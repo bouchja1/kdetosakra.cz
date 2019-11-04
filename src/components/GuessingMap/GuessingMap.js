@@ -1,19 +1,13 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
+import MapyContext from '../../context/MapyContext'
 
 const GuessingMap = () => {
     const [guessingMap, setGuessingMap] = useState(React.createRef());
-    const [loadedMapApi, setLoadedMapApi] = useState(false);
+    const mapyContext = useContext(MapyContext)
     const [loadedMap, setLoadedMap] = useState(false);
 
     useEffect(() => {
-        window.Loader.async = true;
-        window.Loader.load(null, { pano: true }, () => {
-            setLoadedMapApi(true);
-        });
-    }, [loadedMapApi]);
-
-    useEffect(() => {
-        if (loadedMapApi && !loadedMap) {
+        if (mapyContext && !loadedMap) {
             const SMap = window.SMap;
             const JAK = window.JAK;
 
@@ -44,7 +38,7 @@ const GuessingMap = () => {
 
             m.getSignals().addListener(window, "map-click", click); /* Při signálu kliknutí volat tuto funkci */
         }
-    }, [loadedMapApi, loadedMap, guessingMap]);
+    }, [mapyContext, loadedMap, guessingMap]);
 
     return (
         <div>

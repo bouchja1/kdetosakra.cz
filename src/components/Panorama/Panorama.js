@@ -1,19 +1,13 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
+import MapyContext from '../../context/MapyContext'
 
 const Panorama = () => {
     const [panorama, setPanorama] = useState(React.createRef());
-    const [loadedMapApi, setLoadedMapApi] = useState(false);
+    const mapyContext = useContext(MapyContext)
     const [loadedPanorama, setLoadedPanorama] = useState(false);
 
     useEffect(() => {
-        window.Loader.async = true;
-        window.Loader.load(null, { pano: true }, () => {
-            setLoadedMapApi(true);
-        });
-    }, [loadedMapApi]);
-
-    useEffect(() => {
-        if (loadedMapApi && !loadedPanorama) {
+        if (mapyContext && !loadedPanorama) {
             const options = {
                 nav: true,
                 blend: 300,
@@ -35,7 +29,7 @@ const Panorama = () => {
                 },
             );
         }
-    }, [loadedMapApi, loadedPanorama, panorama]);
+    }, [mapyContext, loadedPanorama, panorama]);
 
     return (
         <div>
