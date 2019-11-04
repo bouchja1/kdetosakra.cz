@@ -7,77 +7,44 @@ const useScript = src => {
         error: false,
     });
 
-    const [cachedScript, setCachedScript] = useState(null);
-
     useEffect(() => {
-        console.log("**************** XAX: ", cachedScript)
+        // Create script
+        let script = document.createElement('script');
+        script.src = src;
+        script.async = true;
 
-        // If cachedScripts array already includes src that means another instance ...
-        // ... of this hook already loaded this script, so no need to load again.
-        if (cachedScript !== null && cachedScript === src) {
+        // Script event listener callbacks for load and error
+        const onScriptLoad = () => {
             setState({
                 loaded: true,
                 error: false,
             });
-        } else {
-            setCachedScript(src);
+        };
 
-            // Create script
-            let script = document.createElement('script');
-            script.src = src;
-            script.async = true;
+        const onScriptError = () => {
+            // Remove from cachedScripts we can try loading again
+            script.remove();
 
-            // Script event listener callbacks for load and error
-            const onScriptLoad = () => {
-                console.log("#######")
-                console.log('SRC: ', src);
-                console.log('JOO: ', window);
+            setState({
+                loaded: true,
+                error: true,
+            });
+        };
 
-                /*
-                let scriptLoader = document.createElement('script');
-                scriptLoader.type = 'text/javascript';
-                scriptLoader.text = 'Loader.load(null, {pano: true});';
-                script.async = false;
+        script.addEventListener('load', onScriptLoad);
+        script.addEventListener('error', onScriptError);
 
-                document.body.appendChild(scriptLoader);
-                 */
+        // Add script to document body
+        document.body.appendChild(script);
 
-                setState({
-                    loaded: true,
-                    error: false,
-                    SMap: window.SMap,
-                });
-            };
+        // Remove event listeners on cleanup
+        return () => {
+            script.removeEventListener('load', onScriptLoad);
+            script.removeEventListener('error', onScriptError);
+        };
+    }, [src]); // Only re-run effect if script src changes
 
-            const onScriptError = () => {
-                console.log("NOOIJKJKJKKJKJKJ")
-                // Remove from cachedScripts we can try loading again
-                setCachedScript(null);
-                script.remove();
-
-                setState({
-                    loaded: true,
-                    error: true,
-                });
-            };
-
-            script.addEventListener('load', onScriptLoad);
-            script.addEventListener('error', onScriptError);
-
-            // Add script to document body
-            document.body.appendChild(script);
-
-            // Remove event listeners on cleanup
-            return () => {
-                script.removeEventListener('load', onScriptLoad);
-                script.removeEventListener('error', onScriptError);
-            };
-        }
-    }, [src, cachedScript]); // Only re-run effect if script src changes
-
-    console.log("STATE: ", state)
-
-    return [state.loaded, state.error, state.SMap];
+    return [state.loaded, state.error];
 };
 
 export default useScript;
