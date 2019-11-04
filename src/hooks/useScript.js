@@ -1,68 +1,83 @@
 import { useState, useEffect } from 'react';
 
-const useScript = (src) => {
-
+const useScript = src => {
     // Keeping track of script loaded and error state
     const [state, setState] = useState({
         loaded: false,
-        error: false
+        error: false,
     });
 
-    const [cachedScripts, setCachedScripts] = useState([]);
+    const [cachedScript, setCachedScript] = useState(null);
 
-    useEffect(
-        () => {
-            // If cachedScripts array already includes src that means another instance ...
-            // ... of this hook already loaded this script, so no need to load again.
-            if (cachedScripts.includes(src)) {
+    useEffect(() => {
+        console.log("**************** XAX: ", cachedScript)
+
+        // If cachedScripts array already includes src that means another instance ...
+        // ... of this hook already loaded this script, so no need to load again.
+        if (cachedScript !== null && cachedScript === src) {
+            setState({
+                loaded: true,
+                error: false,
+            });
+        } else {
+            setCachedScript(src);
+
+            // Create script
+            let script = document.createElement('script');
+            script.src = src;
+            script.async = true;
+
+            // Script event listener callbacks for load and error
+            const onScriptLoad = () => {
+                console.log("#######")
+                console.log('SRC: ', src);
+                console.log('JOO: ', window);
+
+                /*
+                let scriptLoader = document.createElement('script');
+                scriptLoader.type = 'text/javascript';
+                scriptLoader.text = 'Loader.load(null, {pano: true});';
+                script.async = false;
+
+                document.body.appendChild(scriptLoader);
+                 */
+
                 setState({
                     loaded: true,
-                    error: false
+                    error: false,
+                    SMap: window.SMap,
                 });
-            } else {
-                setCachedScripts([src]);
+            };
 
-                // Create script
-                let script = document.createElement('script');
-                script.src = src;
-                script.async = true;
+            const onScriptError = () => {
+                console.log("NOOIJKJKJKKJKJKJ")
+                // Remove from cachedScripts we can try loading again
+                setCachedScript(null);
+                script.remove();
 
-                // Script event listener callbacks for load and error
-                const onScriptLoad = () => {
-                    setState({
-                        loaded: true,
-                        error: false
-                    });
-                };
+                setState({
+                    loaded: true,
+                    error: true,
+                });
+            };
 
-                const onScriptError = () => {
-                    // Remove from cachedScripts we can try loading again
-                    const index = cachedScripts.indexOf(src);
-                    if (index >= 0) cachedScripts.splice(index, 1);
-                    script.remove();
+            script.addEventListener('load', onScriptLoad);
+            script.addEventListener('error', onScriptError);
 
-                    setState({
-                        loaded: true,
-                        error: true
-                    });
-                };
+            // Add script to document body
+            document.body.appendChild(script);
 
-                script.addEventListener('load', onScriptLoad);
-                script.addEventListener('error', onScriptError);
+            // Remove event listeners on cleanup
+            return () => {
+                script.removeEventListener('load', onScriptLoad);
+                script.removeEventListener('error', onScriptError);
+            };
+        }
+    }, [src, cachedScript]); // Only re-run effect if script src changes
 
-                // Add script to document body
-                document.body.appendChild(script);
+    console.log("STATE: ", state)
 
-                // Remove event listeners on cleanup
-                return () => {
-                    script.removeEventListener('load', onScriptLoad);
-                    script.removeEventListener('error', onScriptError);
-                };
-            }
-        },
-        [src, cachedScripts]); // Only re-run effect if script src changes
-
-    return [state.loaded, state.error];
-}
+    return [state.loaded, state.error, state.SMap];
+};
 
 export default useScript;
