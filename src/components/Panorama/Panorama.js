@@ -31,7 +31,7 @@ const Panorama = () => {
                     panoramaScene.show(place);
                 },
                 function () {
-                    alert('Panorama se nepodařilo zobrazit!');
+                    alert('GuessingMap se nepodařilo zobrazit!');
                 },
             );
         }

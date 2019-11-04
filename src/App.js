@@ -3,6 +3,7 @@ import useScript from './hooks/useScript';
 import './App.css';
 
 import Panorama from './components/Panorama';
+import GuessingMap from './components/GuessingMap';
 
 function App() {
     const [loaded, error] = useScript('https://api.mapy.cz/loader.js');
@@ -14,7 +15,13 @@ function App() {
                     Script loaded: <b>{loaded.toString()}</b>
                 </div>
                 {loaded && !error && (
-                    <Panorama/>
+                    <div>
+                        {/*
+                        <Panorama/>
+                        <GuessingMap/>
+                        */}
+                        <GuessingMap/>
+                    </div>
                 )}
             </header>
         </div>
