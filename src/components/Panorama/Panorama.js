@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 
 const Panorama = () => {
-    // const [loaded, error, SMap] = useLoader();
     const [panorama, setPanorama] = useState(React.createRef());
     const [loadedMapApi, setLoadedMapApi] = useState(false);
     const [loadedPanorama, setLoadedPanorama] = useState(false);
@@ -16,7 +15,8 @@ const Panorama = () => {
     useEffect(() => {
         if (loadedMapApi && !loadedPanorama) {
             const options = {
-                nav: false, // skryjeme navigaci
+                nav: true,
+                blend: 300,
                 pitchRange: [0, 0], // zakazeme vertikalni rozhled
             };
 
