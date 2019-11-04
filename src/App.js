@@ -4,7 +4,6 @@ import useMapLoader from './hooks/useMapLoader';
 import './App.css';
 
 import Panorama from './components/Panorama';
-import GuessingMap from './components/GuessingMap';
 import { MapyProvider } from './context/MapyContext';
 
 function App() {
@@ -20,7 +19,6 @@ function App() {
                 {loaded && !error && (
                     <MapyProvider value={loadedMapApi}>
                         <Panorama/>
-                        <GuessingMap/>
                     </MapyProvider>
                 )}
             </header>
