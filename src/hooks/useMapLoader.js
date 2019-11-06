@@ -1,21 +1,26 @@
 import { useState, useEffect } from 'react';
 
-const useMapLoader = (loaded) => {
-    const [loadedMapApi, setLoadedMapApi] = useState(false);
-
-    console.log("LOOOADED: ", loaded)
+const useMapLoader = function(loaded) {
+    const [mapLoader, setMapLoader] = useState({
+        loadedMapApi: false,
+        SMap: null,
+        JAK: null,
+    });
 
     useEffect(() => {
         if (loaded) {
-            console.log("NOOOO: fsdkjskjkj")
             window.Loader.async = true;
             window.Loader.load(null, { pano: true }, () => {
-                setLoadedMapApi(true);
+                setMapLoader({
+                    loadedMapApi: true,
+                    SMap: window.SMap,
+                    JAK: window.JAK,
+                });
             });
         }
-    }, [loaded, loadedMapApi]);
+    }, [loaded]);
 
-    return [loadedMapApi];
+    return [mapLoader];
 };
 
 export default useMapLoader;

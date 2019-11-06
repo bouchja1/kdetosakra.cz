@@ -8,7 +8,7 @@ import { MapyProvider } from './context/MapyContext';
 
 function App() {
     const [loaded, error] = useScript('https://api.mapy.cz/loader.js');
-    const [loadedMapApi] = useMapLoader(loaded);
+    const [mapLoader] = useMapLoader(loaded);
 
     return (
         <div className="App">
@@ -17,8 +17,8 @@ function App() {
                     Script loaded: <b>{loaded.toString()}</b>
                 </div>
                 {loaded && !error && (
-                    <MapyProvider value={loadedMapApi}>
-                        <Panorama/>
+                    <MapyProvider value={mapLoader}>
+                        <Panorama loadedMapApi={mapLoader.loadedMapApi}/>
                     </MapyProvider>
                 )}
             </header>
