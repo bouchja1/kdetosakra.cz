@@ -1,23 +1,27 @@
 import React, {useState, useEffect, useContext} from 'react';
+import { Redirect, useLocation, Link } from 'react-router-dom';
 import MapyContext from '../../context/MapyContext'
 import GuessingMap from "../GuessingMap";
 import { pointInCircle } from '../../util/Util';
+import { cities } from '../../data/cities';
 
-const Panorama = function({loadedMapApi}) {
+const Panorama = function() {
+    const location = useLocation();
 
     const [panorama] = useState(React.createRef());
     const [panoramaScene, setPanoramaScene] = useState(null);
     const mapyContext = useContext(MapyContext);
 
-    const generatePlaceInRadius = () => {
+    const generatePlaceInRadius = (radius, locationCity) => {
+        radius = radius * 1000; // to kilometres
         const generatedPlace = pointInCircle({
-            longitude: 14.4297652,
-            latitude: 50.0753929,
-        }, 20)
+            longitude: locationCity.coordinates.longitude,
+            latitude: locationCity.coordinates.latitude,
+        }, radius)
         return generatedPlace;
     };
 
-    const loadPanoramaMap = (rerender = false) => {
+    const loadPanoramaMap = (radius, locationCity, rerender = false) => {
         if (rerender) {
             while (panorama.current.firstChild) {
                 panorama.current.firstChild.remove();
@@ -34,10 +38,10 @@ const Panorama = function({loadedMapApi}) {
             const SMap = mapyContext.SMap;
             const panoramaSceneSMap = new SMap.Pano.Scene(panorama.current, options);
             // kolem teto pozice chceme nejblizsi panorama
-            const generatedPanoramaPlace = generatePlaceInRadius();
-            var position = SMap.Coords.fromWGS84(generatedPanoramaPlace.longitude, generatedPanoramaPlace.latitude);
+            const generatedPanoramaPlace = generatePlaceInRadius(radius, locationCity);
+            const position = SMap.Coords.fromWGS84(generatedPanoramaPlace.longitude, generatedPanoramaPlace.latitude);
             // hledame s toleranci 50m
-            SMap.Pano.getBest(position, 50).then(
+            SMap.Pano.getBest(position, 2000).then(
                 function (place) {
                     panoramaSceneSMap.show(place);
                     setPanoramaScene(panoramaSceneSMap);
@@ -81,20 +85,36 @@ const Panorama = function({loadedMapApi}) {
             return <GuessingMap calculateDistance={calculateDistance} loadPanoramaMap={loadPanoramaMap}/>
         }
         return <p>Načítám mapu...</p>
-    }
+    };
 
     useEffect(() => {
-        if (loadedMapApi) {
-            loadPanoramaMap();
+        if (location && location.state && location.state.radius && location.state.city) {
+            const locationRadius = location.state.radius;
+            const locationCity = location.state.city;
+            if (mapyContext.loadedMapApi) {
+                loadPanoramaMap(locationRadius, locationCity);
+            }
         }
-    }, [loadedMapApi]);
+    }, [mapyContext.loadedMapApi]);
 
-    return (
-        <div>
-            <div ref={panorama}></div>
-            {renderGuessingMap()}
-        </div>
-    );
+    if (location && location.state && location.state.radius && location.state.city) {
+        return (
+            <div>
+                <h2>Herní mód</h2>
+                <h3>Místo: {location.state.city.fullName}</h3>
+                <h3>Maximální vzdálenost od centra: {location.state.radius} km</h3>
+                <Link to="/">Zpět do výběru herního módu</Link>
+                <div ref={panorama}></div>
+                {renderGuessingMap()}
+            </div>
+        );
+    } else {
+        return <Redirect
+            to={{
+                pathname: '/',
+            }}
+        />
+    }
 };
 
 export default Panorama;

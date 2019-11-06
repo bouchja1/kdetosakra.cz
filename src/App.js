@@ -3,7 +3,7 @@ import useScript from './hooks/useScript';
 import useMapLoader from './hooks/useMapLoader';
 import './App.css';
 
-import Panorama from './components/Panorama';
+import RouterSwitch from './components/RouterSwitch';
 import { MapyProvider } from './context/MapyContext';
 
 function App() {
@@ -13,12 +13,9 @@ function App() {
     return (
         <div className="App">
             <header className="App-header">
-                <div>
-                    Script loaded: <b>{loaded.toString()}</b>
-                </div>
                 {loaded && !error && (
                     <MapyProvider value={mapLoader}>
-                        <Panorama loadedMapApi={mapLoader.loadedMapApi}/>
+                        <RouterSwitch />
                     </MapyProvider>
                 )}
             </header>

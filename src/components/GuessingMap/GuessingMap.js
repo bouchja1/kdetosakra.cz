@@ -1,12 +1,19 @@
 import React, {useState, useEffect, useContext} from 'react';
+import { useLocation } from 'react-router-dom';
 import MapyContext from '../../context/MapyContext'
 import NextRoundButton from "../NextRoundButton";
+import {roundToTwoDecimal} from '../../util/Util';
 
-const GuessingMap = ({calculateDistance, loadPanoramaMap}) => {
+const TIMER = 10;
+
+const GuessingMap = ({ calculateDistance, loadPanoramaMap }) => {
+    const location = useLocation();
     const mapyContext = useContext(MapyContext)
     const [layeredMap] = useState(null);
     const [layer] = useState(null);
     const [vectorLayerSMap] = useState(null);
+    const [timer, setTimer] = useState(TIMER);
+    const [guessedDistance, setGuessedDistance] = useState(null);
     let refLayerValue = React.useRef(layer);
     let refVectorLayerSMapValue = React.useRef(vectorLayerSMap);
     let refLayeredMapValue = React.useRef(layeredMap);
@@ -19,12 +26,12 @@ const GuessingMap = ({calculateDistance, loadPanoramaMap}) => {
     });
 
     const click = (e, elm) => { // Došlo ke kliknutí, spočítáme kde
-        var options = {};
+        const options = {};
         if (guessButtonDisabled && refLayerValue.current) {
             refLayerValue.current.removeAll();
-            var coords = mapyContext.SMap.Coords.fromEvent(e.data.event, refLayeredMapValue.current);
+            const coords = mapyContext.SMap.Coords.fromEvent(e.data.event, refLayeredMapValue.current);
             // alert("Kliknuto na " + coords.toWGS84(2).reverse().join(" "));
-            var marker = new mapyContext.SMap.Marker(mapyContext.SMap.Coords.fromWGS84(coords.x, coords.y), "myMarker", options);
+            const marker = new mapyContext.SMap.Marker(mapyContext.SMap.Coords.fromWGS84(coords.x, coords.y), "myMarker", options);
             refLayerValue.current.addMarker(marker);
             setCoordinates({
                 mapLat: coords.y,
@@ -32,7 +39,7 @@ const GuessingMap = ({calculateDistance, loadPanoramaMap}) => {
             });
             setGuessButtonDisabled(false);
         }
-    }
+    };
 
     const initSMap = () => {
         const SMap = mapyContext.SMap;
@@ -40,17 +47,17 @@ const GuessingMap = ({calculateDistance, loadPanoramaMap}) => {
 
         if (SMap && JAK) {
             const center = SMap.Coords.fromWGS84(14.400307, 50.071853);
-            var m = new SMap(JAK.gel("m"), center, 7);
+            const m = new SMap(JAK.gel("m"), center, 7);
             // var m = new SMap(guessingMap.current, SMap.Coords.fromWGS84(14.400307, 50.071853));
             m.addDefaultControls();
             m.addControl(new SMap.Control.Sync()); /* Aby mapa reagovala na změnu velikosti průhledu */
             m.addDefaultLayer(SMap.DEF_BASE).enable();
 
-            var mouse = new SMap.Control.Mouse(SMap.MOUSE_PAN | SMap.MOUSE_WHEEL | SMap.MOUSE_ZOOM); /* Ovládání myší */
+            const mouse = new SMap.Control.Mouse(SMap.MOUSE_PAN | SMap.MOUSE_WHEEL | SMap.MOUSE_ZOOM); /* Ovládání myší */
             m.addControl(mouse);
 
             // 8. vrstva se značkami
-            var layerSMap = new SMap.Layer.Marker();
+            const layerSMap = new SMap.Layer.Marker();
             m.addLayer(layerSMap);
             layerSMap.enable();
             // assign vrstva se značkami
@@ -69,17 +76,38 @@ const GuessingMap = ({calculateDistance, loadPanoramaMap}) => {
     };
 
     useEffect(() => {
+        setTimeout(() => {
+            if (timer > 0) {
+                setTimer((currentTimer) => currentTimer - 1);
+            }
+        }, 1000);
+    }, [timer]);
+
+    useEffect(() => {
         if (mapyContext.loadedMapApi) {
             initSMap();
         }
     }, [mapyContext.loadedMapApi]);
 
     const refreshMap = () => {
+        const locationRadius = location.state.radius;
+        const locationCity = location.state.city;
         refLayerValue.current.removeAll();
         refVectorLayerSMapValue.current.removeAll();
         setNextRoundButtonVisible(false);
         setGuessButtonDisabled(true);
-        loadPanoramaMap(true);
+        setGuessedDistance(null);
+        setTimer(TIMER);
+        loadPanoramaMap(locationRadius, locationCity, true);
+    }
+
+    const showTimer = () => {
+        if (timer > 0) {
+            return <h2>{timer}</h2>;
+        } else if (timer < 1) {
+            // calculateCoords(calculateDistance);
+            return <h2>Došel ti čas</h2>
+        }
     }
 
     const calculateCoords = (calculateDistance) => {
@@ -87,28 +115,36 @@ const GuessingMap = ({calculateDistance, loadPanoramaMap}) => {
         setNextRoundButtonVisible(true);
         const coordsAndDistance = calculateDistance(coordinates);
 
-        var points1 = [
+        const points1 = [
             mapyContext.SMap.Coords.fromWGS84(coordsAndDistance.panoramaCoordinates.lon, coordsAndDistance.panoramaCoordinates.lat),
             mapyContext.SMap.Coords.fromWGS84(coordinates.mapLon, coordinates.mapLat)
         ];
 
-        var options1 = {
+        const options1 = {
             color: "#f00",
             width: 3
         };
 
-        var path = new mapyContext.SMap.Geometry(mapyContext.SMap.GEOMETRY_POLYLINE, null, points1, options1);
+        const path = new mapyContext.SMap.Geometry(mapyContext.SMap.GEOMETRY_POLYLINE, null, points1, options1);
         refVectorLayerSMapValue.current.addGeometry(path);
+        setGuessedDistance(coordsAndDistance.distance);
     };
 
     return (
         <div>
             <h1>Guessing map</h1>
+            {showTimer()}
+            {
+                guessedDistance ?
+                    <p>Vzdušná vzdálenost místa od tvého odhadu: {roundToTwoDecimal(guessedDistance)} km</p> : null
+            }
             <div id="m"></div>
-            <button disabled={guessButtonDisabled} onClick={() => { calculateCoords(calculateDistance)}} type="submit" value="Hááádej">
+            <button disabled={guessButtonDisabled} onClick={() => {
+                calculateCoords(calculateDistance)
+            }} type="submit">
                 Hádej!
             </button>
-            { nextRoundButtonVisible ? <NextRoundButton  refreshMap={() => refreshMap()}/> : null }
+            {nextRoundButtonVisible ? <NextRoundButton refreshMap={() => refreshMap()}/> : null}
         </div>
     );
 };

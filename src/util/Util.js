@@ -61,6 +61,10 @@ function pointAtDistance(inputCoords, distance) {
     return toDegrees(result)
 }
 
+export function roundToTwoDecimal(value) {
+    return Math.round(value * 100) / 100;
+}
+
 export function pointInCircle(coord, distance) {
     const rnd = Math.random()
     /*use square root of random number to avoid high density at the center*/
