@@ -8,12 +8,6 @@ const Panorama = function({loadedMapApi}) {
     const [panoramaScene, setPanoramaScene] = useState(null);
     const mapyContext = useContext(MapyContext);
 
-    const panoramaSceneFce = () => {
-        if (panoramaScene && panoramaScene._place) {
-            console.log("PANORAMA GPS: ", panoramaScene._place._data.mark)
-        }
-    }
-
     const loadPanoramaMap = () => {
         const options = {
             nav: true,
@@ -31,13 +25,6 @@ const Panorama = function({loadedMapApi}) {
             SMap.Pano.getBest(position, 50).then(
                 function (place) {
                     panoramaSceneSMap.show(place);
-                    console.log("PLAAAACE LAT: ", panoramaSceneSMap.getPlace()._data.mark.lat);
-                    console.log("PLAAAACE LON: ", panoramaSceneSMap.getPlace()._data.mark.lon);
-                    // TODO tohle se mi nepohybuje
-                    setCoordinates({
-                        panoramaLat: panoramaSceneSMap.getPlace()._data.mark.lat,
-                        panoramaLon: panoramaSceneSMap.getPlace()._data.mark.lon,
-                    })
                     setPanoramaScene(panoramaSceneSMap);
                 },
                 function () {
@@ -47,14 +34,36 @@ const Panorama = function({loadedMapApi}) {
         }
     }
 
-    const [coordinates, setCoordinates] = useState({
-        panoramaLon: 0,
-        panoramaLat: 0,
-    });
+    const calculateDistance = (mapCoordinates) => {
+        const panoramaCoordinates = panoramaScene._place._data.mark;
+        let distance;
+        if ((panoramaCoordinates.lat === mapCoordinates.mapLat) && (panoramaCoordinates.lon === mapCoordinates.mapLon)) {
+            distance = 0;
+        }
+        else {
+            const radlat1 = Math.PI * panoramaCoordinates.lat / 180;
+            const radlat2 = Math.PI * mapCoordinates.mapLat / 180;
+            const theta = panoramaCoordinates.lon - mapCoordinates.mapLon;
+            const radtheta = Math.PI * theta / 180;
+            let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+            if (dist > 1) {
+                dist = 1;
+            }
+            dist = Math.acos(dist);
+            dist = dist * 180 / Math.PI;
+            dist = dist * 60 * 1.1515;
+            dist = dist * 1.609344; // convert to kilometers
+            distance = dist;
+        }
+        return {
+            distance,
+            panoramaCoordinates,
+        }
+    };
 
     const renderGuessingMap = () => {
         if (panoramaScene) {
-            return <GuessingMap panoramaCoordinates={coordinates}/>
+            return <GuessingMap calculateDistance={calculateDistance}/>
         }
         return <p>Načítám panorama...</p>
     }
@@ -68,7 +77,6 @@ const Panorama = function({loadedMapApi}) {
     return (
         <div>
             <div ref={panorama}></div>
-            <p>{console.log(panoramaSceneFce())}</p>
             {renderGuessingMap()}
         </div>
     );
