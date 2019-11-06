@@ -6,7 +6,9 @@ const GuessingMap = ({calculateDistance}) => {
     const mapyContext = useContext(MapyContext)
     const [layeredMap] = useState(null);
     const [layer] = useState(null);
+    const [vectorLayerSMap] = useState(null);
     let refLayerValue = React.useRef(layer);
+    let refVectorLayerSMapValue = React.useRef(vectorLayerSMap);
     let refLayeredMapValue = React.useRef(layeredMap);
 
     const [guessButtonDisabled, setGuessButtonDisabled] = useState(true);
@@ -27,7 +29,7 @@ const GuessingMap = ({calculateDistance}) => {
             setCoordinates({
                 mapLat: coords.y,
                 mapLon: coords.x,
-            })
+            });
             setGuessButtonDisabled(false);
         }
     }
@@ -51,10 +53,18 @@ const GuessingMap = ({calculateDistance}) => {
             var layerSMap = new SMap.Layer.Marker();
             m.addLayer(layerSMap);
             layerSMap.enable();
+            // assign vrstva se značkami
             refLayerValue.current = layerSMap;
             m.getSignals().addListener(window, "map-click", click); /* Při signálu kliknutí volat tuto funkci */
-            // m.getSignals().addListener(window, "map-click", () => { setGuessButtonDisabled(false)}); /* Při signálu kliknutí volat tuto funkci */
+
+            // assing layered map value
             refLayeredMapValue.current = m;
+
+            // vykreslit vektor do mapy
+            const vectorLayer = new mapyContext.SMap.Layer.Geometry();
+            refLayeredMapValue.current.addLayer(vectorLayer);
+            vectorLayer.enable();
+            refVectorLayerSMapValue.current = vectorLayer;
         }
     };
 
@@ -66,16 +76,16 @@ const GuessingMap = ({calculateDistance}) => {
 
     const refreshMap = () => {
         console.log("************************ REFRESH MAP!!!!!! ***************************")
+        refLayerValue.current.removeAll();
+        refVectorLayerSMapValue.current.removeAll();
+        setNextRoundButtonVisible(false);
+        setGuessButtonDisabled(true);
     }
 
     const calculateCoords = (calculateDistance) => {
         setGuessButtonDisabled(true);
         setNextRoundButtonVisible(true);
         const coordsAndDistance = calculateDistance(coordinates);
-        // vykreslit vektor do mapy
-        const vectorLayer = new mapyContext.SMap.Layer.Geometry();
-        refLayeredMapValue.current.addLayer(vectorLayer);
-        vectorLayer.enable();
 
         var points1 = [
             mapyContext.SMap.Coords.fromWGS84(coordsAndDistance.panoramaCoordinates.lon, coordsAndDistance.panoramaCoordinates.lat),
@@ -88,7 +98,7 @@ const GuessingMap = ({calculateDistance}) => {
         };
 
         var path = new mapyContext.SMap.Geometry(mapyContext.SMap.GEOMETRY_POLYLINE, null, points1, options1);
-        vectorLayer.addGeometry(path);
+        refVectorLayerSMapValue.current.addGeometry(path);
     }
 
     return (
