@@ -71,14 +71,6 @@ const Panorama = function({loadedMapApi}) {
         }
     };
 
-    const renderPanorama = () => {
-        if (panorama) {
-            return <div ref={panorama}></div>
-        } else {
-            return <p>Načítám panorama...</p>
-        }
-    }
-
     const renderGuessingMap = () => {
         if (panoramaScene) {
             return <GuessingMap calculateDistance={calculateDistance} loadPanoramaMap={loadPanoramaMap}/>
@@ -94,7 +86,7 @@ const Panorama = function({loadedMapApi}) {
 
     return (
         <div>
-            {renderPanorama()}
+            <div ref={panorama}></div>
             {renderGuessingMap()}
         </div>
     );
