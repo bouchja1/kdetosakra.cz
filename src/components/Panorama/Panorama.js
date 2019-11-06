@@ -1,13 +1,9 @@
 import React, {useState, useEffect, useContext} from 'react';
-import { Redirect, useLocation, Link } from 'react-router-dom';
 import MapyContext from '../../context/MapyContext'
 import GuessingMap from "../GuessingMap";
-import { pointInCircle } from '../../util/Util';
-import { cities } from '../../data/cities';
+import {pointInCircle} from '../../util/Util';
 
-const Panorama = function() {
-    const location = useLocation();
-
+const Panorama = function ({location}) {
     const [panorama] = useState(React.createRef());
     const [panoramaScene, setPanoramaScene] = useState(null);
     const mapyContext = useContext(MapyContext);
@@ -58,8 +54,7 @@ const Panorama = function() {
         let distance;
         if ((panoramaCoordinates.lat === mapCoordinates.mapLat) && (panoramaCoordinates.lon === mapCoordinates.mapLon)) {
             distance = 0;
-        }
-        else {
+        } else {
             const radlat1 = Math.PI * panoramaCoordinates.lat / 180;
             const radlat2 = Math.PI * mapCoordinates.mapLat / 180;
             const theta = panoramaCoordinates.lon - mapCoordinates.mapLon;
@@ -88,33 +83,22 @@ const Panorama = function() {
     };
 
     useEffect(() => {
-        if (location && location.state && location.state.radius && location.state.city) {
-            const locationRadius = location.state.radius;
-            const locationCity = location.state.city;
+        console.log("NOOOOO LOCATION STATE: ", location.state)
+        if (location) {
+            const { radius, city } = location.state;
             if (mapyContext.loadedMapApi) {
-                loadPanoramaMap(locationRadius, locationCity);
+                loadPanoramaMap(radius, city);
             }
         }
+        // TODO add some cleanup maybe
     }, [mapyContext.loadedMapApi]);
 
-    if (location && location.state && location.state.radius && location.state.city) {
-        return (
-            <div>
-                <h2>Herní mód</h2>
-                <h3>Místo: {location.state.city.fullName}</h3>
-                <h3>Maximální vzdálenost od centra: {location.state.radius} km</h3>
-                <Link to="/">Zpět do výběru herního módu</Link>
-                <div ref={panorama}></div>
-                {renderGuessingMap()}
-            </div>
-        );
-    } else {
-        return <Redirect
-            to={{
-                pathname: '/',
-            }}
-        />
-    }
+    return (
+        <div>
+            <div ref={panorama}></div>
+            {renderGuessingMap()}
+        </div>
+    );
 };
 
 export default Panorama;

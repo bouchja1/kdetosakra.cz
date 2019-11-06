@@ -1,9 +1,10 @@
 import React from 'react';
-import { Route, Switch, useLocation } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 import NotFound from '../../pages/404';
 import Configuration from "../Configuration";
-import Panorama from "../Panorama";
+import City from "../City";
+import Geolocation from "../Geolocation";
 
 const RouterSwitch = () => {
     return (
@@ -11,8 +12,11 @@ const RouterSwitch = () => {
             <Route exact path="/">
                 <Configuration />
             </Route>
-            <Route exact path="/panorama">
-                <Panorama />
+            <Route path="/geolocation">
+                <Geolocation />
+            </Route>
+            <Route path="/city">
+                <City />
             </Route>
             <Route path="*">
                 <NotFound />
