@@ -75,12 +75,11 @@ const GuessingMap = ({calculateDistance, loadPanoramaMap}) => {
     }, [mapyContext.loadedMapApi]);
 
     const refreshMap = () => {
-        console.log("************************ REFRESH MAP!!!!!! ***************************")
         refLayerValue.current.removeAll();
         refVectorLayerSMapValue.current.removeAll();
         setNextRoundButtonVisible(false);
         setGuessButtonDisabled(true);
-        loadPanoramaMap();
+        loadPanoramaMap(true);
     }
 
     const calculateCoords = (calculateDistance) => {
@@ -100,7 +99,7 @@ const GuessingMap = ({calculateDistance, loadPanoramaMap}) => {
 
         var path = new mapyContext.SMap.Geometry(mapyContext.SMap.GEOMETRY_POLYLINE, null, points1, options1);
         refVectorLayerSMapValue.current.addGeometry(path);
-    }
+    };
 
     return (
         <div>

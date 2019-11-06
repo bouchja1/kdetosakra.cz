@@ -17,7 +17,12 @@ const Panorama = function({loadedMapApi}) {
         return generatedPlace;
     };
 
-    const loadPanoramaMap = () => {
+    const loadPanoramaMap = (rerender = false) => {
+        if (rerender) {
+            while (panorama.current.firstChild) {
+                panorama.current.firstChild.remove();
+            }
+        }
         const options = {
             nav: true,
             blend: 300,
