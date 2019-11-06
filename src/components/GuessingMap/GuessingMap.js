@@ -2,7 +2,7 @@ import React, {useState, useEffect, useContext} from 'react';
 import MapyContext from '../../context/MapyContext'
 import NextRoundButton from "../NextRoundButton";
 
-const GuessingMap = ({calculateDistance}) => {
+const GuessingMap = ({calculateDistance, loadPanoramaMap}) => {
     const mapyContext = useContext(MapyContext)
     const [layeredMap] = useState(null);
     const [layer] = useState(null);
@@ -80,6 +80,7 @@ const GuessingMap = ({calculateDistance}) => {
         refVectorLayerSMapValue.current.removeAll();
         setNextRoundButtonVisible(false);
         setGuessButtonDisabled(true);
+        loadPanoramaMap();
     }
 
     const calculateCoords = (calculateDistance) => {

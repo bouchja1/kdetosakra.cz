@@ -1,12 +1,21 @@
 import React, {useState, useEffect, useContext} from 'react';
 import MapyContext from '../../context/MapyContext'
 import GuessingMap from "../GuessingMap";
+import { pointInCircle } from '../../util/Util';
 
 const Panorama = function({loadedMapApi}) {
 
     const [panorama] = useState(React.createRef());
     const [panoramaScene, setPanoramaScene] = useState(null);
     const mapyContext = useContext(MapyContext);
+
+    const generatePlaceInRadius = () => {
+        const generatedPlace = pointInCircle({
+            longitude: 14.4297652,
+            latitude: 50.0753929,
+        }, 20)
+        return generatedPlace;
+    };
 
     const loadPanoramaMap = () => {
         const options = {
@@ -20,7 +29,8 @@ const Panorama = function({loadedMapApi}) {
             const SMap = mapyContext.SMap;
             const panoramaSceneSMap = new SMap.Pano.Scene(panorama.current, options);
             // kolem teto pozice chceme nejblizsi panorama
-            var position = SMap.Coords.fromWGS84(14.4297652, 50.0753929);
+            const generatedPanoramaPlace = generatePlaceInRadius();
+            var position = SMap.Coords.fromWGS84(generatedPanoramaPlace.longitude, generatedPanoramaPlace.latitude);
             // hledame s toleranci 50m
             SMap.Pano.getBest(position, 50).then(
                 function (place) {
@@ -32,7 +42,7 @@ const Panorama = function({loadedMapApi}) {
                 },
             );
         }
-    }
+    };
 
     const calculateDistance = (mapCoordinates) => {
         const panoramaCoordinates = panoramaScene._place._data.mark;
@@ -61,11 +71,19 @@ const Panorama = function({loadedMapApi}) {
         }
     };
 
+    const renderPanorama = () => {
+        if (panorama) {
+            return <div ref={panorama}></div>
+        } else {
+            return <p>Načítám panorama...</p>
+        }
+    }
+
     const renderGuessingMap = () => {
         if (panoramaScene) {
-            return <GuessingMap calculateDistance={calculateDistance}/>
+            return <GuessingMap calculateDistance={calculateDistance} loadPanoramaMap={loadPanoramaMap}/>
         }
-        return <p>Načítám panorama...</p>
+        return <p>Načítám mapu...</p>
     }
 
     useEffect(() => {
@@ -76,7 +94,7 @@ const Panorama = function({loadedMapApi}) {
 
     return (
         <div>
-            <div ref={panorama}></div>
+            {renderPanorama()}
             {renderGuessingMap()}
         </div>
     );
