@@ -2,14 +2,13 @@ import React from 'react';
 import {Link, Redirect, useLocation} from 'react-router-dom';
 import Panorama from "../Panorama";
 
-const Geolocation = () => {
+const RandomCity = () => {
     const location = useLocation();
 
-    if (location && location.state && location.state.radius && location.state.city) {
+    if (location && location.state && location.state.city) {
         return (
             <div>
-                <h2>Herní mód: Podle aktuální geolokace</h2>
-                <h3>Maximální vzdálenost od místa: {location.state.radius} km</h3>
+                <h2>Herní mód: Náhodné místo v Čr</h2>
                 <Link to="/">Zpět do výběru herního módu</Link>
                 <Panorama location={location}/>
             </div>
@@ -23,4 +22,4 @@ const Geolocation = () => {
     }
 };
 
-export default Geolocation;
+export default RandomCity;

@@ -4,6 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 import NotFound from '../../pages/404';
 import Configuration from "../Configuration";
 import City from "../City";
+import RandomCity from "../RandomCity";
 import Geolocation from "../Geolocation";
 
 const RouterSwitch = () => {
@@ -17,6 +18,9 @@ const RouterSwitch = () => {
             </Route>
             <Route path="/city">
                 <City />
+            </Route>
+            <Route path="/random-city">
+                <RandomCity />
             </Route>
             <Route path="*">
                 <NotFound />

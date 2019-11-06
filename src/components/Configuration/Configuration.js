@@ -4,12 +4,14 @@ import * as Yup from 'yup';
 import {Redirect} from 'react-router-dom';
 import useGeolocation from 'react-hook-geolocation'
 import {cities} from '../../data/cities';
+import {crCities} from '../../data/cr';
 import {DisplayFormikState} from '../../util/helper';
 
 const Configuration = function () {
     const geolocation = useGeolocation()
     const [citySelected, setCitySelected] = useState(null);
     const [maxCityRadius, setMaxCityRadius] = useState(null);
+    const [randomCityFormSubmitted, setRandomCityFormSubmitted] = useState(false);
     const [cityFormSubmitted, setCityFormSubmitted] = useState(false);
     const [cityFormValues, setCityFormValues] = useState({});
     const [geoFormSubmitted, setGeoFormSubmitted] = useState(false);
@@ -34,6 +36,39 @@ const Configuration = function () {
             });
             setMaxCityRadius(selectedCity[0].radiusMax);
             setCitySelected(selectedCity[0].name);
+        }
+    };
+
+    const renderRandomCzechPlace = () => {
+        if (randomCityFormSubmitted) {
+            let randomCity = crCities[Math.floor(Math.random() * crCities.length)];
+            console.log("NOOO: ", randomCity)
+            randomCity = {
+                ...randomCity,
+                coordinates: {
+                    latitude: randomCity.latitude,
+                    longitude: randomCity.longitude,
+                }
+            };
+            return (
+                <Redirect
+                    to={{
+                        pathname: '/random-city',
+                        state: {
+                            radius: 0.5, // set default radius
+                            city: randomCity,
+                        }
+                    }}
+                />
+            )
+        } else {
+            return (
+                <form className="container" onSubmit={() => setRandomCityFormSubmitted(true)}>
+                    <button type="submit">
+                        Hrát
+                    </button>
+                </form>
+            );
         }
     };
 
@@ -181,6 +216,8 @@ const Configuration = function () {
 
     return (
         <div>
+            <h1>Náhodné místo v Čr</h1>
+            {renderRandomCzechPlace()}
             <h1>Česká města</h1>
             {renderForm()}
             <h1>Podle mojí pozice</h1>
