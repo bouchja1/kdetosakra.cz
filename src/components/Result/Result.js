@@ -12,7 +12,7 @@ const Result = () => {
 
     if (location && location.state && location.state.totalRoundScore && location.state.guessedPoints && !resultPageClosed) {
         return (
-            <div className="resultBlock">
+            <div className="result-container">
                 <h1>Výsledek: {location.state.totalRoundScore} bodů</h1>
                 <ResultSMapWrapper guessedPoints={location.state.guessedPoints} closeResultPage={closeResultPage}/>
             </div>

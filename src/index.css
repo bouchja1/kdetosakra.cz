@@ -178,6 +178,20 @@ button.outline {
   flex: 2;
 }
 
+.about-container {
+  color: #000;
+  padding: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.result-container {
+  color: #000;
+  padding: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
 .game-mode-info-container {
   color: #fff;
   background-color: #5995DA;  /* Blue */

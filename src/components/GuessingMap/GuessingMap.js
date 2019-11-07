@@ -223,11 +223,11 @@ const GuessingMap = ({ calculateDistance, loadPanoramaMap, generateRandomCzechPl
             }
             {
                 (guessedPlace && guessedDistance) ?
-                    <div>
+                    <>
                         <p>Obec: {guessedPlace.obec}</p>
                         <p>Okres: {guessedPlace.okres}</p>
                         <p>Kraj: {guessedPlace.kraj}</p>
-                    </div> : null
+                    </> : null
             }
             <RoundSMapWrapper click={click} refLayeredMapValue={refLayeredMapValue} refLayerValue={refLayerValue}
                               refVectorLayerSMapValue={refVectorLayerSMapValue}/>

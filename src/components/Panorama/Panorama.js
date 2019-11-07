@@ -151,12 +151,12 @@ const Panorama = function ({ location }) {
     }, [mapyContext.loadedMapApi]);
 
     return (
-        <div>
+        <>
             {
-                (panoramaNotFound) ? <p>V okruhu 5 km od vašeho místa nebylo nalezeno žádné panorama.</p> : <div><div ref={panorama}></div>
-            {renderGuessingMap()}</div>
+                (panoramaNotFound) ? <p>V okruhu 5 km od vašeho místa nebylo nalezeno žádné panorama.</p> : <><div ref={panorama}></div>
+            {renderGuessingMap()}</>
             }
-        </div>
+        </>
     );
 };
 
