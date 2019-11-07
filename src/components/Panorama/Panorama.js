@@ -38,7 +38,6 @@ const Panorama = function ({ location }) {
     };
 
     const loadPanoramaMap = (radius, locationCity, rerender, counter = 0, panoramaScene = null) => {
-        console.log("COOOOUNTS: ", counter)
         if (rerender && counter === 0) {
             while (panorama.current.firstChild) {
                 panorama.current.firstChild.remove();

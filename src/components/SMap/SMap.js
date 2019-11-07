@@ -1,5 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import MapyContext from "../../context/MapyContext";
+import {DEFAUL_MARKER_PLACE_ICON} from '../../util/Util';
 
 const SMap = (props) => {
     const [map] = useState(React.createRef());
@@ -9,20 +10,42 @@ const SMap = (props) => {
     const initSMap = () => {
         const SMap = mapyContext.SMap;
 
+        const markerOptions = {
+            anchor: {left:10, bottom: 1}
+        };
+        const markerPanoramaOptions = {
+            url: DEFAUL_MARKER_PLACE_ICON,
+            anchor: {left:10, bottom: 15}
+        };
+
         if (SMap) {
-            const center = SMap.Coords.fromWGS84(14.400307, 50.071853);
-            const m = new SMap(map.current, center, 7);
-            m.addDefaultControls();
-            m.addControl(new SMap.Control.Sync()); /* Aby mapa reagovala na změnu velikosti průhledu */
-            m.addDefaultLayer(SMap.DEF_BASE).enable();
+            const center = SMap.Coords.fromWGS84(15.202828, 50.027429);
+            const mapInstance = new SMap(map.current, center, 7);
+            mapInstance.addDefaultControls(); // Vyrobí defaultní ovládácí prvky (kompas, zoom, ovládání myší a klávesnicí.)
+            mapInstance.addControl(new SMap.Control.Sync()); // - aby mapa reagovala na změnu velikosti průhledu - Synchronizuje mapu s portem, potažmo mapu s portem a oknem
+            mapInstance.setZoomRange(7, 19);
+            mapInstance.addDefaultLayer(SMap.DEF_BASE).enable();
 
             const mouse = new SMap.Control.Mouse(SMap.MOUSE_PAN | SMap.MOUSE_WHEEL | SMap.MOUSE_ZOOM); /* Ovládání myší */
-            m.addControl(mouse);
+            mapInstance.addControl(mouse);
 
             // 8. vrstva se značkami
             const layerSMap = new SMap.Layer.Marker();
-            m.addLayer(layerSMap);
+            mapInstance.addLayer(layerSMap);
             layerSMap.enable();
+
+            /* znackova vrstva pro ikonky bodu zajmu; poiToolTip - zapneme title jako nazev nad POI */
+            const poILayer = new SMap.Layer.Marker(undefined, {
+                poiTooltip: true
+            });
+            mapInstance.addLayer(poILayer).enable();
+
+            /* dataProvider zastiti komunikaci se servery */
+            const dataProvider = mapInstance.createDefaultDataProvider();
+            dataProvider.setOwner(mapInstance);
+            dataProvider.addLayer(poILayer);
+            dataProvider.setMapSet(SMap.MAPSET_BASE);
+            dataProvider.enable();
 
             if (props.type && props.type === 'result') {
                 const { guessedPoints } = props;
@@ -31,9 +54,8 @@ const SMap = (props) => {
                     width: 3
                 };
                 const vectorLayer = new mapyContext.SMap.Layer.Geometry();
-                m.addLayer(vectorLayer);
+                mapInstance.addLayer(vectorLayer);
                 vectorLayer.enable();
-                console.log("VECTOR LAYER GEOMETRIES: ", vectorLayer.getGeometries())
                 for (let i = 0; i < guessedPoints.length; i++) {
                     const pointsObject = guessedPoints[i];
                     const pointPanorama = mapyContext.SMap.Coords.fromWGS84(pointsObject.pointPanorama.x, pointsObject.pointPanorama.y);
@@ -43,19 +65,23 @@ const SMap = (props) => {
                         pointMap,
                     ];
 
-                    console.log("NOOOOOOO: ", pointsVectorArray)
-
                     const path = new mapyContext.SMap.Geometry(mapyContext.SMap.GEOMETRY_POLYLINE, null, pointsVectorArray, options);
-                    console.log("PAAAAATH: ", path)
                     vectorLayer.addGeometry(path);
-                    console.log("VECTOR LAYER GEOMETRIES AFTER: ", vectorLayer.getGeometries())
+
+                    // my guessed marker
+                    const marker = new mapyContext.SMap.Marker(mapyContext.SMap.Coords.fromWGS84(pointsObject.pointMap.x, pointsObject.pointMap.y), `Můj odhad ${i+1}`, markerOptions);
+                    layerSMap.addMarker(marker);
+                    // panorama place marker
+                    const markerPanorama = new mapyContext.SMap.Marker(mapyContext.SMap.Coords.fromWGS84(pointsObject.pointPanorama.x, pointsObject.pointPanorama.y), `Panorama ${i+1}`, markerPanoramaOptions);
+                    layerSMap.addMarker(markerPanorama);
+
                 }
             } else if (props.type === 'round') {
                 const { click, refLayeredMapValue, refLayerValue, refVectorLayerSMapValue } = props;
                 // assign vrstva se značkami
                 refLayerValue.current = layerSMap;
                 // assing layered map value
-                refLayeredMapValue.current = m;
+                refLayeredMapValue.current = mapInstance;
                 refLayeredMapValue.current.getSignals().addListener(window, "map-click", click); /* Při signálu kliknutí volat tuto funkci */
 
                 // vykreslit vektor do mapy

@@ -2,7 +2,7 @@ import React, {useState, useContext} from 'react';
 import {useLocation, Redirect} from 'react-router-dom';
 import MapyContext from '../../context/MapyContext'
 import NextRoundButton from "../NextRoundButton";
-import {roundToTwoDecimal} from '../../util/Util';
+import {DEFAUL_MARKER_PLACE_ICON, roundToTwoDecimal} from '../../util/Util';
 import RoundSMapWrapper from "../SMap/RoundSMapWrapper";
 
 const TIMER = 10;
@@ -50,13 +50,15 @@ const GuessingMap = ({ calculateDistance, loadPanoramaMap, generateRandomCzechPl
     };
 
     const click = (e, elm) => { // Došlo ke kliknutí, spočítáme kde
-        const options = {};
+        const options = {
+            anchor: {left:10, bottom: 1}  /* Ukotvení značky za bod uprostřed dole */
+        };
         // state is not working in event handling
         //if (guessButtonDisabled && refLayerValue.current && !nextRoundButtonVisible) {
         refLayerValue.current.removeAll();
         const coords = mapyContext.SMap.Coords.fromEvent(e.data.event, refLayeredMapValue.current);
         // alert("Kliknuto na " + coords.toWGS84(2).reverse().join(" "));
-        const marker = new mapyContext.SMap.Marker(mapyContext.SMap.Coords.fromWGS84(coords.x, coords.y), "myMarker", options);
+        const marker = new mapyContext.SMap.Marker(mapyContext.SMap.Coords.fromWGS84(coords.x, coords.y), "Můj odhad", options);
         refLayerValue.current.addMarker(marker);
         setCoordinates({
             mapLat: coords.y,
@@ -148,6 +150,11 @@ const GuessingMap = ({ calculateDistance, loadPanoramaMap, generateRandomCzechPl
     }
 
     const calculateCoords = (calculateDistance) => {
+        const markerPanoramaOptions = {
+            url: DEFAUL_MARKER_PLACE_ICON,
+            anchor: {left:10, bottom: 15}
+        };
+
         setGuessButtonDisabled(true);
         setNextRoundButtonVisible(true);
         const coordsAndDistance = calculateDistance(coordinates);
@@ -169,6 +176,10 @@ const GuessingMap = ({ calculateDistance, loadPanoramaMap, generateRandomCzechPl
 
         const path = new mapyContext.SMap.Geometry(mapyContext.SMap.GEOMETRY_POLYLINE, null, points1, options1);
         refVectorLayerSMapValue.current.addGeometry(path);
+
+        // panorama place marker
+        const markerPanorama = new mapyContext.SMap.Marker(mapyContext.SMap.Coords.fromWGS84(coordsAndDistance.panoramaCoordinates.lon, coordsAndDistance.panoramaCoordinates.lat), `Panorama point`, markerPanoramaOptions);
+        refLayerValue.current.addMarker(markerPanorama);
 
         const score = calculateScore(coordsAndDistance.distance);
 

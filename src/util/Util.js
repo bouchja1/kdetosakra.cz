@@ -71,3 +71,5 @@ export function pointInCircle(coord, distance) {
     const randomDist = Math.sqrt(rnd) * distance
     return pointAtDistance(coord, randomDist)
 };
+
+export const DEFAUL_MARKER_PLACE_ICON = 'http://janbouchner.cz/questionmark.png';
