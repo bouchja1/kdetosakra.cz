@@ -10,6 +10,13 @@ const SMap = (props) => {
     const initSMap = () => {
         const SMap = mapyContext.SMap;
 
+        const mouseControlOptions = {
+            scrollDelay: 5000,
+            maxDriftSpeed: 20,
+            driftSlowdown: 0.50,
+            // idleDelay: 550,
+        }
+
         const markerOptions = {
             anchor: {left:10, bottom: 1}
         };
@@ -26,7 +33,7 @@ const SMap = (props) => {
             mapInstance.setZoomRange(7, 19);
             mapInstance.addDefaultLayer(SMap.DEF_BASE).enable();
 
-            const mouse = new SMap.Control.Mouse(SMap.MOUSE_PAN | SMap.MOUSE_WHEEL | SMap.MOUSE_ZOOM); /* Ovládání myší */
+            const mouse = new SMap.Control.Mouse(SMap.MOUSE_PAN | SMap.MOUSE_WHEEL | SMap.MOUSE_ZOOM, mouseControlOptions); /* Ovládání myší */
             mapInstance.addControl(mouse);
 
             // 8. vrstva se značkami

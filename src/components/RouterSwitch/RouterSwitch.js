@@ -8,6 +8,7 @@ import RandomCity from "../RandomCity";
 import Result from "../Result";
 import Geolocation from "../Geolocation";
 import SuggestedCity from "../SuggestedCity";
+import About from "../About";
 
 const RouterSwitch = () => {
     return (
@@ -29,6 +30,9 @@ const RouterSwitch = () => {
             </Route>
             <Route path="/suggested">
                 <SuggestedCity />
+            </Route>
+            <Route path="/about">
+                <About />
             </Route>
             <Route path="*">
                 <NotFound />

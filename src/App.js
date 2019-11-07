@@ -5,7 +5,7 @@ import useMapLoader from './hooks/useMapLoader';
 import './App.css';
 
 import RouterSwitch from './components/RouterSwitch';
-import { MapyProvider } from './context/MapyContext';
+import {MapyProvider} from './context/MapyContext';
 
 function initializeReactGA() {
     ReactGA.initialize('UA-151784741-1');
@@ -20,13 +20,11 @@ function App() {
 
     return (
         <div className="App">
-            <header className="App-header">
-                {loaded && !error && (
-                    <MapyProvider value={mapLoader}>
-                        <RouterSwitch />
-                    </MapyProvider>
-                )}
-            </header>
+            {loaded && !error && (
+                <MapyProvider value={mapLoader}>
+                    <RouterSwitch/>
+                </MapyProvider>
+            )}
         </div>
     );
 }
