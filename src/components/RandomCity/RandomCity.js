@@ -5,7 +5,7 @@ import Panorama from "../Panorama";
 const RandomCity = () => {
     const location = useLocation();
 
-    if (location && location.state && location.state.city) {
+    if (location && location.state && location.state.mode === 'random') {
         return (
             <div>
                 <h2>Herní mód: Náhodné místo v Čr</h2>

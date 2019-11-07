@@ -4,7 +4,6 @@ import Panorama from "../Panorama";
 
 const City = () => {
     const location = useLocation();
-    console.log("CITYYY LOCATION: ", location)
 
     if (location && location.state && location.state.radius && location.state.city) {
         return (

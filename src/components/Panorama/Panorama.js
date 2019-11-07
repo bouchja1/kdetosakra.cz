@@ -2,11 +2,26 @@ import React, {useState, useEffect, useContext} from 'react';
 import MapyContext from '../../context/MapyContext'
 import GuessingMap from "../GuessingMap";
 import {pointInCircle} from '../../util/Util';
+import {crCities} from "../../data/cr";
 
 const Panorama = function ({location}) {
     const [panorama] = useState(React.createRef());
     const [panoramaScene, setPanoramaScene] = useState(null);
+    const [currentCity, setCurrentCity] = useState(null);
     const mapyContext = useContext(MapyContext);
+
+    const generateRandomCzechPlace = () => {
+        let randomCity = crCities[Math.floor(Math.random() * crCities.length)];
+        randomCity = {
+            ...randomCity,
+            coordinates: {
+                latitude: randomCity.latitude,
+                longitude: randomCity.longitude,
+            }
+        };
+        setCurrentCity(randomCity);
+        return randomCity;
+    };
 
     const generatePlaceInRadius = (radius, locationCity) => {
         radius = radius * 1000; // to kilometres
@@ -18,6 +33,7 @@ const Panorama = function ({location}) {
     };
 
     const loadPanoramaMap = (radius, locationCity, rerender = false) => {
+        console.log("NNNNNNNN")
         if (rerender) {
             while (panorama.current.firstChild) {
                 panorama.current.firstChild.remove();
@@ -37,19 +53,25 @@ const Panorama = function ({location}) {
             const generatedPanoramaPlace = generatePlaceInRadius(radius, locationCity);
             const position = SMap.Coords.fromWGS84(generatedPanoramaPlace.longitude, generatedPanoramaPlace.latitude);
             // hledame s toleranci 50m
-            SMap.Pano.getBest(position, 2000).then(
+            SMap.Pano.getBest(position, 50).then(
                 function (place) {
                     panoramaSceneSMap.show(place);
                     setPanoramaScene(panoramaSceneSMap);
                 },
                 function () {
-                    alert('GuessingMap se nepodařilo zobrazit!');
+                    // alert('GuessingMap se nepodařilo zobrazit!');
+                    loadPanoramaMap(radius, locationCity, true)
                 },
             );
         }
     };
 
     const calculateDistance = (mapCoordinates) => {
+        const locationObject = location.state;
+        let city = location.state.city;
+        if (!city) {
+            city = currentCity;
+        }
         const panoramaCoordinates = panoramaScene._place._data.mark;
         let distance;
         if ((panoramaCoordinates.lat === mapCoordinates.mapLat) && (panoramaCoordinates.lon === mapCoordinates.mapLon)) {
@@ -69,23 +91,33 @@ const Panorama = function ({location}) {
             dist = dist * 1.609344; // convert to kilometers
             distance = dist;
         }
-        return {
+
+        let objectToReturn = {
             distance,
             panoramaCoordinates,
+        };
+        if (locationObject.mode === 'random') {
+            objectToReturn = {
+                ...objectToReturn,
+                randomCity: city,
+            }
         }
+        return objectToReturn;
     };
 
     const renderGuessingMap = () => {
         if (panoramaScene) {
-            return <GuessingMap calculateDistance={calculateDistance} loadPanoramaMap={loadPanoramaMap}/>
+            return <GuessingMap calculateDistance={calculateDistance} loadPanoramaMap={loadPanoramaMap} generateRandomCzechPlace={generateRandomCzechPlace}/>
         }
         return <p>Načítám mapu...</p>
     };
 
     useEffect(() => {
-        console.log("NOOOOO LOCATION STATE: ", location.state)
         if (location) {
-            const { radius, city } = location.state;
+            let { radius, city, mode } = location.state;
+            if (mode === 'random') {
+                city = generateRandomCzechPlace();
+            }
             if (mapyContext.loadedMapApi) {
                 loadPanoramaMap(radius, city);
             }

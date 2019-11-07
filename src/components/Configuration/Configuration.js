@@ -4,7 +4,6 @@ import * as Yup from 'yup';
 import {Redirect} from 'react-router-dom';
 import useGeolocation from 'react-hook-geolocation'
 import {cities} from '../../data/cities';
-import {crCities} from '../../data/cr';
 import {DisplayFormikState} from '../../util/helper';
 
 const Configuration = function () {
@@ -39,24 +38,15 @@ const Configuration = function () {
         }
     };
 
-    const renderRandomCzechPlace = () => {
+    const playRandomCzechPlace = () => {
         if (randomCityFormSubmitted) {
-            let randomCity = crCities[Math.floor(Math.random() * crCities.length)];
-            console.log("NOOO: ", randomCity)
-            randomCity = {
-                ...randomCity,
-                coordinates: {
-                    latitude: randomCity.latitude,
-                    longitude: randomCity.longitude,
-                }
-            };
             return (
                 <Redirect
                     to={{
                         pathname: '/random-city',
                         state: {
                             radius: 0.5, // set default radius
-                            city: randomCity,
+                            mode: 'random',
                         }
                     }}
                 />
@@ -74,7 +64,6 @@ const Configuration = function () {
 
     const renderMyPosition = () => {
         if (geoFormSubmitted) {
-            console.log("******************************************LOOOOOOOOOLLLLLL")
             return (
                 <Redirect
                     to={{
@@ -82,6 +71,7 @@ const Configuration = function () {
                         state: {
                             radius: Number(geoFormValues.radius),
                             city: geoFormValues.city,
+                            mode: 'geolocation',
                         }
                     }}
                 />
@@ -91,9 +81,6 @@ const Configuration = function () {
                 <Formik
                     initialValues={{ radius: 1, city: '' }}
                     onSubmit={(values, { setSubmitting }) => {
-                        console.log("SUBMITTED*****************: ", geolocation)
-                        console.log("Latitude:", geolocation.latitude)
-                        console.log("Longitude:", geolocation.longitude)
                         setGeoFormValues({
                             ...values,
                             city: {
@@ -145,9 +132,6 @@ const Configuration = function () {
             const selectedCity = cities.filter(city => {
                 return city.name === cityFormValues.city;
             });
-            console.log("FOOORM VALUES: ", cityFormValues)
-            console.log("SELECTED CITY: ", selectedCity)
-            console.log("******************************************")
             return (
                 <Redirect
                     to={{
@@ -155,6 +139,7 @@ const Configuration = function () {
                         state: {
                             radius: Number(cityFormValues.radius),
                             city: selectedCity[0],
+                            mode: 'city',
                         },
                     }}
                 />
@@ -217,7 +202,7 @@ const Configuration = function () {
     return (
         <div>
             <h1>Náhodné místo v Čr</h1>
-            {renderRandomCzechPlace()}
+            {playRandomCzechPlace()}
             <h1>Česká města</h1>
             {renderForm()}
             <h1>Podle mojí pozice</h1>
