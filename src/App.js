@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactGA from 'react-ga';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import useScript from './hooks/useScript';
 import useMapLoader from './hooks/useMapLoader';
 import awesomeLogo from './assets/images/awesome-logo.svg'; // Tell Webpack this JS file uses this image
@@ -42,12 +42,15 @@ function App() {
                     <div className='social'><img src={socialIcons}/></div>
                 </div>
             </div>
-            <div className="App">
-                {loaded && !error && (
-                    <MapyProvider value={mapLoader}>
-                        <RouterSwitch/>
-                    </MapyProvider>
-                )}
+            {loaded && !error && (
+                <MapyProvider value={mapLoader}>
+                    <RouterSwitch/>
+                </MapyProvider>
+            )}
+            <div className='footer'>
+                <div className='footer-item footer-one'></div>
+                <div className='footer-item footer-two'></div>
+                <div className='footer-item footer-three'></div>
             </div>
         </>
     );

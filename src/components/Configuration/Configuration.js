@@ -218,15 +218,25 @@ const Configuration = function () {
     };
 
     return (
-        <div>
-            <h1>Náhodné místo v Čr</h1>
-            {playRandomCzechPlace()}
-            <h1>Česká města</h1>
-            {renderForm()}
-            <h1>Vlastní místo</h1>
-            {renderCustomPlace()}
-            <h1>Podle mojí pozice</h1>
-            {renderMyPosition()}
+        <div className='photo-grid-container'>
+            <div className='photo-grid'>
+                <div className='photo-grid-item czech-cities'>
+                    <h1>Česká města</h1>
+                    {renderForm()}
+                </div>
+                <div className='photo-grid-item random-places'>
+                    <h1>Náhodné místo v Čr</h1>
+                    {playRandomCzechPlace()}
+                </div>
+                <div className='photo-grid-item'>
+                    <h1>Vlastní místo</h1>
+                    {renderCustomPlace()}
+                </div>
+                <div className='photo-grid-item'>
+                    <h1>Podle mojí pozice</h1>
+                    {renderMyPosition()}
+                </div>
+            </div>
         </div>
     );
 };

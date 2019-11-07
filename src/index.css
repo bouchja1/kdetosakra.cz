@@ -148,6 +148,65 @@ button.outline {
   align-items: center;
 }
 
+.photo-grid-container {
+  display: flex;
+  justify-content: center;
+}
+
+.photo-grid {
+  width: 900px;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  flex-direction: row;
+  border: 1px solid black;
+  align-items: center;
+}
+
+.photo-grid-item {
+  border: 1px solid #000;
+  width: 300px;
+  height: 300px;
+  flex: 1;
+}
+
+.czech-cities {
+  flex: 2;
+}
+
+.random-places {
+  flex: 2;
+}
+
+.social,
+.subscribe {
+  align-self: flex-end;
+  margin-bottom: 20px;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.footer-item {
+  border: 1px solid #fff;
+  background-color: #D6E9FE;
+  height: 200px;
+  flex: 1;
+}
+
+.footer-one,
+.footer-three {
+  background-color: #5995DA;
+  flex: initial;
+  width: 300px;
+}
+
+.signup {
+  margin-left: auto;
+}
+
 .smap {
   height: 200px;
 }
