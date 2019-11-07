@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@rehooks/local-storage": "^1.7.0",
     "antd": "^3.25.0",
     "csv-parse": "^4.6.5",
     "formik": "^2.0.3",

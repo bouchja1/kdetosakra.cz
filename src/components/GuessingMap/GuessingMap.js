@@ -1,16 +1,14 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useContext} from 'react';
 import {useLocation, Redirect} from 'react-router-dom';
 import MapyContext from '../../context/MapyContext'
 import NextRoundButton from "../NextRoundButton";
 import {roundToTwoDecimal} from '../../util/Util';
-import Result from "../Result";
-import SMap from "../SMap";
 import RoundSMapWrapper from "../SMap/RoundSMapWrapper";
 
 const TIMER = 10;
 const MIN_DISTANCE_FOR_POINTS = 350;
 const MAX_SCORE = 5000;
-const TOTAL_ROUNDS_MAX = 1;
+const TOTAL_ROUNDS_MAX = 3;
 
 const GuessingMap = ({ calculateDistance, loadPanoramaMap, generateRandomCzechPlace }) => {
     const location = useLocation();
@@ -53,20 +51,22 @@ const GuessingMap = ({ calculateDistance, loadPanoramaMap, generateRandomCzechPl
 
     const click = (e, elm) => { // Došlo ke kliknutí, spočítáme kde
         const options = {};
-        if (guessButtonDisabled && refLayerValue.current) {
-            refLayerValue.current.removeAll();
-            const coords = mapyContext.SMap.Coords.fromEvent(e.data.event, refLayeredMapValue.current);
-            // alert("Kliknuto na " + coords.toWGS84(2).reverse().join(" "));
-            const marker = new mapyContext.SMap.Marker(mapyContext.SMap.Coords.fromWGS84(coords.x, coords.y), "myMarker", options);
-            refLayerValue.current.addMarker(marker);
-            setCoordinates({
-                mapLat: coords.y,
-                mapLon: coords.x,
-            });
-            setGuessButtonDisabled(false);
-        }
+        // state is not working in event handling
+        //if (guessButtonDisabled && refLayerValue.current && !nextRoundButtonVisible) {
+        refLayerValue.current.removeAll();
+        const coords = mapyContext.SMap.Coords.fromEvent(e.data.event, refLayeredMapValue.current);
+        // alert("Kliknuto na " + coords.toWGS84(2).reverse().join(" "));
+        const marker = new mapyContext.SMap.Marker(mapyContext.SMap.Coords.fromWGS84(coords.x, coords.y), "myMarker", options);
+        refLayerValue.current.addMarker(marker);
+        setCoordinates({
+            mapLat: coords.y,
+            mapLon: coords.x,
+        });
+        setGuessButtonDisabled(false);
+        // }
     };
 
+    /*
     useEffect(() => {
         setTimeout(() => {
             if (timer > 0) {
@@ -74,6 +74,7 @@ const GuessingMap = ({ calculateDistance, loadPanoramaMap, generateRandomCzechPl
             }
         }, 1000);
     }, [timer]);
+     */
 
     const refreshMap = () => {
         let { radius, city, mode } = location.state;
@@ -129,11 +130,14 @@ const GuessingMap = ({ calculateDistance, loadPanoramaMap, generateRandomCzechPl
         } else {
             return (
                 <div>
-                    <button disabled={guessButtonDisabled} onClick={() => {
-                        calculateCoords(calculateDistance)
-                    }} type="submit">
-                        Hádej!
-                    </button>
+                    {
+                        !nextRoundButtonVisible ?
+                            <button disabled={guessButtonDisabled} onClick={() => {
+                                calculateCoords(calculateDistance)
+                            }} type="submit">
+                                Hádej!
+                            </button> : null
+                    }
                     {
                         nextRoundButtonVisible ?
                             <NextRoundButton refreshMap={() => refreshMap()}/> : null
@@ -161,7 +165,7 @@ const GuessingMap = ({ calculateDistance, loadPanoramaMap, generateRandomCzechPl
             width: 3
         };
 
-        console.log("NOOOOOOOO points1: ", points1)
+        console.log("POOOOINTS: ", points1)
 
         const path = new mapyContext.SMap.Geometry(mapyContext.SMap.GEOMETRY_POLYLINE, null, points1, options1);
         refVectorLayerSMapValue.current.addGeometry(path);
@@ -214,7 +218,8 @@ const GuessingMap = ({ calculateDistance, loadPanoramaMap, generateRandomCzechPl
                         <p>Kraj: {guessedPlace.kraj}</p>
                     </div> : null
             }
-            <RoundSMapWrapper click={click} refLayeredMapValue={refLayeredMapValue} refLayerValue={refLayerValue} refVectorLayerSMapValue={refVectorLayerSMapValue}/>
+            <RoundSMapWrapper click={click} refLayeredMapValue={refLayeredMapValue} refLayerValue={refLayerValue}
+                              refVectorLayerSMapValue={refVectorLayerSMapValue}/>
             {renderGuessingMapButtons()}
         </div>
     );

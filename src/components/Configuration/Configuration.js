@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {Formik, Field} from 'formik';
 import * as Yup from 'yup';
+import { deleteFromStorage } from '@rehooks/local-storage';
 import {Redirect} from 'react-router-dom';
 import useGeolocation from 'react-hook-geolocation'
 import {cities} from '../../data/cities';

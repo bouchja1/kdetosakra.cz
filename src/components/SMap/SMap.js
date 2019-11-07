@@ -2,9 +2,9 @@ import React, {useContext, useEffect, useState} from 'react';
 import MapyContext from "../../context/MapyContext";
 
 const SMap = (props) => {
-
-    const [resultObtained, setResultObrained] = useState(false);
+    const [map] = useState(React.createRef());
     const mapyContext = useContext(MapyContext)
+    const { closeResultPage } = props;
 
     const initSMap = () => {
         const SMap = mapyContext.SMap;
@@ -12,8 +12,7 @@ const SMap = (props) => {
 
         if (SMap && JAK) {
             const center = SMap.Coords.fromWGS84(14.400307, 50.071853);
-            const m = new SMap(JAK.gel("m"), center, 7);
-            // var m = new RoundSMapWrapper(guessingMap.current, RoundSMapWrapper.Coords.fromWGS84(14.400307, 50.071853));
+            const m = new SMap(map.current, center, 7);
             m.addDefaultControls();
             m.addControl(new SMap.Control.Sync()); /* Aby mapa reagovala na změnu velikosti průhledu */
             m.addDefaultLayer(SMap.DEF_BASE).enable();
@@ -28,57 +27,66 @@ const SMap = (props) => {
 
             if (props.type && props.type === 'result') {
                 const { guessedPoints } = props;
-                console.log("PROPS: ", props)
                 const options = {
                     color: "#f00",
                     width: 3
                 };
-                console.log("------------ 1")
                 const vectorLayer = new mapyContext.SMap.Layer.Geometry();
                 m.addLayer(vectorLayer);
-                console.log("------------ 2")
                 vectorLayer.enable();
-                console.log("------------ 3")
-                console.log("******************")
+                console.log("VECTOR LAYER GEOMETRIES: ", vectorLayer.getGeometries())
                 for (let i = 0; i < guessedPoints.length; i++) {
-                    console.log("****************** 1 ")
                     const pointsObject = guessedPoints[i];
+                    const pointPanorama = mapyContext.SMap.Coords.fromWGS84(pointsObject.pointPanorama.x, pointsObject.pointPanorama.y);
+                    const pointMap = mapyContext.SMap.Coords.fromWGS84(pointsObject.pointMap.x, pointsObject.pointMap.y);
                     const pointsVectorArray = [
-                        pointsObject.pointMap,
-                        pointsObject.pointPanorama,
+                        pointPanorama,
+                        pointMap,
                     ];
-                    console.log("NOOOOOOOO pointsVectorArray: ", pointsVectorArray)
+
+                    console.log("NOOOOOOO: ", pointsVectorArray)
+
                     const path = new mapyContext.SMap.Geometry(mapyContext.SMap.GEOMETRY_POLYLINE, null, pointsVectorArray, options);
+                    console.log("PAAAAATH: ", path)
                     vectorLayer.addGeometry(path);
-                    setResultObrained(true);
+                    console.log("VECTOR LAYER GEOMETRIES AFTER: ", vectorLayer.getGeometries())
                 }
             } else if (props.type === 'round') {
                 const { click, refLayeredMapValue, refLayerValue, refVectorLayerSMapValue } = props;
                 // assign vrstva se značkami
                 refLayerValue.current = layerSMap;
-                m.getSignals().addListener(window, "map-click", click); /* Při signálu kliknutí volat tuto funkci */
                 // assing layered map value
                 refLayeredMapValue.current = m;
+                refLayeredMapValue.current.getSignals().addListener(window, "map-click", click); /* Při signálu kliknutí volat tuto funkci */
 
                 // vykreslit vektor do mapy
                 const vectorLayer = new mapyContext.SMap.Layer.Geometry();
                 refLayeredMapValue.current.addLayer(vectorLayer);
                 vectorLayer.enable();
                 refVectorLayerSMapValue.current = vectorLayer;
-            } else {
-                // TODO throw something?
             }
         }
     };
 
     useEffect(() => {
-        console.log("RESULT OBTAINED: ", resultObtained)
-        if (mapyContext.loadedMapApi && !resultObtained) {
+        if (mapyContext.loadedMapApi) {
             initSMap();
         }
-    }, [mapyContext.loadedMapApi, resultObtained]);
+    }, [mapyContext.loadedMapApi]);
 
-    return <div id="m"></div>
+    return (
+        <>
+        <div id="smapView" ref={map}></div>
+            {
+                props.type === 'result' ?
+                    <button onClick={() => {
+                        closeResultPage()
+                    }} type="submit">
+                        Hrát znovu
+                    </button> : null
+            }
+        </>
+    )
 };
 
 export default SMap;
