@@ -2,7 +2,9 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Redirect} from 'react-router-dom';
 import MapyContext from "../../context/MapyContext";
 import {Formik} from "formik";
+import ReactGA from 'react-ga';
 import * as Yup from "yup";
+import {CATEGORIES} from "../../enums/gaCategories";
 
 const Suggest = () => {
     const [suggestInput] = useState(React.createRef());
@@ -32,6 +34,11 @@ const Suggest = () => {
     }, [mapyContext.loadedMapApi]);
 
     if (playSuggested) {
+        ReactGA.event({
+            category: CATEGORIES.SUGGESTED,
+            action: 'Play suggested city game',
+            value: submittedSuggestedData.data.title,
+        });
         return (
             <Redirect
                 to={{

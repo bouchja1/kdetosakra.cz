@@ -1,9 +1,11 @@
 import React, {useState} from 'react';
 import {Formik, Field} from 'formik';
 import * as Yup from 'yup';
+import ReactGA from 'react-ga';
 import {Redirect} from 'react-router-dom';
 import useGeolocation from 'react-hook-geolocation'
 import {cities} from '../../data/cities';
+import {CATEGORIES} from '../../enums/gaCategories';
 import Suggest from "../Suggest";
 
 const Configuration = function () {
@@ -40,6 +42,10 @@ const Configuration = function () {
 
     const playRandomCzechPlace = () => {
         if (randomCityFormSubmitted) {
+            ReactGA.event({
+                category: CATEGORIES.RANDOM_CITY,
+                action: 'Play random city game',
+            });
             return (
                 <Redirect
                     to={{
@@ -64,6 +70,11 @@ const Configuration = function () {
 
     const renderMyPosition = () => {
         if (geoFormSubmitted) {
+            ReactGA.event({
+                category: CATEGORIES.GEOLOCATION,
+                action: 'Play geolocation city game',
+                value: `${geoFormValues.city.coordinates.longitude}, ${geoFormValues.city.coordinates.latitude}`,
+            });
             return (
                 <Redirect
                     to={{
@@ -134,6 +145,11 @@ const Configuration = function () {
         if (cityFormSubmitted) {
             const selectedCity = cities.filter(city => {
                 return city.name === cityFormValues.city;
+            });
+            ReactGA.event({
+                category: CATEGORIES.CITY,
+                action: 'Play city game',
+                value: selectedCity[0].name,
             });
             return (
                 <Redirect
