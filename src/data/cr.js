@@ -7623,7 +7623,7 @@ export const crCities = [
     longitude: 17.228153
   },
   {
-    obec: "ČESKÉ BUDĚJOVICE",
+    obec: "České Budějovice",
     kod: 544256,
     okres: "České Budějovice",
     kod_okres: "CZ0311",
@@ -16137,7 +16137,7 @@ export const crCities = [
     longitude: 13.121483
   },
   {
-    obec: "HRADEC KRÁLOVÉ",
+    obec: "Hradec Králové",
     kod: 569810,
     okres: "Hradec Králové",
     kod_okres: "CZ0521",
@@ -42504,7 +42504,7 @@ export const crCities = [
     longitude: 14.804269
   },
   {
-    obec: "PLZEŇ",
+    obec: "Plzeň",
     kod: 554791,
     okres: "Plzeň-město",
     kod_okres: "CZ0323",
@@ -59961,7 +59961,7 @@ export const crCities = [
     longitude: 18.003211
   },
   {
-    obec: "ÚSTÍ NAD LABEM",
+    obec: "Ústí nad Labem",
     kod: 554804,
     okres: "Ústí nad Labem",
     kod_okres: "CZ0427",
@@ -67188,7 +67188,7 @@ export const crCities = [
     longitude: 17.379491
   },
   {
-    obec: "ZLÍN",
+    obec: "Zlín",
     kod: 585068,
     okres: "Zlín",
     kod_okres: "CZ0724",
