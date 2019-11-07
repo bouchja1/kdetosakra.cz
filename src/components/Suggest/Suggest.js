@@ -1,6 +1,8 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Redirect} from 'react-router-dom';
 import MapyContext from "../../context/MapyContext";
+import {Formik} from "formik";
+import * as Yup from "yup";
 
 const Suggest = () => {
     const [suggestInput] = useState(React.createRef());
@@ -21,10 +23,6 @@ const Suggest = () => {
             })
             .addListener("close", function() {
         });
-    }
-
-    const playSuggestedPlace = () => {
-        setPlaySuggested(true);
     }
 
     useEffect(() => {
@@ -55,12 +53,40 @@ const Suggest = () => {
     } else {
         return (
             <>
-                <input type="text" placeholder="hledaná fráze" ref={suggestInput}/>
-                <button disabled={!submittedSuggestedData} type="submit" onClick={() => {
-                    playSuggestedPlace()
-                }}>
-                    Hrát
-                </button>
+                <Formik
+                    initialValues={{ radius: 1, city: '' }}
+                    onSubmit={(values, { setSubmitting }) => {
+                        setPlaySuggested(true);
+                    }}
+                    validationSchema={Yup.object().shape({
+                        radius: Yup.number().required('Required'),
+                    })}
+                >
+                    {props => {
+                        const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props;
+                        return (
+                            <form onSubmit={handleSubmit}>
+                                <input type="text" placeholder="hledaná fráze" ref={suggestInput}/>
+                                <input
+                                    name="radius"
+                                    placeholder="Zadej radius od své pozice"
+                                    type="number"
+                                    min="1"
+                                    max="10"
+                                    value={values.radius}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    className={errors.radius && touched.radius ? 'text-input error' : 'text-input'}
+                                />
+                                {errors.radius && touched.radius &&
+                                <div className="input-feedback">{errors.radius}</div>}
+                                <button disabled={!submittedSuggestedData} type="submit">
+                                    Hrát
+                                </button>
+                            </form>
+                        );
+                    }}
+                </Formik>
             </>
         )
     }
