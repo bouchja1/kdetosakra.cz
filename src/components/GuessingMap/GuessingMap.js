@@ -5,6 +5,8 @@ import NextRoundButton from "../NextRoundButton";
 import {roundToTwoDecimal} from '../../util/Util';
 
 const TIMER = 10;
+const MIN_DISTANCE_FOR_POINTS = 350;
+const MAX_SCORE = 5000;
 
 const GuessingMap = ({ calculateDistance, loadPanoramaMap, generateRandomCzechPlace }) => {
     const location = useLocation();
@@ -25,6 +27,18 @@ const GuessingMap = ({ calculateDistance, loadPanoramaMap, generateRandomCzechPl
         mapLon: 0,
         mapLat: 0,
     });
+
+    const calculateScore = (distance) => {
+        if (distance < 1)
+            return 5000;
+        let score = (MIN_DISTANCE_FOR_POINTS - distance) / (MIN_DISTANCE_FOR_POINTS / MAX_SCORE);
+        if (score < 0)
+            return 0;
+        score = score ** 2 / MAX_SCORE;
+        score = Math.max(0, score);
+        score = Math.min(MAX_SCORE, score);
+        return Math.round(score);
+    };
 
     const click = (e, elm) => { // Došlo ke kliknutí, spočítáme kde
         const options = {};
@@ -150,6 +164,10 @@ const GuessingMap = ({ calculateDistance, loadPanoramaMap, generateRandomCzechPl
             {
                 guessedDistance ?
                     <p>Vzdušná vzdálenost místa od tvého odhadu: {roundToTwoDecimal(guessedDistance)} km</p> : null
+            }
+            {
+                guessedDistance ?
+                    <p>Skóre: {calculateScore(guessedDistance)}</p> : null
             }
             {
                 (guessedPlace && guessedDistance) ?

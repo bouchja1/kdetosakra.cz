@@ -27,7 +27,7 @@ const Configuration = function () {
 
     const handleOnChangeCity = (event) => {
         const selectedValue = event.target.value;
-        if (selectedValue === '-- Vyber si město --') {
+        if (selectedValue === '') {
             setCitySelected(null);
         } else {
             const selectedCity = cities.filter(city => {
