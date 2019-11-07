@@ -218,21 +218,21 @@ const Configuration = function () {
     };
 
     return (
-        <div className='photo-grid-container'>
-            <div className='photo-grid'>
-                <div className='photo-grid-item czech-cities'>
+        <div className='game-mode-container'>
+            <div className='game-modes'>
+                <div className='game-mode-item czech-cities'>
                     <h1>Česká města</h1>
                     {renderForm()}
                 </div>
-                <div className='photo-grid-item random-places'>
+                <div className='game-mode-item random-places'>
                     <h1>Náhodné místo v Čr</h1>
                     {playRandomCzechPlace()}
                 </div>
-                <div className='photo-grid-item'>
+                <div className='game-mode-item'>
                     <h1>Vlastní místo</h1>
                     {renderCustomPlace()}
                 </div>
-                <div className='photo-grid-item'>
+                <div className='game-mode-item'>
                     <h1>Podle mojí pozice</h1>
                     {renderMyPosition()}
                 </div>

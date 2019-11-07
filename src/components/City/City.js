@@ -7,12 +7,16 @@ const City = () => {
 
     if (location && location.state && location.state.radius && location.state.city) {
         return (
-            <div>
-                <h2>Herní mód: {location.state.city.fullName}</h2>
-                <h3>Maximální vzdálenost od místa: {location.state.radius} km</h3>
-                <Link to="/">Zpět do výběru herního módu</Link>
-                <Panorama location={location}/>
-            </div>
+            <>
+                <div className="game-mode-info-container">
+                    <h2>Herní mód: {location.state.city.fullName}</h2>
+                    <h3>Maximální vzdálenost od místa: {location.state.radius} km</h3>
+                    <Link to="/">Zpět do výběru herního módu</Link>
+                </div>
+                <div className='panorama-container'>
+                    <Panorama location={location}/>
+                </div>
+            </>
         );
     } else {
         return <Redirect

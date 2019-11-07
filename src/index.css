@@ -148,12 +148,12 @@ button.outline {
   align-items: center;
 }
 
-.photo-grid-container {
+.game-mode-container {
   display: flex;
   justify-content: center;
 }
 
-.photo-grid {
+.game-modes {
   width: 900px;
   display: flex;
   justify-content: space-around;
@@ -163,7 +163,7 @@ button.outline {
   align-items: center;
 }
 
-.photo-grid-item {
+.game-mode-item {
   border: 1px solid #000;
   width: 300px;
   height: 300px;
@@ -176,6 +176,19 @@ button.outline {
 
 .random-places {
   flex: 2;
+}
+
+.game-mode-info-container {
+  color: #fff;
+  background-color: #5995DA;  /* Blue */
+  padding: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.panorama-container {
+  display: flex;
+  justify-content: center;
 }
 
 .social,

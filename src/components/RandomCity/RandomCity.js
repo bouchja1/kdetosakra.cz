@@ -7,11 +7,15 @@ const RandomCity = () => {
 
     if (location && location.state && location.state.mode === 'random') {
         return (
-            <div>
-                <h2>Herní mód: Náhodné místo v Čr</h2>
-                <Link to="/">Zpět do výběru herního módu</Link>
-                <Panorama location={location}/>
-            </div>
+            <>
+                <div className="game-mode-info-container">
+                    <h2>Herní mód: Náhodné místo v Čr</h2>
+                    <Link to="/">Zpět do výběru herního módu</Link>
+                </div>
+                <div className='panorama-container'>
+                    <Panorama location={location}/>
+                </div>
+            </>
         );
     } else {
         return <Redirect
