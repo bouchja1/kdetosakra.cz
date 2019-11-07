@@ -1,12 +1,16 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {useLocation} from 'react-router-dom';
+import {useLocation, Redirect} from 'react-router-dom';
 import MapyContext from '../../context/MapyContext'
 import NextRoundButton from "../NextRoundButton";
 import {roundToTwoDecimal} from '../../util/Util';
+import Result from "../Result";
+import SMap from "../SMap";
+import RoundSMapWrapper from "../SMap/RoundSMapWrapper";
 
 const TIMER = 10;
 const MIN_DISTANCE_FOR_POINTS = 350;
 const MAX_SCORE = 5000;
+const TOTAL_ROUNDS_MAX = 1;
 
 const GuessingMap = ({ calculateDistance, loadPanoramaMap, generateRandomCzechPlace }) => {
     const location = useLocation();
@@ -17,6 +21,12 @@ const GuessingMap = ({ calculateDistance, loadPanoramaMap, generateRandomCzechPl
     const [timer, setTimer] = useState(TIMER);
     const [guessedDistance, setGuessedDistance] = useState(null);
     const [guessedPlace, setGuessedPlace] = useState(null);
+    const [roundScore, setRoundScore] = useState(0);
+    const [totalRoundScore, setTotalRoundScore] = useState(0);
+    const [totalRounds, setTotalRounds] = useState(0);
+    const [roundCompleted, setRoundCompleted] = useState(false);
+    const [guessedPoints, setGuessedPoints] = useState([]);
+
     let refLayerValue = React.useRef(layer);
     let refVectorLayerSMapValue = React.useRef(vectorLayerSMap);
     let refLayeredMapValue = React.useRef(layeredMap);
@@ -29,6 +39,7 @@ const GuessingMap = ({ calculateDistance, loadPanoramaMap, generateRandomCzechPl
     });
 
     const calculateScore = (distance) => {
+        let { radius } = location.state;
         if (distance < 1)
             return 5000;
         let score = (MIN_DISTANCE_FOR_POINTS - distance) / (MIN_DISTANCE_FOR_POINTS / MAX_SCORE);
@@ -56,40 +67,6 @@ const GuessingMap = ({ calculateDistance, loadPanoramaMap, generateRandomCzechPl
         }
     };
 
-    const initSMap = () => {
-        const SMap = mapyContext.SMap;
-        const JAK = mapyContext.JAK;
-
-        if (SMap && JAK) {
-            const center = SMap.Coords.fromWGS84(14.400307, 50.071853);
-            const m = new SMap(JAK.gel("m"), center, 7);
-            // var m = new SMap(guessingMap.current, SMap.Coords.fromWGS84(14.400307, 50.071853));
-            m.addDefaultControls();
-            m.addControl(new SMap.Control.Sync()); /* Aby mapa reagovala na změnu velikosti průhledu */
-            m.addDefaultLayer(SMap.DEF_BASE).enable();
-
-            const mouse = new SMap.Control.Mouse(SMap.MOUSE_PAN | SMap.MOUSE_WHEEL | SMap.MOUSE_ZOOM); /* Ovládání myší */
-            m.addControl(mouse);
-
-            // 8. vrstva se značkami
-            const layerSMap = new SMap.Layer.Marker();
-            m.addLayer(layerSMap);
-            layerSMap.enable();
-            // assign vrstva se značkami
-            refLayerValue.current = layerSMap;
-            m.getSignals().addListener(window, "map-click", click); /* Při signálu kliknutí volat tuto funkci */
-
-            // assing layered map value
-            refLayeredMapValue.current = m;
-
-            // vykreslit vektor do mapy
-            const vectorLayer = new mapyContext.SMap.Layer.Geometry();
-            refLayeredMapValue.current.addLayer(vectorLayer);
-            vectorLayer.enable();
-            refVectorLayerSMapValue.current = vectorLayer;
-        }
-    };
-
     useEffect(() => {
         setTimeout(() => {
             if (timer > 0) {
@@ -97,12 +74,6 @@ const GuessingMap = ({ calculateDistance, loadPanoramaMap, generateRandomCzechPl
             }
         }, 1000);
     }, [timer]);
-
-    useEffect(() => {
-        if (mapyContext.loadedMapApi) {
-            initSMap();
-        }
-    }, [mapyContext.loadedMapApi]);
 
     const refreshMap = () => {
         let { radius, city, mode } = location.state;
@@ -130,14 +101,59 @@ const GuessingMap = ({ calculateDistance, loadPanoramaMap, generateRandomCzechPl
          */
     }
 
+    const resolveRounds = () => {
+        setRoundCompleted(true);
+    }
+
+    const renderGuessingMapButtons = () => {
+        if (roundCompleted) {
+            return (
+                <Redirect
+                    to={{
+                        pathname: '/result',
+                        state: {
+                            totalRoundScore,
+                            guessedPoints,
+                        }
+                    }}
+                />
+            )
+        } else if (totalRounds >= TOTAL_ROUNDS_MAX) {
+            return (
+                <button onClick={() => {
+                    resolveRounds()
+                }} type="submit">
+                    Vyhodnotit kolo
+                </button>
+            )
+        } else {
+            return (
+                <div>
+                    <button disabled={guessButtonDisabled} onClick={() => {
+                        calculateCoords(calculateDistance)
+                    }} type="submit">
+                        Hádej!
+                    </button>
+                    {
+                        nextRoundButtonVisible ?
+                            <NextRoundButton refreshMap={() => refreshMap()}/> : null
+                    }
+                </div>
+            )
+        }
+    }
+
     const calculateCoords = (calculateDistance) => {
         setGuessButtonDisabled(true);
         setNextRoundButtonVisible(true);
         const coordsAndDistance = calculateDistance(coordinates);
 
+        const pointPanorama = mapyContext.SMap.Coords.fromWGS84(coordsAndDistance.panoramaCoordinates.lon, coordsAndDistance.panoramaCoordinates.lat);
+        const pointMap = mapyContext.SMap.Coords.fromWGS84(coordinates.mapLon, coordinates.mapLat);
+
         const points1 = [
-            mapyContext.SMap.Coords.fromWGS84(coordsAndDistance.panoramaCoordinates.lon, coordsAndDistance.panoramaCoordinates.lat),
-            mapyContext.SMap.Coords.fromWGS84(coordinates.mapLon, coordinates.mapLat)
+            pointPanorama,
+            pointMap,
         ];
 
         const options1 = {
@@ -145,9 +161,22 @@ const GuessingMap = ({ calculateDistance, loadPanoramaMap, generateRandomCzechPl
             width: 3
         };
 
+        console.log("NOOOOOOOO points1: ", points1)
+
         const path = new mapyContext.SMap.Geometry(mapyContext.SMap.GEOMETRY_POLYLINE, null, points1, options1);
         refVectorLayerSMapValue.current.addGeometry(path);
+
+        const score = calculateScore(coordsAndDistance.distance);
+
+        setGuessedPoints([...guessedPoints, {
+            pointPanorama,
+            pointMap,
+        }]);
+        setRoundScore(score);
         setGuessedDistance(coordsAndDistance.distance);
+        setTotalRoundScore((prevScore) => prevScore + score);
+        setTotalRounds((prevRoundCount) => prevRoundCount + 1);
+
         if (coordsAndDistance.hasOwnProperty('randomCity')) {
             setGuessedPlace({
                 obec: coordsAndDistance.randomCity.obec,
@@ -162,29 +191,31 @@ const GuessingMap = ({ calculateDistance, loadPanoramaMap, generateRandomCzechPl
             <h1>Guessing map</h1>
             {showTimer()}
             {
+                totalRounds > 0 ?
+                    <p>Kolo: {totalRounds}/{TOTAL_ROUNDS_MAX}</p> : null
+            }
+            {
+                totalRoundScore ?
+                    <p>Celkové skóre: {totalRoundScore}</p> : null
+            }
+            {
                 guessedDistance ?
                     <p>Vzdušná vzdálenost místa od tvého odhadu: {roundToTwoDecimal(guessedDistance)} km</p> : null
             }
             {
                 guessedDistance ?
-                    <p>Skóre: {calculateScore(guessedDistance)}</p> : null
+                    <p>Skóre: {roundScore}</p> : null
             }
             {
                 (guessedPlace && guessedDistance) ?
-                <div>
-                <p>Obec: {guessedPlace.obec}</p>
-                <p>Okres: {guessedPlace.okres}</p>
-                <p>Kraj: {guessedPlace.kraj}</p>
-                </div> : null
+                    <div>
+                        <p>Obec: {guessedPlace.obec}</p>
+                        <p>Okres: {guessedPlace.okres}</p>
+                        <p>Kraj: {guessedPlace.kraj}</p>
+                    </div> : null
             }
-            {}
-            <div id="m"></div>
-            <button disabled={guessButtonDisabled} onClick={() => {
-                calculateCoords(calculateDistance)
-            }} type="submit">
-                Hádej!
-            </button>
-            {nextRoundButtonVisible ? <NextRoundButton refreshMap={() => refreshMap()}/> : null}
+            <RoundSMapWrapper click={click} refLayeredMapValue={refLayeredMapValue} refLayerValue={refLayerValue} refVectorLayerSMapValue={refVectorLayerSMapValue}/>
+            {renderGuessingMapButtons()}
         </div>
     );
 };

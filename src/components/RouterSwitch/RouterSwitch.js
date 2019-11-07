@@ -5,6 +5,7 @@ import NotFound from '../../pages/404';
 import Configuration from "../Configuration";
 import City from "../City";
 import RandomCity from "../RandomCity";
+import Result from "../Result";
 import Geolocation from "../Geolocation";
 
 const RouterSwitch = () => {
@@ -21,6 +22,9 @@ const RouterSwitch = () => {
             </Route>
             <Route path="/random-city">
                 <RandomCity />
+            </Route>
+            <Route path="/result">
+                <Result />
             </Route>
             <Route path="*">
                 <NotFound />
