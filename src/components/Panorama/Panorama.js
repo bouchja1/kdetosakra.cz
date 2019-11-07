@@ -127,8 +127,12 @@ const Panorama = function ({ location }) {
 
     const renderGuessingMap = () => {
         if (panoramaScene) {
-            return <GuessingMap calculateDistance={calculateDistance} loadPanoramaMap={loadPanoramaMap}
+            return (
+            <div className="smapContainer">
+            <GuessingMap calculateDistance={calculateDistance} loadPanoramaMap={loadPanoramaMap}
                                 generateRandomCzechPlace={generateRandomCzechPlace}/>
+            </div>
+            )
         }
         return <p>Načítám mapu...</p>
     };
