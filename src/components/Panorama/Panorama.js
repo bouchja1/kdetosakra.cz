@@ -4,9 +4,13 @@ import GuessingMap from "../GuessingMap";
 import {pointInCircle} from '../../util/Util';
 import {crCities} from "../../data/cr";
 
-const Panorama = function ({location}) {
+const MAX_PANORAMA_TRIES = 5;
+const DEFAULT_PANORAMA_TOLERANCE = 50;
+
+const Panorama = function ({ location }) {
     const [panorama] = useState(React.createRef());
     const [panoramaScene, setPanoramaScene] = useState(null);
+    const [panoramaNotFound, setPanoramaNotFound] = useState(false);
     const [currentCity, setCurrentCity] = useState(null);
     const mapyContext = useContext(MapyContext);
 
@@ -24,6 +28,7 @@ const Panorama = function ({location}) {
     };
 
     const generatePlaceInRadius = (radius, locationCity) => {
+        console.log("RADIUS: ", radius)
         radius = radius * 1000; // to kilometres
         const generatedPlace = pointInCircle({
             longitude: locationCity.coordinates.longitude,
@@ -32,8 +37,9 @@ const Panorama = function ({location}) {
         return generatedPlace;
     };
 
-    const loadPanoramaMap = (radius, locationCity, rerender = false) => {
-        if (rerender) {
+    const loadPanoramaMap = (radius, locationCity, rerender, counter = 0, panoramaScene = null) => {
+        console.log("COOOOUNTS: ", counter)
+        if (rerender && counter === 0) {
             while (panorama.current.firstChild) {
                 panorama.current.firstChild.remove();
             }
@@ -47,21 +53,37 @@ const Panorama = function ({location}) {
 
         if (SMap) {
             const SMap = mapyContext.SMap;
-            const panoramaSceneSMap = new SMap.Pano.Scene(panorama.current, options);
+            let panoramaSceneSMap;
+            if (panoramaScene) {
+                panoramaSceneSMap = panoramaScene;
+            } else {
+                panoramaSceneSMap = new SMap.Pano.Scene(panorama.current, options);
+            }
             // kolem teto pozice chceme nejblizsi panorama
             const generatedPanoramaPlace = generatePlaceInRadius(radius, locationCity);
             const position = SMap.Coords.fromWGS84(generatedPanoramaPlace.longitude, generatedPanoramaPlace.latitude);
             // hledame s toleranci 50m
-            SMap.Pano.getBest(position, 50).then(
+            let tolerance = DEFAULT_PANORAMA_TOLERANCE;
+            if (counter > 0) {
+                tolerance = 5000;
+            }
+            SMap.Pano.getBest(position, tolerance).then(
                 function (place) {
                     panoramaSceneSMap.show(place);
                     setPanoramaScene(panoramaSceneSMap);
                 },
                 function () {
                     // alert('GuessingMap se nepodařilo zobrazit!');
-                    loadPanoramaMap(radius, locationCity, true)
+                    if (counter < MAX_PANORAMA_TRIES) {
+                        counter = counter + 1;
+                        loadPanoramaMap(radius, locationCity, true, counter, panoramaSceneSMap)
+                    } else {
+                        throw new Error('Panorama was not found')
+                    }
                 },
-            );
+            ).catch(err => {
+                setPanoramaNotFound(true);
+            });
         }
     };
 
@@ -106,7 +128,8 @@ const Panorama = function ({location}) {
 
     const renderGuessingMap = () => {
         if (panoramaScene) {
-            return <GuessingMap calculateDistance={calculateDistance} loadPanoramaMap={loadPanoramaMap} generateRandomCzechPlace={generateRandomCzechPlace}/>
+            return <GuessingMap calculateDistance={calculateDistance} loadPanoramaMap={loadPanoramaMap}
+                                generateRandomCzechPlace={generateRandomCzechPlace}/>
         }
         return <p>Načítám mapu...</p>
     };
@@ -118,7 +141,7 @@ const Panorama = function ({location}) {
                 city = generateRandomCzechPlace();
             }
             if (mapyContext.loadedMapApi) {
-                loadPanoramaMap(radius, city);
+                loadPanoramaMap(radius, city, false);
             }
         }
         // TODO add some cleanup maybe
@@ -126,8 +149,10 @@ const Panorama = function ({location}) {
 
     return (
         <div>
-            <div ref={panorama}></div>
-            {renderGuessingMap()}
+            {
+                (panoramaNotFound) ? <p>V okruhu 5 km od vašeho místa nebylo nalezeno žádné panorama.</p> : <div><div ref={panorama}></div>
+            {renderGuessingMap()}</div>
+            }
         </div>
     );
 };

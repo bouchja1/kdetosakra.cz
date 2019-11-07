@@ -3,14 +3,13 @@ import MapyContext from "../../context/MapyContext";
 
 const SMap = (props) => {
     const [map] = useState(React.createRef());
-    const mapyContext = useContext(MapyContext)
+    const mapyContext = useContext(MapyContext);
     const { closeResultPage } = props;
 
     const initSMap = () => {
         const SMap = mapyContext.SMap;
-        const JAK = mapyContext.JAK;
 
-        if (SMap && JAK) {
+        if (SMap) {
             const center = SMap.Coords.fromWGS84(14.400307, 50.071853);
             const m = new SMap(map.current, center, 7);
             m.addDefaultControls();

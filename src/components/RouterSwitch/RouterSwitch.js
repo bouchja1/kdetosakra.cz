@@ -7,6 +7,7 @@ import City from "../City";
 import RandomCity from "../RandomCity";
 import Result from "../Result";
 import Geolocation from "../Geolocation";
+import SuggestedCity from "../SuggestedCity";
 
 const RouterSwitch = () => {
     return (
@@ -25,6 +26,9 @@ const RouterSwitch = () => {
             </Route>
             <Route path="/result">
                 <Result />
+            </Route>
+            <Route path="/suggested">
+                <SuggestedCity />
             </Route>
             <Route path="*">
                 <NotFound />

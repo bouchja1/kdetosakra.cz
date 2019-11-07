@@ -1,11 +1,10 @@
 import React, {useState} from 'react';
 import {Formik, Field} from 'formik';
 import * as Yup from 'yup';
-import { deleteFromStorage } from '@rehooks/local-storage';
 import {Redirect} from 'react-router-dom';
 import useGeolocation from 'react-hook-geolocation'
 import {cities} from '../../data/cities';
-import {DisplayFormikState} from '../../util/helper';
+import Suggest from "../Suggest";
 
 const Configuration = function () {
     const geolocation = useGeolocation()
@@ -117,7 +116,6 @@ const Configuration = function () {
                                 <button type="submit" disabled={isSubmitting}>
                                     Potvrdit
                                 </button>
-                                <DisplayFormikState {...props} />
                             </form>
                         );
                     }}
@@ -127,6 +125,10 @@ const Configuration = function () {
                 <p>No geolocation, sorry.</p>
             )
     };
+
+    const renderCustomPlace = () => {
+        return <Suggest />
+    }
 
     const renderForm = () => {
         if (cityFormSubmitted) {
@@ -192,7 +194,6 @@ const Configuration = function () {
                             <button type="submit" disabled={isSubmitting}>
                                 Potvrdit
                             </button>
-                            <DisplayFormikState {...props} />
                         </form>
                     );
                 }}
@@ -206,6 +207,8 @@ const Configuration = function () {
             {playRandomCzechPlace()}
             <h1>Česká města</h1>
             {renderForm()}
+            <h1>Vlastní místo</h1>
+            {renderCustomPlace()}
             <h1>Podle mojí pozice</h1>
             {renderMyPosition()}
         </div>
