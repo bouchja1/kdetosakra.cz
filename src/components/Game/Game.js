@@ -1,12 +1,12 @@
-import React, {useContext, useEffect, useState} from 'react';
-import GuessingMap from "../GuessingMap";
-import {crCities} from "../../data/cr";
-import MapyContext from "../../context/MapyContext";
-import {pointInCircle} from "../../util/Util";
-import GameResults from "../GameResults";
+import React, { useContext, useEffect, useState } from 'react';
+import GuessingMap from '../GuessingMap';
+import { crCities } from '../../data/cr';
+import MapyContext from '../../context/MapyContext';
+import { pointInCircle } from '../../util/Util';
+import GameResults from '../GameResults';
 
-const MIN_DISTANCE_FOR_POINTS = 350;
-const MAX_SCORE = 5000;
+const MIN_DISTANCE_FOR_POINTS_RANDOM = 250;
+const MAX_SCORE_PERCENT = 100;
 const MAX_PANORAMA_TRIES = 5;
 const DEFAULT_PANORAMA_TOLERANCE = 50;
 
@@ -27,7 +27,7 @@ const Game = ({ location }) => {
         setPanoramaFounded(false);
     };
 
-    const loadPanoramaMap = (radius, locationCity, rerender, counter = 0, panoramaScene = null) => {
+    const loadPanoramaMap = (radius, locationCity, rerender, counter = 0, panoramaSceneParam = null) => {
         if (rerender && counter === 0) {
             while (panorama.current.firstChild) {
                 panorama.current.firstChild.remove();
@@ -43,8 +43,8 @@ const Game = ({ location }) => {
         if (SMap) {
             const SMap = mapyContext.SMap;
             let panoramaSceneSMap;
-            if (panoramaScene) {
-                panoramaSceneSMap = panoramaScene;
+            if (panoramaSceneParam) {
+                panoramaSceneSMap = panoramaSceneParam;
             } else {
                 panoramaSceneSMap = new SMap.Pano.Scene(panorama.current, options);
             }
@@ -56,23 +56,25 @@ const Game = ({ location }) => {
             if (counter > 0) {
                 tolerance = 5000;
             }
-            SMap.Pano.getBest(position, tolerance).then(
-                function (place) {
-                    panoramaSceneSMap.show(place);
-                    setPanoramaScene(panoramaSceneSMap);
-                },
-                function () {
-                    // alert('GuessingMap se nepodařilo zobrazit!');
-                    if (counter < MAX_PANORAMA_TRIES) {
-                        counter = counter + 1;
-                        loadPanoramaMap(radius, locationCity, true, counter, panoramaSceneSMap)
-                    } else {
-                        throw new Error('Panorama was not found')
-                    }
-                },
-            ).catch(err => {
-                checkPanoramaFounded(false);
-            });
+            SMap.Pano.getBest(position, tolerance)
+                .then(
+                    function(place) {
+                        panoramaSceneSMap.show(place);
+                        setPanoramaScene(panoramaSceneSMap);
+                    },
+                    function() {
+                        // alert('GuessingMap se nepodařilo zobrazit!');
+                        if (counter < MAX_PANORAMA_TRIES) {
+                            counter = counter + 1;
+                            loadPanoramaMap(radius, locationCity, true, counter, panoramaSceneSMap);
+                        } else {
+                            throw new Error('Panorama was not found');
+                        }
+                    },
+                )
+                .catch(err => {
+                    checkPanoramaFounded(false);
+                });
         }
     };
 
@@ -83,7 +85,7 @@ const Game = ({ location }) => {
             coordinates: {
                 latitude: randomCity.latitude,
                 longitude: randomCity.longitude,
-            }
+            },
         };
         setCurrentCity(randomCity);
         return randomCity;
@@ -91,14 +93,17 @@ const Game = ({ location }) => {
 
     const generatePlaceInRadius = (radius, locationCity) => {
         radius = radius * 1000; // to kilometres
-        const generatedPlace = pointInCircle({
-            longitude: locationCity.coordinates.longitude,
-            latitude: locationCity.coordinates.latitude,
-        }, radius)
+        const generatedPlace = pointInCircle(
+            {
+                longitude: locationCity.coordinates.longitude,
+                latitude: locationCity.coordinates.latitude,
+            },
+            radius,
+        );
         return generatedPlace;
     };
 
-    const calculateDistance = (mapCoordinates) => {
+    const calculateDistance = mapCoordinates => {
         const locationObject = location.state;
         let city = location.state.city;
         if (!city) {
@@ -106,51 +111,65 @@ const Game = ({ location }) => {
         }
         const panoramaCoordinates = panoramaScene._place._data.mark;
         let distance;
-        if ((panoramaCoordinates.lat === mapCoordinates.mapLat) && (panoramaCoordinates.lon === mapCoordinates.mapLon)) {
+        if (panoramaCoordinates.lat === mapCoordinates.mapLat && panoramaCoordinates.lon === mapCoordinates.mapLon) {
             distance = 0;
         } else {
-            const radlat1 = Math.PI * panoramaCoordinates.lat / 180;
-            const radlat2 = Math.PI * mapCoordinates.mapLat / 180;
+            const radlat1 = (Math.PI * panoramaCoordinates.lat) / 180;
+            const radlat2 = (Math.PI * mapCoordinates.mapLat) / 180;
             const theta = panoramaCoordinates.lon - mapCoordinates.mapLon;
-            const radtheta = Math.PI * theta / 180;
-            let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+            const radtheta = (Math.PI * theta) / 180;
+            let dist =
+                Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
             if (dist > 1) {
                 dist = 1;
             }
             dist = Math.acos(dist);
-            dist = dist * 180 / Math.PI;
+            dist = (dist * 180) / Math.PI;
             dist = dist * 60 * 1.1515;
             dist = dist * 1.609344; // convert to kilometers
             distance = dist;
         }
         if (locationObject.mode === 'random') {
+            const { obec, okres, kraj } = city;
             setGuessedPlace({
-                obec: city.obec,
-                okres: city.okres,
-                kraj: city.kraj,
-            })
+                obec,
+                okres,
+                kraj,
+            });
         }
         calculateScore(distance);
         return panoramaCoordinates;
     };
 
-    const calculateScore = (distance) => {
-        // let { radius } = location.state; // TODO calculate with radius?
-        if (distance < 1)
-            return 5000;
-        let score = (MIN_DISTANCE_FOR_POINTS - distance) / (MIN_DISTANCE_FOR_POINTS / MAX_SCORE);
-        if (score < 0)
-            return 0;
-        score = score ** 2 / MAX_SCORE;
-        score = Math.max(0, score);
-        score = Math.min(MAX_SCORE, score);
+    const calculateScore = distance => {
+        let { radius, mode } = location.state;
+        let minDistanceForPoints;
+        if (mode === 'random') {
+            minDistanceForPoints = MIN_DISTANCE_FOR_POINTS_RANDOM;
+        } else {
+            minDistanceForPoints = radius + 2;
+        }
+        let score;
+        // distance less than 20 meters
+        if (distance < 0.2) {
+            score = 100;
+        } else {
+            score = (minDistanceForPoints - distance) / (minDistanceForPoints / MAX_SCORE_PERCENT);
+            if (score < 0) {
+                score = 0;
+            } else {
+                score = score ** 2 / MAX_SCORE_PERCENT + distance / minDistanceForPoints;
+                score = Math.max(0, score);
+                score = Math.min(MAX_SCORE_PERCENT, score);
+            }
+        }
         setRoundScore(Math.round(score));
-        setTotalRoundScore((prevScore) => prevScore + score);
-        setTotalRounds((prevRoundCount) => prevRoundCount + 1);
+        setTotalRoundScore(prevScore => prevScore + score);
+        setTotalRounds(prevRoundCount => prevRoundCount + 1);
         setGuessedDistance(distance);
     };
 
-    const updateCalculation = (guessedPointsInRound) => {
+    const updateCalculation = guessedPointsInRound => {
         setGuessedPoints([...guessedPoints, guessedPointsInRound]);
     };
 
@@ -168,16 +187,31 @@ const Game = ({ location }) => {
     }, [mapyContext.loadedMapApi]);
 
     return (
-        <div className='panorama-container'>
-            { !panoramaFounded ? <p>V okruhu 5 km od vašeho místa nebylo nalezeno žádné panorama.</p> :
-                <div ref={panorama}></div> }
+        <div className="panorama-container">
+            {!panoramaFounded ? (
+                <p>V okruhu 5 km od vašeho místa nebylo nalezeno žádné panorama.</p>
+            ) : (
+                <div ref={panorama}></div>
+            )}
             <div className="smapContainer">
-                <GameResults totalRounds={totalRounds} totalRoundScore={totalRoundScore} roundScore={roundScore} guessedDistance={guessedDistance} guessedPlace={guessedPlace} />
+                <GameResults
+                    totalRounds={totalRounds}
+                    totalRoundScore={totalRoundScore}
+                    roundScore={roundScore}
+                    guessedDistance={guessedDistance}
+                    guessedPlace={guessedPlace}
+                />
                 {/* ty parametry jsou definovane v Panorama */}
-                <GuessingMap updateCalculation={updateCalculation} calculateDistance={calculateDistance} calculateScore={calculateScore} loadPanoramaMap={loadPanoramaMap}
-                             generateRandomCzechPlace={generateRandomCzechPlace} totalRoundScore={totalRoundScore} totalRounds={totalRounds} guessedPoints={guessedPoints} />
+                <GuessingMap
+                    updateCalculation={updateCalculation}
+                    calculateDistance={calculateDistance}
+                    loadPanoramaMap={loadPanoramaMap}
+                    generateRandomCzechPlace={generateRandomCzechPlace}
+                    totalRoundScore={totalRoundScore}
+                    totalRounds={totalRounds}
+                    guessedPoints={guessedPoints}
+                />
             </div>
-
         </div>
     );
 };

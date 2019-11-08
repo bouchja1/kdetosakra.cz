@@ -2,13 +2,13 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 import NotFound from '../../pages/404';
-import Configuration from "../Configuration";
-import City from "../City";
-import RandomCity from "../RandomCity";
-import Result from "../Result";
-import Geolocation from "../Geolocation";
-import SuggestedCity from "../SuggestedCity";
-import About from "../About";
+import Configuration from '../Configuration';
+import City from '../City';
+import RandomCity from '../RandomCity';
+import Result from '../Result';
+import Geolocation from '../Geolocation';
+import SuggestedCity from '../SuggestedCity';
+import About from '../About';
 
 const RouterSwitch = () => {
     return (
@@ -16,22 +16,22 @@ const RouterSwitch = () => {
             <Route exact path="/">
                 <Configuration />
             </Route>
-            <Route path="/geolocation">
+            <Route path="/geolokace">
                 <Geolocation />
             </Route>
-            <Route path="/city">
+            <Route path="/mesto">
                 <City />
             </Route>
-            <Route path="/random-city">
+            <Route path="/nahodne">
                 <RandomCity />
             </Route>
-            <Route path="/result">
+            <Route path="/vysledek">
                 <Result />
             </Route>
-            <Route path="/suggested">
+            <Route path="/vlastni">
                 <SuggestedCity />
             </Route>
-            <Route path="/about">
+            <Route path="/info">
                 <About />
             </Route>
             <Route path="*">

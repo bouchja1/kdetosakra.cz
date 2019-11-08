@@ -1,10 +1,10 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {Redirect} from 'react-router-dom';
-import MapyContext from "../../context/MapyContext";
-import {Formik} from "formik";
+import React, { useContext, useEffect, useState } from 'react';
+import { Redirect } from 'react-router-dom';
+import MapyContext from '../../context/MapyContext';
+import { Formik } from 'formik';
 import ReactGA from 'react-ga';
-import * as Yup from "yup";
-import {CATEGORIES} from "../../enums/gaCategories";
+import * as Yup from 'yup';
+import { CATEGORIES } from '../../enums/gaCategories';
 
 const Suggest = () => {
     const [suggestInput] = useState(React.createRef());
@@ -16,16 +16,15 @@ const Suggest = () => {
         const suggest = new mapyContext.SMap.Suggest(suggestInput.current);
         suggest.urlParams({
             // omezeni pro celou CR
-            bounds: "48.5370786,12.0921668|51.0746358,18.8927040"
+            bounds: '48.5370786,12.0921668|51.0746358,18.8927040',
         });
         suggest
-            .addListener("suggest", function (suggestedData) {
-                console.log("SUGGESTED DATA: ", suggestedData)
+            .addListener('suggest', function(suggestedData) {
+                console.log('SUGGESTED DATA: ', suggestedData);
                 setSubmittedSuggestedData(suggestedData);
             })
-            .addListener("close", function() {
-        });
-    }
+            .addListener('close', function() {});
+    };
 
     useEffect(() => {
         if (mapyContext.loadedMapApi) {
@@ -42,7 +41,7 @@ const Suggest = () => {
         return (
             <Redirect
                 to={{
-                    pathname: '/suggested',
+                    pathname: '/vlastni',
                     state: {
                         radius: 1,
                         city: {
@@ -73,7 +72,7 @@ const Suggest = () => {
                         const { values, touched, errors, handleChange, handleBlur, handleSubmit } = props;
                         return (
                             <form onSubmit={handleSubmit}>
-                                <input type="text" placeholder="hledaná fráze" ref={suggestInput}/>
+                                <input type="text" placeholder="hledaná fráze" ref={suggestInput} />
                                 <input
                                     name="radius"
                                     placeholder="Zadej radius od své pozice"
@@ -85,8 +84,9 @@ const Suggest = () => {
                                     onBlur={handleBlur}
                                     className={errors.radius && touched.radius ? 'text-input error' : 'text-input'}
                                 />
-                                {errors.radius && touched.radius &&
-                                <div className="input-feedback">{errors.radius}</div>}
+                                {errors.radius && touched.radius && (
+                                    <div className="input-feedback">{errors.radius}</div>
+                                )}
                                 <button disabled={!submittedSuggestedData} type="submit">
                                     Hrát
                                 </button>
@@ -95,8 +95,8 @@ const Suggest = () => {
                     }}
                 </Formik>
             </>
-        )
+        );
     }
-}
+};
 
 export default Suggest;

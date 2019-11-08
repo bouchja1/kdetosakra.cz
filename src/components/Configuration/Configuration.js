@@ -1,15 +1,15 @@
-import React, {useState} from 'react';
-import {Formik, Field} from 'formik';
+import React, { useState } from 'react';
+import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import ReactGA from 'react-ga';
-import {Redirect} from 'react-router-dom';
-import useGeolocation from 'react-hook-geolocation'
-import {cities} from '../../data/cities';
-import {CATEGORIES} from '../../enums/gaCategories';
-import Suggest from "../Suggest";
+import { Redirect } from 'react-router-dom';
+import useGeolocation from 'react-hook-geolocation';
+import { cities } from '../../data/cities';
+import { CATEGORIES } from '../../enums/gaCategories';
+import Suggest from '../Suggest';
 
-const Configuration = function () {
-    const geolocation = useGeolocation()
+const Configuration = function() {
+    const geolocation = useGeolocation();
     const [citySelected, setCitySelected] = useState(null);
     const [maxCityRadius, setMaxCityRadius] = useState(null);
     const [randomCityFormSubmitted, setRandomCityFormSubmitted] = useState(false);
@@ -20,20 +20,28 @@ const Configuration = function () {
 
     const createFormOptions = () => {
         let options = [];
-        options.push(<option value="" key="empty">-- Vyber si město --</option>)
+        options.push(
+            <option value="" key="empty">
+                -- Vyber si město --
+            </option>,
+        );
         for (let i = 0; i < cities.length; i++) {
-            options.push(<option key={cities[i].name} value={cities[i].name}>{cities[i].fullName}</option>)
+            options.push(
+                <option key={cities[i].name} value={cities[i].name}>
+                    {cities[i].fullName}
+                </option>,
+            );
         }
         return options;
     };
 
-    const handleOnChangeCity = (event) => {
+    const handleOnChangeCity = event => {
         const selectedValue = event.target.value;
         if (selectedValue === '') {
             setCitySelected(null);
         } else {
             const selectedCity = cities.filter(city => {
-                return city.name === selectedValue
+                return city.name === selectedValue;
             });
             setMaxCityRadius(selectedCity[0].radiusMax);
             setCitySelected(selectedCity[0].name);
@@ -49,20 +57,18 @@ const Configuration = function () {
             return (
                 <Redirect
                     to={{
-                        pathname: '/random-city',
+                        pathname: '/nahodne',
                         state: {
                             radius: 0.5, // set default radius
                             mode: 'random',
-                        }
+                        },
                     }}
                 />
-            )
+            );
         } else {
             return (
                 <form className="container" onSubmit={() => setRandomCityFormSubmitted(true)}>
-                    <button type="submit">
-                        Hrát
-                    </button>
+                    <button type="submit">Hrát</button>
                 </form>
             );
         }
@@ -78,17 +84,17 @@ const Configuration = function () {
             return (
                 <Redirect
                     to={{
-                        pathname: '/geolocation',
+                        pathname: '/geolokace',
                         state: {
                             radius: Number(geoFormValues.radius),
                             city: geoFormValues.city,
                             mode: 'geolocation',
-                        }
+                        },
                     }}
                 />
             );
-        } else return (geolocation.latitude && geolocation.longitude)
-            ? (
+        } else
+            return geolocation.latitude && geolocation.longitude ? (
                 <Formik
                     initialValues={{ radius: 1, city: '' }}
                     onSubmit={(values, { setSubmitting }) => {
@@ -98,8 +104,8 @@ const Configuration = function () {
                                 coordinates: {
                                     longitude: geolocation.longitude,
                                     latitude: geolocation.latitude,
-                                }
-                            }
+                                },
+                            },
                         });
                         setGeoFormSubmitted(true);
                     }}
@@ -122,8 +128,9 @@ const Configuration = function () {
                                     onBlur={handleBlur}
                                     className={errors.radius && touched.radius ? 'text-input error' : 'text-input'}
                                 />
-                                {errors.radius && touched.radius &&
-                                <div className="input-feedback">{errors.radius}</div>}
+                                {errors.radius && touched.radius && (
+                                    <div className="input-feedback">{errors.radius}</div>
+                                )}
                                 <button type="submit" disabled={isSubmitting}>
                                     Potvrdit
                                 </button>
@@ -131,15 +138,14 @@ const Configuration = function () {
                         );
                     }}
                 </Formik>
-            )
-            : (
+            ) : (
                 <p>No geolocation, sorry.</p>
-            )
+            );
     };
 
     const renderCustomPlace = () => {
-        return <Suggest />
-    }
+        return <Suggest />;
+    };
 
     const renderForm = () => {
         if (cityFormSubmitted) {
@@ -154,7 +160,7 @@ const Configuration = function () {
             return (
                 <Redirect
                     to={{
-                        pathname: '/city',
+                        pathname: '/mesto',
                         state: {
                             radius: Number(cityFormValues.radius),
                             city: selectedCity[0],
@@ -164,36 +170,34 @@ const Configuration = function () {
                 />
             );
         } else {
-            return (<Formik
-                initialValues={{ radius: 1, city: '' }}
-                onSubmit={(values, { setSubmitting }) => {
-                    setCityFormValues(values);
-                    setCityFormSubmitted(true);
-                }}
-                validationSchema={Yup.object().shape({
-                    radius: Yup.number().required('Required'),
-                    city: Yup.string().required('Required'),
-                })}
-            >
-                {props => {
-                    const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props;
-                    return (
-                        <form onSubmit={handleSubmit}>
-                            <Field as="select"
-                                   name="city"
-                                   onChange={(event) => {
-                                       handleOnChangeCity(event)
-                                       values.city = event.target.value
-                                   }}>
-                                {createFormOptions()}
-                            </Field>
-                            {errors.city &&
-                            touched.city &&
-                            <div className="input-feedback">
-                                {errors.color}
-                            </div>}
-                            {
-                                (citySelected) ?
+            return (
+                <Formik
+                    initialValues={{ radius: 1, city: '' }}
+                    onSubmit={(values, { setSubmitting }) => {
+                        setCityFormValues(values);
+                        setCityFormSubmitted(true);
+                    }}
+                    validationSchema={Yup.object().shape({
+                        radius: Yup.number().required('Required'),
+                        city: Yup.string().required('Required'),
+                    })}
+                >
+                    {props => {
+                        const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props;
+                        return (
+                            <form onSubmit={handleSubmit}>
+                                <Field
+                                    as="select"
+                                    name="city"
+                                    onChange={event => {
+                                        handleOnChangeCity(event);
+                                        values.city = event.target.value;
+                                    }}
+                                >
+                                    {createFormOptions()}
+                                </Field>
+                                {errors.city && touched.city && <div className="input-feedback">{errors.color}</div>}
+                                {citySelected ? (
                                     <input
                                         name="radius"
                                         placeholder="Zadej radius od centra Prahy"
@@ -204,35 +208,38 @@ const Configuration = function () {
                                         onChange={handleChange}
                                         onBlur={handleBlur}
                                         className={errors.radius && touched.radius ? 'text-input error' : 'text-input'}
-                                    /> : null
-                            }
-                            {errors.radius && touched.radius && <div className="input-feedback">{errors.radius}</div>}
-                            <button type="submit" disabled={isSubmitting}>
-                                Potvrdit
-                            </button>
-                        </form>
-                    );
-                }}
-            </Formik>);
+                                    />
+                                ) : null}
+                                {errors.radius && touched.radius && (
+                                    <div className="input-feedback">{errors.radius}</div>
+                                )}
+                                <button type="submit" disabled={isSubmitting}>
+                                    Potvrdit
+                                </button>
+                            </form>
+                        );
+                    }}
+                </Formik>
+            );
         }
     };
 
     return (
-        <div className='game-mode-container'>
-            <div className='game-modes'>
-                <div className='game-mode-item czech-cities'>
+        <div className="game-mode-container">
+            <div className="game-modes">
+                <div className="game-mode-item czech-cities">
                     <h1>Česká města</h1>
                     {renderForm()}
                 </div>
-                <div className='game-mode-item random-places'>
+                <div className="game-mode-item random-places">
                     <h1>Náhodné místo v Čr</h1>
                     {playRandomCzechPlace()}
                 </div>
-                <div className='game-mode-item'>
+                <div className="game-mode-item">
                     <h1>Vlastní místo</h1>
                     {renderCustomPlace()}
                 </div>
-                <div className='game-mode-item'>
+                <div className="game-mode-item">
                     <h1>Podle mojí pozice</h1>
                     {renderMyPosition()}
                 </div>

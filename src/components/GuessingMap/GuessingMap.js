@@ -1,13 +1,21 @@
-import React, {useState, useContext} from 'react';
-import {useLocation, Redirect} from 'react-router-dom';
-import MapyContext from '../../context/MapyContext'
-import NextRoundButton from "../NextRoundButton";
-import {DEFAUL_MARKER_PLACE_ICON, TOTAL_ROUNDS_MAX} from '../../util/Util';
-import RoundSMapWrapper from "../SMap/RoundSMapWrapper";
+import React, { useState, useContext } from 'react';
+import { useLocation, Redirect } from 'react-router-dom';
+import MapyContext from '../../context/MapyContext';
+import NextRoundButton from '../NextRoundButton';
+import { DEFAUL_MARKER_PLACE_ICON, TOTAL_ROUNDS_MAX } from '../../util/Util';
+import RoundSMapWrapper from '../SMap/RoundSMapWrapper';
 
-const GuessingMap = ({ updateCalculation, calculateDistance, loadPanoramaMap, generateRandomCzechPlace, totalRoundScore, totalRounds, guessedPoints }) => {
+const GuessingMap = ({
+    updateCalculation,
+    calculateDistance,
+    loadPanoramaMap,
+    generateRandomCzechPlace,
+    totalRoundScore,
+    totalRounds,
+    guessedPoints,
+}) => {
     const location = useLocation();
-    const mapyContext = useContext(MapyContext)
+    const mapyContext = useContext(MapyContext);
     const [layeredMap] = useState(null);
     const [layer] = useState(null);
     const [vectorLayerSMap] = useState(null);
@@ -39,16 +47,21 @@ const GuessingMap = ({ updateCalculation, calculateDistance, loadPanoramaMap, ge
         loadPanoramaMap(radius, city, true);
     };
 
-    const click = (e, elm) => { // Došlo ke kliknutí, spočítáme kde
+    const click = (e, elm) => {
+        // Došlo ke kliknutí, spočítáme kde
         const options = {
-            anchor: { left: 10, bottom: 1 }  /* Ukotvení značky za bod uprostřed dole */
+            anchor: { left: 10, bottom: 1 } /* Ukotvení značky za bod uprostřed dole */,
         };
         // state is not working in event handling
         //if (guessButtonDisabled && refLayerValue.current && !nextRoundButtonVisible) {
         refLayerValue.current.removeAll();
         const coords = mapyContext.SMap.Coords.fromEvent(e.data.event, refLayeredMapValue.current);
         // alert("Kliknuto na " + coords.toWGS84(2).reverse().join(" "));
-        const marker = new mapyContext.SMap.Marker(mapyContext.SMap.Coords.fromWGS84(coords.x, coords.y), "Můj odhad", options);
+        const marker = new mapyContext.SMap.Marker(
+            mapyContext.SMap.Coords.fromWGS84(coords.x, coords.y),
+            'Můj odhad',
+            options,
+        );
         refLayerValue.current.addMarker(marker);
         setGuessedCoordinates({
             mapLat: coords.y,
@@ -60,53 +73,56 @@ const GuessingMap = ({ updateCalculation, calculateDistance, loadPanoramaMap, ge
 
     const resolveRounds = () => {
         setGameCompleted(true);
-    }
+    };
 
     const renderGuessingMapButtons = () => {
         if (gameCompleted) {
             return (
                 <Redirect
                     to={{
-                        pathname: '/result',
+                        pathname: '/vysledek',
                         state: {
                             totalRoundScore,
                             guessedPoints,
-                        }
+                        },
                     }}
                 />
-            )
+            );
         } else if (totalRounds >= TOTAL_ROUNDS_MAX) {
             return (
-                <button onClick={() => {
-                    resolveRounds()
-                }} type="submit">
+                <button
+                    onClick={() => {
+                        resolveRounds();
+                    }}
+                    type="submit"
+                >
                     Vyhodnotit hru
                 </button>
-            )
+            );
         } else {
             return (
                 <div>
-                    {
-                        !nextRoundButtonVisible ?
-                            <button disabled={guessButtonDisabled} onClick={() => {
-                                calculateCoords()
-                            }} type="submit">
-                                Hádej!
-                            </button> : null
-                    }
-                    {
-                        nextRoundButtonVisible ?
-                            <NextRoundButton refreshMap={() => refreshMap()}/> : null
-                    }
+                    {!nextRoundButtonVisible ? (
+                        <button
+                            disabled={guessButtonDisabled}
+                            onClick={() => {
+                                calculateCoords();
+                            }}
+                            type="submit"
+                        >
+                            Hádej!
+                        </button>
+                    ) : null}
+                    {nextRoundButtonVisible ? <NextRoundButton refreshMap={() => refreshMap()} /> : null}
                 </div>
-            )
+            );
         }
     };
 
     const calculateCoords = () => {
         const markerPanoramaOptions = {
             url: DEFAUL_MARKER_PLACE_ICON,
-            anchor: { left: 10, bottom: 15 }
+            anchor: { left: 10, bottom: 15 },
         };
         setGuessButtonDisabled(true);
         setNextRoundButtonVisible(true);
@@ -116,26 +132,36 @@ const GuessingMap = ({ updateCalculation, calculateDistance, loadPanoramaMap, ge
         const pointPanorama = mapyContext.SMap.Coords.fromWGS84(panoramaCoordinates.lon, panoramaCoordinates.lat);
         const pointMap = mapyContext.SMap.Coords.fromWGS84(guessedCoordinates.mapLon, guessedCoordinates.mapLat);
 
-        const guessedVectorPathCoordinates = [
-            pointPanorama,
-            pointMap,
-        ];
+        const guessedVectorPathCoordinates = [pointPanorama, pointMap];
         const vectorPathOptions = {
-            color: "#f00",
-            width: 3
+            color: '#f00',
+            width: 3,
         };
-        const path = new mapyContext.SMap.Geometry(mapyContext.SMap.GEOMETRY_POLYLINE, null, guessedVectorPathCoordinates, vectorPathOptions);
+        const path = new mapyContext.SMap.Geometry(
+            mapyContext.SMap.GEOMETRY_POLYLINE,
+            null,
+            guessedVectorPathCoordinates,
+            vectorPathOptions,
+        );
         refVectorLayerSMapValue.current.addGeometry(path);
         // panorama place marker
-        const markerPanorama = new mapyContext.SMap.Marker(mapyContext.SMap.Coords.fromWGS84(panoramaCoordinates.lon, panoramaCoordinates.lat), `Panorama point`, markerPanoramaOptions);
+        const markerPanorama = new mapyContext.SMap.Marker(
+            mapyContext.SMap.Coords.fromWGS84(panoramaCoordinates.lon, panoramaCoordinates.lat),
+            `Panorama point`,
+            markerPanoramaOptions,
+        );
         refLayerValue.current.addMarker(markerPanorama);
         updateCalculation({ pointPanorama, pointMap });
     };
 
     return (
         <div>
-            <RoundSMapWrapper click={click} refLayeredMapValue={refLayeredMapValue} refLayerValue={refLayerValue}
-                              refVectorLayerSMapValue={refVectorLayerSMapValue}/>
+            <RoundSMapWrapper
+                click={click}
+                refLayeredMapValue={refLayeredMapValue}
+                refLayerValue={refLayerValue}
+                refVectorLayerSMapValue={refVectorLayerSMapValue}
+            />
             {renderGuessingMapButtons()}
         </div>
     );
