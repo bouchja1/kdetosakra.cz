@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import ReactGA from 'react-ga';
+import cryptoRandomString from 'crypto-random-string';
 import { Redirect } from 'react-router-dom';
 import useGeolocation from 'react-hook-geolocation';
+import { writeStorage, useLocalStorage } from '@rehooks/local-storage';
 import { cities } from '../../data/cities';
 import { CATEGORIES } from '../../enums/gaCategories';
 import Suggest from '../Suggest';
 
 const Configuration = function() {
+    const [randomUserResultToken] = useLocalStorage('randomUserResultToken'); // send the key to be tracked.
     const geolocation = useGeolocation();
     const [citySelected, setCitySelected] = useState(null);
     const [maxCityRadius, setMaxCityRadius] = useState(null);
@@ -17,6 +20,12 @@ const Configuration = function() {
     const [cityFormValues, setCityFormValues] = useState({});
     const [geoFormSubmitted, setGeoFormSubmitted] = useState(false);
     const [geoFormValues, setGeoFormValues] = useState({});
+
+    useEffect(() => {
+        if (!randomUserResultToken) {
+            writeStorage('randomUserResultToken', cryptoRandomString({ length: 15 }));
+        }
+    }, []);
 
     const createFormOptions = () => {
         let options = [];

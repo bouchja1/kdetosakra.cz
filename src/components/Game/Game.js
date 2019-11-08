@@ -164,7 +164,7 @@ const Game = ({ location }) => {
             }
         }
         setRoundScore(Math.round(score));
-        setTotalRoundScore(prevScore => prevScore + score);
+        setTotalRoundScore(prevScore => Math.round(prevScore + score));
         setTotalRounds(prevRoundCount => prevRoundCount + 1);
         setGuessedDistance(distance);
     };

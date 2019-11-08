@@ -1,9 +1,11 @@
 import React, { useState, useContext } from 'react';
 import { useLocation, Redirect } from 'react-router-dom';
+import { useLocalStorage } from '@rehooks/local-storage';
 import MapyContext from '../../context/MapyContext';
 import NextRoundButton from '../NextRoundButton';
-import { DEFAUL_MARKER_PLACE_ICON, TOTAL_ROUNDS_MAX } from '../../util/Util';
+import { DEFAUL_MARKER_PLACE_ICON, roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util/Util';
 import RoundSMapWrapper from '../SMap/RoundSMapWrapper';
+import { saveRandomScore, saveCityScore } from '../../services/api';
 
 const GuessingMap = ({
     updateCalculation,
@@ -15,6 +17,7 @@ const GuessingMap = ({
     guessedPoints,
 }) => {
     const location = useLocation();
+    const [randomUserResultToken] = useLocalStorage('randomUserResultToken'); // send the key to be tracked.
     const mapyContext = useContext(MapyContext);
     const [layeredMap] = useState(null);
     const [layer] = useState(null);
@@ -75,8 +78,25 @@ const GuessingMap = ({
         setGameCompleted(true);
     };
 
+    const storeResult = () => {
+        const locationObj = location.state;
+        const percent = roundToTwoDecimal(totalRoundScore / TOTAL_ROUNDS_MAX);
+        if (randomUserResultToken && locationObj) {
+            if (locationObj.mode === 'random') {
+                saveRandomScore(randomUserResultToken, percent).catch(err => {
+                    // we ignore this
+                });
+            } else if (locationObj.mode === 'city') {
+                saveCityScore(locationObj.city.name, randomUserResultToken, percent).catch(err => {
+                    // we ignore this
+                });
+            }
+        }
+    };
+
     const renderGuessingMapButtons = () => {
         if (gameCompleted) {
+            storeResult();
             return (
                 <Redirect
                     to={{
@@ -88,7 +108,8 @@ const GuessingMap = ({
                     }}
                 />
             );
-        } else if (totalRounds >= TOTAL_ROUNDS_MAX) {
+        }
+        if (totalRounds >= TOTAL_ROUNDS_MAX) {
             return (
                 <button
                     onClick={() => {

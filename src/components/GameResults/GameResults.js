@@ -13,7 +13,7 @@ const GameResults = ({ totalRounds, totalRoundScore, roundScore, guessedDistance
             {guessedDistance ? (
                 <p>Vzdušná vzdálenost místa od tvého odhadu: {roundToTwoDecimal(guessedDistance)} km</p>
             ) : null}
-            {roundScore >= 0 ? <p>Skóre: {roundScore}</p> : null}
+            {roundScore >= 0 && guessedDistance ? <p>Skóre: {roundScore}</p> : null}
             {guessedPlace && guessedDistance ? (
                 <>
                     <p>Obec: {guessedPlace.obec}</p>

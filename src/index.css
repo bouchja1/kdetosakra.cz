@@ -103,141 +103,142 @@ button.outline {
 */
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Arial';
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial';
 }
 
 /* this is flex container */
 .menu-container {
-  color: #fff;
-  background-color: #5995DA;  /* Blue */
-  padding: 20px 0;
-  display: flex;
-  justify-content: center;
+    color: #fff;
+    background-color: #5995da; /* Blue */
+    padding: 20px 0;
+    display: flex;
+    justify-content: center;
 }
 
 .menu {
-  width: 900px;
-  display: flex;
-  justify-content: space-between;
+    width: 900px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .links {
-  display: flex;
-  justify-content: flex-end;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .login {
-  margin-left: 20px;
+    margin-left: 20px;
 }
 
 .header-container {
-  color: #5995DA;
-  background-color: #D6E9FE;
-  display: flex;
-  justify-content: center;
+    color: #5995da;
+    background-color: #d6e9fe;
+    display: flex;
+    justify-content: center;
 }
 
 .header {
-  width: 900px;
-  height: 300px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    width: 900px;
+    height: 300px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .game-mode-container {
-  display: flex;
-  justify-content: center;
+    display: flex;
+    justify-content: center;
 }
 
 .game-modes {
-  width: 900px;
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  flex-direction: row;
-  border: 1px solid black;
-  align-items: center;
+    width: 900px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    flex-direction: row;
+    border: 1px solid black;
+    align-items: center;
 }
 
 .game-mode-item {
-  border: 1px solid #000;
-  width: 300px;
-  height: 300px;
-  flex: 1;
+    border: 1px solid #000;
+    width: 300px;
+    height: 300px;
+    flex: 1;
 }
 
 .czech-cities {
-  flex: 2;
+    flex: 2;
 }
 
 .random-places {
-  flex: 2;
+    flex: 2;
 }
 
 .about-container {
-  color: #000;
-  padding: 20px 0;
-  display: flex;
-  justify-content: center;
+    color: #000;
+    padding: 20px 0;
+    display: flex;
+    justify-content: center;
 }
 
 .result-container {
-  color: #000;
-  padding: 20px 0;
-  display: flex;
-  justify-content: center;
+    height: 200px;
+    color: #000;
+    padding: 20px 0;
+    display: flex;
+    justify-content: center;
 }
 
 .game-mode-info-container {
-  color: #fff;
-  background-color: #5995DA;  /* Blue */
-  padding: 20px 0;
-  display: flex;
-  justify-content: center;
+    color: #fff;
+    background-color: #5995da; /* Blue */
+    padding: 20px 0;
+    display: flex;
+    justify-content: center;
 }
 
 .panorama-container {
-  display: flex;
-  justify-content: center;
+    display: flex;
+    justify-content: center;
 }
 
 .social,
 .subscribe {
-  align-self: flex-end;
-  margin-bottom: 20px;
+    align-self: flex-end;
+    margin-bottom: 20px;
 }
 
 .footer {
-  display: flex;
-  justify-content: space-between;
+    display: flex;
+    justify-content: space-between;
 }
 
 .footer-item {
-  border: 1px solid #fff;
-  background-color: #D6E9FE;
-  height: 200px;
-  flex: 1;
+    border: 1px solid #fff;
+    background-color: #d6e9fe;
+    height: 200px;
+    flex: 1;
 }
 
 .footer-one,
 .footer-three {
-  background-color: #5995DA;
-  flex: initial;
-  width: 300px;
+    background-color: #5995da;
+    flex: initial;
+    width: 300px;
 }
 
 .signup {
-  margin-left: auto;
+    margin-left: auto;
 }
 
 .smap {
-  height: 200px;
+    height: 200px;
 }
 
 .smapContainer {
-  width: 100%;
+    width: 100%;
 }
