@@ -1,6 +1,6 @@
 {
-  "name": "zemeceska",
-  "version": "0.1.0",
+  "name": "kdetosakra.cz",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@rehooks/local-storage": "^1.7.0",
