@@ -25,7 +25,7 @@ const Configuration = function() {
         if (!randomUserResultToken) {
             writeStorage('randomUserResultToken', cryptoRandomString({ length: 15 }));
         }
-    }, []);
+    }, [randomUserResultToken]);
 
     const createFormOptions = () => {
         let options = [];
@@ -88,7 +88,6 @@ const Configuration = function() {
             ReactGA.event({
                 category: CATEGORIES.GEOLOCATION,
                 action: 'Play geolocation city game',
-                value: `${geoFormValues.city.coordinates.longitude}, ${geoFormValues.city.coordinates.latitude}`,
             });
             return (
                 <Redirect
@@ -164,7 +163,6 @@ const Configuration = function() {
             ReactGA.event({
                 category: CATEGORIES.CITY,
                 action: 'Play city game',
-                value: selectedCity[0].name,
             });
             return (
                 <Redirect

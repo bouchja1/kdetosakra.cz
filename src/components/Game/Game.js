@@ -184,7 +184,7 @@ const Game = ({ location }) => {
             }
         }
         // TODO add some cleanup maybe
-    }, [mapyContext.loadedMapApi]);
+    }, [mapyContext.loadedMapApi, location]);
 
     return (
         <div className="panorama-container">
