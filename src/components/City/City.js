@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link, Redirect, useLocation} from 'react-router-dom';
-import Panorama from "../Panorama";
+import Game from "../Game";
 
 const City = () => {
     const location = useLocation();
@@ -13,9 +13,7 @@ const City = () => {
                     <h3>Maximální vzdálenost od místa: {location.state.radius} km</h3>
                     <Link to="/">Zpět do výběru herního módu</Link>
                 </div>
-                <div className='panorama-container'>
-                    <Panorama location={location}/>
-                </div>
+                <Game location={location} />
             </>
         );
     } else {

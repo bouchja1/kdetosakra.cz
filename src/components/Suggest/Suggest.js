@@ -70,7 +70,7 @@ const Suggest = () => {
                     })}
                 >
                     {props => {
-                        const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props;
+                        const { values, touched, errors, handleChange, handleBlur, handleSubmit } = props;
                         return (
                             <form onSubmit={handleSubmit}>
                                 <input type="text" placeholder="hledaná fráze" ref={suggestInput}/>

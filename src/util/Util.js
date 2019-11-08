@@ -73,3 +73,4 @@ export function pointInCircle(coord, distance) {
 };
 
 export const DEFAUL_MARKER_PLACE_ICON = 'http://janbouchner.cz/questionmark.png';
+export const TOTAL_ROUNDS_MAX = 5;

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link, Redirect, useLocation} from 'react-router-dom';
-import Panorama from "../Panorama";
+import Game from "../Game";
 
 const SuggestedCity = () => {
     const location = useLocation();
@@ -14,9 +14,7 @@ const SuggestedCity = () => {
                     {location.state.city.info ? <h3>{location.state.city.info}</h3> : null}
                     <Link to="/">Zpět do výběru herního módu</Link>
                 </div>
-                <div className='panorama-container'>
-                    <Panorama location={location}/>
-                </div>
+                <Game location={location} />
             </>
         );
     } else {

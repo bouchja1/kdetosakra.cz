@@ -1,40 +1,30 @@
-import React, {useState, useEffect, useContext} from 'react';
-import MapyContext from '../../context/MapyContext'
+import React, {useContext, useEffect, useState} from 'react';
 import GuessingMap from "../GuessingMap";
-import {pointInCircle} from '../../util/Util';
 import {crCities} from "../../data/cr";
+import MapyContext from "../../context/MapyContext";
+import {pointInCircle} from "../../util/Util";
+import GameResults from "../GameResults";
 
+const MIN_DISTANCE_FOR_POINTS = 350;
+const MAX_SCORE = 5000;
 const MAX_PANORAMA_TRIES = 5;
 const DEFAULT_PANORAMA_TOLERANCE = 50;
 
-const Panorama = function ({ location }) {
+const Game = ({ location }) => {
     const [panorama] = useState(React.createRef());
     const [panoramaScene, setPanoramaScene] = useState(null);
-    const [panoramaNotFound, setPanoramaNotFound] = useState(false);
-    const [currentCity, setCurrentCity] = useState(null);
+    const [totalRoundScore, setTotalRoundScore] = useState(0);
+    const [totalRounds, setTotalRounds] = useState(0);
+    const [roundScore, setRoundScore] = useState(0);
+    const [guessedDistance, setGuessedDistance] = useState(null);
+    const [guessedPlace, setGuessedPlace] = useState(null);
+    const [guessedPoints, setGuessedPoints] = useState([]);
     const mapyContext = useContext(MapyContext);
+    const [panoramaFounded, setPanoramaFounded] = useState(true);
+    const [currentCity, setCurrentCity] = useState(null);
 
-    const generateRandomCzechPlace = () => {
-        let randomCity = crCities[Math.floor(Math.random() * crCities.length)];
-        randomCity = {
-            ...randomCity,
-            coordinates: {
-                latitude: randomCity.latitude,
-                longitude: randomCity.longitude,
-            }
-        };
-        setCurrentCity(randomCity);
-        return randomCity;
-    };
-
-    const generatePlaceInRadius = (radius, locationCity) => {
-        console.log("RADIUS: ", radius)
-        radius = radius * 1000; // to kilometres
-        const generatedPlace = pointInCircle({
-            longitude: locationCity.coordinates.longitude,
-            latitude: locationCity.coordinates.latitude,
-        }, radius)
-        return generatedPlace;
+    const checkPanoramaFounded = () => {
+        setPanoramaFounded(false);
     };
 
     const loadPanoramaMap = (radius, locationCity, rerender, counter = 0, panoramaScene = null) => {
@@ -81,9 +71,31 @@ const Panorama = function ({ location }) {
                     }
                 },
             ).catch(err => {
-                setPanoramaNotFound(true);
+                checkPanoramaFounded(false);
             });
         }
+    };
+
+    const generateRandomCzechPlace = () => {
+        let randomCity = crCities[Math.floor(Math.random() * crCities.length)];
+        randomCity = {
+            ...randomCity,
+            coordinates: {
+                latitude: randomCity.latitude,
+                longitude: randomCity.longitude,
+            }
+        };
+        setCurrentCity(randomCity);
+        return randomCity;
+    };
+
+    const generatePlaceInRadius = (radius, locationCity) => {
+        radius = radius * 1000; // to kilometres
+        const generatedPlace = pointInCircle({
+            longitude: locationCity.coordinates.longitude,
+            latitude: locationCity.coordinates.latitude,
+        }, radius)
+        return generatedPlace;
     };
 
     const calculateDistance = (mapCoordinates) => {
@@ -111,30 +123,35 @@ const Panorama = function ({ location }) {
             dist = dist * 1.609344; // convert to kilometers
             distance = dist;
         }
-
-        let objectToReturn = {
-            distance,
-            panoramaCoordinates,
-        };
         if (locationObject.mode === 'random') {
-            objectToReturn = {
-                ...objectToReturn,
-                randomCity: city,
-            }
+            setGuessedPlace({
+                obec: city.obec,
+                okres: city.okres,
+                kraj: city.kraj,
+            })
         }
-        return objectToReturn;
+        calculateScore(distance);
+        return panoramaCoordinates;
     };
 
-    const renderGuessingMap = () => {
-        if (panoramaScene) {
-            return (
-            <div className="smapContainer">
-            <GuessingMap calculateDistance={calculateDistance} loadPanoramaMap={loadPanoramaMap}
-                                generateRandomCzechPlace={generateRandomCzechPlace}/>
-            </div>
-            )
-        }
-        return <p>Načítám mapu...</p>
+    const calculateScore = (distance) => {
+        // let { radius } = location.state; // TODO calculate with radius?
+        if (distance < 1)
+            return 5000;
+        let score = (MIN_DISTANCE_FOR_POINTS - distance) / (MIN_DISTANCE_FOR_POINTS / MAX_SCORE);
+        if (score < 0)
+            return 0;
+        score = score ** 2 / MAX_SCORE;
+        score = Math.max(0, score);
+        score = Math.min(MAX_SCORE, score);
+        setRoundScore(Math.round(score));
+        setTotalRoundScore((prevScore) => prevScore + score);
+        setTotalRounds((prevRoundCount) => prevRoundCount + 1);
+        setGuessedDistance(distance);
+    };
+
+    const updateCalculation = (guessedPointsInRound) => {
+        setGuessedPoints([...guessedPoints, guessedPointsInRound]);
     };
 
     useEffect(() => {
@@ -151,13 +168,18 @@ const Panorama = function ({ location }) {
     }, [mapyContext.loadedMapApi]);
 
     return (
-        <>
-            {
-                (panoramaNotFound) ? <p>V okruhu 5 km od vašeho místa nebylo nalezeno žádné panorama.</p> : <><div ref={panorama}></div>
-            {renderGuessingMap()}</>
-            }
-        </>
+        <div className='panorama-container'>
+            { !panoramaFounded ? <p>V okruhu 5 km od vašeho místa nebylo nalezeno žádné panorama.</p> :
+                <div ref={panorama}></div> }
+            <div className="smapContainer">
+                <GameResults totalRounds={totalRounds} totalRoundScore={totalRoundScore} roundScore={roundScore} guessedDistance={guessedDistance} guessedPlace={guessedPlace} />
+                {/* ty parametry jsou definovane v Panorama */}
+                <GuessingMap updateCalculation={updateCalculation} calculateDistance={calculateDistance} calculateScore={calculateScore} loadPanoramaMap={loadPanoramaMap}
+                             generateRandomCzechPlace={generateRandomCzechPlace} totalRoundScore={totalRoundScore} totalRounds={totalRounds} guessedPoints={guessedPoints} />
+            </div>
+
+        </div>
     );
 };
 
-export default Panorama;
+export default Game;

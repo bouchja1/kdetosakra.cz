@@ -38,8 +38,8 @@ function App() {
             <div className='header-container'>
                 <div className='header'>
                     <div className='subscribe'>Subscribe &#9662;</div>
-                    <div className='logo'><img src={awesomeLogo}/></div>
-                    <div className='social'><img src={socialIcons}/></div>
+                    <div className='logo'><img alt="logo" src={awesomeLogo}/></div>
+                    <div className='social'><img alt="example social icons" src={socialIcons}/></div>
                 </div>
             </div>
             {loaded && !error && (
