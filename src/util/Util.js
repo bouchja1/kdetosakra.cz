@@ -71,5 +71,5 @@ export function pointInCircle(coord, distance) {
     return pointAtDistance(coord, randomDist);
 }
 
-export const DEFAUL_MARKER_PLACE_ICON = 'http://janbouchner.cz/questionmark.png';
+export const DEFAUL_MARKER_PLACE_ICON = 'https://kdetosakra.cz/questionmark.png';
 export const TOTAL_ROUNDS_MAX = 1;

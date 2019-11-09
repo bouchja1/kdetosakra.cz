@@ -147,7 +147,7 @@ const Configuration = function() {
                     }}
                 </Formik>
             ) : (
-                <p>No geolocation, sorry.</p>
+                <p>Geografickou polohu se nepodařilo načíst.</p>
             );
     };
 
