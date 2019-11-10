@@ -11,6 +11,7 @@ import { CATEGORIES } from '../../enums/gaCategories';
 import Suggest from '../Suggest';
 import awesomeLogo from '../../assets/images/kdetosakra.png';
 import socialIcons from '../../assets/images/social-icons.svg';
+import HeaderContainer from '../pageStructure/HeaderContainer';
 
 const Configuration = function() {
     const [randomUserResultToken] = useLocalStorage('randomUserResultToken'); // send the key to be tracked.
@@ -19,8 +20,8 @@ const Configuration = function() {
     const [maxCityRadius, setMaxCityRadius] = useState(null);
     const [randomCityFormSubmitted, setRandomCityFormSubmitted] = useState(false);
     const [cityFormSubmitted, setCityFormSubmitted] = useState(false);
-    const [cityFormValues, setCityFormValues] = useState({});
     const [geoFormSubmitted, setGeoFormSubmitted] = useState(false);
+    const [cityFormValues, setCityFormValues] = useState({});
     const [geoFormValues, setGeoFormValues] = useState({});
 
     useEffect(() => {
@@ -68,7 +69,7 @@ const Configuration = function() {
             return (
                 <Redirect
                     to={{
-                        pathname: '/random',
+                        pathname: '/nahodne',
                         state: {
                             radius: 0.5, // set default radius
                             city: null,
@@ -248,19 +249,9 @@ const Configuration = function() {
 
     return (
         <>
-            <div className="header-container">
-                <div className="header">
-                    <div className="subscribe">Subscribe &#9662;</div>
-                    <div className="logo">
-                        <img alt="logo" src={awesomeLogo} />
-                    </div>
-                    <div className="social">
-                        <img alt="example social icons" src={socialIcons} />
-                    </div>
-                </div>
-            </div>
+            <HeaderContainer />
             <div className="game-mode-container">
-                <div className="game-modes">
+                <div className="game-modes-primary">
                     <div className="game-mode-item czech-cities">
                         <h1>Česká města</h1>
                         {renderForm()}
@@ -269,6 +260,8 @@ const Configuration = function() {
                         <h1>Náhodné místo v Čr</h1>
                         {playRandomCzechPlace()}
                     </div>
+                </div>
+                <div className="game-modes-secondary">
                     <div className="game-mode-item">
                         <h1>Vlastní místo</h1>
                         {renderCustomPlace()}

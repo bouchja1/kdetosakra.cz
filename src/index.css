@@ -1,107 +1,3 @@
-/*
-* {
-  box-sizing: border-box;
-  font-family: 'Arial';
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
-  sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  font-size: 14px;
-  line-height: 1.5;
-  color: #24292e;
-  background-color: #fff;
-}
-
-.app {
-  margin: 2rem;
-}
-
-a {
-  color: #08c;
-}
-
-code {
-  background: #eee;
-  padding: .1rem;
-  font-family: 'Menlo';
-  font-size: 13px;
-  color: #ff00aa;
-}
-
-input {
-  padding: .5rem;
-  font-size: 16px;
-  width: 100%;
-  display: block;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-
-input:focus {
-  border-color: #007eff;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
-  0 0 0 3px rgba(0, 126, 255, 0.1);
-  outline: none;
-}
-
-input.error {
-  border-color: red;
-}
-
-label {
-  font-weight: bold;
-  display: block;
-  margin-bottom: .5rem;
-}
-
-.input-feedback {
-  color: red;
-  margin-top: .25rem;
-}
-
-button {
-  max-width: 150px;
-  margin: 20px 0;
-  padding: 12px 20px;
-  border-style: none;
-  border-radius: 5px;
-  background-color: #08c;
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.15);
-  font-size: 17px;
-  font-weight: 500;
-  color: #fff;
-  cursor: pointer;
-  outline: none;
-  -webkit-appearance: none;
-}
-
-button:disabled {
-  opacity: .5;
-  cursor: not-allowed !important;
-}
-
-button + button {
-  margin-left: .5rem;
-}
-
-button.outline {
-  background-color: #eee;
-  border: 1px solid #aaa;
-  color: #555;
-}
-
-.panorama {
-  height: 780px;
-  width: 1024px;
-}
-
-.smap {
-  height: 780px;
-  width: 1024px;
-}
-*/
-
 @font-face {
     font-family: 'Roboto-Regular';
     src: local('Roboto-Regular');
@@ -118,6 +14,7 @@ button.outline {
 .kdetosakra-container {
     display: flex;
     flex-direction: column;
+    justify-content: center;
 }
 
 /* this is flex container */
@@ -131,7 +28,7 @@ button.outline {
 }
 
 .menu {
-    width: 900px;
+    width: 90%;
     display: flex;
     justify-content: space-between;
 }
@@ -153,20 +50,36 @@ button.outline {
 }
 
 .header {
-    width: 900px;
+    width: 100%;
     height: 300px;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
 }
 
 .game-mode-container {
+    padding: 20px 0;
+    background-color: khaki;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
-.game-modes {
+.game-modes-primary {
     width: 900px;
+    background-color: fuchsia;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    flex-direction: row;
+    border: 1px solid black;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.game-modes-secondary {
+    width: 900px;
+    background-color: brown;
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
@@ -177,27 +90,34 @@ button.outline {
 
 .game-mode-item {
     border: 1px solid #000;
-    width: 300px;
+    width: 400px;
     height: 300px;
-    flex: 1;
-}
-
-.czech-cities {
-    flex: 2;
-}
-
-.random-places {
-    flex: 2;
+    padding: 5px;
 }
 
 .about-container {
+    background-color: fuchsia;
+    width: 100%;
     color: #000;
     padding: 20px 0;
     display: flex;
     justify-content: center;
+    align-items: center;
+}
+
+.about {
+    width: 900px;
+    background-color: khaki;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
 .result-container {
+    background-color: chartreuse;
     height: 200px;
     color: #000;
     padding: 20px 0;
@@ -215,6 +135,7 @@ button.outline {
 }
 
 .panorama-container {
+    background-color: brown;
     flex: 5;
     width: 100%;
     display: flex;
@@ -222,28 +143,28 @@ button.outline {
 }
 
 .panorama {
+    background-color: crimson;
     width: 100%;
 }
 
-.social,
-.subscribe {
-    align-self: flex-end;
-    margin-bottom: 20px;
+.footer-container {
+    padding: 20px 0;
+    color: #5995da;
+    background-color: #d6e9fe;
+    display: flex;
+    justify-content: center;
 }
 
 .footer {
-    position: fixed;
-    bottom: 0px;
-    left: 0px;
-    width: 100%;
+    background-color: blue;
+    width: 90%;
     display: flex;
     justify-content: center;
-    height: 50px;
 }
 
 .footer-item {
     background-color: #d6e9fe;
-    flex: 1;
+    display: flex;
     align-items: center;
 }
 
@@ -252,10 +173,12 @@ button.outline {
 }
 
 .smap {
+    background-color: aqua;
     height: 450px;
 }
 
 .smapContainer {
+    background-color: antiquewhite;
     width: 650px;
     position: fixed;
     bottom: 55px;

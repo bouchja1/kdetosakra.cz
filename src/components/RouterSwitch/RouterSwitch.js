@@ -2,19 +2,19 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 import NotFound from '../../pages/404';
-import Configuration from '../Configuration';
 import City from '../City';
 import RandomCity from '../RandomCity';
-import Result from '../Result';
 import Geolocation from '../Geolocation';
 import SuggestedCity from '../SuggestedCity';
-import About from '../About';
+import Home from '../../pages/home';
+import Info from '../../pages/info';
+import Result from '../../pages/vysledek';
 
 const RouterSwitch = () => {
     return (
         <Switch>
             <Route exact path="/">
-                <Configuration />
+                <Home />
             </Route>
             <Route path="/geolokace">
                 <Geolocation />
@@ -22,7 +22,7 @@ const RouterSwitch = () => {
             <Route path="/mesto">
                 <City />
             </Route>
-            <Route path="/random">
+            <Route path="/nahodne">
                 <RandomCity />
             </Route>
             <Route path="/vysledek">
@@ -32,7 +32,7 @@ const RouterSwitch = () => {
                 <SuggestedCity />
             </Route>
             <Route path="/info">
-                <About />
+                <Info />
             </Route>
             <Route path="*">
                 <NotFound />

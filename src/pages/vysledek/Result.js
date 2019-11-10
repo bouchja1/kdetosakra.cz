@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
-import ResultSMapWrapper from '../SMap/ResultSMapWrapper';
+import ResultSMapWrapper from '../../components/SMap/ResultSMapWrapper';
 import { roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util/Util';
+import HeaderContainer from '../../components/pageStructure/HeaderContainer';
 
 const Result = () => {
     const location = useLocation();
@@ -20,6 +21,7 @@ const Result = () => {
     ) {
         return (
             <>
+                <HeaderContainer />
                 <div className="result-container">
                     <h1>
                         Výsledek:
