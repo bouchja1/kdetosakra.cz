@@ -129,7 +129,7 @@ const SMap = props => {
 
     return (
         <>
-            <div ref={map}></div>
+            <div className="smap" ref={map}></div>
             {props.type === 'result' ? (
                 <button
                     onClick={() => {

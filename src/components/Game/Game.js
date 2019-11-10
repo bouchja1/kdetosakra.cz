@@ -187,13 +187,13 @@ const Game = ({ location }) => {
     }, [mapyContext.loadedMapApi, location]);
 
     return (
-        <div className="panorama-container">
-            {!panoramaFounded ? (
-                <p>V okruhu 5 km od vašeho místa nebylo nalezeno žádné panorama.</p>
-            ) : (
-                <div ref={panorama}></div>
-            )}
-            <div className="smapContainer">
+        <>
+            <div className="panorama-container">
+                {!panoramaFounded ? (
+                    <p>V okruhu 5 km od vašeho místa nebylo nalezeno žádné panorama.</p>
+                ) : (
+                    <div ref={panorama}></div>
+                )}
                 <GameResults
                     totalRounds={totalRounds}
                     totalRoundScore={totalRoundScore}
@@ -201,6 +201,8 @@ const Game = ({ location }) => {
                     guessedDistance={guessedDistance}
                     guessedPlace={guessedPlace}
                 />
+            </div>
+            <div className="smapContainer">
                 {/* ty parametry jsou definovane v Panorama */}
                 <GuessingMap
                     updateCalculation={updateCalculation}
@@ -212,7 +214,7 @@ const Game = ({ location }) => {
                     guessedPoints={guessedPoints}
                 />
             </div>
-        </div>
+        </>
     );
 };
 

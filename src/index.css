@@ -102,15 +102,27 @@ button.outline {
 }
 */
 
+@font-face {
+    font-family: 'Roboto-Regular';
+    src: local('Roboto-Regular');
+    url: (./assets/fonts/Roboto-Regular.ttf) format('truetype');
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Arial';
+    font-family: 'Roboto-Regular';
+}
+
+.kdetosakra-container {
+    display: flex;
+    flex-direction: column;
 }
 
 /* this is flex container */
 .menu-container {
+    flex: 1;
     color: #fff;
     background-color: #5995da; /* Blue */
     padding: 20px 0;
@@ -194,6 +206,7 @@ button.outline {
 }
 
 .game-mode-info-container {
+    flex: 1;
     color: #fff;
     background-color: #5995da; /* Blue */
     padding: 20px 0;
@@ -202,8 +215,14 @@ button.outline {
 }
 
 .panorama-container {
+    flex: 5;
+    width: 100%;
     display: flex;
     justify-content: center;
+}
+
+.panorama {
+    width: 100%;
 }
 
 .social,
@@ -213,22 +232,19 @@ button.outline {
 }
 
 .footer {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    height: 50px;
 }
 
 .footer-item {
-    border: 1px solid #fff;
     background-color: #d6e9fe;
-    height: 200px;
     flex: 1;
-}
-
-.footer-one,
-.footer-three {
-    background-color: #5995da;
-    flex: initial;
-    width: 300px;
+    align-items: center;
 }
 
 .signup {
@@ -236,9 +252,12 @@ button.outline {
 }
 
 .smap {
-    height: 200px;
+    height: 450px;
 }
 
 .smapContainer {
-    width: 100%;
+    width: 650px;
+    position: fixed;
+    bottom: 55px;
+    right: 5px;
 }

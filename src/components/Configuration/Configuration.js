@@ -9,6 +9,8 @@ import { writeStorage, useLocalStorage } from '@rehooks/local-storage';
 import { cities } from '../../data/cities';
 import { CATEGORIES } from '../../enums/gaCategories';
 import Suggest from '../Suggest';
+import awesomeLogo from '../../assets/images/kdetosakra.png';
+import socialIcons from '../../assets/images/social-icons.svg';
 
 const Configuration = function() {
     const [randomUserResultToken] = useLocalStorage('randomUserResultToken'); // send the key to be tracked.
@@ -245,26 +247,39 @@ const Configuration = function() {
     };
 
     return (
-        <div className="game-mode-container">
-            <div className="game-modes">
-                <div className="game-mode-item czech-cities">
-                    <h1>Česká města</h1>
-                    {renderForm()}
-                </div>
-                <div className="game-mode-item random-places">
-                    <h1>Náhodné místo v Čr</h1>
-                    {playRandomCzechPlace()}
-                </div>
-                <div className="game-mode-item">
-                    <h1>Vlastní místo</h1>
-                    {renderCustomPlace()}
-                </div>
-                <div className="game-mode-item">
-                    <h1>Podle mojí pozice</h1>
-                    {renderMyPosition()}
+        <>
+            <div className="header-container">
+                <div className="header">
+                    <div className="subscribe">Subscribe &#9662;</div>
+                    <div className="logo">
+                        <img alt="logo" src={awesomeLogo} />
+                    </div>
+                    <div className="social">
+                        <img alt="example social icons" src={socialIcons} />
+                    </div>
                 </div>
             </div>
-        </div>
+            <div className="game-mode-container">
+                <div className="game-modes">
+                    <div className="game-mode-item czech-cities">
+                        <h1>Česká města</h1>
+                        {renderForm()}
+                    </div>
+                    <div className="game-mode-item random-places">
+                        <h1>Náhodné místo v Čr</h1>
+                        {playRandomCzechPlace()}
+                    </div>
+                    <div className="game-mode-item">
+                        <h1>Vlastní místo</h1>
+                        {renderCustomPlace()}
+                    </div>
+                    <div className="game-mode-item">
+                        <h1>Podle mojí pozice</h1>
+                        {renderMyPosition()}
+                    </div>
+                </div>
+            </div>
+        </>
     );
 };
 

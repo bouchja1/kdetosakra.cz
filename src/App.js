@@ -21,7 +21,7 @@ function App() {
     const [mapLoader] = useMapLoader(loaded);
 
     return (
-        <>
+        <div className="kdetosakra-container">
             <div className="menu-container">
                 <div className="menu">
                     <div className="date">
@@ -35,28 +35,17 @@ function App() {
                     </div>
                 </div>
             </div>
-            <div className="header-container">
-                <div className="header">
-                    <div className="subscribe">Subscribe &#9662;</div>
-                    <div className="logo">
-                        <img alt="logo" src={awesomeLogo} />
-                    </div>
-                    <div className="social">
-                        <img alt="example social icons" src={socialIcons} />
-                    </div>
-                </div>
-            </div>
             {loaded && !error && (
                 <MapyProvider value={mapLoader}>
                     <RouterSwitch />
                 </MapyProvider>
             )}
             <div className="footer">
-                <div className="footer-item footer-one"></div>
-                <div className="footer-item footer-two"></div>
-                <div className="footer-item footer-three"></div>
+                <div className="footer-item">
+                    <p>Neco neco neco</p>
+                </div>
             </div>
-        </>
+        </div>
     );
 }
 
