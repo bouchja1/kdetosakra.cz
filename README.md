@@ -1,5 +1,9 @@
 # kdetosakra.cz #
 
+<p align="center">
+  <img alt="logo" src="https://raw.githubusercontent.com/bouchja1/kdetosakra.cz/master/src/assets/images/kdetosakra.png">
+</p>
+
 This is a *GeoGuessr* clone (a game where you have to figure out where you are and guess this place on the map 📍) with game modes for the Czech Republic 🇨🇿.
 
 ### Game modes
