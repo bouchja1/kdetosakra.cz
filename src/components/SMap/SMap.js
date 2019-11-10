@@ -131,16 +131,6 @@ const SMap = props => {
     return (
         <>
             <div className="smap" ref={map}></div>
-            {props.type === 'result' ? (
-                <Button
-                    onClick={() => {
-                        closeResultPage();
-                    }}
-                    type="primary"
-                >
-                    Hrát znovu
-                </Button>
-            ) : null}
         </>
     );
 };

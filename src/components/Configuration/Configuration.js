@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import ReactGA from 'react-ga';
-import { Input, Button } from 'antd';
+import { Input, Button, Select } from 'antd';
 import cryptoRandomString from 'crypto-random-string';
 import { Redirect } from 'react-router-dom';
 import useGeolocation from 'react-hook-geolocation';
@@ -11,6 +11,8 @@ import { cities } from '../../data/cities';
 import { CATEGORIES } from '../../enums/gaCategories';
 import Suggest from '../Suggest';
 import HeaderContainer from '../pageStructure/HeaderContainer';
+
+const { Option } = Select;
 
 const Configuration = function() {
     const [randomUserResultToken] = useLocalStorage('randomUserResultToken'); // send the key to be tracked.
@@ -31,23 +33,18 @@ const Configuration = function() {
 
     const createFormOptions = () => {
         let options = [];
-        options.push(
-            <option value="" key="empty">
-                -- Vyber si město --
-            </option>,
-        );
         for (let i = 0; i < cities.length; i++) {
             options.push(
-                <option key={cities[i].name} value={cities[i].name}>
+                <Option key={cities[i].name} value={cities[i].name}>
                     {cities[i].fullName}
-                </option>,
+                </Option>,
             );
         }
         return options;
     };
 
-    const handleOnChangeCity = event => {
-        const selectedValue = event.target.value;
+    const handleOnChangeCity = value => {
+        const selectedValue = value;
         if (selectedValue === '') {
             setCitySelected(null);
         } else {
@@ -208,16 +205,18 @@ const Configuration = function() {
                         const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props;
                         return (
                             <form onSubmit={handleSubmit}>
-                                <Field
-                                    as="select"
+                                <Select
+                                    showSearch
                                     name="city"
-                                    onChange={event => {
-                                        handleOnChangeCity(event);
-                                        values.city = event.target.value;
+                                    style={{ width: 200 }}
+                                    placeholder="Vyber si město"
+                                    onChange={value => {
+                                        handleOnChangeCity(value);
+                                        values.city = value;
                                     }}
                                 >
                                     {createFormOptions()}
-                                </Field>
+                                </Select>
                                 {errors.city && touched.city && <div className="input-feedback">{errors.color}</div>}
                                 {citySelected ? (
                                     <Input

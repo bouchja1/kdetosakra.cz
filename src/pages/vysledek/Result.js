@@ -3,6 +3,7 @@ import { Redirect, useLocation } from 'react-router-dom';
 import ResultSMapWrapper from '../../components/SMap/ResultSMapWrapper';
 import { roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util/Util';
 import HeaderContainer from '../../components/pageStructure/HeaderContainer';
+import { Button } from 'antd';
 
 const Result = () => {
     const location = useLocation();
@@ -30,6 +31,14 @@ const Result = () => {
                     </h1>
                 </div>
                 <ResultSMapWrapper guessedPoints={location.state.guessedPoints} closeResultPage={closeResultPage} />
+                <Button
+                    onClick={() => {
+                        closeResultPage();
+                    }}
+                    type="primary"
+                >
+                    Hrát znovu
+                </Button>
             </>
         );
     }

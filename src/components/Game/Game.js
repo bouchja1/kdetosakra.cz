@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import GuessingMap from '../GuessingMap';
 import { crCities } from '../../data/cr';
 import MapyContext from '../../context/MapyContext';
-import { pointInCircle } from '../../util/Util';
-import GameResults from '../GameResults';
+import { pointInCircle, roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util/Util';
+import { Modal, Progress, Button } from 'antd';
 
 const MIN_DISTANCE_FOR_POINTS_RANDOM = 250;
 const MAX_SCORE_PERCENT = 100;
@@ -22,6 +22,7 @@ const Game = ({ location }) => {
     const mapyContext = useContext(MapyContext);
     const [panoramaFounded, setPanoramaFounded] = useState(true);
     const [currentCity, setCurrentCity] = useState(null);
+    const [resultModalVisible, setResultModalVisible] = useState(false);
 
     const checkPanoramaFounded = () => {
         setPanoramaFounded(false);
@@ -171,6 +172,7 @@ const Game = ({ location }) => {
 
     const updateCalculation = guessedPointsInRound => {
         setGuessedPoints([...guessedPoints, guessedPointsInRound]);
+        setResultModalVisible(true);
     };
 
     useEffect(() => {
@@ -194,13 +196,6 @@ const Game = ({ location }) => {
                 ) : (
                     <div ref={panorama}></div>
                 )}
-                <GameResults
-                    totalRounds={totalRounds}
-                    totalRoundScore={totalRoundScore}
-                    roundScore={roundScore}
-                    guessedDistance={guessedDistance}
-                    guessedPlace={guessedPlace}
-                />
             </div>
             <div className="smapContainer">
                 {/* ty parametry jsou definovane v Panorama */}
@@ -212,8 +207,40 @@ const Game = ({ location }) => {
                     totalRoundScore={totalRoundScore}
                     totalRounds={totalRounds}
                     guessedPoints={guessedPoints}
+                    guessedDistance={guessedDistance}
                 />
             </div>
+            <Modal
+                visible={resultModalVisible}
+                onOk={() => setResultModalVisible(false)}
+                onCancel={() => setResultModalVisible(false)}
+                footer={[
+                    <Button key="submit" type="primary" onClick={() => setResultModalVisible(false)}>
+                        Submit
+                    </Button>,
+                ]}
+            >
+                <>
+                    {totalRounds > 0 ? (
+                        <p>
+                            Kolo: {totalRounds}/{TOTAL_ROUNDS_MAX}
+                        </p>
+                    ) : null}
+                    {totalRoundScore ? <p>Celkové skóre: {roundToTwoDecimal(totalRoundScore)}</p> : null}
+                    {guessedDistance ? (
+                        <p>Vzdušná vzdálenost místa od tvého odhadu: {roundToTwoDecimal(guessedDistance)} km</p>
+                    ) : null}
+                    {roundScore >= 0 && guessedDistance ? <p>Skóre: {roundScore}</p> : null}
+                    {roundScore >= 0 && guessedDistance ? <Progress percent={roundScore} /> : null}
+                    {guessedPlace && guessedDistance ? (
+                        <>
+                            <p>Obec: {guessedPlace.obec}</p>
+                            <p>Okres: {guessedPlace.okres}</p>
+                            <p>Kraj: {guessedPlace.kraj}</p>
+                        </>
+                    ) : null}
+                </>
+            </Modal>
         </>
     );
 };

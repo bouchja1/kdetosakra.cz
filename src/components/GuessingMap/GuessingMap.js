@@ -1,12 +1,13 @@
 import React, { useState, useContext } from 'react';
 import { useLocation, Redirect } from 'react-router-dom';
 import { useLocalStorage } from '@rehooks/local-storage';
-import { Button } from 'antd';
+import { Button, Modal } from 'antd';
 import MapyContext from '../../context/MapyContext';
 import NextRoundButton from '../NextRoundButton';
 import { DEFAUL_MARKER_PLACE_ICON, DEFAUL_MARKER_ICON, roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util/Util';
 import RoundSMapWrapper from '../SMap/RoundSMapWrapper';
 import { saveRandomScore, saveCityScore } from '../../services/api';
+import ResultSMapWrapper from '../SMap/ResultSMapWrapper';
 
 const GuessingMap = ({
     updateCalculation,
@@ -16,6 +17,7 @@ const GuessingMap = ({
     totalRoundScore,
     totalRounds,
     guessedPoints,
+    guessedDistance,
 }) => {
     const location = useLocation();
     const [randomUserResultToken] = useLocalStorage('randomUserResultToken'); // send the key to be tracked.
@@ -179,12 +181,16 @@ const GuessingMap = ({
 
     return (
         <div>
-            <RoundSMapWrapper
-                click={click}
-                refLayeredMapValue={refLayeredMapValue}
-                refLayerValue={refLayerValue}
-                refVectorLayerSMapValue={refVectorLayerSMapValue}
-            />
+            {guessedDistance === null ? (
+                <RoundSMapWrapper
+                    click={click}
+                    refLayeredMapValue={refLayeredMapValue}
+                    refLayerValue={refLayerValue}
+                    refVectorLayerSMapValue={refVectorLayerSMapValue}
+                />
+            ) : (
+                <ResultSMapWrapper guessedPoints={guessedPoints} />
+            )}
             {renderGuessingMapButtons()}
         </div>
     );
