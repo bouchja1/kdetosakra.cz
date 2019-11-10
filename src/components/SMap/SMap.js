@@ -1,8 +1,8 @@
-import React, {useContext, useEffect, useState} from 'react';
-import MapyContext from "../../context/MapyContext";
-import {DEFAUL_MARKER_PLACE_ICON} from '../../util/Util';
+import React, { useContext, useEffect, useState } from 'react';
+import MapyContext from '../../context/MapyContext';
+import { DEFAUL_MARKER_ICON, DEFAUL_MARKER_PLACE_ICON } from '../../util/Util';
 
-const SMap = (props) => {
+const SMap = props => {
     const [map] = useState(React.createRef());
     const mapyContext = useContext(MapyContext);
     const { closeResultPage } = props;
@@ -13,16 +13,17 @@ const SMap = (props) => {
         const mouseControlOptions = {
             scrollDelay: 5000,
             maxDriftSpeed: 20,
-            driftSlowdown: 0.50,
+            driftSlowdown: 0.5,
             // idleDelay: 550,
-        }
+        };
 
         const markerOptions = {
-            anchor: {left:10, bottom: 1}
+            url: DEFAUL_MARKER_ICON,
+            anchor: { left: 10, bottom: 1 },
         };
         const markerPanoramaOptions = {
             url: DEFAUL_MARKER_PLACE_ICON,
-            anchor: {left:10, bottom: 15}
+            anchor: { left: 10, bottom: 15 },
         };
 
         if (SMap) {
@@ -33,7 +34,10 @@ const SMap = (props) => {
             mapInstance.setZoomRange(7, 19);
             mapInstance.addDefaultLayer(SMap.DEF_BASE).enable();
 
-            const mouse = new SMap.Control.Mouse(SMap.MOUSE_PAN | SMap.MOUSE_WHEEL | SMap.MOUSE_ZOOM, mouseControlOptions); /* Ovládání myší */
+            const mouse = new SMap.Control.Mouse(
+                SMap.MOUSE_PAN | SMap.MOUSE_WHEEL | SMap.MOUSE_ZOOM,
+                mouseControlOptions,
+            ); /* Ovládání myší */
             mapInstance.addControl(mouse);
 
             // 8. vrstva se značkami
@@ -43,7 +47,7 @@ const SMap = (props) => {
 
             /* znackova vrstva pro ikonky bodu zajmu; poiToolTip - zapneme title jako nazev nad POI */
             const poILayer = new SMap.Layer.Marker(undefined, {
-                poiTooltip: true
+                poiTooltip: true,
             });
             mapInstance.addLayer(poILayer).enable();
 
@@ -57,31 +61,46 @@ const SMap = (props) => {
             if (props.type && props.type === 'result') {
                 const { guessedPoints } = props;
                 const options = {
-                    color: "#f00",
-                    width: 3
+                    color: '#f00',
+                    width: 3,
                 };
                 const vectorLayer = new mapyContext.SMap.Layer.Geometry();
                 mapInstance.addLayer(vectorLayer);
                 vectorLayer.enable();
                 for (let i = 0; i < guessedPoints.length; i++) {
                     const pointsObject = guessedPoints[i];
-                    const pointPanorama = mapyContext.SMap.Coords.fromWGS84(pointsObject.pointPanorama.x, pointsObject.pointPanorama.y);
-                    const pointMap = mapyContext.SMap.Coords.fromWGS84(pointsObject.pointMap.x, pointsObject.pointMap.y);
-                    const pointsVectorArray = [
-                        pointPanorama,
-                        pointMap,
-                    ];
+                    const pointPanorama = mapyContext.SMap.Coords.fromWGS84(
+                        pointsObject.pointPanorama.x,
+                        pointsObject.pointPanorama.y,
+                    );
+                    const pointMap = mapyContext.SMap.Coords.fromWGS84(
+                        pointsObject.pointMap.x,
+                        pointsObject.pointMap.y,
+                    );
+                    const pointsVectorArray = [pointPanorama, pointMap];
 
-                    const path = new mapyContext.SMap.Geometry(mapyContext.SMap.GEOMETRY_POLYLINE, null, pointsVectorArray, options);
+                    const path = new mapyContext.SMap.Geometry(
+                        mapyContext.SMap.GEOMETRY_POLYLINE,
+                        null,
+                        pointsVectorArray,
+                        options,
+                    );
                     vectorLayer.addGeometry(path);
 
                     // my guessed marker
-                    const marker = new mapyContext.SMap.Marker(mapyContext.SMap.Coords.fromWGS84(pointsObject.pointMap.x, pointsObject.pointMap.y), `Můj odhad ${i+1}`, markerOptions);
+                    const marker = new mapyContext.SMap.Marker(
+                        mapyContext.SMap.Coords.fromWGS84(pointsObject.pointMap.x, pointsObject.pointMap.y),
+                        `Můj odhad ${i + 1}`,
+                        markerOptions,
+                    );
                     layerSMap.addMarker(marker);
                     // panorama place marker
-                    const markerPanorama = new mapyContext.SMap.Marker(mapyContext.SMap.Coords.fromWGS84(pointsObject.pointPanorama.x, pointsObject.pointPanorama.y), `Panorama ${i+1}`, markerPanoramaOptions);
+                    const markerPanorama = new mapyContext.SMap.Marker(
+                        mapyContext.SMap.Coords.fromWGS84(pointsObject.pointPanorama.x, pointsObject.pointPanorama.y),
+                        `Panorama ${i + 1}`,
+                        markerPanoramaOptions,
+                    );
                     layerSMap.addMarker(markerPanorama);
-
                 }
             } else if (props.type === 'round') {
                 const { click, refLayeredMapValue, refLayerValue, refVectorLayerSMapValue } = props;
@@ -89,7 +108,9 @@ const SMap = (props) => {
                 refLayerValue.current = layerSMap;
                 // assing layered map value
                 refLayeredMapValue.current = mapInstance;
-                refLayeredMapValue.current.getSignals().addListener(window, "map-click", click); /* Při signálu kliknutí volat tuto funkci */
+                refLayeredMapValue.current
+                    .getSignals()
+                    .addListener(window, 'map-click', click); /* Při signálu kliknutí volat tuto funkci */
 
                 // vykreslit vektor do mapy
                 const vectorLayer = new mapyContext.SMap.Layer.Geometry();
@@ -108,17 +129,19 @@ const SMap = (props) => {
 
     return (
         <>
-        <div ref={map}></div>
-            {
-                props.type === 'result' ?
-                    <button onClick={() => {
-                        closeResultPage()
-                    }} type="submit">
-                        Hrát znovu
-                    </button> : null
-            }
+            <div ref={map}></div>
+            {props.type === 'result' ? (
+                <button
+                    onClick={() => {
+                        closeResultPage();
+                    }}
+                    type="submit"
+                >
+                    Hrát znovu
+                </button>
+            ) : null}
         </>
-    )
+    );
 };
 
 export default SMap;

@@ -3,7 +3,7 @@ import ReactGA from 'react-ga';
 import { Link } from 'react-router-dom';
 import useScript from './hooks/useScript';
 import useMapLoader from './hooks/useMapLoader';
-import awesomeLogo from './assets/images/awesome-logo.svg'; // Tell Webpack this JS file uses this image
+import awesomeLogo from './assets/images/kdetosakra.png'; // Tell Webpack this JS file uses this image
 import socialIcons from './assets/images/social-icons.svg';
 
 import RouterSwitch from './components/RouterSwitch';

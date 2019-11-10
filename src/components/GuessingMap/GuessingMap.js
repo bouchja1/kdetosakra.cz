@@ -3,7 +3,7 @@ import { useLocation, Redirect } from 'react-router-dom';
 import { useLocalStorage } from '@rehooks/local-storage';
 import MapyContext from '../../context/MapyContext';
 import NextRoundButton from '../NextRoundButton';
-import { DEFAUL_MARKER_PLACE_ICON, roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util/Util';
+import { DEFAUL_MARKER_PLACE_ICON, DEFAUL_MARKER_ICON, roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util/Util';
 import RoundSMapWrapper from '../SMap/RoundSMapWrapper';
 import { saveRandomScore, saveCityScore } from '../../services/api';
 
@@ -53,6 +53,7 @@ const GuessingMap = ({
     const click = (e, elm) => {
         // Došlo ke kliknutí, spočítáme kde
         const options = {
+            url: DEFAUL_MARKER_ICON,
             anchor: { left: 10, bottom: 1 } /* Ukotvení značky za bod uprostřed dole */,
         };
         // state is not working in event handling
