@@ -26,6 +26,7 @@ const GuessingMap = ({
     const [layer] = useState(null);
     const [vectorLayerSMap] = useState(null);
     const [gameCompleted, setGameCompleted] = useState(false);
+    const [roundGuessed, setRoundGuessed] = useState(false);
 
     let refLayerValue = React.useRef(layer);
     let refVectorLayerSMapValue = React.useRef(vectorLayerSMap);
@@ -47,6 +48,7 @@ const GuessingMap = ({
         refVectorLayerSMapValue.current.removeAll();
         setNextRoundButtonVisible(false);
         setGuessButtonDisabled(true);
+        setRoundGuessed(false);
         if (mode === 'random') {
             city = generateRandomCzechPlace();
         }
@@ -151,6 +153,7 @@ const GuessingMap = ({
         };
         setGuessButtonDisabled(true);
         setNextRoundButtonVisible(true);
+        setRoundGuessed(true);
 
         const panoramaCoordinates = calculateDistance(guessedCoordinates);
 
@@ -181,7 +184,7 @@ const GuessingMap = ({
 
     return (
         <div>
-            {guessedDistance === null ? (
+            {!roundGuessed ? (
                 <RoundSMapWrapper
                     click={click}
                     refLayeredMapValue={refLayeredMapValue}
@@ -189,7 +192,7 @@ const GuessingMap = ({
                     refVectorLayerSMapValue={refVectorLayerSMapValue}
                 />
             ) : (
-                <ResultSMapWrapper guessedPoints={guessedPoints} />
+                <ResultSMapWrapper guessedPoints={[guessedPoints[guessedPoints.length - 1]]} />
             )}
             {renderGuessingMapButtons()}
         </div>
