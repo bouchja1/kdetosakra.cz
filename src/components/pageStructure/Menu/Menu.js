@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const Menu = () => {
     return (
-        <div className="menu-container">
+        <div className="section menu-container">
             <div className="menu">
                 <div className="date">
                     <Link to="/">Domů</Link>

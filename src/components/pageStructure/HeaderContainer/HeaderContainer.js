@@ -4,7 +4,7 @@ import socialIcons from '../../../assets/images/social-icons.svg';
 
 const HeaderContainer = () => {
     return (
-        <div className="header-container">
+        <div className="section header-container">
             <div className="header">
                 <div className="logo">
                     <img alt="logo" src={awesomeLogo} />

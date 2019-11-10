@@ -248,26 +248,22 @@ const Configuration = function() {
     return (
         <>
             <HeaderContainer />
-            <div className="game-mode-container">
-                <div className="game-modes-primary">
-                    <div className="game-mode-item czech-cities">
-                        <h1>Česká města</h1>
-                        {renderForm()}
-                    </div>
-                    <div className="game-mode-item random-places">
-                        <h1>Náhodné místo v Čr</h1>
-                        {playRandomCzechPlace()}
-                    </div>
+            <div className="section game-mode-container">
+                <div className="game-mode-item czech-cities">
+                    <h1>Česká města</h1>
+                    {renderForm()}
                 </div>
-                <div className="game-modes-secondary">
-                    <div className="game-mode-item">
-                        <h1>Vlastní místo</h1>
-                        {renderCustomPlace()}
-                    </div>
-                    <div className="game-mode-item">
-                        <h1>Podle mojí pozice</h1>
-                        {renderMyPosition()}
-                    </div>
+                <div className="game-mode-item random-places">
+                    <h1>Náhodné místo v Čr</h1>
+                    {playRandomCzechPlace()}
+                </div>
+                <div className="game-mode-item">
+                    <h1>Vlastní místo</h1>
+                    {renderCustomPlace()}
+                </div>
+                <div className="game-mode-item">
+                    <h1>Podle mojí pozice</h1>
+                    {renderMyPosition()}
                 </div>
             </div>
         </>

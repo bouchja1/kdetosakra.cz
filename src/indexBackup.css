@@ -7,13 +7,23 @@
 * {
     box-sizing: border-box;
     font-family: 'Roboto-Regular';
+    margin: 0;
+    padding: 0;
 }
 
 .kdetosakra-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    position: relative;
+    flex-wrap: wrap;
+}
+
+.section {
+    width: 100%;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* this is flex container */
@@ -24,7 +34,7 @@
     padding: 20px 0;
     display: flex;
     justify-content: center;
-    height: 5%;
+    height: 80px;
 }
 
 .menu {
@@ -61,31 +71,10 @@
     padding: 20px 0;
     background-color: khaki;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.game-modes-primary {
-    width: 900px;
-    background-color: fuchsia;
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
     flex-direction: row;
-    border: 1px solid black;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.game-modes-secondary {
-    width: 900px;
-    background-color: brown;
-    display: flex;
-    justify-content: space-around;
     flex-wrap: wrap;
-    flex-direction: row;
-    border: 1px solid black;
     align-items: center;
+    height: 600px;
 }
 
 .game-mode-item {
@@ -186,4 +175,40 @@
     position: fixed;
     bottom: 55px;
     right: 5px;
+}
+
+/* Mobile Styles */
+@media only screen and (max-width: 400px) {
+    body {
+        background-color: #f09a9d; /* Red */
+    }
+}
+
+/* Tablet Styles */
+@media only screen and (min-width: 401px) and (max-width: 960px) {
+    body {
+        background-color: #f5cf8e; /* Yellow */
+    }
+
+    .game-mode-item {
+        width: 50%;
+    }
+}
+
+/* Desktop Styles */
+@media only screen and (min-width: 961px) {
+    body {
+        background-color: #b2d6ff; /* Blue */
+    }
+
+    .kdetosakra-container {
+        width: 960px;
+        margin: 0 auto;
+    }
+    .game-mode-item {
+        width: 50%;
+    }
+    .header {
+        height: 400px;
+    }
 }
