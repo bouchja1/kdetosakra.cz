@@ -22,7 +22,7 @@ const RouterSwitch = () => {
             <Route path="/mesto">
                 <City />
             </Route>
-            <Route path="/nahodne">
+            <Route path="/random">
                 <RandomCity />
             </Route>
             <Route path="/vysledek">

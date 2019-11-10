@@ -66,9 +66,10 @@ const Configuration = function() {
             return (
                 <Redirect
                     to={{
-                        pathname: '/nahodne',
+                        pathname: '/random',
                         state: {
                             radius: 0.5, // set default radius
+                            city: null,
                             mode: 'random',
                         },
                     }}
@@ -76,9 +77,23 @@ const Configuration = function() {
             );
         } else {
             return (
-                <form className="container" onSubmit={() => setRandomCityFormSubmitted(true)}>
-                    <button type="submit">Hrát</button>
-                </form>
+                <Formik
+                    initialValues={{ radius: 1, city: '' }}
+                    onSubmit={(values, { setSubmitting }) => {
+                        setRandomCityFormSubmitted(true);
+                    }}
+                >
+                    {props => {
+                        const { values, isSubmitting, handleSubmit } = props;
+                        return (
+                            <form onSubmit={handleSubmit}>
+                                <button type="submit" disabled={isSubmitting}>
+                                    Hrát
+                                </button>
+                            </form>
+                        );
+                    }}
+                </Formik>
             );
         }
     };
@@ -101,54 +116,52 @@ const Configuration = function() {
                     }}
                 />
             );
-        } else
-            return geolocation.latitude && geolocation.longitude ? (
-                <Formik
-                    initialValues={{ radius: 1, city: '' }}
-                    onSubmit={(values, { setSubmitting }) => {
-                        setGeoFormValues({
-                            ...values,
-                            city: {
-                                coordinates: {
-                                    longitude: geolocation.longitude,
-                                    latitude: geolocation.latitude,
-                                },
+        }
+        return geolocation.latitude && geolocation.longitude ? (
+            <Formik
+                initialValues={{ radius: 1, city: '' }}
+                onSubmit={(values, { setSubmitting }) => {
+                    setGeoFormValues({
+                        ...values,
+                        city: {
+                            coordinates: {
+                                longitude: geolocation.longitude,
+                                latitude: geolocation.latitude,
                             },
-                        });
-                        setGeoFormSubmitted(true);
-                    }}
-                    validationSchema={Yup.object().shape({
-                        radius: Yup.number().required('Required'),
-                    })}
-                >
-                    {props => {
-                        const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props;
-                        return (
-                            <form onSubmit={handleSubmit}>
-                                <input
-                                    name="radius"
-                                    placeholder="Zadej radius od své pozice"
-                                    type="number"
-                                    min="1"
-                                    max="10"
-                                    value={values.radius}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    className={errors.radius && touched.radius ? 'text-input error' : 'text-input'}
-                                />
-                                {errors.radius && touched.radius && (
-                                    <div className="input-feedback">{errors.radius}</div>
-                                )}
-                                <button type="submit" disabled={isSubmitting}>
-                                    Potvrdit
-                                </button>
-                            </form>
-                        );
-                    }}
-                </Formik>
-            ) : (
-                <p>Geografickou polohu se nepodařilo načíst.</p>
-            );
+                        },
+                    });
+                    setGeoFormSubmitted(true);
+                }}
+                validationSchema={Yup.object().shape({
+                    radius: Yup.number().required('Required'),
+                })}
+            >
+                {props => {
+                    const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props;
+                    return (
+                        <form onSubmit={handleSubmit}>
+                            <input
+                                name="radius"
+                                placeholder="Zadej radius od své pozice"
+                                type="number"
+                                min="1"
+                                max="10"
+                                value={values.radius}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                className={errors.radius && touched.radius ? 'text-input error' : 'text-input'}
+                            />
+                            {errors.radius && touched.radius && <div className="input-feedback">{errors.radius}</div>}
+                            <button type="submit" disabled={isSubmitting}>
+                                Potvrdit
+                            </button>
+                        </form>
+                    );
+                }}
+            </Formik>
+        ) : (
+            <p>Geografickou polohu se nepodařilo načíst.</p>
+        );
     };
 
     const renderCustomPlace = () => {
