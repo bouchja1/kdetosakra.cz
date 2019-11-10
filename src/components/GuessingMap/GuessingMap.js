@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useLocation, Redirect } from 'react-router-dom';
 import { useLocalStorage } from '@rehooks/local-storage';
+import { Button } from 'antd';
 import MapyContext from '../../context/MapyContext';
 import NextRoundButton from '../NextRoundButton';
 import { DEFAUL_MARKER_PLACE_ICON, DEFAUL_MARKER_ICON, roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util/Util';
@@ -112,28 +113,28 @@ const GuessingMap = ({
         }
         if (totalRounds >= TOTAL_ROUNDS_MAX) {
             return (
-                <button
+                <Button
                     onClick={() => {
                         resolveRounds();
                     }}
-                    type="submit"
+                    type="primary"
                 >
                     Vyhodnotit hru
-                </button>
+                </Button>
             );
         } else {
             return (
                 <div>
                     {!nextRoundButtonVisible ? (
-                        <button
+                        <Button
                             disabled={guessButtonDisabled}
                             onClick={() => {
                                 calculateCoords();
                             }}
-                            type="submit"
+                            type="primary"
                         >
                             Hádej!
-                        </button>
+                        </Button>
                     ) : null}
                     {nextRoundButtonVisible ? <NextRoundButton refreshMap={() => refreshMap()} /> : null}
                 </div>

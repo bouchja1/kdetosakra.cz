@@ -1,10 +1,11 @@
 import React from 'react';
+import { Button } from 'antd';
 
-const NextRoundButton = ({refreshMap}) => {
+const NextRoundButton = ({ refreshMap }) => {
     return (
-        <button onClick={refreshMap} type="submit">
+        <Button onClick={refreshMap} type="primary">
             Další kolo!
-        </button>
+        </Button>
     );
 };
 

@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Formik } from 'formik';
 import ReactGA from 'react-ga';
+import { Input, Button } from 'antd';
 import * as Yup from 'yup';
 import MapyContext from '../../context/MapyContext';
 import { CATEGORIES } from '../../enums/gaCategories';
@@ -74,7 +75,7 @@ const Suggest = () => {
                         return (
                             <form onSubmit={handleSubmit}>
                                 <input type="text" placeholder="hledaná fráze" ref={suggestInput} />
-                                <input
+                                <Input
                                     name="radius"
                                     placeholder="Zadej radius od své pozice"
                                     type="number"
@@ -88,9 +89,9 @@ const Suggest = () => {
                                 {errors.radius && touched.radius && (
                                     <div className="input-feedback">{errors.radius}</div>
                                 )}
-                                <button disabled={!submittedSuggestedData} type="submit">
+                                <Button disabled={!submittedSuggestedData} type="primary" onClick={handleSubmit}>
                                     Hrát
-                                </button>
+                                </Button>
                             </form>
                         );
                     }}

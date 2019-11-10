@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import ReactGA from 'react-ga';
+import { Input, Button } from 'antd';
 import cryptoRandomString from 'crypto-random-string';
 import { Redirect } from 'react-router-dom';
 import useGeolocation from 'react-hook-geolocation';
@@ -9,8 +10,6 @@ import { writeStorage, useLocalStorage } from '@rehooks/local-storage';
 import { cities } from '../../data/cities';
 import { CATEGORIES } from '../../enums/gaCategories';
 import Suggest from '../Suggest';
-import awesomeLogo from '../../assets/images/kdetosakra.png';
-import socialIcons from '../../assets/images/social-icons.svg';
 import HeaderContainer from '../pageStructure/HeaderContainer';
 
 const Configuration = function() {
@@ -90,9 +89,9 @@ const Configuration = function() {
                         const { values, isSubmitting, handleSubmit } = props;
                         return (
                             <form onSubmit={handleSubmit}>
-                                <button type="submit" disabled={isSubmitting}>
+                                <Button type="primary" disabled={isSubmitting} onClick={handleSubmit}>
                                     Hrát
-                                </button>
+                                </Button>
                             </form>
                         );
                     }}
@@ -143,7 +142,7 @@ const Configuration = function() {
                     const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props;
                     return (
                         <form onSubmit={handleSubmit}>
-                            <input
+                            <Input
                                 name="radius"
                                 placeholder="Zadej radius od své pozice"
                                 type="number"
@@ -155,9 +154,9 @@ const Configuration = function() {
                                 className={errors.radius && touched.radius ? 'text-input error' : 'text-input'}
                             />
                             {errors.radius && touched.radius && <div className="input-feedback">{errors.radius}</div>}
-                            <button type="submit" disabled={isSubmitting}>
+                            <Button type="primary" disabled={isSubmitting} onClick={handleSubmit}>
                                 Potvrdit
-                            </button>
+                            </Button>
                         </form>
                     );
                 }}
@@ -221,7 +220,7 @@ const Configuration = function() {
                                 </Field>
                                 {errors.city && touched.city && <div className="input-feedback">{errors.color}</div>}
                                 {citySelected ? (
-                                    <input
+                                    <Input
                                         name="radius"
                                         placeholder="Zadej radius od centra Prahy"
                                         type="number"
@@ -236,9 +235,9 @@ const Configuration = function() {
                                 {errors.radius && touched.radius && (
                                     <div className="input-feedback">{errors.radius}</div>
                                 )}
-                                <button type="submit" disabled={isSubmitting}>
+                                <Button type="primary" disabled={isSubmitting} onClick={handleSubmit}>
                                     Potvrdit
-                                </button>
+                                </Button>
                             </form>
                         );
                     }}

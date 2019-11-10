@@ -3,7 +3,8 @@ import 'react-app-polyfill/ie9';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
-import './index.css';
+import 'antd/dist/antd.css';
+import './indexBackup.css';
 import './assets/fonts/Roboto-Regular.ttf';
 import App from './App';
 

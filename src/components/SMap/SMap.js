@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { Button } from 'antd';
 import MapyContext from '../../context/MapyContext';
 import { DEFAUL_MARKER_ICON, DEFAUL_MARKER_PLACE_ICON } from '../../util/Util';
 
@@ -131,14 +132,14 @@ const SMap = props => {
         <>
             <div className="smap" ref={map}></div>
             {props.type === 'result' ? (
-                <button
+                <Button
                     onClick={() => {
                         closeResultPage();
                     }}
-                    type="submit"
+                    type="primary"
                 >
                     Hrát znovu
-                </button>
+                </Button>
             ) : null}
         </>
     );

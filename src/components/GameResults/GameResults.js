@@ -1,4 +1,5 @@
 import React from 'react';
+import { Progress } from 'antd';
 import { roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util/Util';
 
 const GameResults = ({ totalRounds, totalRoundScore, roundScore, guessedDistance, guessedPlace }) => {
@@ -14,6 +15,7 @@ const GameResults = ({ totalRounds, totalRoundScore, roundScore, guessedDistance
                 <p>Vzdušná vzdálenost místa od tvého odhadu: {roundToTwoDecimal(guessedDistance)} km</p>
             ) : null}
             {roundScore >= 0 && guessedDistance ? <p>Skóre: {roundScore}</p> : null}
+            {roundScore >= 0 && guessedDistance ? <Progress percent={roundScore} /> : null}
             {guessedPlace && guessedDistance ? (
                 <>
                     <p>Obec: {guessedPlace.obec}</p>
