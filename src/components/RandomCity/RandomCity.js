@@ -1,9 +1,13 @@
-import React from 'react';
-import {Link, Redirect, useLocation} from 'react-router-dom';
-import Game from "../Game";
+import React, { useEffect } from 'react';
+import { Link, Redirect, useLocation } from 'react-router-dom';
+import Game from '../Game';
 
-const RandomCity = () => {
+const RandomCity = ({ processHeaderContainerVisible }) => {
     const location = useLocation();
+
+    useEffect(() => {
+        processHeaderContainerVisible(false);
+    }, []);
 
     if (location && location.state && location.state.mode === 'random') {
         return (
@@ -16,11 +20,13 @@ const RandomCity = () => {
             </>
         );
     } else {
-        return <Redirect
-            to={{
-                pathname: '/',
-            }}
-        />
+        return (
+            <Redirect
+                to={{
+                    pathname: '/',
+                }}
+            />
+        );
     }
 };
 

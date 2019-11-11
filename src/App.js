@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactGA from 'react-ga';
 import { Link } from 'react-router-dom';
 import useScript from './hooks/useScript';
@@ -25,16 +25,21 @@ function App() {
     initializeReactGA();
     const [loaded, error] = useScript('https://api.mapy.cz/loader.js');
     const [mapLoader] = useMapLoader(loaded);
+    const [headerContainerVisible, setHeaderContainerVisible] = useState(false);
+
+    const processHeaderContainerVisible = isVisible => {
+        setHeaderContainerVisible(isVisible);
+    };
 
     return (
         <>
             <MenuComponent />
-            <HeaderContainer />
+            <HeaderContainer headerContainerVisible={headerContainerVisible} />
             <Layout className="layout">
                 <Content>
                     {loaded && !error && (
                         <MapyProvider value={mapLoader}>
-                            <RouterSwitch />
+                            <RouterSwitch processHeaderContainerVisible={processHeaderContainerVisible} />
                         </MapyProvider>
                     )}
                 </Content>

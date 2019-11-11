@@ -17,7 +17,7 @@ const { Option } = Select;
 const { Meta } = Card;
 const { Content } = Layout;
 
-const Configuration = function() {
+const Configuration = function({ processHeaderContainerVisible }) {
     const [randomUserResultToken] = useLocalStorage('randomUserResultToken'); // send the key to be tracked.
     const geolocation = useGeolocation();
     const [citySelected, setCitySelected] = useState(null);
@@ -27,6 +27,10 @@ const Configuration = function() {
     const [geoFormSubmitted, setGeoFormSubmitted] = useState(false);
     const [cityFormValues, setCityFormValues] = useState({});
     const [geoFormValues, setGeoFormValues] = useState({});
+
+    useEffect(() => {
+        processHeaderContainerVisible(true);
+    }, []);
 
     useEffect(() => {
         if (!randomUserResultToken) {
@@ -143,6 +147,7 @@ const Configuration = function() {
                     const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props;
                     return (
                         <form onSubmit={handleSubmit}>
+                            <label htmlFor="radius">Radius: </label>
                             <Input
                                 name="radius"
                                 placeholder="Zadej radius od své pozice"
@@ -209,6 +214,7 @@ const Configuration = function() {
                         const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props;
                         return (
                             <form onSubmit={handleSubmit}>
+                                <label htmlFor="city">Město: </label>
                                 <Select
                                     showSearch
                                     name="city"
@@ -223,17 +229,22 @@ const Configuration = function() {
                                 </Select>
                                 {errors.city && touched.city && <div className="input-feedback">{errors.color}</div>}
                                 {citySelected ? (
-                                    <Input
-                                        name="radius"
-                                        placeholder="Zadej radius od centra Prahy"
-                                        type="number"
-                                        min="1"
-                                        max={maxCityRadius}
-                                        value={values.radius}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        className={errors.radius && touched.radius ? 'text-input error' : 'text-input'}
-                                    />
+                                    <>
+                                        <label htmlFor="radius">Radius: </label>
+                                        <Input
+                                            name="radius"
+                                            placeholder="Zadej radius od centra Prahy"
+                                            type="number"
+                                            min="1"
+                                            max={maxCityRadius}
+                                            value={values.radius}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            className={
+                                                errors.radius && touched.radius ? 'text-input error' : 'text-input'
+                                            }
+                                        />
+                                    </>
                                 ) : null}
                                 {errors.radius && touched.radius && (
                                     <div className="input-feedback">{errors.radius}</div>

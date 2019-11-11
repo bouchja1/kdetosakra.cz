@@ -74,12 +74,15 @@ const Suggest = () => {
                         const { values, touched, errors, handleChange, handleBlur, handleSubmit } = props;
                         return (
                             <form onSubmit={handleSubmit}>
+                                <label htmlFor="place">Místo, které chceš zkoumat: </label>
                                 <input
+                                    name="place"
                                     type="text"
                                     className="ant-input text-input"
                                     placeholder="hledaná fráze"
                                     ref={suggestInput}
                                 />
+                                <label htmlFor="radius">Radius: </label>
                                 <Input
                                     name="radius"
                                     placeholder="Zadej radius od své pozice"

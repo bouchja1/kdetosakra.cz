@@ -1,9 +1,13 @@
-import React from 'react';
-import {Link, Redirect, useLocation} from 'react-router-dom';
-import Game from "../Game";
+import React, { useEffect } from 'react';
+import { Link, Redirect, useLocation } from 'react-router-dom';
+import Game from '../Game';
 
-const SuggestedCity = () => {
+const SuggestedCity = ({ processHeaderContainerVisible }) => {
     const location = useLocation();
+
+    useEffect(() => {
+        processHeaderContainerVisible(false);
+    }, []);
 
     if (location && location.state && location.state.city) {
         return (
@@ -18,11 +22,13 @@ const SuggestedCity = () => {
             </>
         );
     } else {
-        return <Redirect
-            to={{
-                pathname: '/',
-            }}
-        />
+        return (
+            <Redirect
+                to={{
+                    pathname: '/',
+                }}
+            />
+        );
     }
 };
 

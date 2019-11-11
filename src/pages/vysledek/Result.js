@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
 import ResultSMapWrapper from '../../components/SMap/ResultSMapWrapper';
 import { roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util/Util';
 import HeaderContainer from '../../components/pageStructure/HeaderContainer';
 import { Button, Progress } from 'antd';
 
-const Result = () => {
+const Result = ({ processHeaderContainerVisible }) => {
     const location = useLocation();
     const [resultPageClosed, setResultPageClosed] = useState(false);
+
+    useEffect(() => {
+        processHeaderContainerVisible(true);
+    }, []);
 
     const closeResultPage = () => {
         setResultPageClosed(true);

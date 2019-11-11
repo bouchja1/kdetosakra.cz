@@ -9,34 +9,33 @@ import SuggestedCity from '../SuggestedCity';
 import Home from '../../pages/home';
 import Info from '../../pages/info';
 import Result from '../../pages/vysledek';
-import MenuComponent from '../pageStructure/Menu';
 
-const RouterSwitch = () => {
+const RouterSwitch = ({ processHeaderContainerVisible }) => {
     return (
         <Switch>
             <Route exact path="/">
-                <Home />
+                <Home processHeaderContainerVisible={processHeaderContainerVisible} />
             </Route>
             <Route path="/geolokace">
-                <Geolocation />
+                <Geolocation processHeaderContainerVisible={processHeaderContainerVisible} />
             </Route>
             <Route path="/mesto">
-                <City />
+                <City processHeaderContainerVisible={processHeaderContainerVisible} />
             </Route>
             <Route path="/nahodne">
-                <RandomCity />
+                <RandomCity processHeaderContainerVisible={processHeaderContainerVisible} />
             </Route>
             <Route path="/vysledek">
-                <Result />
+                <Result processHeaderContainerVisible={processHeaderContainerVisible} />
             </Route>
             <Route path="/vlastni">
-                <SuggestedCity />
+                <SuggestedCity processHeaderContainerVisible={processHeaderContainerVisible} />
             </Route>
             <Route path="/info">
-                <Info />
+                <Info processHeaderContainerVisible={processHeaderContainerVisible} />
             </Route>
             <Route path="*">
-                <NotFound />
+                <NotFound processHeaderContainerVisible={processHeaderContainerVisible} />
             </Route>
         </Switch>
     );

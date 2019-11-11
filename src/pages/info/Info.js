@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Typography, Icon } from 'antd';
 import HeaderContainer from '../../components/pageStructure/HeaderContainer';
 
 const { Title, Paragraph, Text } = Typography;
 
-const Info = () => {
+const Info = ({ processHeaderContainerVisible }) => {
+    useEffect(() => {
+        processHeaderContainerVisible(true);
+    }, []);
+
     function decryptEmail(encoded) {
         const address = atob(encoded);
         return `mailto:${address}`;
