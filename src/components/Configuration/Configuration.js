@@ -10,6 +10,7 @@ import { writeStorage, useLocalStorage } from '@rehooks/local-storage';
 import { cities } from '../../data/cities';
 import { CATEGORIES } from '../../enums/gaCategories';
 import Suggest from '../Suggest';
+import { generateRandomRadius } from '../../util/Util';
 import HeaderContainer from '../pageStructure/HeaderContainer';
 
 const { Option } = Select;
@@ -58,6 +59,7 @@ const Configuration = function() {
 
     const playRandomCzechPlace = () => {
         if (randomCityFormSubmitted) {
+            const randomRadius = generateRandomRadius();
             ReactGA.event({
                 category: CATEGORIES.RANDOM_CITY,
                 action: 'Play random city game',
@@ -67,7 +69,7 @@ const Configuration = function() {
                     to={{
                         pathname: '/nahodne',
                         state: {
-                            radius: 0.5, // set default radius
+                            radius: randomRadius,
                             city: null,
                             mode: 'random',
                         },

@@ -93,7 +93,7 @@ const Game = ({ location }) => {
     };
 
     const generatePlaceInRadius = (radius, locationCity) => {
-        radius = radius * 1000; // to kilometres
+        radius = radius * 1000; // to meters
         const generatedPlace = pointInCircle(
             {
                 longitude: locationCity.coordinates.longitude,

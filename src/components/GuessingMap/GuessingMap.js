@@ -4,7 +4,13 @@ import { useLocalStorage } from '@rehooks/local-storage';
 import { Button, Modal } from 'antd';
 import MapyContext from '../../context/MapyContext';
 import NextRoundButton from '../NextRoundButton';
-import { DEFAUL_MARKER_PLACE_ICON, DEFAUL_MARKER_ICON, roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util/Util';
+import {
+    DEFAUL_MARKER_PLACE_ICON,
+    DEFAUL_MARKER_ICON,
+    roundToTwoDecimal,
+    TOTAL_ROUNDS_MAX,
+    generateRandomRadius,
+} from '../../util/Util';
 import RoundSMapWrapper from '../SMap/RoundSMapWrapper';
 import { saveRandomScore, saveCityScore } from '../../services/api';
 import ResultSMapWrapper from '../SMap/ResultSMapWrapper';
@@ -50,6 +56,7 @@ const GuessingMap = ({
         setGuessButtonDisabled(true);
         setRoundGuessed(false);
         if (mode === 'random') {
+            radius = generateRandomRadius();
             city = generateRandomCzechPlace();
         }
         loadPanoramaMap(radius, city, true);
