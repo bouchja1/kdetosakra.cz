@@ -197,7 +197,7 @@ const Game = ({ location }) => {
                     <div ref={panorama}></div>
                 )}
             </div>
-            <div className="smapContainer">
+            <div className="smap-container">
                 {/* ty parametry jsou definovane v Panorama */}
                 <GuessingMap
                     updateCalculation={updateCalculation}

@@ -249,20 +249,38 @@ const Configuration = function() {
         <>
             <HeaderContainer />
             <div className="section game-mode-container">
-                <div className="game-mode-item czech-cities">
-                    <h1>Česká města</h1>
+                <div className="game-mode-item">
+                    <h1>Krajská města ČR</h1>
+                    <p>
+                        Bydlíš v některém z krajských sídel a znáš ho jako své boty? Tak to prokaž! Nebo se prostě jen
+                        tak projdi v místech, kde to zase až tak dobře neznáš.
+                    </p>
                     {renderForm()}
                 </div>
-                <div className="game-mode-item random-places">
-                    <h1>Náhodné místo v Čr</h1>
+                <div className="game-mode-item">
+                    <h1>Náhodné místo v Česku</h1>
+                    <p>
+                        Známá města a místa pro tebe nejsou dostatečnou výzvou? Přenes se tedy do některých z{' '}
+                        <a href="https://github.com/33bcdd/souradnice-mest">6259 obcí ČR</a> a jejich bezprostředního
+                        okolí. Tahle výzva je pro experty, co mají naši zemi o rozloze 78 864 km čtverečních projetou
+                        křížem krážem.
+                    </p>
                     {playRandomCzechPlace()}
                 </div>
                 <div className="game-mode-item">
-                    <h1>Vlastní místo</h1>
+                    <h1>Zadat vlastní místo</h1>
+                    <p>
+                        Chceš si zahrát KdeToSakra a nebydlíš přitom v krajském městě? Nevadí, přesně tohle je výzva pro
+                        tebe. Svou obec či jiné zajímavé místo vyhledáš níže a pak už jen lovíš body na mapě.
+                    </p>
                     {renderCustomPlace()}
                 </div>
                 <div className="game-mode-item">
-                    <h1>Podle mojí pozice</h1>
+                    <h1>Podle mojí geolokace</h1>
+                    <p>
+                        Nech se zaměřit dle své geolokace a ukaž, kdo je tady pánem a znalcem svého bezprostředního
+                        okolí!
+                    </p>
                     {renderMyPosition()}
                 </div>
             </div>

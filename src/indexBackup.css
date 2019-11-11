@@ -169,14 +169,6 @@
     height: 450px;
 }
 
-.smapContainer {
-    background-color: antiquewhite;
-    width: 650px;
-    position: fixed;
-    bottom: 55px;
-    right: 5px;
-}
-
 /* Mobile Styles */
 @media only screen and (max-width: 400px) {
     body {
@@ -202,13 +194,18 @@
     }
 
     .kdetosakra-container {
-        width: 960px;
+        width: 100%;
         margin: 0 auto;
     }
     .game-mode-item {
         width: 50%;
     }
-    .header {
-        height: 400px;
+
+    .smap-container {
+        background-color: antiquewhite;
+        width: 650px;
+        position: fixed;
+        bottom: 55px;
+        right: 5px;
     }
 }

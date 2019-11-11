@@ -74,7 +74,12 @@ const Suggest = () => {
                         const { values, touched, errors, handleChange, handleBlur, handleSubmit } = props;
                         return (
                             <form onSubmit={handleSubmit}>
-                                <input type="text" placeholder="hledaná fráze" ref={suggestInput} />
+                                <input
+                                    type="text"
+                                    className="ant-input text-input"
+                                    placeholder="hledaná fráze"
+                                    ref={suggestInput}
+                                />
                                 <Input
                                     name="radius"
                                     placeholder="Zadej radius od své pozice"

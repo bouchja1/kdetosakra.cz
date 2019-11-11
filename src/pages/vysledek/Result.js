@@ -3,7 +3,7 @@ import { Redirect, useLocation } from 'react-router-dom';
 import ResultSMapWrapper from '../../components/SMap/ResultSMapWrapper';
 import { roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util/Util';
 import HeaderContainer from '../../components/pageStructure/HeaderContainer';
-import { Button } from 'antd';
+import { Button, Progress } from 'antd';
 
 const Result = () => {
     const location = useLocation();
@@ -26,8 +26,7 @@ const Result = () => {
                 <div className="result-container">
                     <h1>
                         Výsledek:
-                        {roundToTwoDecimal(location.state.totalRoundScore / TOTAL_ROUNDS_MAX)}
-                        procent
+                        <Progress percent={roundToTwoDecimal(location.state.totalRoundScore / TOTAL_ROUNDS_MAX)} />
                     </h1>
                 </div>
                 <ResultSMapWrapper guessedPoints={location.state.guessedPoints} closeResultPage={closeResultPage} />
