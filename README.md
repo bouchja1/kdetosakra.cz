@@ -17,7 +17,7 @@ This service is based on [Mapy.cz API](https://api.mapy.cz/) (version 4.13)
 
 ## About ##
 
-I am a backend developer who needed to learn the basics of React. This project was created with the trial and error method but. It's good enough for me now but code reviews, contributors and pull requests are always more than welcome! 🙏
+I am a backend developer who needed to learn the basics of React. This project was created with the trial and error method and It's good enough for me now. But code reviews, contributors and pull requests are always more than welcome! 🙏
 
 ## Technologies
 
