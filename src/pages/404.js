@@ -6,7 +6,6 @@ const NotFound = () => {
     const location = useLocation();
     return (
         <>
-            <HeaderContainer />
             <h1>Not found {location.pathname}</h1>
         </>
     );

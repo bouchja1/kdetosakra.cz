@@ -8,8 +8,12 @@ import socialIcons from './assets/images/social-icons.svg';
 
 import RouterSwitch from './components/RouterSwitch';
 import { MapyProvider } from './context/MapyContext';
-import Menu from './components/pageStructure/Menu';
-import Footer from './components/pageStructure/Footer';
+import MenuComponent from './components/pageStructure/Menu';
+import { Layout, Icon } from 'antd';
+import HeaderContainer from './components/pageStructure/HeaderContainer';
+// import Footer from './components/pageStructure/Footer';
+
+const { Header, Content, Footer } = Layout;
 
 function initializeReactGA() {
     ReactGA.initialize('UA-151784741-1');
@@ -23,15 +27,23 @@ function App() {
     const [mapLoader] = useMapLoader(loaded);
 
     return (
-        <div className="kdetosakra-container">
-            <Menu />
-            {loaded && !error && (
-                <MapyProvider value={mapLoader}>
-                    <RouterSwitch />
-                </MapyProvider>
-            )}
-            <Footer />
-        </div>
+        <>
+            <MenuComponent />
+            <HeaderContainer />
+            <Layout className="layout">
+                <Content>
+                    {loaded && !error && (
+                        <MapyProvider value={mapLoader}>
+                            <RouterSwitch />
+                        </MapyProvider>
+                    )}
+                </Content>
+                <Footer style={{ textAlign: 'center' }}>
+                    Web běží díky <a href="http://mapy.cz/">Mapy.cz</a> <a href="https://api.mapy.cz/">API</a>{' '}
+                    <Icon type="heart" theme="twoTone" twoToneColor="#eb2f96" />
+                </Footer>
+            </Layout>
+        </>
     );
 }
 

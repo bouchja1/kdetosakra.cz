@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import ReactGA from 'react-ga';
-import { Input, Button, Select } from 'antd';
+import { Input, Button, Select, Card, Icon, Avatar, Layout } from 'antd';
 import cryptoRandomString from 'crypto-random-string';
 import { Redirect } from 'react-router-dom';
 import useGeolocation from 'react-hook-geolocation';
@@ -14,6 +14,8 @@ import { generateRandomRadius } from '../../util/Util';
 import HeaderContainer from '../pageStructure/HeaderContainer';
 
 const { Option } = Select;
+const { Meta } = Card;
+const { Content } = Layout;
 
 const Configuration = function() {
     const [randomUserResultToken] = useLocalStorage('randomUserResultToken'); // send the key to be tracked.
@@ -249,43 +251,67 @@ const Configuration = function() {
 
     return (
         <>
-            <HeaderContainer />
-            <div className="section game-mode-container">
-                <div className="game-mode-item">
-                    <h1>Krajská města ČR</h1>
-                    <p>
-                        Bydlíš v některém z krajských sídel a znáš ho jako své boty? Tak to prokaž! Nebo se prostě jen
-                        tak projdi v místech, kde to zase až tak dobře neznáš.
-                    </p>
-                    {renderForm()}
-                </div>
-                <div className="game-mode-item">
-                    <h1>Náhodné místo v Česku</h1>
-                    <p>
-                        Známá města a místa pro tebe nejsou dostatečnou výzvou? Přenes se tedy do některých z{' '}
-                        <a href="https://github.com/33bcdd/souradnice-mest">6259 obcí ČR</a> a jejich bezprostředního
-                        okolí. Tahle výzva je pro experty, co mají naši zemi o rozloze 78 864 km čtverečních projetou
-                        křížem krážem.
-                    </p>
-                    {playRandomCzechPlace()}
-                </div>
-                <div className="game-mode-item">
-                    <h1>Zadat vlastní místo</h1>
-                    <p>
-                        Chceš si zahrát KdeToSakra a nebydlíš přitom v krajském městě? Nevadí, přesně tohle je výzva pro
-                        tebe. Svou obec či jiné zajímavé místo vyhledáš níže a pak už jen lovíš body na mapě.
-                    </p>
-                    {renderCustomPlace()}
-                </div>
-                <div className="game-mode-item">
-                    <h1>Podle mojí geolokace</h1>
-                    <p>
-                        Nech se zaměřit dle své geolokace a ukaž, kdo je tady pánem a znalcem svého bezprostředního
-                        okolí!
-                    </p>
-                    {renderMyPosition()}
-                </div>
-            </div>
+            <Card
+                cover={
+                    <img
+                        alt="Herní mód - Krajská města ČR"
+                        src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                    />
+                }
+            >
+                <h1>Krajská města ČR</h1>
+                <p>
+                    Bydlíš v některém z krajských sídel a znáš ho jako své boty? Tak to prokaž! Nebo se prostě jen tak
+                    projdi v místech, kde to zase až tak dobře neznáš.
+                </p>
+                {renderForm()}
+            </Card>
+            <Card
+                cover={
+                    <img
+                        alt="Herní mód - Náhodné místo v Česku"
+                        src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                    />
+                }
+            >
+                <h1>Náhodné místo v Česku</h1>
+                <p>
+                    Známá města a místa pro tebe nejsou dostatečnou výzvou? Přenes se tedy do některých z{' '}
+                    <a href="https://github.com/33bcdd/souradnice-mest">6259 obcí ČR</a> a jejich bezprostředního okolí.
+                    Tahle výzva je pro experty, co mají naši zemi o rozloze 78 864 km čtverečních projetou křížem
+                    krážem.
+                </p>
+                {playRandomCzechPlace()}
+            </Card>
+            <Card
+                cover={
+                    <img
+                        alt="Herní mód - Zadat vlastní místo"
+                        src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                    />
+                }
+            >
+                <h1>Zadat vlastní místo</h1>
+                <p>
+                    Chceš si zahrát KdeToSakra a nebydlíš přitom v krajském městě? Nevadí, přesně tohle je výzva pro
+                    tebe. Svou obec či jiné zajímavé místo vyhledáš níže a pak už jen lovíš body na mapě.
+                </p>
+                {renderCustomPlace()}
+            </Card>
+            <Card
+                cover={
+                    <img
+                        alt="Herní mód - Podle mojí geolokace"
+                        src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                    />
+                }
+            >
+                <h1>Podle mojí geolokace</h1>
+                <p>
+                    Nech se zaměřit dle své geolokace a ukaž, kdo je tady pánem a znalcem svého bezprostředního okolí!
+                </p>
+                {renderMyPosition()}
+            </Card>
         </>
     );
 };

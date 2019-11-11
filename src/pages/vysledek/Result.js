@@ -22,7 +22,6 @@ const Result = () => {
     ) {
         return (
             <>
-                <HeaderContainer />
                 <div className="result-container">
                     <h1>
                         Výsledek:

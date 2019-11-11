@@ -1,7 +1,6 @@
 @font-face {
     font-family: 'Roboto-Regular';
     src: local('Roboto-Regular');
-    url: (./assets/fonts/Roboto-Regular.ttf) format('truetype');
 }
 
 * {
@@ -11,11 +10,16 @@
     padding: 0;
 }
 
-.kdetosakra-container {
+.layout {
     display: flex;
-    flex-direction: column;
     justify-content: center;
+}
+
+.ant-layout-content {
+    display: flex;
+    justify-content: center; /* Add this */
     flex-wrap: wrap;
+    justify-content: space-around;
 }
 
 .section {
@@ -48,8 +52,11 @@
     justify-content: flex-end;
 }
 
-.login {
-    margin-left: 20px;
+.home-menu-item,
+.info-menu-item {
+    margin: 0 0 0 10px;
+    padding: 0;
+    display: inline-block;
 }
 
 .header-container {
@@ -67,6 +74,10 @@
     align-items: center;
 }
 
+.ant-card {
+    width: 600px;
+}
+
 .game-mode-container {
     padding: 20px 0;
     background-color: khaki;
@@ -82,27 +93,6 @@
     width: 400px;
     height: 300px;
     padding: 5px;
-}
-
-.about-container {
-    background-color: fuchsia;
-    width: 100%;
-    color: #000;
-    padding: 20px 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.about {
-    width: 900px;
-    background-color: khaki;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid black;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
 }
 
 .result-container {
@@ -191,11 +181,6 @@
 @media only screen and (min-width: 961px) {
     body {
         background-color: #b2d6ff; /* Blue */
-    }
-
-    .kdetosakra-container {
-        width: 100%;
-        margin: 0 auto;
     }
     .game-mode-item {
         width: 50%;
