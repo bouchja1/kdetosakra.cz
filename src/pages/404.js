@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
+import { Layout } from 'antd';
 import { useLocation } from 'react-router';
-import HeaderContainer from '../components/pageStructure/HeaderContainer';
+
+const { Content } = Layout;
 
 const NotFound = ({ processHeaderContainerVisible }) => {
     const location = useLocation();
@@ -10,9 +12,9 @@ const NotFound = ({ processHeaderContainerVisible }) => {
     }, []);
 
     return (
-        <>
+        <Content>
             <h1>Not found {location.pathname}</h1>
-        </>
+        </Content>
     );
 };
 

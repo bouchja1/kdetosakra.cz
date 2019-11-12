@@ -190,7 +190,7 @@ const Game = ({ location }) => {
 
     return (
         <>
-            <div className="panorama-container">
+            <div className="panorama-container" style={{ height: window.innerHeight - 90 }}>
                 {!panoramaFounded ? (
                     <p>V okruhu 5 km od vašeho místa nebylo nalezeno žádné panorama.</p>
                 ) : (

@@ -3,7 +3,8 @@ import { Redirect, useLocation } from 'react-router-dom';
 import ResultSMapWrapper from '../../components/SMap/ResultSMapWrapper';
 import { roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util/Util';
 import HeaderContainer from '../../components/pageStructure/HeaderContainer';
-import { Button, Progress } from 'antd';
+import { Button, Progress, Layout } from 'antd';
+const { Content } = Layout;
 
 const Result = ({ processHeaderContainerVisible }) => {
     const location = useLocation();
@@ -25,7 +26,7 @@ const Result = ({ processHeaderContainerVisible }) => {
         !resultPageClosed
     ) {
         return (
-            <>
+            <Content className="result">
                 <div className="result-container">
                     <h1>
                         Výsledek:
@@ -41,7 +42,7 @@ const Result = ({ processHeaderContainerVisible }) => {
                 >
                     Hrát znovu
                 </Button>
-            </>
+            </Content>
         );
     }
     return <Redirect to={{ pathname: '/' }} />;

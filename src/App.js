@@ -36,13 +36,11 @@ function App() {
             <MenuComponent />
             <HeaderContainer headerContainerVisible={headerContainerVisible} />
             <Layout className="layout">
-                <Content>
-                    {loaded && !error && (
-                        <MapyProvider value={mapLoader}>
-                            <RouterSwitch processHeaderContainerVisible={processHeaderContainerVisible} />
-                        </MapyProvider>
-                    )}
-                </Content>
+                {loaded && !error && (
+                    <MapyProvider value={mapLoader}>
+                        <RouterSwitch processHeaderContainerVisible={processHeaderContainerVisible} />
+                    </MapyProvider>
+                )}
                 <Footer style={{ textAlign: 'center' }}>
                     Web běží díky <a href="http://mapy.cz/">Mapy.cz</a> <a href="https://api.mapy.cz/">API</a>{' '}
                     <Icon type="heart" theme="twoTone" twoToneColor="#eb2f96" />

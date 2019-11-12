@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
-import { Typography, Icon } from 'antd';
+import { Typography, Icon, Layout } from 'antd';
 import HeaderContainer from '../../components/pageStructure/HeaderContainer';
 
+const { Content } = Layout;
 const { Title, Paragraph, Text } = Typography;
 
 const Info = ({ processHeaderContainerVisible }) => {
@@ -15,8 +16,8 @@ const Info = ({ processHeaderContainerVisible }) => {
     }
 
     return (
-        <>
-            <Typography>
+        <Content>
+            <Typography className="about-container">
                 <Title>KdeToSakra.cz</Title>
                 <Paragraph>
                     KdeToSakra.cz je český klon populární online zěměpisné hry GeoGuessr. Ta je založena na snímcích ze
@@ -48,7 +49,7 @@ const Info = ({ processHeaderContainerVisible }) => {
                     <Icon type="mail" />.
                 </Paragraph>
             </Typography>
-        </>
+        </Content>
     );
 };
 

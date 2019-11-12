@@ -113,6 +113,16 @@ label {
     padding: 5px;
 }
 
+.about-container {
+    padding: 0 20px 0 20px;
+    width: 900px;
+    justify-content: center;
+}
+
+.result {
+    flex-direction: column;
+}
+
 .result-container {
     background-color: chartreuse;
     height: 200px;
@@ -132,10 +142,8 @@ label {
 }
 
 .panorama-container {
-    padding: 20px 0;
     background-color: brown;
     width: 100%;
-    height: 750px;
     display: flex;
     justify-content: center;
 }
@@ -179,17 +187,13 @@ label {
 
 /* Mobile Styles */
 @media only screen and (max-width: 400px) {
-    body {
-        background-color: #f09a9d; /* Red */
+    .game-mode-info-container {
+        display: none;
     }
 }
 
 /* Tablet Styles */
 @media only screen and (min-width: 401px) and (max-width: 960px) {
-    body {
-        background-color: #f5cf8e; /* Yellow */
-    }
-
     .game-mode-item {
         width: 50%;
     }
@@ -197,9 +201,6 @@ label {
 
 /* Desktop Styles */
 @media only screen and (min-width: 961px) {
-    body {
-        background-color: #b2d6ff; /* Blue */
-    }
     .game-mode-item {
         width: 50%;
     }
