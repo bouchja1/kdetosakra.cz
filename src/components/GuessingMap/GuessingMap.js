@@ -23,7 +23,6 @@ const GuessingMap = ({
     totalRoundScore,
     totalRounds,
     guessedPoints,
-    guessedDistance,
 }) => {
     const location = useLocation();
     const [randomUserResultToken] = useLocalStorage('randomUserResultToken'); // send the key to be tracked.
@@ -197,6 +196,7 @@ const GuessingMap = ({
                     refLayeredMapValue={refLayeredMapValue}
                     refLayerValue={refLayerValue}
                     refVectorLayerSMapValue={refVectorLayerSMapValue}
+                    location={location}
                 />
             ) : (
                 <ResultSMapWrapper guessedPoints={[guessedPoints[guessedPoints.length - 1]]} />

@@ -3,10 +3,12 @@ import { Button } from 'antd';
 import MapyContext from '../../context/MapyContext';
 import { DEFAUL_MARKER_ICON, DEFAUL_MARKER_PLACE_ICON } from '../../util/Util';
 
+const DEFAULT_MODE_ZOOM = 14;
+
 const SMap = props => {
     const [map] = useState(React.createRef());
     const mapyContext = useContext(MapyContext);
-    const { closeResultPage } = props;
+    const { closeResultPage, location } = props;
 
     const initSMap = () => {
         const SMap = mapyContext.SMap;
@@ -28,11 +30,34 @@ const SMap = props => {
         };
 
         if (SMap) {
+            let defaultModeZoom = DEFAULT_MODE_ZOOM;
             const center = SMap.Coords.fromWGS84(15.202828, 50.027429);
             const mapInstance = new SMap(map.current, center, 7);
             mapInstance.addDefaultControls(); // Vyrobí defaultní ovládácí prvky (kompas, zoom, ovládání myší a klávesnicí.)
             mapInstance.addControl(new SMap.Control.Sync()); // - aby mapa reagovala na změnu velikosti průhledu - Synchronizuje mapu s portem, potažmo mapu s portem a oknem
             mapInstance.setZoomRange(7, 19);
+            if (
+                location.state.mode === 'geolocation' ||
+                location.state.mode === 'city' ||
+                location.state.mode === 'suggested'
+            ) {
+                const locationModeRadius = location.state.radius;
+                if (locationModeRadius > 6 && locationModeRadius <= 10) {
+                    if (location.state.city.cityRange) {
+                        defaultModeZoom = defaultModeZoom - location.state.city.cityRange;
+                    } else {
+                        defaultModeZoom = defaultModeZoom - 1;
+                    }
+                }
+                mapInstance.setCenterZoom(
+                    SMap.Coords.fromWGS84(
+                        location.state.city.coordinates.longitude,
+                        location.state.city.coordinates.latitude,
+                    ),
+                    defaultModeZoom,
+                    true,
+                );
+            }
             mapInstance.addDefaultLayer(SMap.DEF_BASE).enable();
 
             const mouse = new SMap.Control.Mouse(

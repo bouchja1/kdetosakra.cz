@@ -11,7 +11,7 @@ const Result = ({ processHeaderContainerVisible }) => {
     const [resultPageClosed, setResultPageClosed] = useState(false);
 
     useEffect(() => {
-        processHeaderContainerVisible(true);
+        processHeaderContainerVisible(false);
     }, []);
 
     const closeResultPage = () => {
@@ -30,7 +30,10 @@ const Result = ({ processHeaderContainerVisible }) => {
                 <div className="result-container">
                     <h1>
                         Výsledek:
-                        <Progress percent={roundToTwoDecimal(location.state.totalRoundScore / TOTAL_ROUNDS_MAX)} />
+                        <Progress
+                            type="circle"
+                            percent={roundToTwoDecimal(location.state.totalRoundScore / TOTAL_ROUNDS_MAX)}
+                        />
                     </h1>
                 </div>
                 <ResultSMapWrapper guessedPoints={location.state.guessedPoints} closeResultPage={closeResultPage} />

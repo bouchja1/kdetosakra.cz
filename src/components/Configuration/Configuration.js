@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import ReactGA from 'react-ga';
-import { Input, Button, Select, Card, Icon, Avatar, Layout } from 'antd';
+import { Input, Button, Select, Card, Layout, Slider, InputNumber, Row, Col } from 'antd';
 import cryptoRandomString from 'crypto-random-string';
 import { Redirect } from 'react-router-dom';
 import useGeolocation from 'react-hook-geolocation';
@@ -11,11 +11,8 @@ import { cities } from '../../data/cities';
 import { CATEGORIES } from '../../enums/gaCategories';
 import Suggest from '../Suggest';
 import { generateRandomRadius } from '../../util/Util';
-import HeaderContainer from '../pageStructure/HeaderContainer';
 
 const { Option } = Select;
-const { Meta } = Card;
-const { Content } = Layout;
 
 const Configuration = function({ processHeaderContainerVisible }) {
     const [randomUserResultToken] = useLocalStorage('randomUserResultToken'); // send the key to be tracked.
@@ -27,6 +24,8 @@ const Configuration = function({ processHeaderContainerVisible }) {
     const [geoFormSubmitted, setGeoFormSubmitted] = useState(false);
     const [cityFormValues, setCityFormValues] = useState({});
     const [geoFormValues, setGeoFormValues] = useState({});
+    const [radiusGeolocationInputValue, setRadiusGeolocationInputValue] = useState(1);
+    const [radiusCityInputValue, setRadiusCityInputValue] = useState(1);
 
     useEffect(() => {
         processHeaderContainerVisible(true);
@@ -61,6 +60,14 @@ const Configuration = function({ processHeaderContainerVisible }) {
             setMaxCityRadius(selectedCity[0].radiusMax);
             setCitySelected(selectedCity[0].name);
         }
+    };
+
+    const onChangeGeolocationRadiusInput = value => {
+        setRadiusGeolocationInputValue(value);
+    };
+
+    const onChangeCityRadiusInput = value => {
+        setRadiusCityInputValue(value);
     };
 
     const playRandomCzechPlace = () => {
@@ -128,6 +135,7 @@ const Configuration = function({ processHeaderContainerVisible }) {
             <Formik
                 initialValues={{ radius: 1, city: '' }}
                 onSubmit={(values, { setSubmitting }) => {
+                    values.radius = radiusGeolocationInputValue;
                     setGeoFormValues({
                         ...values,
                         city: {
@@ -148,18 +156,29 @@ const Configuration = function({ processHeaderContainerVisible }) {
                     return (
                         <form onSubmit={handleSubmit}>
                             <label htmlFor="radius">Radius: </label>
-                            <Input
-                                name="radius"
-                                placeholder="Zadej radius od své pozice"
-                                type="number"
-                                min="1"
-                                max="10"
-                                value={values.radius}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                className={errors.radius && touched.radius ? 'text-input error' : 'text-input'}
-                            />
-                            {errors.radius && touched.radius && <div className="input-feedback">{errors.radius}</div>}
+                            <Row>
+                                <Col span={12}>
+                                    <Slider
+                                        min={1}
+                                        max={10}
+                                        onChange={onChangeGeolocationRadiusInput}
+                                        value={
+                                            typeof radiusGeolocationInputValue === 'number'
+                                                ? radiusGeolocationInputValue
+                                                : 0
+                                        }
+                                    />
+                                </Col>
+                                <Col span={4}>
+                                    <InputNumber
+                                        min={1}
+                                        max={10}
+                                        style={{ marginLeft: 16 }}
+                                        value={radiusGeolocationInputValue}
+                                        onChange={onChangeGeolocationRadiusInput}
+                                    />
+                                </Col>
+                            </Row>
                             <Button type="primary" disabled={isSubmitting} onClick={handleSubmit}>
                                 Potvrdit
                             </Button>
@@ -202,6 +221,7 @@ const Configuration = function({ processHeaderContainerVisible }) {
                 <Formik
                     initialValues={{ radius: 1, city: '' }}
                     onSubmit={(values, { setSubmitting }) => {
+                        values.radius = radiusCityInputValue;
                         setCityFormValues(values);
                         setCityFormSubmitted(true);
                     }}
@@ -231,24 +251,31 @@ const Configuration = function({ processHeaderContainerVisible }) {
                                 {citySelected ? (
                                     <>
                                         <label htmlFor="radius">Radius: </label>
-                                        <Input
-                                            name="radius"
-                                            placeholder="Zadej radius od centra Prahy"
-                                            type="number"
-                                            min="1"
-                                            max={maxCityRadius}
-                                            value={values.radius}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            className={
-                                                errors.radius && touched.radius ? 'text-input error' : 'text-input'
-                                            }
-                                        />
+                                        <Row>
+                                            <Col span={12}>
+                                                <Slider
+                                                    min={1}
+                                                    max={maxCityRadius}
+                                                    onChange={onChangeCityRadiusInput}
+                                                    value={
+                                                        typeof radiusCityInputValue === 'number'
+                                                            ? radiusCityInputValue
+                                                            : 0
+                                                    }
+                                                />
+                                            </Col>
+                                            <Col span={4}>
+                                                <InputNumber
+                                                    min={1}
+                                                    max={maxCityRadius}
+                                                    style={{ marginLeft: 16 }}
+                                                    value={radiusCityInputValue}
+                                                    onChange={onChangeCityRadiusInput}
+                                                />
+                                            </Col>
+                                        </Row>
                                     </>
                                 ) : null}
-                                {errors.radius && touched.radius && (
-                                    <div className="input-feedback">{errors.radius}</div>
-                                )}
                                 <Button type="primary" disabled={isSubmitting} onClick={handleSubmit}>
                                     Potvrdit
                                 </Button>

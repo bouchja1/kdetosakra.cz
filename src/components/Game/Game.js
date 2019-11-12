@@ -3,7 +3,9 @@ import GuessingMap from '../GuessingMap';
 import { crCities } from '../../data/cr';
 import MapyContext from '../../context/MapyContext';
 import { pointInCircle, roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util/Util';
-import { Modal, Progress, Button } from 'antd';
+import { Modal, Progress, Button, Typography } from 'antd';
+
+const { Title, Paragraph, Text } = Typography;
 
 const MIN_DISTANCE_FOR_POINTS_RANDOM = 250;
 const MAX_SCORE_PERCENT = 100;
@@ -207,7 +209,6 @@ const Game = ({ location }) => {
                     totalRoundScore={totalRoundScore}
                     totalRounds={totalRounds}
                     guessedPoints={guessedPoints}
-                    guessedDistance={guessedDistance}
                 />
             </div>
             <Modal
@@ -216,30 +217,43 @@ const Game = ({ location }) => {
                 onCancel={() => setResultModalVisible(false)}
                 footer={[
                     <Button key="submit" type="primary" onClick={() => setResultModalVisible(false)}>
-                        Submit
+                        Dobře, jedem dál
                     </Button>,
                 ]}
             >
-                <>
+                <Typography>
                     {totalRounds > 0 ? (
-                        <p>
-                            Kolo: {totalRounds}/{TOTAL_ROUNDS_MAX}
-                        </p>
-                    ) : null}
-                    {totalRoundScore ? <p>Celkové skóre: {roundToTwoDecimal(totalRoundScore)}</p> : null}
-                    {guessedDistance ? (
-                        <p>Vzdušná vzdálenost místa od tvého odhadu: {roundToTwoDecimal(guessedDistance)} km</p>
-                    ) : null}
-                    {roundScore >= 0 && guessedDistance ? <p>Skóre: {roundScore}</p> : null}
-                    {roundScore >= 0 && guessedDistance ? <Progress percent={roundScore} /> : null}
-                    {guessedPlace && guessedDistance ? (
                         <>
-                            <p>Obec: {guessedPlace.obec}</p>
-                            <p>Okres: {guessedPlace.okres}</p>
-                            <p>Kraj: {guessedPlace.kraj}</p>
+                            <Title>
+                                Kolo: {totalRounds}/{TOTAL_ROUNDS_MAX}
+                            </Title>
+                            {guessedDistance ? (
+                                <Paragraph>
+                                    Vzdušná vzdálenost místa od tvého odhadu: {roundToTwoDecimal(guessedDistance)} km
+                                </Paragraph>
+                            ) : null}
                         </>
                     ) : null}
-                </>
+                    {totalRoundScore ? (
+                        <>
+                            <Title level={2}>Celkové skóre {roundToTwoDecimal(totalRoundScore)} %</Title>
+                        </>
+                    ) : null}
+                    {roundScore >= 0 && guessedDistance ? (
+                        <>
+                            <Title level={2}>Skóre získané v rámci kola</Title>
+                            {roundScore >= 0 && guessedDistance ? <Progress percent={roundScore} /> : null}
+                        </>
+                    ) : null}
+                    {guessedPlace && guessedDistance ? (
+                        <>
+                            <Title level={2}>Bližší informace</Title>
+                            <Paragraph>Obec: {guessedPlace.obec}</Paragraph>
+                            <Paragraph>Okres: {guessedPlace.okres}</Paragraph>
+                            <Paragraph>Kraj: {guessedPlace.kraj}</Paragraph>
+                        </>
+                    ) : null}
+                </Typography>
             </Modal>
         </>
     );

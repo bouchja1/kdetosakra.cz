@@ -1,119 +1,132 @@
 export const cities = [
     {
-        name: "praha",
-        fullName: "Praha",
+        name: 'praha',
+        fullName: 'Praha',
         radiusMax: 10,
+        cityRange: 3,
         coordinates: {
             longitude: 14.4297652,
             latitude: 50.0753929,
         },
     },
     {
-        name: "jihlava",
-        fullName: "Jihlava",
+        name: 'jihlava',
+        fullName: 'Jihlava',
         radiusMax: 4,
+        cityRange: 1,
         coordinates: {
             longitude: 15.587041,
             latitude: 49.398378,
         },
     },
     {
-        name: "brno",
-        fullName: "Brno",
+        name: 'brno',
+        fullName: 'Brno',
         radiusMax: 7,
+        cityRange: 2,
         coordinates: {
             latitude: 49.19516,
-            longitude: 16.606937
+            longitude: 16.606937,
         },
     },
     {
-        name: "ceske-budejovice",
-        fullName: "České Budějovice",
+        name: 'ceske-budejovice',
+        fullName: 'České Budějovice',
         radiusMax: 5,
+        cityRange: 1,
         coordinates: {
             latitude: 48.975758,
-            longitude: 14.480355
+            longitude: 14.480355,
         },
     },
     {
-        name: "hradec-kralove",
-        fullName: "Hradec Králové",
+        name: 'hradec-kralove',
+        fullName: 'Hradec Králové',
         radiusMax: 5,
+        cityRange: 1,
         coordinates: {
             latitude: 50.210461,
-            longitude: 15.825311
+            longitude: 15.825311,
         },
     },
     {
-        name: "karlovy-vary",
-        fullName: "Karlovy Vary",
+        name: 'karlovy-vary',
+        fullName: 'Karlovy Vary',
         radiusMax: 4,
+        cityRange: 1,
         coordinates: {
             latitude: 50.231952,
-            longitude: 12.872062
+            longitude: 12.872062,
         },
     },
     {
-        name: "liberec",
-        fullName: "Liberec",
+        name: 'liberec',
+        fullName: 'Liberec',
         radiusMax: 4,
+        cityRange: 1,
         coordinates: {
             latitude: 50.76638,
-            longitude: 15.054439
+            longitude: 15.054439,
         },
     },
     {
-        name: "olomouc",
-        fullName: "Olomouc",
+        name: 'olomouc',
+        fullName: 'Olomouc',
         radiusMax: 3,
+        cityRange: 1,
         coordinates: {
             latitude: 49.593878,
-            longitude: 17.250979
+            longitude: 17.250979,
         },
     },
     {
-        name: "ostrava",
-        fullName: "Ostrava",
+        name: 'ostrava',
+        fullName: 'Ostrava',
         radiusMax: 7,
+        cityRange: 2,
         coordinates: {
             latitude: 49.821023,
-            longitude: 18.262624
+            longitude: 18.262624,
         },
     },
     {
-        name: "pardubice",
-        fullName: "Pardubice",
+        name: 'pardubice',
+        fullName: 'Pardubice',
         radiusMax: 4,
+        cityRange: 1,
         coordinates: {
             latitude: 50.034409,
-            longitude: 15.781299
+            longitude: 15.781299,
         },
     },
     {
-        name: "plzen",
-        fullName: "Plzeň",
+        name: 'plzen',
+        fullName: 'Plzeň',
         radiusMax: 6,
+        cityRange: 2,
         coordinates: {
             latitude: 49.738531,
-            longitude: 13.373737
+            longitude: 13.373737,
         },
     },
     {
-        name: "usti-nad-labem",
-        fullName: "Ústí nad Labem",
+        name: 'usti-nad-labem',
+        fullName: 'Ústí nad Labem',
         radiusMax: 4,
+        cityRange: 1,
         coordinates: {
             latitude: 50.661216,
-            longitude: 14.053246
+            longitude: 14.053246,
         },
     },
     {
-        name: "zlin",
-        fullName: "Zlín",
+        name: 'zlin',
+        fullName: 'Zlín',
         radiusMax: 3,
+        cityRange: 1,
         coordinates: {
             latitude: 49.224537,
-            longitude: 17.662863
+            longitude: 17.662863,
         },
     },
-    ];
+];

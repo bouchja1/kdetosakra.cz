@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Formik } from 'formik';
 import ReactGA from 'react-ga';
-import { Input, Button } from 'antd';
+import { Input, Button, Row, Col, Slider, InputNumber } from 'antd';
 import * as Yup from 'yup';
 import MapyContext from '../../context/MapyContext';
 import { CATEGORIES } from '../../enums/gaCategories';
@@ -13,6 +13,7 @@ const Suggest = () => {
     const [mapyContextApiLoaded, setMapyContextApiLoaded] = useState(false);
     const [submittedSuggestedData, setSubmittedSuggestedData] = useState(null);
     const [playSuggested, setPlaySuggested] = useState(false);
+    const [radiusCustomInputValue, setRadiusCustomInputValue] = useState(1);
 
     const useInitSuggest = () => {
         if (mapyContextApiLoaded) {
@@ -35,6 +36,10 @@ const Suggest = () => {
         setMapyContextApiLoaded(mapyContext.loadedMapApi);
     }, [mapyContext.loadedMapApi]);
 
+    const onChangeGeolocationRadiusInput = value => {
+        setRadiusCustomInputValue(value);
+    };
+
     if (playSuggested) {
         ReactGA.event({
             category: CATEGORIES.SUGGESTED,
@@ -54,6 +59,7 @@ const Suggest = () => {
                             place: submittedSuggestedData.data.title,
                             info: submittedSuggestedData.data.secondRow,
                         },
+                        mode: 'suggested',
                     },
                 }}
             />
@@ -64,6 +70,7 @@ const Suggest = () => {
                 <Formik
                     initialValues={{ radius: 1, city: '' }}
                     onSubmit={(values, { setSubmitting }) => {
+                        values.radius = radiusCustomInputValue;
                         setPlaySuggested(true);
                     }}
                     validationSchema={Yup.object().shape({
@@ -83,20 +90,27 @@ const Suggest = () => {
                                     ref={suggestInput}
                                 />
                                 <label htmlFor="radius">Radius: </label>
-                                <Input
-                                    name="radius"
-                                    placeholder="Zadej radius od své pozice"
-                                    type="number"
-                                    min="1"
-                                    max="10"
-                                    value={values.radius}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    className={errors.radius && touched.radius ? 'text-input error' : 'text-input'}
-                                />
-                                {errors.radius && touched.radius && (
-                                    <div className="input-feedback">{errors.radius}</div>
-                                )}
+                                <Row>
+                                    <Col span={12}>
+                                        <Slider
+                                            min={1}
+                                            max={10}
+                                            onChange={onChangeGeolocationRadiusInput}
+                                            value={
+                                                typeof radiusCustomInputValue === 'number' ? radiusCustomInputValue : 0
+                                            }
+                                        />
+                                    </Col>
+                                    <Col span={4}>
+                                        <InputNumber
+                                            min={1}
+                                            max={10}
+                                            style={{ marginLeft: 16 }}
+                                            value={radiusCustomInputValue}
+                                            onChange={onChangeGeolocationRadiusInput}
+                                        />
+                                    </Col>
+                                </Row>
                                 <Button disabled={!submittedSuggestedData} type="primary" onClick={handleSubmit}>
                                     Hrát
                                 </Button>

@@ -7,7 +7,7 @@ const { Content } = Layout;
 const Home = ({ processHeaderContainerVisible }) => {
     return (
         <Content>
-            <Configuration processHeaderContainerVisible={processHeaderContainerVisible} />;
+            <Configuration processHeaderContainerVisible={processHeaderContainerVisible} />
         </Content>
     );
 };
