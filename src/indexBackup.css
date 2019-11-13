@@ -126,7 +126,6 @@ label {
 }
 
 .result-container {
-    background-color: chartreuse;
     height: 200px;
     color: #000;
     padding: 20px 0;
@@ -156,21 +155,18 @@ label {
 .game-mode-info-container {
     flex: 1;
     color: #fff;
-    background-color: #5995da; /* Blue */
     padding: 20px 0;
     display: flex;
     justify-content: center;
 }
 
 .panorama-container {
-    background-color: brown;
     width: 100%;
     display: flex;
     justify-content: center;
 }
 
 .panorama {
-    background-color: crimson;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -179,20 +175,17 @@ label {
 .footer-container {
     padding: 20px 0;
     color: #5995da;
-    background-color: #d6e9fe;
     display: flex;
     justify-content: center;
 }
 
 .footer {
-    background-color: blue;
     width: 90%;
     display: flex;
     justify-content: center;
 }
 
 .footer-item {
-    background-color: #d6e9fe;
     display: flex;
     align-items: center;
 }
@@ -266,7 +259,6 @@ label {
     }
 
     .smap-container {
-        width: 650px;
         position: fixed;
         bottom: 10px;
         right: 15px;

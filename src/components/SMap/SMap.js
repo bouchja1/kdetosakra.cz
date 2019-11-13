@@ -171,7 +171,7 @@ const SMap = props => {
 
     return (
         <>
-            <div className="smap" ref={map}></div>
+            <div id="smap" className="smap" ref={map}></div>
         </>
     );
 };

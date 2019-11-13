@@ -35,7 +35,7 @@ function App() {
                     </MapyProvider>
                 )}
                 <Footer style={{ textAlign: 'center' }}>
-                    Web běží díky <a href="http://mapy.cz/">Mapy.cz</a> <a href="https://api.mapy.cz/">API</a>{' '}
+                    Postaveno na <a href="http://mapy.cz/">Mapy.cz</a> <a href="https://api.mapy.cz/">API</a>{' '}
                     <Icon type="heart" theme="twoTone" twoToneColor="#eb2f96" />
                 </Footer>
             </Layout>

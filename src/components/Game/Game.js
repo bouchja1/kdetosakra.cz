@@ -5,6 +5,7 @@ import { crCities } from '../../data/cr';
 import MapyContext from '../../context/MapyContext';
 import { pointInCircle, roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util/Util';
 import useWindowHeight from '../../hooks/useWindowHeight';
+import useSMapResize from '../../hooks/useSMapResize';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -14,7 +15,8 @@ const MAX_PANORAMA_TRIES = 5;
 const DEFAULT_PANORAMA_TOLERANCE = 50;
 
 const Game = ({ location }) => {
-    const height = useWindowHeight();
+    const windowHeight = useWindowHeight();
+    const { width, height } = useSMapResize();
     const [panorama] = useState(React.createRef());
     const [panoramaScene, setPanoramaScene] = useState(null);
     const [totalRoundScore, setTotalRoundScore] = useState(0);
@@ -194,14 +196,14 @@ const Game = ({ location }) => {
 
     return (
         <>
-            <div className="panorama-container" style={{ height: height - 110 }}>
+            <div className="panorama-container" style={{ height: windowHeight - 110 }}>
                 {!panoramaFounded ? (
                     <p>V okruhu 5 km od vašeho místa nebylo nalezeno žádné panorama.</p>
                 ) : (
                     <div ref={panorama}></div>
                 )}
             </div>
-            <div className="smap-container">
+            <div id="smap-container" className="smap-container">
                 {/* ty parametry jsou definovane v Panorama */}
                 <GuessingMap
                     updateCalculation={updateCalculation}
