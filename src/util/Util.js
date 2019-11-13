@@ -73,7 +73,9 @@ export function pointInCircle(coord, distance) {
 
 export const DEFAUL_MARKER_PLACE_ICON = 'https://kdetosakra.cz/questionmark.png';
 export const DEFAUL_MARKER_ICON = 'https://kdetosakra.cz/marker.png';
-export const TOTAL_ROUNDS_MAX = 1;
+export const TOTAL_ROUNDS_MAX = 2;
+export const RADIUS_DESCRIPTION =
+    'Poloměr kružnice, ve které se náhodně vygeneruje panorama (středem je dle zvoleného módu buď centrum obce nebo vašeho poloha).';
 
 export function generateRandomRadius() {
     const RANDOM_RADIUS_ARRAY = [0.05, 0.1, 0.3, 0.5, 1.0];

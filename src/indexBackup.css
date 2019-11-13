@@ -202,8 +202,15 @@ label {
 }
 
 .smap {
-    background-color: aqua;
     height: 450px;
+    border-radius: 25px;
+    border: 3px solid #fff;
+}
+
+.smap-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .highlighted {
@@ -226,6 +233,10 @@ label {
 
     .kdetosakra-logo {
         max-width: 50px;
+    }
+
+    .smap-container {
+        width: 100%;
     }
 }
 
@@ -255,10 +266,9 @@ label {
     }
 
     .smap-container {
-        background-color: antiquewhite;
         width: 650px;
         position: fixed;
-        bottom: 55px;
-        right: 5px;
+        bottom: 10px;
+        right: 15px;
     }
 }

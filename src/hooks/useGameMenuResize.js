@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 export default function useWindowHeight() {
     useEffect(() => {
+        const scrolled = window.document.documentElement.scrollTop || window.document.body.scrollTop;
         const menuContainerElement = window.document.getElementById('menu-container');
         menuContainerElement.classList.add('game-menu');
         const menuLogoElement = document.querySelector('#menu-container > div > div:nth-child(2) > img');

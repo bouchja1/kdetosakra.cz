@@ -134,7 +134,7 @@ const GuessingMap = ({
             );
         } else {
             return (
-                <div>
+                <>
                     {!nextRoundButtonVisible ? (
                         <Button
                             disabled={guessButtonDisabled}
@@ -147,7 +147,7 @@ const GuessingMap = ({
                         </Button>
                     ) : null}
                     {nextRoundButtonVisible ? <NextRoundButton refreshMap={() => refreshMap()} /> : null}
-                </div>
+                </>
             );
         }
     };
@@ -189,7 +189,7 @@ const GuessingMap = ({
     };
 
     return (
-        <div>
+        <>
             {!roundGuessed ? (
                 <RoundSMapWrapper
                     click={click}
@@ -201,7 +201,7 @@ const GuessingMap = ({
                 <ResultSMapWrapper guessedPoints={[guessedPoints[guessedPoints.length - 1]]} />
             )}
             {renderGuessingMapButtons()}
-        </div>
+        </>
     );
 };
 

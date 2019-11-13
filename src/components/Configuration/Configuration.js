@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import ReactGA from 'react-ga';
-import { Input, Button, Select, Card, Layout, Slider, InputNumber, Row, Col } from 'antd';
+import { Input, Button, Select, Card, Layout, Slider, InputNumber, Row, Col, Tooltip } from 'antd';
 import cryptoRandomString from 'crypto-random-string';
 import { Redirect } from 'react-router-dom';
 import useGeolocation from 'react-hook-geolocation';
@@ -10,7 +10,7 @@ import { writeStorage, useLocalStorage } from '@rehooks/local-storage';
 import { cities } from '../../data/cities';
 import { CATEGORIES } from '../../enums/gaCategories';
 import Suggest from '../Suggest';
-import { generateRandomRadius } from '../../util/Util';
+import { generateRandomRadius, RADIUS_DESCRIPTION } from '../../util/Util';
 
 const { Option } = Select;
 
@@ -151,7 +151,11 @@ const Configuration = function() {
                     const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props;
                     return (
                         <form onSubmit={handleSubmit}>
-                            <label htmlFor="radius">Radius: </label>
+                            <label htmlFor="radius">
+                                <Tooltip title={RADIUS_DESCRIPTION}>
+                                    <span>Radius:</span>
+                                </Tooltip>
+                            </label>
                             <Row>
                                 <Col span={12}>
                                     <Slider
@@ -245,8 +249,12 @@ const Configuration = function() {
                                 </Select>
                                 {errors.city && touched.city && <div className="input-feedback">{errors.color}</div>}
                                 {citySelected ? (
-                                    <>
-                                        <label htmlFor="radius">Radius: </label>
+                                    <div>
+                                        <label htmlFor="radius">
+                                            <Tooltip title={RADIUS_DESCRIPTION}>
+                                                <span>Radius:</span>
+                                            </Tooltip>
+                                        </label>
                                         <Row>
                                             <Col span={12}>
                                                 <Slider
@@ -270,11 +278,13 @@ const Configuration = function() {
                                                 />
                                             </Col>
                                         </Row>
-                                    </>
+                                    </div>
                                 ) : null}
-                                <Button type="primary" disabled={isSubmitting} onClick={handleSubmit}>
-                                    Potvrdit
-                                </Button>
+                                {citySelected ? (
+                                    <Button type="primary" disabled={isSubmitting} onClick={handleSubmit}>
+                                        Potvrdit
+                                    </Button>
+                                ) : null}
                             </form>
                         );
                     }}

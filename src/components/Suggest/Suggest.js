@@ -2,10 +2,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Formik } from 'formik';
 import ReactGA from 'react-ga';
-import { Input, Button, Row, Col, Slider, InputNumber } from 'antd';
+import { Input, Button, Row, Col, Slider, InputNumber, Tooltip } from 'antd';
 import * as Yup from 'yup';
 import MapyContext from '../../context/MapyContext';
 import { CATEGORIES } from '../../enums/gaCategories';
+import { RADIUS_DESCRIPTION } from '../../util/Util';
 
 const Suggest = () => {
     const [suggestInput] = useState(React.createRef());
@@ -89,7 +90,11 @@ const Suggest = () => {
                                     placeholder="hledaná fráze"
                                     ref={suggestInput}
                                 />
-                                <label htmlFor="radius">Radius: </label>
+                                <label htmlFor="radius">
+                                    <Tooltip title={RADIUS_DESCRIPTION}>
+                                        <span>Radius:</span>
+                                    </Tooltip>
+                                </label>
                                 <Row>
                                     <Col span={12}>
                                         <Slider
