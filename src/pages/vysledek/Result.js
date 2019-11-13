@@ -2,17 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
 import ResultSMapWrapper from '../../components/SMap/ResultSMapWrapper';
 import { roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util/Util';
-import HeaderContainer from '../../components/pageStructure/HeaderContainer';
 import { Button, Progress, Layout } from 'antd';
 const { Content } = Layout;
 
-const Result = ({ processHeaderContainerVisible }) => {
+const Result = () => {
     const location = useLocation();
     const [resultPageClosed, setResultPageClosed] = useState(false);
-
-    useEffect(() => {
-        processHeaderContainerVisible(false);
-    }, []);
 
     const closeResultPage = () => {
         setResultPageClosed(true);
@@ -29,7 +24,7 @@ const Result = ({ processHeaderContainerVisible }) => {
             <Content className="result">
                 <div className="result-container">
                     <h1>
-                        Výsledek:
+                        Průměrná přesnost:
                         <Progress
                             type="circle"
                             percent={roundToTwoDecimal(location.state.totalRoundScore / TOTAL_ROUNDS_MAX)}

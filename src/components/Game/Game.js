@@ -4,6 +4,7 @@ import GuessingMap from '../GuessingMap';
 import { crCities } from '../../data/cr';
 import MapyContext from '../../context/MapyContext';
 import { pointInCircle, roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util/Util';
+import useWindowHeight from '../../hooks/useWindowHeight';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -13,6 +14,7 @@ const MAX_PANORAMA_TRIES = 5;
 const DEFAULT_PANORAMA_TOLERANCE = 50;
 
 const Game = ({ location }) => {
+    const height = useWindowHeight();
     const [panorama] = useState(React.createRef());
     const [panoramaScene, setPanoramaScene] = useState(null);
     const [totalRoundScore, setTotalRoundScore] = useState(0);
@@ -192,7 +194,7 @@ const Game = ({ location }) => {
 
     return (
         <>
-            <div className="panorama-container" style={{ height: window.innerHeight - 90 }}>
+            <div className="panorama-container" style={{ height: height - 90 }}>
                 {!panoramaFounded ? (
                     <p>V okruhu 5 km od vašeho místa nebylo nalezeno žádné panorama.</p>
                 ) : (
@@ -213,6 +215,7 @@ const Game = ({ location }) => {
             </div>
             <Modal
                 visible={resultModalVisible}
+                style={{ top: 20 }}
                 onOk={() => setResultModalVisible(false)}
                 onCancel={() => setResultModalVisible(false)}
                 footer={[
@@ -237,16 +240,18 @@ const Game = ({ location }) => {
                             ) : null}
                         </div>
                     ) : null}
-                    {totalRoundScore >= 0 ? (
-                        <div className="result-modal-container-item">
-                            <Title level={3}>Celkové skóre:</Title>
-                            <Progress type="circle" percent={roundToTwoDecimal(totalRoundScore)} />
-                        </div>
-                    ) : null}
                     {roundScore >= 0 && guessedDistance ? (
                         <div className="result-modal-container-item">
-                            <Title level={3}>Skóre získané v rámci kola</Title>
+                            <Title level={3}>Přesnost v rámci kola</Title>
                             {roundScore >= 0 && guessedDistance ? <Progress percent={roundScore} /> : null}
+                        </div>
+                    ) : null}
+                    {totalRoundScore >= 0 ? (
+                        <div className="result-modal-container-item">
+                            <Paragraph>
+                                Průběžný počet bodů:{' '}
+                                <Text className="highlighted">{roundToTwoDecimal(totalRoundScore)}</Text>
+                            </Paragraph>
                         </div>
                     ) : null}
                     {guessedPlace && guessedDistance ? (

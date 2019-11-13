@@ -14,7 +14,7 @@ import { generateRandomRadius } from '../../util/Util';
 
 const { Option } = Select;
 
-const Configuration = function({ processHeaderContainerVisible }) {
+const Configuration = function() {
     const [randomUserResultToken] = useLocalStorage('randomUserResultToken'); // send the key to be tracked.
     const geolocation = useGeolocation();
     const [citySelected, setCitySelected] = useState(null);
@@ -26,10 +26,6 @@ const Configuration = function({ processHeaderContainerVisible }) {
     const [geoFormValues, setGeoFormValues] = useState({});
     const [radiusGeolocationInputValue, setRadiusGeolocationInputValue] = useState(1);
     const [radiusCityInputValue, setRadiusCityInputValue] = useState(1);
-
-    useEffect(() => {
-        processHeaderContainerVisible(true);
-    }, []);
 
     useEffect(() => {
         if (!randomUserResultToken) {

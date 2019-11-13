@@ -10,32 +10,32 @@ import Home from '../../pages/home';
 import Info from '../../pages/info';
 import Result from '../../pages/vysledek';
 
-const RouterSwitch = ({ processHeaderContainerVisible }) => {
+const RouterSwitch = () => {
     return (
         <Switch>
             <Route exact path="/">
-                <Home processHeaderContainerVisible={processHeaderContainerVisible} />
+                <Home />
             </Route>
             <Route path="/geolokace">
-                <Geolocation processHeaderContainerVisible={processHeaderContainerVisible} />
+                <Geolocation />
             </Route>
             <Route path="/mesto">
-                <City processHeaderContainerVisible={processHeaderContainerVisible} />
+                <City />
             </Route>
             <Route path="/nahodne">
-                <RandomCity processHeaderContainerVisible={processHeaderContainerVisible} />
+                <RandomCity />
             </Route>
             <Route path="/vysledek">
-                <Result processHeaderContainerVisible={processHeaderContainerVisible} />
+                <Result />
             </Route>
             <Route path="/vlastni">
-                <SuggestedCity processHeaderContainerVisible={processHeaderContainerVisible} />
+                <SuggestedCity />
             </Route>
             <Route path="/info">
-                <Info processHeaderContainerVisible={processHeaderContainerVisible} />
+                <Info />
             </Route>
             <Route path="*">
-                <NotFound processHeaderContainerVisible={processHeaderContainerVisible} />
+                <NotFound />
             </Route>
         </Switch>
     );

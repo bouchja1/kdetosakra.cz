@@ -10,7 +10,6 @@ import RouterSwitch from './components/RouterSwitch';
 import { MapyProvider } from './context/MapyContext';
 import MenuComponent from './components/pageStructure/Menu';
 import { Layout, Icon } from 'antd';
-import HeaderContainer from './components/pageStructure/HeaderContainer';
 // import Footer from './components/pageStructure/Footer';
 
 const { Header, Content, Footer } = Layout;
@@ -25,20 +24,14 @@ function App() {
     initializeReactGA();
     const [loaded, error] = useScript('https://api.mapy.cz/loader.js');
     const [mapLoader] = useMapLoader(loaded);
-    const [headerContainerVisible, setHeaderContainerVisible] = useState(false);
-
-    const processHeaderContainerVisible = isVisible => {
-        setHeaderContainerVisible(isVisible);
-    };
 
     return (
         <>
             <MenuComponent />
-            <HeaderContainer headerContainerVisible={headerContainerVisible} />
             <Layout className="layout">
                 {loaded && !error && (
                     <MapyProvider value={mapLoader}>
-                        <RouterSwitch processHeaderContainerVisible={processHeaderContainerVisible} />
+                        <RouterSwitch />
                     </MapyProvider>
                 )}
                 <Footer style={{ textAlign: 'center' }}>

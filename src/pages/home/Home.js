@@ -4,10 +4,10 @@ import Configuration from '../../components/Configuration';
 
 const { Content } = Layout;
 
-const Home = ({ processHeaderContainerVisible }) => {
+const Home = () => {
     return (
         <Content>
-            <Configuration processHeaderContainerVisible={processHeaderContainerVisible} />
+            <Configuration />
         </Content>
     );
 };

@@ -4,12 +4,8 @@ import { useLocation } from 'react-router';
 
 const { Content } = Layout;
 
-const NotFound = ({ processHeaderContainerVisible }) => {
+const NotFound = () => {
     const location = useLocation();
-
-    useEffect(() => {
-        processHeaderContainerVisible(true);
-    }, []);
 
     return (
         <Content>
