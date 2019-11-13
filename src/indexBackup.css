@@ -8,6 +8,7 @@
     font-family: 'Roboto-Regular';
     margin: 0;
     padding: 0;
+    -webkit-font-smoothing: antialiased;
 }
 
 .layout {
@@ -132,6 +133,25 @@ label {
     justify-content: center;
 }
 
+.result-modal-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.result-modal-container-item {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
+    margin: 5px 0 10px 0;
+}
+
+.result-modal-button {
+    padding: 0 0 10px 0;
+    text-align: center;
+}
+
 .game-mode-info-container {
     flex: 1;
     color: #fff;
@@ -183,6 +203,10 @@ label {
 .smap {
     background-color: aqua;
     height: 450px;
+}
+
+.highlighted {
+    font-weight: bolder;
 }
 
 /* Mobile Styles */

@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { Modal, Progress, Button, Typography } from 'antd';
 import GuessingMap from '../GuessingMap';
 import { crCities } from '../../data/cr';
 import MapyContext from '../../context/MapyContext';
 import { pointInCircle, roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util/Util';
-import { Modal, Progress, Button, Typography } from 'antd';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -216,42 +216,52 @@ const Game = ({ location }) => {
                 onOk={() => setResultModalVisible(false)}
                 onCancel={() => setResultModalVisible(false)}
                 footer={[
-                    <Button key="submit" type="primary" onClick={() => setResultModalVisible(false)}>
-                        Dobře, jedem dál
-                    </Button>,
+                    <div className="result-modal-button">
+                        <Button key="submit" type="primary" onClick={() => setResultModalVisible(false)}>
+                            Okej
+                        </Button>
+                    </div>,
                 ]}
             >
-                <Typography>
+                <Typography className="result-modal-container">
                     {totalRounds > 0 ? (
-                        <>
-                            <Title>
+                        <div className="result-modal-container-item">
+                            <Title level={2}>
                                 Kolo: {totalRounds}/{TOTAL_ROUNDS_MAX}
                             </Title>
                             {guessedDistance ? (
                                 <Paragraph>
-                                    Vzdušná vzdálenost místa od tvého odhadu: {roundToTwoDecimal(guessedDistance)} km
+                                    Vzdušná vzdálenost místa od tvého odhadu:{' '}
+                                    <Text className="highlighted">{roundToTwoDecimal(guessedDistance)} km</Text>
                                 </Paragraph>
                             ) : null}
-                        </>
+                        </div>
                     ) : null}
-                    {totalRoundScore ? (
-                        <>
-                            <Title level={2}>Celkové skóre {roundToTwoDecimal(totalRoundScore)} %</Title>
-                        </>
+                    {totalRoundScore >= 0 ? (
+                        <div className="result-modal-container-item">
+                            <Title level={3}>Celkové skóre:</Title>
+                            <Progress type="circle" percent={roundToTwoDecimal(totalRoundScore)} />
+                        </div>
                     ) : null}
                     {roundScore >= 0 && guessedDistance ? (
-                        <>
-                            <Title level={2}>Skóre získané v rámci kola</Title>
+                        <div className="result-modal-container-item">
+                            <Title level={3}>Skóre získané v rámci kola</Title>
                             {roundScore >= 0 && guessedDistance ? <Progress percent={roundScore} /> : null}
-                        </>
+                        </div>
                     ) : null}
                     {guessedPlace && guessedDistance ? (
-                        <>
-                            <Title level={2}>Bližší informace</Title>
-                            <Paragraph>Obec: {guessedPlace.obec}</Paragraph>
-                            <Paragraph>Okres: {guessedPlace.okres}</Paragraph>
-                            <Paragraph>Kraj: {guessedPlace.kraj}</Paragraph>
-                        </>
+                        <div className="result-modal-container-item">
+                            <Title level={4}>Bližší informace</Title>
+                            <Paragraph>
+                                <Text className="highlighted">Obec:</Text> {guessedPlace.obec}
+                            </Paragraph>
+                            <Paragraph>
+                                <Text className="highlighted">Okres:</Text> {guessedPlace.okres}
+                            </Paragraph>
+                            <Paragraph>
+                                <Text className="highlighted">Kraj:</Text> {guessedPlace.kraj}
+                            </Paragraph>
+                        </div>
                     ) : null}
                 </Typography>
             </Modal>
