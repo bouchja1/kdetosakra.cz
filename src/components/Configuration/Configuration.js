@@ -295,8 +295,9 @@ const Configuration = function() {
             >
                 <h1>Krajská města ČR</h1>
                 <p>
-                    Bydlíš v některém z krajských sídel a znáš ho jako své boty? Tak to prokaž! Nebo se prostě jen tak
-                    projdi v místech, kde to zase až tak dobře neznáš.
+                    Bydlíš v některém z krajských sídel a znáš ho jako své boty? No tak se ukaž. Nebo se prostě jen tak
+                    projdi po místech, které zase až tak dobře neznáš. Třeba objevíš zákoutí, kam tě to potáhne i
+                    naživo.
                 </p>
                 {renderForm()}
             </Card>
@@ -310,10 +311,10 @@ const Configuration = function() {
             >
                 <h1>Náhodné místo v Česku</h1>
                 <p>
-                    Známá města a místa pro tebe nejsou dostatečnou výzvou? Přenes se tedy do některých z{' '}
-                    <a href="https://github.com/33bcdd/souradnice-mest">6259 obcí ČR</a> a jejich bezprostředního okolí.
-                    Tahle výzva je pro experty, co mají naši zemi o rozloze 78 864 km čtverečních projetou křížem
-                    krážem.
+                    Známá města a místa pro tebe nejsou dostatečnou výzvou? Přenes se tedy do některé z{' '}
+                    <a href="https://github.com/33bcdd/souradnice-mest">6259 obcí ČR</a> a jejího bezprostředního okolí.
+                    V každém kole na tebe čeká úplně jiné náhodné místo v naší republice. Tahle výzva je (nejen) pro
+                    experty, co mají ČR projetou křížem krážem.
                 </p>
                 {playRandomCzechPlace()}
             </Card>
@@ -327,8 +328,8 @@ const Configuration = function() {
             >
                 <h1>Zadat vlastní místo</h1>
                 <p>
-                    Chceš si zahrát KdeToSakra a nebydlíš přitom v krajském městě? Nevadí, přesně tohle je výzva pro
-                    tebe. Svou obec či jiné zajímavé místo vyhledáš níže a pak už jen lovíš body na mapě.
+                    Chceš si zahrát a nebydlíš přitom v krajském městě? Nevadí, přesně tohle je výzva pro tebe. Svou
+                    obec či jiné zajímavé místo, které chceš více poznat, vyhledej ve formuláři níže. Šťastnou cestu!
                 </p>
                 {renderCustomPlace()}
             </Card>
@@ -341,9 +342,7 @@ const Configuration = function() {
                 }
             >
                 <h1>Podle mojí geolokace</h1>
-                <p>
-                    Nech se zaměřit dle své geolokace a ukaž, kdo je tady pánem a znalcem svého bezprostředního okolí!
-                </p>
+                <p>Zaměř svou polohu a ukaž, kdo je tady pánem a znalcem svého bezprostředního okolí!</p>
                 {renderMyPosition()}
             </Card>
         </>

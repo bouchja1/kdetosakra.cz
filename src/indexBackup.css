@@ -50,7 +50,7 @@
 }
 
 .game-menu {
-    height: 90px;
+    height: 70px;
 }
 
 .logo-not-displayed {
@@ -120,8 +120,9 @@ label {
     justify-content: center;
 }
 
-.result {
-    flex-direction: column;
+.smap-suggest {
+    position: relative;
+    bottom: 1px;
 }
 
 .result-container {
