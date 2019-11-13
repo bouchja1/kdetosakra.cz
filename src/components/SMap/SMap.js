@@ -1,14 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button } from 'antd';
+import { useLocation } from 'react-router-dom';
 import MapyContext from '../../context/MapyContext';
 import { DEFAUL_MARKER_ICON, DEFAUL_MARKER_PLACE_ICON } from '../../util/Util';
 
 const DEFAULT_MODE_ZOOM = 14;
 
 const SMap = props => {
+    const location = useLocation();
     const [map] = useState(React.createRef());
     const mapyContext = useContext(MapyContext);
-    const { closeResultPage, location } = props;
+    const { closeResultPage } = props;
 
     const initSMap = () => {
         const SMap = mapyContext.SMap;
@@ -29,24 +30,33 @@ const SMap = props => {
             anchor: { left: 10, bottom: 15 },
         };
 
+        let mapInstance;
         if (SMap) {
-            let defaultModeZoom = DEFAULT_MODE_ZOOM;
-            const center = SMap.Coords.fromWGS84(15.202828, 50.027429);
-            const mapInstance = new SMap(map.current, center, 7);
-            mapInstance.addDefaultControls(); // Vyrobí defaultní ovládácí prvky (kompas, zoom, ovládání myší a klávesnicí.)
-            mapInstance.addControl(new SMap.Control.Sync()); // - aby mapa reagovala na změnu velikosti průhledu - Synchronizuje mapu s portem, potažmo mapu s portem a oknem
-            mapInstance.setZoomRange(7, 19);
+            let defaultModeZoom = DEFAULT_MODE_ZOOM - 1;
             if (
-                location.state.mode === 'geolocation' ||
+                (typeof location !== 'undefined' &&
+                    location.hasOwnProperty('state') &&
+                    location.state.mode === 'geolocation') ||
                 location.state.mode === 'city' ||
                 location.state.mode === 'suggested'
             ) {
+                const center = SMap.Coords.fromWGS84(
+                    location.state.city.coordinates.longitude,
+                    location.state.city.coordinates.latitude,
+                );
+                mapInstance = new SMap(map.current, center, 7);
                 const locationModeRadius = location.state.radius;
-                if (locationModeRadius > 6 && locationModeRadius <= 10) {
+                if (locationModeRadius > 2 && locationModeRadius <= 6 && locationModeRadius <= 10) {
+                    if (location.state.city.cityRange) {
+                        defaultModeZoom =
+                            defaultModeZoom -
+                            (location.state.city.cityRange > 1
+                                ? location.state.city.cityRange - 1
+                                : location.state.city.cityRange);
+                    }
+                } else if (locationModeRadius > 6 && locationModeRadius <= 10) {
                     if (location.state.city.cityRange) {
                         defaultModeZoom = defaultModeZoom - location.state.city.cityRange;
-                    } else {
-                        defaultModeZoom = defaultModeZoom - 1;
                     }
                 }
                 mapInstance.setCenterZoom(
@@ -57,8 +67,14 @@ const SMap = props => {
                     defaultModeZoom,
                     true,
                 );
+            } else {
+                const center = SMap.Coords.fromWGS84(15.202828, 50.027429);
+                mapInstance = new SMap(map.current, center, 7);
             }
+            mapInstance.addDefaultControls(); // Vyrobí defaultní ovládácí prvky (kompas, zoom, ovládání myší a klávesnicí.)
+            mapInstance.addControl(new SMap.Control.Sync()); // - aby mapa reagovala na změnu velikosti průhledu - Synchronizuje mapu s portem, potažmo mapu s portem a oknem
             mapInstance.addDefaultLayer(SMap.DEF_BASE).enable();
+            mapInstance.setZoomRange(7, 19);
 
             const mouse = new SMap.Control.Mouse(
                 SMap.MOUSE_PAN | SMap.MOUSE_WHEEL | SMap.MOUSE_ZOOM,

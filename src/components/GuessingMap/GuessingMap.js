@@ -196,7 +196,6 @@ const GuessingMap = ({
                     refLayeredMapValue={refLayeredMapValue}
                     refLayerValue={refLayerValue}
                     refVectorLayerSMapValue={refVectorLayerSMapValue}
-                    location={location}
                 />
             ) : (
                 <ResultSMapWrapper guessedPoints={[guessedPoints[guessedPoints.length - 1]]} />
