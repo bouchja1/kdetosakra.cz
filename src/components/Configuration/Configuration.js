@@ -318,6 +318,11 @@ const Configuration = function() {
                 </p>
                 {playRandomCzechPlace()}
             </Card>
+            <Card cover={<img alt="Herní mód - Podle mojí geolokace" src={geolocationCover} />}>
+                <h1>Podle mojí geolokace</h1>
+                <p>Zaměř svou polohu a ukaž, kdo je tady pánem a znalcem svého bezprostředního okolí!</p>
+                {renderMyPosition()}
+            </Card>
             <Card cover={<img alt="Herní mód - Zadat vlastní místo" src={suggestedCover} />}>
                 <h1>Zadat vlastní místo</h1>
                 <p>
@@ -325,11 +330,6 @@ const Configuration = function() {
                     obec či jiné zajímavé místo, které chceš více poznat, vyhledej ve formuláři níže. Šťastnou cestu!
                 </p>
                 {renderCustomPlace()}
-            </Card>
-            <Card cover={<img alt="Herní mód - Podle mojí geolokace" src={geolocationCover} />}>
-                <h1>Podle mojí geolokace</h1>
-                <p>Zaměř svou polohu a ukaž, kdo je tady pánem a znalcem svého bezprostředního okolí!</p>
-                {renderMyPosition()}
             </Card>
         </>
     );

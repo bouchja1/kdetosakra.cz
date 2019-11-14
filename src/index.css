@@ -1,13 +1,8 @@
 @import '~antd/dist/antd.css';
 
-@font-face {
-    font-family: 'Roboto-Regular';
-    src: local('Roboto-Regular');
-}
-
 * {
     box-sizing: border-box;
-    font-family: 'Roboto-Regular';
+    font-family: 'Roboto', 'Arial', sans-serif;
     margin: 0;
     padding: 0;
     -webkit-font-smoothing: antialiased;
@@ -84,7 +79,7 @@
 }
 
 .ant-card {
-    width: 600px;
+    width: 400px;
 }
 
 input[type='text'],
@@ -273,5 +268,12 @@ label {
         position: fixed;
         bottom: 5px;
         right: 15px;
+    }
+}
+
+/* Large Display Desktop Styles */
+@media only screen and (min-width: 1281px) {
+    .ant-card {
+        width: 600px;
     }
 }
