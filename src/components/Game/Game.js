@@ -203,7 +203,11 @@ const Game = ({ location }) => {
                     <div ref={panorama}></div>
                 )}
             </div>
-            <div id="smap-container" className="smap-container">
+            <div
+                id="smap-container"
+                className="smap-container"
+                style={width > 400 ? { height: height / 2, width: width / 3 } : null}
+            >
                 {/* ty parametry jsou definovane v Panorama */}
                 <GuessingMap
                     updateCalculation={updateCalculation}

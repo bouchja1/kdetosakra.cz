@@ -1,12 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import MapyContext from '../../context/MapyContext';
+import { Divider } from 'antd';
 import { DEFAUL_MARKER_ICON, DEFAUL_MARKER_PLACE_ICON } from '../../util/Util';
+import useSMapResize from '../../hooks/useSMapResize';
 
 const DEFAULT_MODE_ZOOM = 14;
 
 const SMap = props => {
     const location = useLocation();
+    const { width, height } = useSMapResize();
     const [map] = useState(React.createRef());
     const mapyContext = useContext(MapyContext);
     const { closeResultPage } = props;
@@ -171,7 +174,8 @@ const SMap = props => {
 
     return (
         <>
-            <div id="smap" className="smap" ref={map}></div>
+            {width <= 400 ? <Divider /> : null}
+            <div id="smap" className={width > 400 ? 'smap smap-style' : 'smap'} ref={map}></div>
         </>
     );
 };

@@ -8,7 +8,7 @@ const MenuComponent = () => {
         <div id="menu-container" className="section menu-container">
             <div className="menu">
                 <div className="menu-item home">
-                    <Icon type="home" theme="filled" style={{ color: '#000' }} />
+                    <Icon type="home" theme="filled" style={{ color: 'rgb(97, 95, 95)' }} />
                     <div className="home-menu-item">
                         <Link to="/">Herní módy</Link>
                     </div>
@@ -17,7 +17,7 @@ const MenuComponent = () => {
                     <img src={awesomeLogo} className="kdetosakra-logo" />
                 </div>
                 <div className="menu-item info">
-                    <Icon type="info-circle" theme="filled" style={{ color: '#000' }} />
+                    <Icon type="info-circle" theme="filled" style={{ color: 'rgb(97, 95, 95)' }} />
                     <div className="info-menu-item">
                         <Link to="/info">O hře</Link>
                     </div>

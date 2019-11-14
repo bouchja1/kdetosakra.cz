@@ -10,6 +10,10 @@ import { writeStorage, useLocalStorage } from '@rehooks/local-storage';
 import { cities } from '../../data/cities';
 import { CATEGORIES } from '../../enums/gaCategories';
 import Suggest from '../Suggest';
+import pragueCover from '../../assets/images/city/prague.jpg';
+import randomCover from '../../assets/images/city/random.jpg';
+import suggestedCover from '../../assets/images/city/suggested.jpg';
+import geolocationCover from '../../assets/images/city/geolocation.jpg';
 import { generateRandomRadius, RADIUS_DESCRIPTION } from '../../util/Util';
 
 const { Option } = Select;
@@ -295,14 +299,7 @@ const Configuration = function() {
 
     return (
         <>
-            <Card
-                cover={
-                    <img
-                        alt="Herní mód - Krajská města ČR"
-                        src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                    />
-                }
-            >
+            <Card cover={<img alt="Herní mód - Krajská města ČR" src={pragueCover} />}>
                 <h1>Krajská města ČR</h1>
                 <p>
                     Bydlíš v některém z krajských sídel a znáš ho jako své boty? No tak se ukaž. Nebo se prostě jen tak
@@ -311,14 +308,7 @@ const Configuration = function() {
                 </p>
                 {renderForm()}
             </Card>
-            <Card
-                cover={
-                    <img
-                        alt="Herní mód - Náhodné místo v Česku"
-                        src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                    />
-                }
-            >
+            <Card cover={<img alt="Herní mód - Náhodné místo v Česku" src={randomCover} />}>
                 <h1>Náhodné místo v Česku</h1>
                 <p>
                     Známá města a místa pro tebe nejsou dostatečnou výzvou? Přenes se tedy do některé z{' '}
@@ -328,14 +318,7 @@ const Configuration = function() {
                 </p>
                 {playRandomCzechPlace()}
             </Card>
-            <Card
-                cover={
-                    <img
-                        alt="Herní mód - Zadat vlastní místo"
-                        src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                    />
-                }
-            >
+            <Card cover={<img alt="Herní mód - Zadat vlastní místo" src={suggestedCover} />}>
                 <h1>Zadat vlastní místo</h1>
                 <p>
                     Chceš si zahrát a nebydlíš přitom v krajském městě? Nevadí, přesně tohle je výzva pro tebe. Svou
@@ -343,14 +326,7 @@ const Configuration = function() {
                 </p>
                 {renderCustomPlace()}
             </Card>
-            <Card
-                cover={
-                    <img
-                        alt="Herní mód - Podle mojí geolokace"
-                        src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                    />
-                }
-            >
+            <Card cover={<img alt="Herní mód - Podle mojí geolokace" src={geolocationCover} />}>
                 <h1>Podle mojí geolokace</h1>
                 <p>Zaměř svou polohu a ukaž, kdo je tady pánem a znalcem svého bezprostředního okolí!</p>
                 {renderMyPosition()}

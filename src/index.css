@@ -1,7 +1,277 @@
-.logo {
-    width: 120px;
-    height: 31px;
-    background: rgba(255, 255, 255, 0.2);
-    margin: 16px 24px 16px 0;
-    float: left;
+@import '~antd/dist/antd.css';
+
+@font-face {
+    font-family: 'Roboto-Regular';
+    src: local('Roboto-Regular');
+}
+
+* {
+    box-sizing: border-box;
+    font-family: 'Roboto-Regular';
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+}
+
+.layout {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px 20px 20px;
+}
+
+.kdetosakra-logo {
+    max-width: 150px;
+}
+
+.ant-layout-content {
+    display: flex;
+    justify-content: center; /* Add this */
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.ant-layout-footer {
+    background: #ffffff;
+}
+
+.ant-modal-body {
+    padding: 24px 24px 0 24px;
+}
+
+.section {
+    width: 100%;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* this is flex container */
+.menu-container {
+    color: #fff;
+    padding: 40px 0 20px 0;
+    display: flex;
+    justify-content: center;
+    height: 180px;
+}
+
+.game-menu {
+    height: 70px;
+}
+
+.logo-not-displayed {
+    display: none;
+}
+
+.menu {
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+}
+
+.links {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.home-menu-item,
+.info-menu-item {
+    margin: 0 0 0 10px;
+    padding: 0;
+    display: inline-block;
+}
+
+.ant-card {
+    width: 600px;
+}
+
+input[type='text'],
+select,
+number {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 0 0 10px 0;
+    box-sizing: border-box;
+}
+
+button {
+    margin: 10px 0 0 0;
+}
+
+label {
+    padding: 12px 12px 12px 0;
+    display: inline-block;
+}
+
+.game-mode-container {
+    padding: 20px 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    height: 600px;
+}
+
+.game-mode-item {
+    border: 1px solid #000;
+    width: 400px;
+    height: 300px;
+    padding: 5px;
+}
+
+.about-container {
+    padding: 0 20px 0 20px;
+    width: 900px;
+    justify-content: center;
+}
+
+.smap-suggest {
+    position: relative;
+    bottom: 1px;
+}
+
+.result-container {
+    height: 200px;
+    color: #000;
+    padding: 20px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.result-modal-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.result-modal-container-item {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
+    margin: 5px 0 10px 0;
+}
+
+.result-modal-button {
+    padding: 0 0 10px 0;
+    text-align: center;
+}
+
+.game-mode-info-container {
+    flex: 1;
+    color: #fff;
+    padding: 20px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.panorama-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.panorama {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.footer-container {
+    padding: 20px 0;
+    color: #5995da;
+    display: flex;
+    justify-content: center;
+}
+
+.footer {
+    width: 90%;
+    display: flex;
+    justify-content: center;
+}
+
+.footer-item {
+    display: flex;
+    align-items: center;
+}
+
+.signup {
+    margin-left: auto;
+}
+
+.smap {
+    height: 450px;
+    margin-bottom: 5px;
+}
+
+.smap-style {
+    border-radius: 25px;
+    border: 3px solid #fff;
+}
+
+.smap-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.highlighted {
+    font-weight: bolder;
+}
+
+/* Mobile Styles */
+@media only screen and (max-width: 400px) {
+    .game-mode-info-container {
+        display: none;
+    }
+
+    .menu-container {
+        height: 50%;
+    }
+
+    .menu {
+        align-items: center;
+    }
+
+    .kdetosakra-logo {
+        max-width: 50px;
+    }
+
+    .smap-container {
+        width: 100%;
+    }
+}
+
+/* Tablet Styles */
+@media only screen and (min-width: 401px) and (max-width: 960px) {
+    .game-mode-item {
+        width: 50%;
+    }
+
+    .menu-container {
+        height: 50%;
+    }
+
+    .menu {
+        align-items: center;
+    }
+
+    .kdetosakra-logo {
+        max-width: 50px;
+    }
+}
+
+/* Desktop Styles */
+@media only screen and (min-width: 961px) {
+    .game-mode-item {
+        width: 50%;
+    }
+
+    .smap-container {
+        position: fixed;
+        bottom: 5px;
+        right: 15px;
+    }
 }
