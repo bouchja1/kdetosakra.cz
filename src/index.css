@@ -256,6 +256,10 @@ label {
     .kdetosakra-logo {
         max-width: 50px;
     }
+
+    .smap-container {
+        width: 100%;
+    }
 }
 
 /* Desktop Styles */

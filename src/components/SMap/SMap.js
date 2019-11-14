@@ -173,8 +173,8 @@ const SMap = props => {
 
     return (
         <>
-            {width <= 400 ? <Divider /> : null}
-            <div id="smap" className={width > 400 ? 'smap smap-style' : 'smap'} ref={map}></div>
+            {width <= 961 ? <Divider /> : null}
+            <div id="smap" className={width > 960 ? 'smap smap-style' : 'smap'} ref={map}></div>
         </>
     );
 };
