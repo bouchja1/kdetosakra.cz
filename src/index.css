@@ -223,7 +223,7 @@ label {
     }
 
     .menu-container {
-        height: 50%;
+        height: 20px;
     }
 
     .menu {
@@ -236,6 +236,10 @@ label {
 
     .smap-container {
         width: 100%;
+    }
+
+    .layout {
+        padding: 15px 20px 20px 20px;
     }
 }
 
@@ -246,7 +250,7 @@ label {
     }
 
     .menu-container {
-        height: 50%;
+        height: 20px;
     }
 
     .menu {
@@ -259,6 +263,10 @@ label {
 
     .smap-container {
         width: 100%;
+    }
+
+    .layout {
+        padding: 15px 20px 20px 20px;
     }
 }
 

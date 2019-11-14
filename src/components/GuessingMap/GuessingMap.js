@@ -59,6 +59,7 @@ const GuessingMap = ({
             city = generateRandomCzechPlace();
         }
         loadPanoramaMap(radius, city, true);
+        window.scrollTo(0, 0);
     };
 
     const click = (e, elm) => {
