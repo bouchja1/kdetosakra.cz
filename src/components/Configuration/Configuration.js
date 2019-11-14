@@ -303,7 +303,7 @@ const Configuration = function() {
                 <h1>Krajská města ČR</h1>
                 <p>
                     Bydlíš v některém z krajských sídel a znáš ho jako své boty? No tak se ukaž. Nebo se prostě jen tak
-                    projdi po místech, které zase až tak dobře neznáš. Třeba objevíš zákoutí, kam tě to potáhne i
+                    projdi po místech, která zase až tak dobře neznáš. Třeba objevíš zákoutí, kam tě to potáhne i
                     naživo.
                 </p>
                 {renderForm()}
