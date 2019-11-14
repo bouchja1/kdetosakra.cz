@@ -184,7 +184,7 @@ const Configuration = function() {
                                 </Col>
                             </Row>
                             <Button type="primary" disabled={isSubmitting} onClick={handleSubmit}>
-                                Potvrdit
+                                Hrát
                             </Button>
                         </form>
                     );
@@ -286,7 +286,7 @@ const Configuration = function() {
                                 ) : null}
                                 {citySelected ? (
                                     <Button type="primary" disabled={isSubmitting} onClick={handleSubmit}>
-                                        Potvrdit
+                                        Hrát
                                     </Button>
                                 ) : null}
                             </form>
