@@ -25,3 +25,4 @@ I am a backend developer who needed to learn the basics of React. This project w
 * [Mapy.cz API](https://api.mapy.cz/)
 * React (bootstrapped with [Create React App](https://github.com/facebook/create-react-app)) and React Hooks
 * React Router
+* [Ant Design](https://github.com/ant-design/ant-design)
