@@ -157,7 +157,7 @@ const Configuration = function() {
                         <form onSubmit={handleSubmit}>
                             <label htmlFor="radius">
                                 <Tooltip title={RADIUS_DESCRIPTION}>
-                                    <span>Radius:</span>
+                                    <span>Radius (km):</span>
                                 </Tooltip>
                             </label>
                             <Row>
@@ -256,7 +256,7 @@ const Configuration = function() {
                                     <div>
                                         <label htmlFor="radius">
                                             <Tooltip title={RADIUS_DESCRIPTION}>
-                                                <span>Radius:</span>
+                                                <span>Radius (km):</span>
                                             </Tooltip>
                                         </label>
                                         <Row>

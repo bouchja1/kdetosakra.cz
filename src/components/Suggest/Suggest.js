@@ -92,7 +92,7 @@ const Suggest = () => {
                                 />
                                 <label htmlFor="radius">
                                     <Tooltip title={RADIUS_DESCRIPTION}>
-                                        <span>Radius:</span>
+                                        <span>Radius (km):</span>
                                     </Tooltip>
                                 </label>
                                 <Row>
