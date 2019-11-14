@@ -10,6 +10,7 @@ import { MapyProvider } from './context/MapyContext';
 import MenuComponent from './components/pageStructure/Menu';
 
 const { Footer } = Layout;
+const { REACT_APP_SENTRY_DNS } = process.env;
 
 function initializeReactGA() {
     ReactGA.initialize('UA-151784741-1');
@@ -19,7 +20,9 @@ function initializeReactGA() {
 function App() {
     // init google analytics
     initializeReactGA();
-    Sentry.init({ dsn: process.env.REACT_APP_SENTRY_DNS });
+    if (REACT_APP_SENTRY_DNS) {
+        Sentry.init({ dsn: process.env.REACT_APP_SENTRY_DNS });
+    }
     const [loaded, error] = useScript('https://api.mapy.cz/loader.js');
     const [mapLoader] = useMapLoader(loaded);
 
