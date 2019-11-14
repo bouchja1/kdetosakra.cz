@@ -8,7 +8,7 @@ import Geolocation from '../Geolocation';
 import SuggestedCity from '../SuggestedCity';
 import Home from '../../pages/home';
 import Info from '../../pages/info';
-import Result from '../../pages/vysledek';
+import Result from '../../pages/result';
 
 const RouterSwitch = () => {
     return (
