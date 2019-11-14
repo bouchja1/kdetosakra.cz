@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Formik } from 'formik';
 import ReactGA from 'react-ga';
-import { Input, Button, Row, Col, Slider, InputNumber, Tooltip } from 'antd';
+import { Button, Row, Col, Slider, InputNumber, Tooltip } from 'antd';
 import * as Yup from 'yup';
 import MapyContext from '../../context/MapyContext';
 import { CATEGORIES } from '../../enums/gaCategories';
@@ -79,7 +79,7 @@ const Suggest = () => {
                     })}
                 >
                     {props => {
-                        const { values, touched, errors, handleChange, handleBlur, handleSubmit } = props;
+                        const { handleSubmit } = props;
                         return (
                             <form onSubmit={handleSubmit}>
                                 <label htmlFor="place">Místo, které chceš zkoumat: </label>

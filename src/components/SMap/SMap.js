@@ -9,10 +9,9 @@ const DEFAULT_MODE_ZOOM = 14;
 
 const SMap = props => {
     const location = useLocation();
-    const { width, height } = useSMapResize();
+    const { width } = useSMapResize();
     const [map] = useState(React.createRef());
     const mapyContext = useContext(MapyContext);
-    const { closeResultPage } = props;
 
     const initSMap = () => {
         const SMap = mapyContext.SMap;

@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useLocation, Redirect } from 'react-router-dom';
 import { useLocalStorage } from '@rehooks/local-storage';
-import { Button, Modal } from 'antd';
+import { Button } from 'antd';
 import MapyContext from '../../context/MapyContext';
 import NextRoundButton from '../NextRoundButton';
 import {

@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Layout } from 'antd';
-import { Link, Redirect, useLocation } from 'react-router-dom';
+import { Redirect, useLocation } from 'react-router-dom';
 import Game from '../Game';
 import useGameMenuResize from '../../hooks/useGameMenuResize';
 

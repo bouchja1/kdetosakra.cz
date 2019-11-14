@@ -1,18 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ReactGA from 'react-ga';
-import { Link } from 'react-router-dom';
+import { Layout, Icon } from 'antd';
+import * as Sentry from '@sentry/browser';
+
 import useScript from './hooks/useScript';
 import useMapLoader from './hooks/useMapLoader';
-import awesomeLogo from './assets/images/kdetosakra.png'; // Tell Webpack this JS file uses this image
-import socialIcons from './assets/images/social-icons.svg';
-
 import RouterSwitch from './components/RouterSwitch';
 import { MapyProvider } from './context/MapyContext';
 import MenuComponent from './components/pageStructure/Menu';
-import { Layout, Icon } from 'antd';
-// import Footer from './components/pageStructure/Footer';
 
-const { Header, Content, Footer } = Layout;
+const { Footer } = Layout;
 
 function initializeReactGA() {
     ReactGA.initialize('UA-151784741-1');
@@ -22,6 +19,7 @@ function initializeReactGA() {
 function App() {
     // init google analytics
     initializeReactGA();
+    Sentry.init({ dsn: process.env.REACT_APP_SENTRY_DNS });
     const [loaded, error] = useScript('https://api.mapy.cz/loader.js');
     const [mapLoader] = useMapLoader(loaded);
 

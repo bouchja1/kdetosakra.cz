@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Typography, Icon, Layout } from 'antd';
 
 const { Content } = Layout;
@@ -38,7 +38,7 @@ const Info = () => {
                 </Paragraph>
                 <Paragraph>
                     Projekt jsem naprogramoval jako{' '}
-                    <a href="https://github.com/bouchja1/kdetosakra.cz" target="_blank">
+                    <a href="https://github.com/bouchja1/kdetosakra.cz" target="_blank" rel="noopener noreferrer">
                         open-source
                     </a>{' '}
                     <Icon type="github" /> v rámci studia JavaScript knihovny React.js. Code reviews, pull requesty a

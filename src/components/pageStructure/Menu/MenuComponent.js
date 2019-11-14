@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, Icon } from 'antd';
+import { Icon } from 'antd';
 import awesomeLogo from '../../../assets/images/kdetosakra.svg';
 
 const MenuComponent = () => {
@@ -14,7 +14,7 @@ const MenuComponent = () => {
                     </div>
                 </div>
                 <div className="menu-item">
-                    <img src={awesomeLogo} className="kdetosakra-logo" />
+                    <img src={awesomeLogo} alt="logo" className="kdetosakra-logo" />
                 </div>
                 <div className="menu-item info">
                     <Icon type="info-circle" theme="filled" style={{ color: 'rgb(97, 95, 95)' }} />

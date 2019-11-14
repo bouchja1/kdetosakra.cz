@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Layout } from 'antd';
 import { useLocation } from 'react-router';
 
@@ -9,7 +9,7 @@ const NotFound = () => {
 
     return (
         <Content>
-            <h1>Not found {location.pathname}</h1>
+            <h1>Takovouhle adresu tady nemám: {location.pathname}</h1>
         </Content>
     );
 };

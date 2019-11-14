@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Formik, Field } from 'formik';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 import ReactGA from 'react-ga';
-import { Input, Button, Select, Card, Layout, Slider, InputNumber, Row, Col, Tooltip } from 'antd';
+import { Button, Select, Card, Slider, InputNumber, Row, Col, Tooltip } from 'antd';
 import cryptoRandomString from 'crypto-random-string';
 import { Redirect } from 'react-router-dom';
 import useGeolocation from 'react-hook-geolocation';
@@ -98,7 +98,7 @@ const Configuration = function() {
                     }}
                 >
                     {props => {
-                        const { values, isSubmitting, handleSubmit } = props;
+                        const { isSubmitting, handleSubmit } = props;
                         return (
                             <form onSubmit={handleSubmit}>
                                 <Button type="primary" disabled={isSubmitting} onClick={handleSubmit}>
@@ -152,7 +152,7 @@ const Configuration = function() {
                 })}
             >
                 {props => {
-                    const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props;
+                    const { isSubmitting, handleSubmit } = props;
                     return (
                         <form onSubmit={handleSubmit}>
                             <label htmlFor="radius">
@@ -235,7 +235,7 @@ const Configuration = function() {
                     })}
                 >
                     {props => {
-                        const { values, touched, errors, isSubmitting, handleChange, handleBlur, handleSubmit } = props;
+                        const { values, touched, errors, isSubmitting, handleSubmit } = props;
                         return (
                             <form onSubmit={handleSubmit}>
                                 <label htmlFor="city">Město: </label>

@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
 import ResultSMapWrapper from '../../components/SMap/ResultSMapWrapper';
 import { roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util/Util';
-import { Button, Progress, Layout, Typography, Divider } from 'antd';
+import { Button, Progress, Typography, Divider } from 'antd';
 
-const { Content } = Layout;
-const { Title, Paragraph, Text } = Typography;
+const { Title } = Typography;
 
 const Result = () => {
     const location = useLocation();
