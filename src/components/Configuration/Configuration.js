@@ -35,7 +35,7 @@ const Configuration = function() {
         if (!randomUserResultToken) {
             writeStorage('randomUserResultToken', cryptoRandomString({ length: 15 }));
         }
-    }, [randomUserResultToken]);
+    }, []);
 
     const createFormOptions = () => {
         let options = [];

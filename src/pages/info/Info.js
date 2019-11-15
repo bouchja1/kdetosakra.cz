@@ -15,8 +15,7 @@ const Info = () => {
             <Typography className="about-container">
                 <Title>KdeToSakra.cz</Title>
                 <Paragraph>
-                    Tato aplikace je český klon populární online zěměpisné hry{' '}
-                    <a href="https://geoguessr.com/">GeoGuessr</a>.
+                    ...je český klon populární online zěměpisné hry <a href="https://geoguessr.com/">GeoGuessr</a>.
                 </Paragraph>
                 <Paragraph>
                     Hra <Text className="highlighted">GeoGuessr</Text> je založena na snímcích ze služby Google Street
