@@ -13,6 +13,7 @@ module.exports = override(
             '@font-size-base': '16px',
             '@layout-body-background': '#fff',
             '@layout-footer-background': '#fff',
+            '@border-radius-base': '4px',
         },
     }),
 );

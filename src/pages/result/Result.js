@@ -31,9 +31,6 @@ const Result = () => {
                             percent={roundToTwoDecimal(location.state.totalRoundScore / TOTAL_ROUNDS_MAX)}
                         />
                     </div>
-                    <Divider />
-                    <ResultSMapWrapper guessedPoints={location.state.guessedPoints} closeResultPage={closeResultPage} />
-                    <Divider />
                     <div className="result-modal-container-item">
                         <Button
                             onClick={() => {
@@ -44,6 +41,9 @@ const Result = () => {
                             Hrát znovu
                         </Button>
                     </div>
+                    <Divider />
+                    <ResultSMapWrapper guessedPoints={location.state.guessedPoints} closeResultPage={closeResultPage} />
+                    <Divider />
                 </Typography>
             </>
         );
