@@ -1,5 +1,6 @@
 import React from 'react';
-import { Typography, Icon, Layout } from 'antd';
+import { GithubOutlined, MailOutlined } from '@ant-design/icons';
+import { Typography, Layout } from 'antd';
 
 const { Content } = Layout;
 const { Title, Paragraph, Text } = Typography;
@@ -40,12 +41,12 @@ const Info = () => {
                     <a href="https://github.com/bouchja1/kdetosakra.cz" target="_blank" rel="noopener noreferrer">
                         open-source
                     </a>{' '}
-                    <Icon type="github" /> v rámci studia JavaScript knihovny React.js. Code reviews, pull requesty a
+                    <GithubOutlined /> v rámci studia JavaScript knihovny React.js. Code reviews, pull requesty a
                     připomínky jsou víc než vítány!
                 </Paragraph>
                 <Paragraph>
                     Máte dotaz? Tak mi <a href={decryptEmail('amFuLmJvdWNobmVyQGdtYWlsLmNvbQ==')}>napiště</a>{' '}
-                    <Icon type="mail" />.
+                    <MailOutlined />.
                 </Paragraph>
             </Typography>
         </Content>

@@ -1,0 +1,13 @@
+# https://docs.docker.com/compose/compose-file/
+version: "3"
+
+services:
+  web:
+    build: .
+    # command: serve -s build -l 3000
+    container_name: kdetosakra-web
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules # node_modules installed inside the container during the build will not be overridden by your current folder
+    ports:
+      - 4000:80

@@ -1,6 +1,6 @@
 import axiosLib from 'axios';
 
-const API_KEY = process.env.REACT_APP_API_KEY;
+const API_KEY = window._env_.REACT_APP_API_KEY;
 
 const stage = 'Prod/';
 const CITY_ENDPOINT = 'https://qz9m2zyb86.execute-api.eu-west-1.amazonaws.com/';

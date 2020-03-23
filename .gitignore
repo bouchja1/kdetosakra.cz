@@ -15,6 +15,10 @@
 # production
 /build
 
+# Temporary env files
+/public/env-config.js
+env-config.js
+
 # misc
 .DS_Store
 .env

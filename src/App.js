@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactGA from 'react-ga';
-import { Layout, Icon } from 'antd';
+import { Layout } from 'antd';
+import { HeartTwoTone } from '@ant-design/icons';
 import * as Sentry from '@sentry/browser';
 
 import useScript from './hooks/useScript';
@@ -10,7 +11,6 @@ import { MapyProvider } from './context/MapyContext';
 import MenuComponent from './components/pageStructure/Menu';
 
 const { Footer } = Layout;
-const { REACT_APP_SENTRY_DNS } = process.env;
 
 function initializeReactGA() {
     ReactGA.initialize('UA-151784741-1');
@@ -20,8 +20,8 @@ function initializeReactGA() {
 function App() {
     // init google analytics
     initializeReactGA();
-    if (REACT_APP_SENTRY_DNS) {
-        Sentry.init({ dsn: process.env.REACT_APP_SENTRY_DNS });
+    if (window._env_.REACT_APP_SENTRY_DNS) {
+        Sentry.init({ dsn: window._env_.REACT_APP_SENTRY_DNS });
     }
     const [loaded, error] = useScript('https://api.mapy.cz/loader.js');
     const [mapLoader] = useMapLoader(loaded);
@@ -37,7 +37,7 @@ function App() {
                 )}
                 <Footer style={{ textAlign: 'center' }}>
                     Postaveno na <a href="http://mapy.cz/">Mapy.cz</a> <a href="https://api.mapy.cz/">API</a>{' '}
-                    <Icon type="heart" theme="twoTone" twoToneColor="#eb2f96" />
+                    <HeartTwoTone twoToneColor="#eb2f96" />
                 </Footer>
             </Layout>
         </>
