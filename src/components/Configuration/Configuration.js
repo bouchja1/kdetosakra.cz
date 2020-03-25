@@ -183,6 +183,10 @@ const Configuration = function() {
                                     />
                                 </Col>
                             </Row>
+                            <p style={{ marginTop: '10px' }}>
+                                Panoramata budou náhodně generována v okolí {radiusGeolocationInputValue} km od vaší
+                                aktuální polohy.
+                            </p>
                             <Button type="primary" disabled={isSubmitting} onClick={handleSubmit}>
                                 Hrát
                             </Button>
@@ -282,12 +286,14 @@ const Configuration = function() {
                                                 />
                                             </Col>
                                         </Row>
+                                        <p style={{ marginTop: '10px' }}>
+                                            Panoramata budou náhodně generována v okolí {radiusCityInputValue} km od
+                                            středu krajského města.
+                                        </p>
+                                        <Button type="primary" disabled={isSubmitting} onClick={handleSubmit}>
+                                            Hrát
+                                        </Button>
                                     </div>
-                                ) : null}
-                                {citySelected ? (
-                                    <Button type="primary" disabled={isSubmitting} onClick={handleSubmit}>
-                                        Hrát
-                                    </Button>
                                 ) : null}
                             </form>
                         );

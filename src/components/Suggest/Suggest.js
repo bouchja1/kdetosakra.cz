@@ -116,6 +116,10 @@ const Suggest = () => {
                                         />
                                     </Col>
                                 </Row>
+                                <p style={{ marginTop: '10px' }}>
+                                    Panoramata budou náhodně generována v okolí {radiusCustomInputValue} km od vámi
+                                    vybraného místa.
+                                </p>
                                 <Button disabled={!submittedSuggestedData} type="primary" onClick={handleSubmit}>
                                     Hrát
                                 </Button>
