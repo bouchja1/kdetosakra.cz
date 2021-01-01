@@ -45,7 +45,7 @@ const Info = () => {
                     připomínky jsou víc než vítány!
                 </Paragraph>
                 <Paragraph>
-                    Máte dotaz? Tak mi <a href={decryptEmail('amFuLmJvdWNobmVyQGdtYWlsLmNvbQ==')}>napiště</a>{' '}
+                    Máte dotaz? Tak mi <a href={decryptEmail('amFuLmJvdWNobmVyQGdtYWlsLmNvbQ==')}>napište</a>{' '}
                     <MailOutlined />.
                 </Paragraph>
             </Typography>
