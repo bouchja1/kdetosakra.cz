@@ -16,6 +16,12 @@
 
 .kdetosakra-logo {
     max-width: 150px;
+    position: relative;
+    left: 13px;
+}
+
+.fb-icon {
+    margin-left: 20px;
 }
 
 .ant-layout-content {

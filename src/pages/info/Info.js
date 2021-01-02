@@ -1,16 +1,12 @@
 import React from 'react';
 import { GithubOutlined, MailOutlined } from '@ant-design/icons';
 import { Typography, Layout } from 'antd';
+import { decryptEmail } from '../../util/Util';
 
 const { Content } = Layout;
 const { Title, Paragraph, Text } = Typography;
 
 const Info = () => {
-    function decryptEmail(encoded) {
-        const address = atob(encoded);
-        return `mailto:${address}`;
-    }
-
     return (
         <Content>
             <Typography className="about-container">

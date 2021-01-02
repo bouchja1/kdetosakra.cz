@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { HomeFilled, InfoCircleFilled } from '@ant-design/icons';
-import awesomeLogo from '../../../assets/images/kdetosakra.svg';
+import { FacebookFilled, HomeFilled, InfoCircleFilled, MailOutlined } from '@ant-design/icons';
 import smilingLogo from '../../../assets/images/kdetosakraSmile.svg';
+import { decryptEmail } from '../../../util/Util';
 
 const MenuComponent = () => {
     return (
@@ -22,6 +22,12 @@ const MenuComponent = () => {
                     <div className="info-menu-item">
                         <Link to="/info">O hře</Link>
                     </div>
+                    <a className="fb-icon" href="https://www.facebook.com/kdetosakra.cz" target="_blank">
+                        <FacebookFilled style={{ color: 'rgb(97, 95, 95)' }} />
+                    </a>
+                    <a className="fb-icon" href={decryptEmail('amFuLmJvdWNobmVyQGdtYWlsLmNvbQ==')}>
+                        <MailOutlined style={{ color: 'rgb(97, 95, 95)' }} />
+                    </a>
                 </div>
             </div>
         </div>

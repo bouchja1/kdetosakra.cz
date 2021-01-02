@@ -35,7 +35,7 @@ RUN apk add --no-cache bash
 # Make our shell script executable
 RUN chmod +x env-config.sh
 
-EXPOSE 4000
+EXPOSE 80
 
 # Start Nginx server
 CMD ["/bin/bash", "-c", "/var/www/env-config.sh && nginx -g \"daemon off;\""]

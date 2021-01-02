@@ -71,6 +71,11 @@ export function pointInCircle(coord, distance) {
     return pointAtDistance(coord, randomDist);
 }
 
+export function decryptEmail(encoded) {
+    const address = atob(encoded);
+    return `mailto:${address}`;
+}
+
 export const DEFAUL_MARKER_PLACE_ICON = 'https://kdetosakra.cz/questionmark.png';
 export const DEFAUL_MARKER_ICON = 'https://kdetosakra.cz/marker.png';
 export const TOTAL_ROUNDS_MAX = 5;
