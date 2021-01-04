@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Modal, Progress, Button, Typography } from 'antd';
 import GuessingMap from '../GuessingMap';
 import { crCities } from '../../data/cr';
-import MapyContext from '../../context/MapyContext';
+import KdetosakraContext from '../../context/KdetosakraContext';
 import { pointInCircle, roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util/Util';
 import useWindowHeight from '../../hooks/useWindowHeight';
 import useSMapResize from '../../hooks/useSMapResize';
@@ -25,7 +25,7 @@ const Game = ({ location }) => {
     const [guessedDistance, setGuessedDistance] = useState(null);
     const [guessedPlace, setGuessedPlace] = useState(null);
     const [guessedPoints, setGuessedPoints] = useState([]);
-    const mapyContext = useContext(MapyContext);
+    const mapyContext = useContext(KdetosakraContext);
     const [panoramaFounded, setPanoramaFounded] = useState(true);
     const [currentCity, setCurrentCity] = useState(null);
     const [resultModalVisible, setResultModalVisible] = useState(false);
@@ -45,10 +45,10 @@ const Game = ({ location }) => {
             blend: 300,
             pitchRange: [0, 0], // zakazeme vertikalni rozhled
         };
-        const SMap = mapyContext.SMap;
+        const { SMap } = mapyContext;
 
         if (SMap) {
-            const SMap = mapyContext.SMap;
+            const { SMap } = mapyContext;
             let panoramaSceneSMap;
             if (panoramaSceneParam) {
                 panoramaSceneSMap = panoramaSceneParam;
@@ -65,14 +65,14 @@ const Game = ({ location }) => {
             }
             SMap.Pano.getBest(position, tolerance)
                 .then(
-                    function(place) {
+                    place => {
                         panoramaSceneSMap.show(place);
                         setPanoramaScene(panoramaSceneSMap);
                     },
-                    function() {
+                    () => {
                         // alert('GuessingMap se nepodařilo zobrazit!');
                         if (counter < MAX_PANORAMA_TRIES) {
-                            counter = counter + 1;
+                            counter += 1;
                             loadPanoramaMap(radius, locationCity, true, counter, panoramaSceneSMap);
                         } else {
                             throw new Error('Panorama was not found');
@@ -99,7 +99,7 @@ const Game = ({ location }) => {
     };
 
     const generatePlaceInRadius = (radius, locationCity) => {
-        radius = radius * 1000; // to meters
+        radius *= 1000; // to meters
         const generatedPlace = pointInCircle(
             {
                 longitude: locationCity.coordinates.longitude,
@@ -112,7 +112,7 @@ const Game = ({ location }) => {
 
     const calculateDistance = mapCoordinates => {
         const locationObject = location.state;
-        let city = location.state.city;
+        let { city } = location.state;
         if (!city) {
             city = currentCity;
         }
@@ -133,7 +133,7 @@ const Game = ({ location }) => {
             dist = Math.acos(dist);
             dist = (dist * 180) / Math.PI;
             dist = dist * 60 * 1.1515;
-            dist = dist * 1.609344; // convert to kilometers
+            dist *= 1.609344; // convert to kilometers
             distance = dist;
         }
         if (locationObject.mode === 'random') {
@@ -149,7 +149,7 @@ const Game = ({ location }) => {
     };
 
     const calculateScore = distance => {
-        let { radius, mode } = location.state;
+        const { radius, mode } = location.state;
         let minDistanceForPoints;
         if (mode === 'random') {
             minDistanceForPoints = MIN_DISTANCE_FOR_POINTS_RANDOM;
@@ -196,11 +196,11 @@ const Game = ({ location }) => {
 
     return (
         <>
-            <div className="panorama-container" style={{ height: windowHeight - 110 }}>
+            <div className="panorama-container" style={{ height: windowHeight - 130 }}>
                 {!panoramaFounded ? (
                     <p>V okruhu 5 km od vašeho místa nebylo nalezeno žádné panorama.</p>
                 ) : (
-                    <div ref={panorama}></div>
+                    <div ref={panorama} />
                 )}
             </div>
             <div

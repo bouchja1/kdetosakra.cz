@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import MapyContext from '../../context/MapyContext';
 import { Divider } from 'antd';
+import KdetosakraContext from '../../context/KdetosakraContext';
 import { DEFAUL_MARKER_ICON, DEFAUL_MARKER_PLACE_ICON } from '../../util/Util';
 import useSMapResize from '../../hooks/useSMapResize';
 
@@ -11,10 +11,10 @@ const SMap = props => {
     const location = useLocation();
     const { width } = useSMapResize();
     const [map] = useState(React.createRef());
-    const mapyContext = useContext(MapyContext);
+    const mapyContext = useContext(KdetosakraContext);
 
     const initSMap = () => {
-        const SMap = mapyContext.SMap;
+        const { SMap } = mapyContext;
 
         const mouseControlOptions = {
             scrollDelay: 5000,
@@ -50,15 +50,14 @@ const SMap = props => {
                 const locationModeRadius = location.state.radius;
                 if (locationModeRadius > 2 && locationModeRadius <= 6 && locationModeRadius <= 10) {
                     if (location.state.city.cityRange) {
-                        defaultModeZoom =
-                            defaultModeZoom -
-                            (location.state.city.cityRange > 1
+                        defaultModeZoom -=
+                            location.state.city.cityRange > 1
                                 ? location.state.city.cityRange - 1
-                                : location.state.city.cityRange);
+                                : location.state.city.cityRange;
                     }
                 } else if (locationModeRadius > 6 && locationModeRadius <= 10) {
                     if (location.state.city.cityRange) {
-                        defaultModeZoom = defaultModeZoom - location.state.city.cityRange;
+                        defaultModeZoom -= location.state.city.cityRange;
                     }
                 }
                 mapInstance.setCenterZoom(
@@ -174,7 +173,7 @@ const SMap = props => {
     return (
         <>
             {width <= 961 ? <Divider /> : null}
-            <div id="smap" className={width > 960 ? 'smap smap-style' : 'smap'} ref={map}></div>
+            <div id="smap" className={width > 960 ? 'smap smap-style' : 'smap'} ref={map} />
         </>
     );
 };

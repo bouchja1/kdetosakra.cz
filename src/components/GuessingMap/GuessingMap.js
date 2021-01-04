@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useLocation, Redirect } from 'react-router-dom';
 import { useLocalStorage } from '@rehooks/local-storage';
 import { Button } from 'antd';
-import MapyContext from '../../context/MapyContext';
+import KdetosakraContext from '../../context/KdetosakraContext';
 import NextRoundButton from '../NextRoundButton';
 import {
     DEFAUL_MARKER_PLACE_ICON,
@@ -26,16 +26,16 @@ const GuessingMap = ({
 }) => {
     const location = useLocation();
     const [randomUserResultToken] = useLocalStorage('randomUserResultToken'); // send the key to be tracked.
-    const mapyContext = useContext(MapyContext);
+    const mapyContext = useContext(KdetosakraContext);
     const [layeredMap] = useState(null);
     const [layer] = useState(null);
     const [vectorLayerSMap] = useState(null);
     const [gameCompleted, setGameCompleted] = useState(false);
     const [roundGuessed, setRoundGuessed] = useState(false);
 
-    let refLayerValue = React.useRef(layer);
-    let refVectorLayerSMapValue = React.useRef(vectorLayerSMap);
-    let refLayeredMapValue = React.useRef(layeredMap);
+    const refLayerValue = React.useRef(layer);
+    const refVectorLayerSMapValue = React.useRef(vectorLayerSMap);
+    const refLayeredMapValue = React.useRef(layeredMap);
 
     const [guessButtonDisabled, setGuessButtonDisabled] = useState(true);
     const [nextRoundButtonVisible, setNextRoundButtonVisible] = useState(false);
@@ -69,7 +69,7 @@ const GuessingMap = ({
             anchor: { left: 10, bottom: 1 } /* Ukotvení značky za bod uprostřed dole */,
         };
         // state is not working in event handling
-        //if (guessButtonDisabled && refLayerValue.current && !nextRoundButtonVisible) {
+        // if (guessButtonDisabled && refLayerValue.current && !nextRoundButtonVisible) {
         refLayerValue.current.removeAll();
         const coords = mapyContext.SMap.Coords.fromEvent(e.data.event, refLayeredMapValue.current);
         // alert("Kliknuto na " + coords.toWGS84(2).reverse().join(" "));
@@ -133,24 +133,23 @@ const GuessingMap = ({
                     Vyhodnotit hru
                 </Button>
             );
-        } else {
-            return (
-                <>
-                    {!nextRoundButtonVisible ? (
-                        <Button
-                            disabled={guessButtonDisabled}
-                            onClick={() => {
-                                calculateCoords();
-                            }}
-                            type="primary"
-                        >
-                            Hádej!
-                        </Button>
-                    ) : null}
-                    {nextRoundButtonVisible ? <NextRoundButton refreshMap={() => refreshMap()} /> : null}
-                </>
-            );
         }
+        return (
+            <>
+                {!nextRoundButtonVisible ? (
+                    <Button
+                        disabled={guessButtonDisabled}
+                        onClick={() => {
+                            calculateCoords();
+                        }}
+                        type="primary"
+                    >
+                        Hádej!
+                    </Button>
+                ) : null}
+                {nextRoundButtonVisible ? <NextRoundButton refreshMap={() => refreshMap()} /> : null}
+            </>
+        );
     };
 
     const calculateCoords = () => {
@@ -182,7 +181,7 @@ const GuessingMap = ({
         // panorama place marker
         const markerPanorama = new mapyContext.SMap.Marker(
             mapyContext.SMap.Coords.fromWGS84(panoramaCoordinates.lon, panoramaCoordinates.lat),
-            `Panorama point`,
+            'Panorama point',
             markerPanoramaOptions,
         );
         refLayerValue.current.addMarker(markerPanorama);

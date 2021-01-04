@@ -13,24 +13,17 @@ const Geolocation = () => {
     if (location && location.state && location.state.radius && location.state.city) {
         return (
             <Content>
-                {/*
-                <div className="game-mode-info-container">
-                    <h2>Herní mód: Podle aktuální geolokace</h2>
-                    <h3>Maximální vzdálenost od místa: {location.state.radius} km</h3>
-                </div>
-                */}
                 <Game location={location} />
             </Content>
         );
-    } else {
-        return (
-            <Redirect
-                to={{
-                    pathname: '/',
-                }}
-            />
-        );
     }
+    return (
+        <Redirect
+            to={{
+                pathname: '/',
+            }}
+        />
+    );
 };
 
 export default Geolocation;

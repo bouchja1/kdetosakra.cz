@@ -38,7 +38,7 @@ const Configuration = function() {
     }, []);
 
     const createFormOptions = () => {
-        let options = [];
+        const options = [];
         for (let i = 0; i < cities.length; i++) {
             options.push(
                 <Option key={cities[i].name} value={cities[i].name}>
@@ -49,7 +49,7 @@ const Configuration = function() {
         return options;
     };
 
-    const handleOnChangeCity = value => {
+    const changeCity = value => {
         const selectedValue = value;
         if (selectedValue === '') {
             setCitySelected(null);
@@ -62,11 +62,11 @@ const Configuration = function() {
         }
     };
 
-    const onChangeGeolocationRadiusInput = value => {
+    const handleChangeGeolocationRadiusInput = value => {
         setRadiusGeolocationInputValue(value);
     };
 
-    const onChangeCityRadiusInput = value => {
+    const handleChangeCityRadiusInput = value => {
         setRadiusCityInputValue(value);
     };
 
@@ -89,27 +89,26 @@ const Configuration = function() {
                     }}
                 />
             );
-        } else {
-            return (
-                <Formik
-                    initialValues={{ radius: 1, city: '' }}
-                    onSubmit={(values, { setSubmitting }) => {
-                        setRandomCityFormSubmitted(true);
-                    }}
-                >
-                    {props => {
-                        const { isSubmitting, handleSubmit } = props;
-                        return (
-                            <form onSubmit={handleSubmit}>
-                                <Button type="primary" disabled={isSubmitting} onClick={handleSubmit}>
-                                    Hrát
-                                </Button>
-                            </form>
-                        );
-                    }}
-                </Formik>
-            );
         }
+        return (
+            <Formik
+                initialValues={{ radius: 1, city: '' }}
+                onSubmit={(values, { setSubmitting }) => {
+                    setRandomCityFormSubmitted(true);
+                }}
+            >
+                {props => {
+                    const { isSubmitting, handleSubmit } = props;
+                    return (
+                        <form onSubmit={handleSubmit}>
+                            <Button type="primary" disabled={isSubmitting} onClick={handleSubmit}>
+                                Hrát
+                            </Button>
+                        </form>
+                    );
+                }}
+            </Formik>
+        );
     };
 
     const renderMyPosition = () => {
@@ -165,7 +164,7 @@ const Configuration = function() {
                                     <Slider
                                         min={1}
                                         max={10}
-                                        onChange={onChangeGeolocationRadiusInput}
+                                        onChange={handleChangeGeolocationRadiusInput}
                                         value={
                                             typeof radiusGeolocationInputValue === 'number'
                                                 ? radiusGeolocationInputValue
@@ -179,7 +178,7 @@ const Configuration = function() {
                                         max={10}
                                         style={{ marginLeft: 16 }}
                                         value={radiusGeolocationInputValue}
-                                        onChange={onChangeGeolocationRadiusInput}
+                                        onChange={handleChangeGeolocationRadiusInput}
                                     />
                                 </Col>
                             </Row>
@@ -197,10 +196,6 @@ const Configuration = function() {
         ) : (
             <p>Geografickou polohu se nepodařilo načíst.</p>
         );
-    };
-
-    const renderCustomPlace = () => {
-        return <Suggest />;
     };
 
     const renderForm = () => {
@@ -224,83 +219,80 @@ const Configuration = function() {
                     }}
                 />
             );
-        } else {
-            return (
-                <Formik
-                    initialValues={{ radius: 1, city: '' }}
-                    onSubmit={(values, { setSubmitting }) => {
-                        values.radius = radiusCityInputValue;
-                        setCityFormValues(values);
-                        setCityFormSubmitted(true);
-                    }}
-                    validationSchema={Yup.object().shape({
-                        radius: Yup.number().required('Required'),
-                        city: Yup.string().required('Required'),
-                    })}
-                >
-                    {props => {
-                        const { values, touched, errors, isSubmitting, handleSubmit } = props;
-                        return (
-                            <form onSubmit={handleSubmit}>
-                                <label htmlFor="city">Město: </label>
-                                <Select
-                                    showSearch
-                                    name="city"
-                                    style={{ width: 200 }}
-                                    placeholder="Vyber si město"
-                                    onChange={value => {
-                                        handleOnChangeCity(value);
-                                        values.city = value;
-                                    }}
-                                >
-                                    {createFormOptions()}
-                                </Select>
-                                {errors.city && touched.city && <div className="input-feedback">{errors.color}</div>}
-                                {citySelected ? (
-                                    <div>
-                                        <label htmlFor="radius">
-                                            <Tooltip title={RADIUS_DESCRIPTION}>
-                                                <span>Radius (km):</span>
-                                            </Tooltip>
-                                        </label>
-                                        <Row>
-                                            <Col span={12}>
-                                                <Slider
-                                                    min={1}
-                                                    max={maxCityRadius}
-                                                    onChange={onChangeCityRadiusInput}
-                                                    value={
-                                                        typeof radiusCityInputValue === 'number'
-                                                            ? radiusCityInputValue
-                                                            : 0
-                                                    }
-                                                />
-                                            </Col>
-                                            <Col span={4}>
-                                                <InputNumber
-                                                    min={1}
-                                                    max={maxCityRadius}
-                                                    style={{ marginLeft: 16 }}
-                                                    value={radiusCityInputValue}
-                                                    onChange={onChangeCityRadiusInput}
-                                                />
-                                            </Col>
-                                        </Row>
-                                        <p style={{ marginTop: '10px' }}>
-                                            Panoramata budou náhodně generována v okolí {radiusCityInputValue} km od
-                                            středu krajského města.
-                                        </p>
-                                        <Button type="primary" disabled={isSubmitting} onClick={handleSubmit}>
-                                            Hrát
-                                        </Button>
-                                    </div>
-                                ) : null}
-                            </form>
-                        );
-                    }}
-                </Formik>
-            );
         }
+        return (
+            <Formik
+                initialValues={{ radius: 1, city: '' }}
+                onSubmit={(values, { setSubmitting }) => {
+                    values.radius = radiusCityInputValue;
+                    setCityFormValues(values);
+                    setCityFormSubmitted(true);
+                }}
+                validationSchema={Yup.object().shape({
+                    radius: Yup.number().required('Required'),
+                    city: Yup.string().required('Required'),
+                })}
+            >
+                {props => {
+                    const { values, touched, errors, isSubmitting, handleSubmit } = props;
+                    return (
+                        <form onSubmit={handleSubmit}>
+                            <label htmlFor="city">Město: </label>
+                            <Select
+                                showSearch
+                                name="city"
+                                style={{ width: 200 }}
+                                placeholder="Vyber si město"
+                                onChange={value => {
+                                    changeCity(value);
+                                    values.city = value;
+                                }}
+                            >
+                                {createFormOptions()}
+                            </Select>
+                            {errors.city && touched.city && <div className="input-feedback">{errors.color}</div>}
+                            {citySelected ? (
+                                <div>
+                                    <label htmlFor="radius">
+                                        <Tooltip title={RADIUS_DESCRIPTION}>
+                                            <span>Radius (km):</span>
+                                        </Tooltip>
+                                    </label>
+                                    <Row>
+                                        <Col span={12}>
+                                            <Slider
+                                                min={1}
+                                                max={maxCityRadius}
+                                                onChange={handleChangeCityRadiusInput}
+                                                value={
+                                                    typeof radiusCityInputValue === 'number' ? radiusCityInputValue : 0
+                                                }
+                                            />
+                                        </Col>
+                                        <Col span={4}>
+                                            <InputNumber
+                                                min={1}
+                                                max={maxCityRadius}
+                                                style={{ marginLeft: 16 }}
+                                                value={radiusCityInputValue}
+                                                onChange={handleChangeCityRadiusInput}
+                                            />
+                                        </Col>
+                                    </Row>
+                                    <p style={{ marginTop: '10px' }}>
+                                        Panoramata budou náhodně generována v okolí {radiusCityInputValue} km od středu
+                                        krajského města.
+                                    </p>
+                                    <Button type="primary" disabled={isSubmitting} onClick={handleSubmit}>
+                                        Hrát
+                                    </Button>
+                                </div>
+                            ) : null}
+                        </form>
+                    );
+                }}
+            </Formik>
+        );
     };
 
     return (
@@ -335,7 +327,7 @@ const Configuration = function() {
                     Chceš si zahrát a nebydlíš přitom v krajském městě? Nevadí, přesně tohle je výzva pro tebe. Svou
                     obec či jiné zajímavé místo, které chceš více poznat, vyhledej ve formuláři níže. Šťastnou cestu!
                 </p>
-                {renderCustomPlace()}
+                <Suggest />
             </Card>
         </>
     );

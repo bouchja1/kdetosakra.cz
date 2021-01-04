@@ -13,25 +13,17 @@ const SuggestedCity = () => {
     if (location && location.state && location.state.city) {
         return (
             <Content>
-                {/*
-                <div className="game-mode-info-container">
-                    <h2>Herní mód: Zvolené místo v Čr</h2>
-                    <h3>Místo: {location.state.city.place}</h3>
-                    {location.state.city.info ? <h3>{location.state.city.info}</h3> : null}
-                </div>
-                */}
                 <Game location={location} />
             </Content>
         );
-    } else {
-        return (
-            <Redirect
-                to={{
-                    pathname: '/',
-                }}
-            />
-        );
     }
+    return (
+        <Redirect
+            to={{
+                pathname: '/',
+            }}
+        />
+    );
 };
 
 export default SuggestedCity;
