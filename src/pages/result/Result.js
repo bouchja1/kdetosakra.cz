@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
+import { Button, Progress, Typography, Divider } from 'antd';
 import ResultSMapWrapper from '../../components/SMap/ResultSMapWrapper';
 import { roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util/Util';
-import { Button, Progress, Typography, Divider } from 'antd';
 
 const { Title } = Typography;
 
@@ -41,9 +41,7 @@ const Result = () => {
                             Hrát znovu
                         </Button>
                     </div>
-                    <Divider />
                     <ResultSMapWrapper guessedPoints={location.state.guessedPoints} closeResultPage={closeResultPage} />
-                    <Divider />
                 </Typography>
             </>
         );

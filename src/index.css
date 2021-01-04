@@ -11,13 +11,13 @@
 .layout {
     display: flex;
     justify-content: center;
-    padding: 40px 20px 20px 20px;
+    padding: 10px 20px 20px 20px;
 }
 
 .kdetosakra-logo {
     max-width: 150px;
     position: relative;
-    left: 13px;
+    left: 25px;
 }
 
 .fb-icon {
@@ -32,6 +32,7 @@
 }
 
 .ant-layout-footer {
+    padding: 13px 50px !important;
     background: #ffffff;
 }
 
@@ -50,7 +51,6 @@
 /* this is flex container */
 .menu-container {
     color: #fff;
-    padding: 40px 0 20px 0;
     display: flex;
     justify-content: center;
     height: 180px;
@@ -229,6 +229,7 @@ label {
     }
 
     .menu-container {
+        padding: 30px 0 15px 0;
         height: 20px;
     }
 
@@ -237,7 +238,7 @@ label {
     }
 
     .kdetosakra-logo {
-        max-width: 50px;
+        max-width: 0px;
     }
 
     .smap-container {
@@ -256,6 +257,7 @@ label {
     }
 
     .menu-container {
+        padding: 30px 0 15px 0;
         height: 20px;
     }
 

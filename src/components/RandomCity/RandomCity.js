@@ -13,23 +13,17 @@ const RandomCity = () => {
     if (location && location.state && location.state.mode === 'random') {
         return (
             <Content>
-                {/*
-                <div className="game-mode-info-container">
-                    <h2>Herní mód: Náhodné místo v Čr</h2>
-                </div>
-                */}
                 <Game location={location} />
             </Content>
         );
-    } else {
-        return (
-            <Redirect
-                to={{
-                    pathname: '/',
-                }}
-            />
-        );
     }
+    return (
+        <Redirect
+            to={{
+                pathname: '/',
+            }}
+        />
+    );
 };
 
 export default RandomCity;

@@ -4,13 +4,13 @@ import { Formik } from 'formik';
 import ReactGA from 'react-ga';
 import { Button, Row, Col, Slider, InputNumber, Tooltip } from 'antd';
 import * as Yup from 'yup';
-import MapyContext from '../../context/MapyContext';
+import KdetosakraContext from '../../context/KdetosakraContext';
 import { CATEGORIES } from '../../enums/gaCategories';
 import { RADIUS_DESCRIPTION } from '../../util/Util';
 
 const Suggest = () => {
     const [suggestInput] = useState(React.createRef());
-    const mapyContext = useContext(MapyContext);
+    const mapyContext = useContext(KdetosakraContext);
     const [mapyContextApiLoaded, setMapyContextApiLoaded] = useState(false);
     const [submittedSuggestedData, setSubmittedSuggestedData] = useState(null);
     const [playSuggested, setPlaySuggested] = useState(false);
@@ -24,10 +24,10 @@ const Suggest = () => {
                 bounds: '48.5370786,12.0921668|51.0746358,18.8927040',
             });
             suggest
-                .addListener('suggest', function(suggestedData) {
+                .addListener('suggest', suggestedData => {
                     setSubmittedSuggestedData(suggestedData);
                 })
-                .addListener('close', function() {});
+                .addListener('close', () => {});
         }
     };
 
@@ -65,71 +65,68 @@ const Suggest = () => {
                 }}
             />
         );
-    } else {
-        return (
-            <>
-                <Formik
-                    initialValues={{ radius: 1, city: '' }}
-                    onSubmit={(values, { setSubmitting }) => {
-                        values.radius = radiusCustomInputValue;
-                        setPlaySuggested(true);
-                    }}
-                    validationSchema={Yup.object().shape({
-                        radius: Yup.number().required('Required'),
-                    })}
-                >
-                    {props => {
-                        const { handleSubmit } = props;
-                        return (
-                            <form onSubmit={handleSubmit}>
-                                <label htmlFor="place">Místo, které chceš zkoumat: </label>
-                                <input
-                                    name="place"
-                                    type="text"
-                                    className="ant-input text-input"
-                                    placeholder="hledaná fráze"
-                                    ref={suggestInput}
-                                />
-                                <label htmlFor="radius">
-                                    <Tooltip title={RADIUS_DESCRIPTION}>
-                                        <span>Radius (km):</span>
-                                    </Tooltip>
-                                </label>
-                                <Row>
-                                    <Col span={12}>
-                                        <Slider
-                                            min={1}
-                                            max={10}
-                                            onChange={onChangeGeolocationRadiusInput}
-                                            value={
-                                                typeof radiusCustomInputValue === 'number' ? radiusCustomInputValue : 0
-                                            }
-                                        />
-                                    </Col>
-                                    <Col span={4}>
-                                        <InputNumber
-                                            min={1}
-                                            max={10}
-                                            style={{ marginLeft: 16 }}
-                                            value={radiusCustomInputValue}
-                                            onChange={onChangeGeolocationRadiusInput}
-                                        />
-                                    </Col>
-                                </Row>
-                                <p style={{ marginTop: '10px' }}>
-                                    Panoramata budou náhodně generována v okolí {radiusCustomInputValue} km od vámi
-                                    vybraného místa.
-                                </p>
-                                <Button disabled={!submittedSuggestedData} type="primary" onClick={handleSubmit}>
-                                    Hrát
-                                </Button>
-                            </form>
-                        );
-                    }}
-                </Formik>
-            </>
-        );
     }
+    return (
+        <>
+            <Formik
+                initialValues={{ radius: 1, city: '' }}
+                onSubmit={(values, { setSubmitting }) => {
+                    values.radius = radiusCustomInputValue;
+                    setPlaySuggested(true);
+                }}
+                validationSchema={Yup.object().shape({
+                    radius: Yup.number().required('Required'),
+                })}
+            >
+                {props => {
+                    const { handleSubmit } = props;
+                    return (
+                        <form onSubmit={handleSubmit}>
+                            <label htmlFor="place">Místo, které chceš zkoumat: </label>
+                            <input
+                                name="place"
+                                type="text"
+                                className="ant-input text-input"
+                                placeholder="hledaná fráze"
+                                ref={suggestInput}
+                            />
+                            <label htmlFor="radius">
+                                <Tooltip title={RADIUS_DESCRIPTION}>
+                                    <span>Radius (km):</span>
+                                </Tooltip>
+                            </label>
+                            <Row>
+                                <Col span={12}>
+                                    <Slider
+                                        min={1}
+                                        max={10}
+                                        onChange={onChangeGeolocationRadiusInput}
+                                        value={typeof radiusCustomInputValue === 'number' ? radiusCustomInputValue : 0}
+                                    />
+                                </Col>
+                                <Col span={4}>
+                                    <InputNumber
+                                        min={1}
+                                        max={10}
+                                        style={{ marginLeft: 16 }}
+                                        value={radiusCustomInputValue}
+                                        onChange={onChangeGeolocationRadiusInput}
+                                    />
+                                </Col>
+                            </Row>
+                            <p style={{ marginTop: '10px' }}>
+                                Panoramata budou náhodně generována v okolí {radiusCustomInputValue} km od vámi
+                                vybraného místa.
+                            </p>
+                            <Button disabled={!submittedSuggestedData} type="primary" onClick={handleSubmit}>
+                                Hrát
+                            </Button>
+                        </form>
+                    );
+                }}
+            </Formik>
+        </>
+    );
 };
 
 export default Suggest;

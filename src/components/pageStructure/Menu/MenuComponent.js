@@ -15,7 +15,7 @@ const MenuComponent = () => {
                     </div>
                 </div>
                 <div className="menu-item">
-                    <img id="kdetosakra-logo" src={smilingLogo} alt="logo" className="kdetosakra-logo" />
+                    <img id="kdetosakra-logo" src={smilingLogo} alt="logo" className="kdetosakra-logo" width="85%" />
                 </div>
                 <div className="menu-item info">
                     <InfoCircleFilled style={{ color: 'rgb(97, 95, 95)' }} />
