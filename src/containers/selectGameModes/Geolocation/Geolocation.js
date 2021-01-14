@@ -40,6 +40,7 @@ const Geolocation = () => {
         );
     }
 
+    // browser is allowed to access user's LAT and LONG
     return geolocation.latitude && geolocation.longitude ? (
         <Formik
             initialValues={{ radius: 1, city: '' }}

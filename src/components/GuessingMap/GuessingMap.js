@@ -3,7 +3,6 @@ import { useLocation, Redirect } from 'react-router-dom';
 import { useLocalStorage } from '@rehooks/local-storage';
 import { Button } from 'antd';
 import KdetosakraContext from '../../context/KdetosakraContext';
-import NextRoundButton from '../NextRoundButton';
 import {
     DEFAUL_MARKER_PLACE_ICON,
     DEFAUL_MARKER_ICON,
@@ -62,7 +61,7 @@ const GuessingMap = ({
         window.scrollTo(0, 0);
     };
 
-    const click = (e, elm) => {
+    const clickMapPoint = (e, elm) => {
         // Došlo ke kliknutí, spočítáme kde
         const options = {
             url: DEFAUL_MARKER_ICON,
@@ -147,7 +146,11 @@ const GuessingMap = ({
                         Hádej!
                     </Button>
                 ) : null}
-                {nextRoundButtonVisible ? <NextRoundButton refreshMap={() => refreshMap()} /> : null}
+                {nextRoundButtonVisible ? (
+                    <Button onClick={() => refreshMap()} type="primary">
+                        Další kolo
+                    </Button>
+                ) : null}
             </>
         );
     };
@@ -192,7 +195,7 @@ const GuessingMap = ({
         <>
             {!roundGuessed ? (
                 <RoundSMapWrapper
-                    click={click}
+                    onMapClick={clickMapPoint}
                     refLayeredMapValue={refLayeredMapValue}
                     refLayerValue={refLayerValue}
                     refVectorLayerSMapValue={refVectorLayerSMapValue}

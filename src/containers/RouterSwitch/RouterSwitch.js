@@ -2,10 +2,10 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 import NotFound from '../../pages/404';
-import City from '../../components/City';
-import RandomCity from '../../components/RandomCity';
-import Geolocation from '../../components/Geolocation';
-import SuggestedCity from '../../components/SuggestedCity';
+import RegionCity from '../gameModes/RegionCity';
+import RandomCity from '../gameModes/RandomCity';
+import Geolocation from '../gameModes/Geolocation';
+import Custom from '../gameModes/Custom';
 import Home from '../../pages/home';
 import Info from '../../pages/info';
 import Result from '../../pages/result';
@@ -20,7 +20,7 @@ const RouterSwitch = () => {
                 <Geolocation />
             </Route>
             <Route path="/mesto">
-                <City />
+                <RegionCity />
             </Route>
             <Route path="/nahodne">
                 <RandomCity />
@@ -29,7 +29,7 @@ const RouterSwitch = () => {
                 <Result />
             </Route>
             <Route path="/vlastni">
-                <SuggestedCity />
+                <Custom />
             </Route>
             <Route path="/info">
                 <Info />

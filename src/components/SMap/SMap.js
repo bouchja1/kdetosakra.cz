@@ -37,10 +37,11 @@ const SMap = props => {
             let defaultModeZoom = DEFAULT_MODE_ZOOM - 1;
             const locationStateMode = location?.state?.mode;
             if (
-                (locationStateMode && locationStateMode === 'geolocation')
+                locationStateMode === 'geolocation'
                 || locationStateMode === 'city'
                 || locationStateMode === 'suggested'
             ) {
+                // not random mode
                 const center = SMapContext.Coords.fromWGS84(
                     location.state.city.coordinates.longitude,
                     location.state.city.coordinates.latitude,
@@ -145,7 +146,7 @@ const SMap = props => {
                 }
             } else if (props.type === 'round') {
                 const {
-                    click, refLayeredMapValue, refLayerValue, refVectorLayerSMapValue,
+                    onMapClick, refLayeredMapValue, refLayerValue, refVectorLayerSMapValue,
                 } = props;
                 // assign vrstva se značkami
                 refLayerValue.current = layerSMap;
@@ -153,7 +154,7 @@ const SMap = props => {
                 refLayeredMapValue.current = mapInstance;
                 refLayeredMapValue.current
                     .getSignals()
-                    .addListener(window, 'map-click', click); /* Při signálu kliknutí volat tuto funkci */
+                    .addListener(window, 'map-click', onMapClick); /* Při signálu kliknutí volat tuto funkci */
 
                 // vykreslit vektor do mapy
                 const vectorLayer = new SMapContext.Layer.Geometry();

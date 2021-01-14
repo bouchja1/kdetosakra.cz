@@ -2,12 +2,12 @@ import React from 'react';
 import SMap from '../SMap';
 
 const RoundSMapWrapper = ({
-    click, refLayeredMapValue, refLayerValue, refVectorLayerSMapValue,
+    onMapClick, refLayeredMapValue, refLayerValue, refVectorLayerSMapValue,
 }) => {
     return (
         <SMap
             type="round"
-            click={click}
+            onMapClick={onMapClick}
             refLayeredMapValue={refLayeredMapValue}
             refLayerValue={refLayerValue}
             refVectorLayerSMapValue={refVectorLayerSMapValue}
