@@ -1,26 +1,20 @@
 import React, { useState } from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
-import { Button, Progress, Typography, Divider } from 'antd';
-import ResultSMapWrapper from '../../components/SMap/ResultSMapWrapper';
-import { roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util/Util';
+import { Button, Progress, Typography } from 'antd';
+import ResultSMapWrapper from '../../components/SeznamMap/ResultSMapWrapper';
+import { roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util';
 
 const { Title } = Typography;
 
 const Result = () => {
     const location = useLocation();
-    const [resultPageClosed, setResultPageClosed] = useState(false);
+    const [playAgainSelected, setPlayAgainSelected] = useState(false);
 
     const closeResultPage = () => {
-        setResultPageClosed(true);
+        setPlayAgainSelected(true);
     };
 
-    if (
-        location &&
-        location.state &&
-        location.state.totalRoundScore !== null &&
-        location.state.guessedPoints &&
-        !resultPageClosed
-    ) {
+    if (location?.state?.totalRoundScore && location?.state?.guessedPoints && !playAgainSelected) {
         return (
             <>
                 <Typography className="result-modal-container">

@@ -10,7 +10,7 @@ const SuggestedCity = () => {
     const location = useLocation();
     useGameMenuResize();
 
-    if (location && location.state && location.state.city) {
+    if (location?.state?.city) {
         return (
             <Content>
                 <Game location={location} />

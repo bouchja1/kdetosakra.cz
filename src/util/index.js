@@ -3,18 +3,18 @@ const DEG_TO_RAD = Math.PI / 180.0;
 const THREE_PI = Math.PI * 3;
 const TWO_PI = Math.PI * 2;
 
-function isFloat(n) {
+const isFloat = n => {
     return !isNaN(parseFloat(n)) && isFinite(n);
-}
+};
 
-function recursiveConvert(input, callback) {
+const recursiveConvert = (input, callback) => {
     if (input instanceof Array) {
         return input.map(el => recursiveConvert(el, callback));
     }
     if (input instanceof Object) {
         input = JSON.parse(JSON.stringify(input));
-        for (let key in input) {
-            if (input.hasOwnProperty(key)) {
+        for (const key in input) {
+            if (input?.[key]) {
                 input[key] = recursiveConvert(input[key], callback);
             }
         }
@@ -23,21 +23,23 @@ function recursiveConvert(input, callback) {
     if (isFloat(input)) {
         return callback(input);
     }
-}
 
-function toRadians(input) {
+    return null;
+};
+
+const toRadians = input => {
     return recursiveConvert(input, val => val * DEG_TO_RAD);
-}
+};
 
-function toDegrees(input) {
+const toDegrees = input => {
     return recursiveConvert(input, val => val / DEG_TO_RAD);
-}
+};
 
 /*
 coords is an object: {latitude: y, longitude: x}
 toRadians() and toDegrees() convert all values of the object
 */
-function pointAtDistance(inputCoords, distance) {
+const pointAtDistance = (inputCoords, distance) => {
     const result = {};
     const coords = toRadians(inputCoords);
     const sinLat = Math.sin(coords.latitude);
@@ -52,37 +54,35 @@ function pointAtDistance(inputCoords, distance) {
     const cosTheta = Math.cos(theta);
 
     result.latitude = Math.asin(sinLat * cosTheta + cosLat * sinTheta * cosBearing);
-    result.longitude =
-        coords.longitude + Math.atan2(sinBearing * sinTheta * cosLat, cosTheta - sinLat * Math.sin(result.latitude));
+    result.longitude = coords.longitude + Math.atan2(sinBearing * sinTheta * cosLat, cosTheta - sinLat * Math.sin(result.latitude));
     /* normalize -PI -> +PI radians */
     result.longitude = ((result.longitude + THREE_PI) % TWO_PI) - Math.PI;
 
     return toDegrees(result);
-}
+};
 
-export function roundToTwoDecimal(value) {
+export const roundToTwoDecimal = value => {
     return Math.round(value * 100) / 100;
-}
+};
 
-export function pointInCircle(coord, distance) {
+export const pointInCircle = (coord, distance) => {
     const rnd = Math.random();
-    /*use square root of random number to avoid high density at the center*/
+    // use square root of random number to avoid high density at the center
     const randomDist = Math.sqrt(rnd) * distance;
     return pointAtDistance(coord, randomDist);
-}
+};
 
-export function decryptEmail(encoded) {
+export const decryptEmail = encoded => {
     const address = atob(encoded);
     return `mailto:${address}`;
-}
+};
+
+export const generateRandomRadius = () => {
+    const RANDOM_RADIUS_ARRAY = [0.05, 0.1, 0.3, 0.5, 1.0];
+    return RANDOM_RADIUS_ARRAY[Math.floor(Math.random() * (0, RANDOM_RADIUS_ARRAY.length - 1))];
+};
 
 export const DEFAUL_MARKER_PLACE_ICON = 'https://kdetosakra.cz/questionmark.png';
 export const DEFAUL_MARKER_ICON = 'https://kdetosakra.cz/marker.png';
 export const TOTAL_ROUNDS_MAX = 5;
-export const RADIUS_DESCRIPTION =
-    'Poloměr kružnice, ve které se náhodně vygeneruje panorama (středem je dle zvoleného módu buď centrum obce nebo vaše poloha).';
-
-export function generateRandomRadius() {
-    const RANDOM_RADIUS_ARRAY = [0.05, 0.1, 0.3, 0.5, 1.0];
-    return RANDOM_RADIUS_ARRAY[Math.floor(Math.random() * (0, RANDOM_RADIUS_ARRAY.length - 1))];
-}
+export const RADIUS_DESCRIPTION = 'Poloměr kružnice, ve které se náhodně vygeneruje panorama (středem je dle zvoleného módu buď centrum obce nebo vaše poloha).';

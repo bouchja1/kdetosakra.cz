@@ -10,10 +10,10 @@ const useMapLoader = function(loaded) {
     useEffect(() => {
         if (loaded) {
             window.Loader.async = true;
-            window.Loader.load(null, { pano: true, suggest:true, poi:true }, () => {
+            window.Loader.load(null, { pano: true, suggest: true, poi: true }, () => {
                 setMapLoader({
                     loadedMapApi: true,
-                    SMap: window.SMap,
+                    SMap: window.SeznamMap,
                 });
             });
         }

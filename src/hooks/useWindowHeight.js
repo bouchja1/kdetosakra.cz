@@ -9,7 +9,7 @@ export default function useWindowHeight() {
         return () => {
             window.removeEventListener('resize', handleResize);
         };
-    }, []);
+    }, [window.innerHeight]);
 
     return height;
 }

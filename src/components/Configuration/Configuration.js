@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import ReactGA from 'react-ga';
-import { Button, Select, Card, Slider, InputNumber, Row, Col, Tooltip } from 'antd';
+import {
+    Button, Select, Card, Slider, InputNumber, Row, Col, Tooltip
+} from 'antd';
 import cryptoRandomString from 'crypto-random-string';
 import { Redirect } from 'react-router-dom';
 import useGeolocation from 'react-hook-geolocation';
@@ -14,7 +16,7 @@ import pragueCover from '../../assets/images/city/prague.jpg';
 import randomCover from '../../assets/images/city/random.jpg';
 import suggestedCover from '../../assets/images/city/suggested.jpg';
 import geolocationCover from '../../assets/images/city/geolocation.jpg';
-import { generateRandomRadius, RADIUS_DESCRIPTION } from '../../util/Util';
+import { generateRandomRadius, RADIUS_DESCRIPTION } from '../../util';
 
 const { Option } = Select;
 
@@ -35,7 +37,7 @@ const Configuration = function() {
         if (!randomUserResultToken) {
             writeStorage('randomUserResultToken', cryptoRandomString({ length: 15 }));
         }
-    }, []);
+    }, [randomUserResultToken]);
 
     const createFormOptions = () => {
         const options = [];
@@ -183,7 +185,11 @@ const Configuration = function() {
                                 </Col>
                             </Row>
                             <p style={{ marginTop: '10px' }}>
-                                Panoramata budou náhodně generována v okolí {radiusGeolocationInputValue} km od vaší
+                                Panoramata budou náhodně generována v okolí
+                                {' '}
+                                {radiusGeolocationInputValue}
+                                {' '}
+                                km od vaší
                                 aktuální polohy.
                             </p>
                             <Button type="primary" disabled={isSubmitting} onClick={handleSubmit}>
@@ -234,7 +240,9 @@ const Configuration = function() {
                 })}
             >
                 {props => {
-                    const { values, touched, errors, isSubmitting, handleSubmit } = props;
+                    const {
+                        values, touched, errors, isSubmitting, handleSubmit,
+                    } = props;
                     return (
                         <form onSubmit={handleSubmit}>
                             <label htmlFor="city">Město: </label>
@@ -280,7 +288,11 @@ const Configuration = function() {
                                         </Col>
                                     </Row>
                                     <p style={{ marginTop: '10px' }}>
-                                        Panoramata budou náhodně generována v okolí {radiusCityInputValue} km od středu
+                                        Panoramata budou náhodně generována v okolí
+                                        {' '}
+                                        {radiusCityInputValue}
+                                        {' '}
+                                        km od středu
                                         krajského města.
                                     </p>
                                     <Button type="primary" disabled={isSubmitting} onClick={handleSubmit}>
@@ -309,8 +321,11 @@ const Configuration = function() {
             <Card cover={<img alt="Herní mód - Náhodné místo v Česku" src={randomCover} />}>
                 <h1>Náhodné místo v Česku</h1>
                 <p>
-                    Známá města a místa pro tebe nejsou dostatečnou výzvou? Přenes se tedy do některé z{' '}
-                    <a href="https://github.com/33bcdd/souradnice-mest">6259 obcí ČR</a> a jejího bezprostředního okolí.
+                    Známá města a místa pro tebe nejsou dostatečnou výzvou? Přenes se tedy do některé z
+                    {' '}
+                    <a href="https://github.com/33bcdd/souradnice-mest">6259 obcí ČR</a>
+                    {' '}
+                    a jejího bezprostředního okolí.
                     V každém kole na tebe čeká úplně jiné náhodné místo v naší republice. Tahle výzva je (nejen) pro
                     experty, co mají ČR projetou křížem krážem.
                 </p>

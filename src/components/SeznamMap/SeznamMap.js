@@ -2,12 +2,12 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Divider } from 'antd';
 import KdetosakraContext from '../../context/KdetosakraContext';
-import { DEFAUL_MARKER_ICON, DEFAUL_MARKER_PLACE_ICON } from '../../util/Util';
+import { DEFAUL_MARKER_ICON, DEFAUL_MARKER_PLACE_ICON } from '../../util';
 import useSMapResize from '../../hooks/useSMapResize';
 
 const DEFAULT_MODE_ZOOM = 14;
 
-const SMap = props => {
+const SeznamMap = props => {
     const location = useLocation();
     const { width } = useSMapResize();
     const [map] = useState(React.createRef());
@@ -35,12 +35,11 @@ const SMap = props => {
         let mapInstance;
         if (SMap) {
             let defaultModeZoom = DEFAULT_MODE_ZOOM - 1;
+            const locationStateMode = location?.state?.mode;
             if (
-                (typeof location !== 'undefined' &&
-                    location.hasOwnProperty('state') &&
-                    location.state.mode === 'geolocation') ||
-                location.state.mode === 'city' ||
-                location.state.mode === 'suggested'
+                (locationStateMode && locationStateMode === 'geolocation')
+                || locationStateMode === 'city'
+                || locationStateMode === 'suggested'
             ) {
                 const center = SMap.Coords.fromWGS84(
                     location.state.city.coordinates.longitude,
@@ -50,8 +49,8 @@ const SMap = props => {
                 const locationModeRadius = location.state.radius;
                 if (locationModeRadius > 2 && locationModeRadius <= 6 && locationModeRadius <= 10) {
                     if (location.state.city.cityRange) {
-                        defaultModeZoom -=
-                            location.state.city.cityRange > 1
+                        defaultModeZoom
+                            -= location.state.city.cityRange > 1
                                 ? location.state.city.cityRange - 1
                                 : location.state.city.cityRange;
                     }
@@ -77,7 +76,9 @@ const SMap = props => {
             mapInstance.addDefaultLayer(SMap.DEF_BASE).enable();
             mapInstance.setZoomRange(7, 19);
 
+            // Bitová maska určující, co všechno myš/prst ovládá - konstanty SMap.MOUSE_*
             const mouse = new SMap.Control.Mouse(
+                // eslint-disable-next-line no-bitwise
                 SMap.MOUSE_PAN | SMap.MOUSE_WHEEL | SMap.MOUSE_ZOOM,
                 mouseControlOptions,
             ); /* Ovládání myší */
@@ -146,7 +147,9 @@ const SMap = props => {
                     layerSMap.addMarker(markerPanorama);
                 }
             } else if (props.type === 'round') {
-                const { click, refLayeredMapValue, refLayerValue, refVectorLayerSMapValue } = props;
+                const {
+                    click, refLayeredMapValue, refLayerValue, refVectorLayerSMapValue,
+                } = props;
                 // assign vrstva se značkami
                 refLayerValue.current = layerSMap;
                 // assing layered map value
@@ -178,4 +181,4 @@ const SMap = props => {
     );
 };
 
-export default SMap;
+export default SeznamMap;

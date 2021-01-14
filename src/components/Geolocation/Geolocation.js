@@ -10,7 +10,7 @@ const Geolocation = () => {
     const location = useLocation();
     useGameMenuResize();
 
-    if (location && location.state && location.state.radius && location.state.city) {
+    if (location?.state?.radius && location?.state?.city) {
         return (
             <Content>
                 <Game location={location} />

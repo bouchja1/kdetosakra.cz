@@ -4,7 +4,8 @@
     },
     "extends": [
         "airbnb",
-        "react-app"
+        "react-app",
+        "plugin:json/recommended"
     ],
     "plugins": [
         // ...
@@ -17,12 +18,15 @@
 
         // https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md
         "import/no-extraneous-dependencies": "off",
+        "no-underscore-dangle": ["error", { "allow": ["_env_"] }],
 
         /**
          * Deprecated in jsx-a11y@6, see https://github.com/evcohen/eslint-plugin-jsx-a11y/blob/master/CHANGELOG.md
          * and replace it with anchor-is-valid when upgrade jsx-a11y
          */
         "jsx-a11y/href-no-hash": "off",
+        "react/prop-types": "off", // TODO maybe fix it everywhere later
+        "jsx-a11y/label-has-associated-control": "off", // TODO maybe fix it later
 
         // https://eslint.org/docs/rules/indent
         "indent": [
@@ -45,7 +49,7 @@
         // https://eslint.org/docs/rules/max-len
         "max-len": [
             "warn",
-            160,
+            165,
             4,
             {
                 "ignoreComments": true,
@@ -93,7 +97,8 @@
         ],
 
         // https://eslint.org/docs/rules/no-console
-        "no-console": "error",
+        // "no-console": "error",
+        "no-console": "off",
 
         // https://eslint.org/docs/rules/no-warning-comments
         "no-warning-comments": "warn",

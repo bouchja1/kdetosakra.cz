@@ -6,7 +6,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import './index.css';
 import './assets/fonts/Roboto-Regular.ttf';
 import App from './App';
-import ScrollToTop from './components/pageStructure/ScrollToTop';
+import ScrollToTop from './components/ScrollToTop';
 
 ReactDOM.render(
     <Router>

@@ -2,11 +2,13 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Formik } from 'formik';
 import ReactGA from 'react-ga';
-import { Button, Row, Col, Slider, InputNumber, Tooltip } from 'antd';
+import {
+    Button, Row, Col, Slider, InputNumber, Tooltip
+} from 'antd';
 import * as Yup from 'yup';
 import KdetosakraContext from '../../context/KdetosakraContext';
 import { CATEGORIES } from '../../enums/gaCategories';
-import { RADIUS_DESCRIPTION } from '../../util/Util';
+import { RADIUS_DESCRIPTION } from '../../util';
 
 const Suggest = () => {
     const [suggestInput] = useState(React.createRef());
@@ -115,7 +117,11 @@ const Suggest = () => {
                                 </Col>
                             </Row>
                             <p style={{ marginTop: '10px' }}>
-                                Panoramata budou náhodně generována v okolí {radiusCustomInputValue} km od vámi
+                                Panoramata budou náhodně generována v okolí
+                                {' '}
+                                {radiusCustomInputValue}
+                                {' '}
+                                km od vámi
                                 vybraného místa.
                             </p>
                             <Button disabled={!submittedSuggestedData} type="primary" onClick={handleSubmit}>

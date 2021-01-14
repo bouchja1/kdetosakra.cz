@@ -1,10 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FacebookFilled, HomeFilled, InfoCircleFilled, MailOutlined } from '@ant-design/icons';
-import smilingLogo from '../../../assets/images/kdetosakraSmile.svg';
-import { decryptEmail } from '../../../util/Util';
+import {
+    FacebookFilled, HomeFilled, InfoCircleFilled, MailOutlined
+} from '@ant-design/icons';
+import smilingLogo from '../../assets/images/kdetosakraSmile.svg';
+import { decryptEmail } from '../../util';
 
-const MenuComponent = () => {
+const Menu = () => {
     return (
         <div id="menu-container" className="section menu-container">
             <div className="menu">
@@ -22,7 +24,12 @@ const MenuComponent = () => {
                     <div className="info-menu-item">
                         <Link to="/info">O hře</Link>
                     </div>
-                    <a className="fb-icon" href="https://www.facebook.com/kdetosakra.cz" target="_blank">
+                    <a
+                        className="fb-icon"
+                        href="https://www.facebook.com/kdetosakra.cz"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
                         <FacebookFilled style={{ color: 'rgb(97, 95, 95)' }} />
                     </a>
                     <a className="fb-icon" href={decryptEmail('amFuLmJvdWNobmVyQGdtYWlsLmNvbQ==')}>
@@ -34,4 +41,4 @@ const MenuComponent = () => {
     );
 };
 
-export default MenuComponent;
+export default Menu;

@@ -10,7 +10,7 @@ const RandomCity = () => {
     const location = useLocation();
     useGameMenuResize();
 
-    if (location && location.state && location.state.mode === 'random') {
+    if (location?.state?.mode === 'random') {
         return (
             <Content>
                 <Game location={location} />

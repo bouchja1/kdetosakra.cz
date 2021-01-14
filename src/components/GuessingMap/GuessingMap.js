@@ -10,10 +10,10 @@ import {
     roundToTwoDecimal,
     TOTAL_ROUNDS_MAX,
     generateRandomRadius,
-} from '../../util/Util';
-import RoundSMapWrapper from '../SMap/RoundSMapWrapper';
+} from '../../util';
+import RoundSMapWrapper from '../SeznamMap/RoundSMapWrapper';
 import { saveRandomScore, saveCityScore } from '../../services/api';
-import ResultSMapWrapper from '../SMap/ResultSMapWrapper';
+import ResultSMapWrapper from '../SeznamMap/ResultSMapWrapper';
 
 const GuessingMap = ({
     updateCalculation,
