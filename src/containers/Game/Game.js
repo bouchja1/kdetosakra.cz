@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import {
     Modal, Progress, Button, Typography
 } from 'antd';
-import GuessingMap from '../GuessingMap';
+import GuessingMap from '../../components/GuessingMap';
 import { crCities } from '../../data/cr';
 import KdetosakraContext from '../../context/KdetosakraContext';
 import { pointInCircle, roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util';

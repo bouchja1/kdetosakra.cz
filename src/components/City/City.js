@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
 import { Layout } from 'antd';
-import Game from '../Game';
+import Game from '../../containers/Game';
 import useGameMenuResize from '../../hooks/useGameMenuResize';
 
 const { Content } = Layout;

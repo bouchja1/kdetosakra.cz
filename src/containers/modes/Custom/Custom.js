@@ -6,11 +6,11 @@ import {
     Button, Row, Col, Slider, InputNumber, Tooltip
 } from 'antd';
 import * as Yup from 'yup';
-import KdetosakraContext from '../../context/KdetosakraContext';
-import { CATEGORIES } from '../../enums/gaCategories';
-import { RADIUS_DESCRIPTION } from '../../util';
+import KdetosakraContext from '../../../context/KdetosakraContext';
+import { CATEGORIES } from '../../../enums/gaCategories';
+import { RADIUS_DESCRIPTION } from '../../../util';
 
-const Suggest = () => {
+const Custom = () => {
     const [suggestInput] = useState(React.createRef());
     const mapyContext = useContext(KdetosakraContext);
     const [mapyContextApiLoaded, setMapyContextApiLoaded] = useState(false);
@@ -135,4 +135,4 @@ const Suggest = () => {
     );
 };
 
-export default Suggest;
+export default Custom;

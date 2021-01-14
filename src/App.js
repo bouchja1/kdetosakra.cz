@@ -6,7 +6,7 @@ import * as Sentry from '@sentry/browser';
 
 import useScript from './hooks/useScript';
 import useMapLoader from './hooks/useMapLoader';
-import RouterSwitch from './components/RouterSwitch';
+import RouterSwitch from './containers/RouterSwitch';
 import { KdetosakraProvider } from './context/KdetosakraContext';
 import Menu from './components/Menu';
 import { MAPY_API_URL } from './constants';
