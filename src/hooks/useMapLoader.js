@@ -13,7 +13,7 @@ const useMapLoader = function(loaded) {
             window.Loader.load(null, { pano: true, suggest: true, poi: true }, () => {
                 setMapLoader({
                     loadedMapApi: true,
-                    SMap: window.SeznamMap,
+                    SMap: window.SMap,
                 });
             });
         }

@@ -7,14 +7,14 @@ import useSMapResize from '../../hooks/useSMapResize';
 
 const DEFAULT_MODE_ZOOM = 14;
 
-const SeznamMap = props => {
+const SMap = props => {
     const location = useLocation();
     const { width } = useSMapResize();
     const [map] = useState(React.createRef());
     const mapyContext = useContext(KdetosakraContext);
 
     const initSMap = () => {
-        const { SMap } = mapyContext;
+        const { SMap: SMapContext } = mapyContext;
 
         const mouseControlOptions = {
             scrollDelay: 5000,
@@ -33,7 +33,7 @@ const SeznamMap = props => {
         };
 
         let mapInstance;
-        if (SMap) {
+        if (SMapContext) {
             let defaultModeZoom = DEFAULT_MODE_ZOOM - 1;
             const locationStateMode = location?.state?.mode;
             if (
@@ -41,11 +41,11 @@ const SeznamMap = props => {
                 || locationStateMode === 'city'
                 || locationStateMode === 'suggested'
             ) {
-                const center = SMap.Coords.fromWGS84(
+                const center = SMapContext.Coords.fromWGS84(
                     location.state.city.coordinates.longitude,
                     location.state.city.coordinates.latitude,
                 );
-                mapInstance = new SMap(map.current, center, 7);
+                mapInstance = new SMapContext(map.current, center, 7);
                 const locationModeRadius = location.state.radius;
                 if (locationModeRadius > 2 && locationModeRadius <= 6 && locationModeRadius <= 10) {
                     if (location.state.city.cityRange) {
@@ -60,7 +60,7 @@ const SeznamMap = props => {
                     }
                 }
                 mapInstance.setCenterZoom(
-                    SMap.Coords.fromWGS84(
+                    SMapContext.Coords.fromWGS84(
                         location.state.city.coordinates.longitude,
                         location.state.city.coordinates.latitude,
                     ),
@@ -68,29 +68,29 @@ const SeznamMap = props => {
                     true,
                 );
             } else {
-                const center = SMap.Coords.fromWGS84(15.202828, 50.027429);
-                mapInstance = new SMap(map.current, center, 7);
+                const center = SMapContext.Coords.fromWGS84(15.202828, 50.027429);
+                mapInstance = new SMapContext(map.current, center, 7);
             }
             mapInstance.addDefaultControls(); // Vyrobí defaultní ovládácí prvky (kompas, zoom, ovládání myší a klávesnicí.)
-            mapInstance.addControl(new SMap.Control.Sync()); // - aby mapa reagovala na změnu velikosti průhledu - Synchronizuje mapu s portem, potažmo mapu s portem a oknem
-            mapInstance.addDefaultLayer(SMap.DEF_BASE).enable();
+            mapInstance.addControl(new SMapContext.Control.Sync()); // - aby mapa reagovala na změnu velikosti průhledu - Synchronizuje mapu s portem, potažmo mapu s portem a oknem
+            mapInstance.addDefaultLayer(SMapContext.DEF_BASE).enable();
             mapInstance.setZoomRange(7, 19);
 
-            // Bitová maska určující, co všechno myš/prst ovládá - konstanty SMap.MOUSE_*
-            const mouse = new SMap.Control.Mouse(
+            // Bitová maska určující, co všechno myš/prst ovládá - konstanty SMapContext.MOUSE_*
+            const mouse = new SMapContext.Control.Mouse(
                 // eslint-disable-next-line no-bitwise
-                SMap.MOUSE_PAN | SMap.MOUSE_WHEEL | SMap.MOUSE_ZOOM,
+                SMapContext.MOUSE_PAN | SMapContext.MOUSE_WHEEL | SMapContext.MOUSE_ZOOM,
                 mouseControlOptions,
             ); /* Ovládání myší */
             mapInstance.addControl(mouse);
 
             // 8. vrstva se značkami
-            const layerSMap = new SMap.Layer.Marker();
+            const layerSMap = new SMapContext.Layer.Marker();
             mapInstance.addLayer(layerSMap);
             layerSMap.enable();
 
             /* znackova vrstva pro ikonky bodu zajmu; poiToolTip - zapneme title jako nazev nad POI */
-            const poILayer = new SMap.Layer.Marker(undefined, {
+            const poILayer = new SMapContext.Layer.Marker(undefined, {
                 poiTooltip: true,
             });
             mapInstance.addLayer(poILayer).enable();
@@ -99,7 +99,7 @@ const SeznamMap = props => {
             const dataProvider = mapInstance.createDefaultDataProvider();
             dataProvider.setOwner(mapInstance);
             dataProvider.addLayer(poILayer);
-            dataProvider.setMapSet(SMap.MAPSET_BASE);
+            dataProvider.setMapSet(SMapContext.MAPSET_BASE);
             dataProvider.enable();
 
             if (props.type && props.type === 'result') {
@@ -108,23 +108,20 @@ const SeznamMap = props => {
                     color: '#f00',
                     width: 3,
                 };
-                const vectorLayer = new mapyContext.SMap.Layer.Geometry();
+                const vectorLayer = new SMapContext.Layer.Geometry();
                 mapInstance.addLayer(vectorLayer);
                 vectorLayer.enable();
                 for (let i = 0; i < guessedPoints.length; i++) {
                     const pointsObject = guessedPoints[i];
-                    const pointPanorama = mapyContext.SMap.Coords.fromWGS84(
+                    const pointPanorama = SMapContext.Coords.fromWGS84(
                         pointsObject.pointPanorama.x,
                         pointsObject.pointPanorama.y,
                     );
-                    const pointMap = mapyContext.SMap.Coords.fromWGS84(
-                        pointsObject.pointMap.x,
-                        pointsObject.pointMap.y,
-                    );
+                    const pointMap = SMapContext.Coords.fromWGS84(pointsObject.pointMap.x, pointsObject.pointMap.y);
                     const pointsVectorArray = [pointPanorama, pointMap];
 
-                    const path = new mapyContext.SMap.Geometry(
-                        mapyContext.SMap.GEOMETRY_POLYLINE,
+                    const path = new SMapContext.Geometry(
+                        SMapContext.GEOMETRY_POLYLINE,
                         null,
                         pointsVectorArray,
                         options,
@@ -132,15 +129,15 @@ const SeznamMap = props => {
                     vectorLayer.addGeometry(path);
 
                     // my guessed marker
-                    const marker = new mapyContext.SMap.Marker(
-                        mapyContext.SMap.Coords.fromWGS84(pointsObject.pointMap.x, pointsObject.pointMap.y),
+                    const marker = new SMapContext.Marker(
+                        SMapContext.Coords.fromWGS84(pointsObject.pointMap.x, pointsObject.pointMap.y),
                         `Můj odhad ${i + 1}`,
                         markerOptions,
                     );
                     layerSMap.addMarker(marker);
                     // panorama place marker
-                    const markerPanorama = new mapyContext.SMap.Marker(
-                        mapyContext.SMap.Coords.fromWGS84(pointsObject.pointPanorama.x, pointsObject.pointPanorama.y),
+                    const markerPanorama = new SMapContext.Marker(
+                        SMapContext.Coords.fromWGS84(pointsObject.pointPanorama.x, pointsObject.pointPanorama.y),
                         `Panorama ${i + 1}`,
                         markerPanoramaOptions,
                     );
@@ -159,7 +156,7 @@ const SeznamMap = props => {
                     .addListener(window, 'map-click', click); /* Při signálu kliknutí volat tuto funkci */
 
                 // vykreslit vektor do mapy
-                const vectorLayer = new mapyContext.SMap.Layer.Geometry();
+                const vectorLayer = new SMapContext.Layer.Geometry();
                 refLayeredMapValue.current.addLayer(vectorLayer);
                 vectorLayer.enable();
                 refVectorLayerSMapValue.current = vectorLayer;
@@ -181,4 +178,4 @@ const SeznamMap = props => {
     );
 };
 
-export default SeznamMap;
+export default SMap;

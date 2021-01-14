@@ -11,9 +11,9 @@ import {
     TOTAL_ROUNDS_MAX,
     generateRandomRadius,
 } from '../../util';
-import RoundSMapWrapper from '../SeznamMap/RoundSMapWrapper';
+import RoundSMapWrapper from '../SMap/RoundSMapWrapper';
 import { saveRandomScore, saveCityScore } from '../../services/api';
-import ResultSMapWrapper from '../SeznamMap/ResultSMapWrapper';
+import ResultSMapWrapper from '../SMap/ResultSMapWrapper';
 
 const GuessingMap = ({
     updateCalculation,

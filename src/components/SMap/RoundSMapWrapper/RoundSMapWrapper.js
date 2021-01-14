@@ -1,11 +1,11 @@
 import React from 'react';
-import SeznamMap from '../SeznamMap';
+import SMap from '../SMap';
 
 const RoundSMapWrapper = ({
     click, refLayeredMapValue, refLayerValue, refVectorLayerSMapValue,
 }) => {
     return (
-        <SeznamMap
+        <SMap
             type="round"
             click={click}
             refLayeredMapValue={refLayeredMapValue}
