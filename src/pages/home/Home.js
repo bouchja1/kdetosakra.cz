@@ -1,6 +1,6 @@
 import React from 'react';
 import { Layout } from 'antd';
-import Configuration from '../../components/Configuration';
+import Configuration from '../../containers/Configuration';
 
 const { Content } = Layout;
 

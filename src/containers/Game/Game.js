@@ -1,9 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Modal, Progress, Button, Typography } from 'antd';
-import GuessingMap from '../GuessingMap';
+import {
+    Modal, Progress, Button, Typography
+} from 'antd';
+import GuessingMap from '../../components/GuessingMap';
 import { crCities } from '../../data/cr';
 import KdetosakraContext from '../../context/KdetosakraContext';
-import { pointInCircle, roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util/Util';
+import { pointInCircle, roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util';
 import useWindowHeight from '../../hooks/useWindowHeight';
 import useSMapResize from '../../hooks/useSMapResize';
 
@@ -48,7 +50,6 @@ const Game = ({ location }) => {
         const { SMap } = mapyContext;
 
         if (SMap) {
-            const { SMap } = mapyContext;
             let panoramaSceneSMap;
             if (panoramaSceneParam) {
                 panoramaSceneSMap = panoramaSceneParam;
@@ -116,6 +117,7 @@ const Game = ({ location }) => {
         if (!city) {
             city = currentCity;
         }
+        // eslint-disable-next-line no-underscore-dangle
         const panoramaCoordinates = panoramaScene._place._data.mark;
         let distance;
         if (panoramaCoordinates.lat === mapCoordinates.mapLat && panoramaCoordinates.lon === mapCoordinates.mapLon) {
@@ -125,8 +127,7 @@ const Game = ({ location }) => {
             const radlat2 = (Math.PI * mapCoordinates.mapLat) / 180;
             const theta = panoramaCoordinates.lon - mapCoordinates.mapLon;
             const radtheta = (Math.PI * theta) / 180;
-            let dist =
-                Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+            let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
             if (dist > 1) {
                 dist = 1;
             }
@@ -183,7 +184,8 @@ const Game = ({ location }) => {
 
     useEffect(() => {
         if (location) {
-            let { radius, city, mode } = location.state;
+            let { city } = location.state;
+            const { radius, mode } = location.state;
             if (mode === 'random') {
                 city = generateRandomCzechPlace();
             }
@@ -236,12 +238,21 @@ const Game = ({ location }) => {
                     {totalRounds > 0 ? (
                         <div className="result-modal-container-item">
                             <Title level={2}>
-                                Kolo: {totalRounds}/{TOTAL_ROUNDS_MAX}
+                                Kolo:
+                                {' '}
+                                {totalRounds}
+                                /
+                                {TOTAL_ROUNDS_MAX}
                             </Title>
                             {guessedDistance ? (
                                 <Paragraph>
-                                    Vzdušná vzdálenost místa od tvého odhadu:{' '}
-                                    <Text className="highlighted">{roundToTwoDecimal(guessedDistance)} km</Text>
+                                    Vzdušná vzdálenost místa od tvého odhadu:
+                                    {' '}
+                                    <Text className="highlighted">
+                                        {roundToTwoDecimal(guessedDistance)}
+                                        {' '}
+                                        km
+                                    </Text>
                                 </Paragraph>
                             ) : null}
                         </div>
@@ -255,7 +266,8 @@ const Game = ({ location }) => {
                     {totalRoundScore >= 0 ? (
                         <div className="result-modal-container-item">
                             <Paragraph>
-                                Průběžný počet bodů:{' '}
+                                Průběžný počet bodů:
+                                {' '}
                                 <Text className="highlighted">{roundToTwoDecimal(totalRoundScore)}</Text>
                             </Paragraph>
                         </div>
@@ -264,13 +276,19 @@ const Game = ({ location }) => {
                         <div className="result-modal-container-item">
                             <Title level={4}>Bližší informace</Title>
                             <Paragraph>
-                                <Text className="highlighted">Obec:</Text> {guessedPlace.obec}
+                                <Text className="highlighted">Obec:</Text>
+                                {' '}
+                                {guessedPlace.obec}
                             </Paragraph>
                             <Paragraph>
-                                <Text className="highlighted">Okres:</Text> {guessedPlace.okres}
+                                <Text className="highlighted">Okres:</Text>
+                                {' '}
+                                {guessedPlace.okres}
                             </Paragraph>
                             <Paragraph>
-                                <Text className="highlighted">Kraj:</Text> {guessedPlace.kraj}
+                                <Text className="highlighted">Kraj:</Text>
+                                {' '}
+                                {guessedPlace.kraj}
                             </Paragraph>
                         </div>
                     ) : null}

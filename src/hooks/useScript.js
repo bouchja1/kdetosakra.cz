@@ -9,7 +9,7 @@ const useScript = src => {
 
     useEffect(() => {
         // Create script
-        let script = document.createElement('script');
+        const script = document.createElement('script');
         script.src = src;
         script.async = true;
 
@@ -42,7 +42,7 @@ const useScript = src => {
             script.removeEventListener('load', onScriptLoad);
             script.removeEventListener('error', onScriptError);
         };
-    }, [src]); // Only re-run effect if script src changes
+    }, []);
 
     return [state.loaded, state.error];
 };

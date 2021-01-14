@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-export default function useWindowHeight() {
+export default function useGameMenuResize() {
     useEffect(() => {
         const menuContainerElement = window.document.getElementById('menu-container');
         menuContainerElement.classList.add('game-menu');

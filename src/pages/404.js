@@ -9,7 +9,10 @@ const NotFound = () => {
 
     return (
         <Content>
-            <h1>Takovouhle adresu tady nemám: {location.pathname}</h1>
+            <h1>
+                Takovou adresu tady nemám:
+                {location.pathname}
+            </h1>
         </Content>
     );
 };
