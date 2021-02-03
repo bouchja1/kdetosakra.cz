@@ -15,24 +15,24 @@ const { Option } = Select;
 export const RegionCity = () => {
     const [citySelected, setCitySelected] = useState(null);
     const [maxCityRadius, setMaxCityRadius] = useState(null);
-    const [cityFormSubmitted, setCityFormSubmitted] = useState(false);
-    const [cityFormValues, setCityFormValues] = useState({});
-    const [radiusCityInputValue, setRadiusCityInputValue] = useState(1);
+    const [playGame, setPlayGame] = useState(false);
+    const [selectedCityData, setSelectedCityData] = useState({});
+    const [radius, setRadius] = useState(1);
 
-    const handleChangeCityRadiusInput = value => {
-        setRadiusCityInputValue(value);
+    const handleChangeRadius = value => {
+        setRadius(value);
     };
 
-    const createFormOptions = () => {
-        const options = [];
+    const createCitiesOptions = () => {
+        const citiesOptions = [];
         for (let i = 0; i < cities.length; i++) {
-            options.push(
+            citiesOptions.push(
                 <Option key={cities[i].name} value={cities[i].name}>
                     {cities[i].fullName}
                 </Option>,
             );
         }
-        return options;
+        return citiesOptions;
     };
 
     const changeCity = value => {
@@ -48,9 +48,9 @@ export const RegionCity = () => {
         }
     };
 
-    if (cityFormSubmitted) {
+    if (playGame) {
         const selectedCity = cities.filter(city => {
-            return city.name === cityFormValues.city;
+            return city.name === selectedCityData.city;
         });
         ReactGA.event({
             category: CATEGORIES.CITY,
@@ -61,7 +61,7 @@ export const RegionCity = () => {
                 to={{
                     pathname: '/mesto',
                     state: {
-                        radius: Number(cityFormValues.radius),
+                        radius: Number(radius),
                         city: selectedCity[0],
                         mode: 'city',
                     },
@@ -74,9 +74,8 @@ export const RegionCity = () => {
         <Formik
             initialValues={{ radius: 1, city: '' }}
             onSubmit={(values, { setSubmitting }) => {
-                values.radius = radiusCityInputValue;
-                setCityFormValues(values);
-                setCityFormSubmitted(true);
+                setSelectedCityData(values);
+                setPlayGame(true);
             }}
             validationSchema={Yup.object().shape({
                 radius: Yup.number().required('Required'),
@@ -100,7 +99,7 @@ export const RegionCity = () => {
                                 values.city = value;
                             }}
                         >
-                            {createFormOptions()}
+                            {createCitiesOptions()}
                         </Select>
                         {errors.city && touched.city && <div className="input-feedback">{errors.color}</div>}
                         {citySelected ? (
@@ -115,8 +114,8 @@ export const RegionCity = () => {
                                         <Slider
                                             min={1}
                                             max={maxCityRadius}
-                                            onChange={handleChangeCityRadiusInput}
-                                            value={typeof radiusCityInputValue === 'number' ? radiusCityInputValue : 0}
+                                            onChange={handleChangeRadius}
+                                            value={typeof radius === 'number' ? radius : 0}
                                         />
                                     </Col>
                                     <Col span={4}>
@@ -124,18 +123,17 @@ export const RegionCity = () => {
                                             min={1}
                                             max={maxCityRadius}
                                             style={{ marginLeft: 16 }}
-                                            value={radiusCityInputValue}
-                                            onChange={handleChangeCityRadiusInput}
+                                            value={radius}
+                                            onChange={handleChangeRadius}
                                         />
                                     </Col>
                                 </Row>
                                 <p style={{ marginTop: '10px' }}>
                                     Panoramata budou náhodně generována v okolí
                                     {' '}
-                                    {radiusCityInputValue}
+                                    {radius}
                                     {' '}
-                                    km od středu
-                                    krajského města.
+                                    km od středu krajského města.
                                 </p>
                                 <Button type="primary" disabled={isSubmitting} onClick={handleSubmit}>
                                     Hrát

@@ -4,7 +4,7 @@ import { useLocation } from 'react-router';
 
 const { Content } = Layout;
 
-const NotFound = () => {
+export const NotFound = () => {
     const location = useLocation();
 
     return (
@@ -16,5 +16,3 @@ const NotFound = () => {
         </Content>
     );
 };
-
-export default NotFound;

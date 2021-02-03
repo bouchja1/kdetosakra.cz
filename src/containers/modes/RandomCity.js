@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import ReactGA from 'react-ga';
 import { Redirect } from 'react-router-dom';
-import { Formik } from 'formik';
 import { Button } from 'antd';
 import { CATEGORIES } from '../../enums/gaCategories';
 import { generateRandomRadius } from '../../util';
 
 export const RandomCity = () => {
-    const [randomCityFormSubmitted, setRandomCityFormSubmitted] = useState(false);
+    const [playGame, setPlayGame] = useState(false);
 
-    if (randomCityFormSubmitted) {
+    if (playGame) {
         const randomRadius = generateRandomRadius();
         ReactGA.event({
             category: CATEGORIES.RANDOM_CITY,
@@ -30,22 +29,8 @@ export const RandomCity = () => {
     }
 
     return (
-        <Formik
-            initialValues={{ radius: 1, city: '' }}
-            onSubmit={(values, { setSubmitting }) => {
-                setRandomCityFormSubmitted(true);
-            }}
-        >
-            {props => {
-                const { isSubmitting, handleSubmit } = props;
-                return (
-                    <form onSubmit={handleSubmit}>
-                        <Button type="primary" disabled={isSubmitting} onClick={handleSubmit}>
-                            Hrát
-                        </Button>
-                    </form>
-                );
-            }}
-        </Formik>
+        <Button type="primary" disabled={playGame} onClick={() => setPlayGame(true)}>
+            Hrát
+        </Button>
     );
 };

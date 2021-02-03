@@ -1,12 +1,12 @@
 import React from 'react';
 import { GithubOutlined, MailOutlined } from '@ant-design/icons';
 import { Typography, Layout } from 'antd';
-import { decryptEmail } from '../../util';
+import { decryptEmail } from '../util';
 
 const { Content } = Layout;
 const { Title, Paragraph, Text } = Typography;
 
-const Info = () => {
+export const Info = () => {
     return (
         <Content>
             <Typography className="about-container">
@@ -73,5 +73,3 @@ const Info = () => {
         </Content>
     );
 };
-
-export default Info;

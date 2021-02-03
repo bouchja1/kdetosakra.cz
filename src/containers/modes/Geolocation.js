@@ -12,16 +12,16 @@ import { CATEGORIES } from '../../enums/gaCategories';
 import { RADIUS_DESCRIPTION } from '../../util';
 
 export const Geolocation = () => {
-    const geolocation = useGeolocation();
-    const [geoFormSubmitted, setGeoFormSubmitted] = useState(false);
-    const [geoFormValues, setGeoFormValues] = useState({});
-    const [radiusGeolocationInputValue, setRadiusGeolocationInputValue] = useState(1);
+    const geolocationData = useGeolocation();
+    const [playGame, setPlayGame] = useState(false);
+    const [geolocationFormValues, setGeolocationFormValues] = useState({});
+    const [radius, setRadius] = useState(1);
 
-    const handleChangeGeolocationRadiusInput = value => {
-        setRadiusGeolocationInputValue(value);
+    const handleChangeRadius = value => {
+        setRadius(value);
     };
 
-    if (geoFormSubmitted) {
+    if (playGame) {
         ReactGA.event({
             category: CATEGORIES.GEOLOCATION,
             action: 'Play geolocation city game',
@@ -31,8 +31,8 @@ export const Geolocation = () => {
                 to={{
                     pathname: '/geolokace',
                     state: {
-                        radius: Number(geoFormValues.radius),
-                        city: geoFormValues.city,
+                        radius: Number(radius),
+                        city: geolocationFormValues.city,
                         mode: 'geolocation',
                     },
                 }}
@@ -41,21 +41,20 @@ export const Geolocation = () => {
     }
 
     // browser is allowed to access user's LAT and LONG
-    return geolocation.latitude && geolocation.longitude ? (
+    return geolocationData?.latitude && geolocationData?.longitude ? (
         <Formik
-            initialValues={{ radius: 1, city: '' }}
+            initialValues={{ radius: 1 }}
             onSubmit={(values, { setSubmitting }) => {
-                values.radius = radiusGeolocationInputValue;
-                setGeoFormValues({
+                setGeolocationFormValues({
                     ...values,
                     city: {
                         coordinates: {
-                            longitude: geolocation.longitude,
-                            latitude: geolocation.latitude,
+                            longitude: geolocationData.longitude,
+                            latitude: geolocationData.latitude,
                         },
                     },
                 });
-                setGeoFormSubmitted(true);
+                setPlayGame(true);
             }}
             validationSchema={Yup.object().shape({
                 radius: Yup.number().required('Required'),
@@ -75,12 +74,8 @@ export const Geolocation = () => {
                                 <Slider
                                     min={1}
                                     max={10}
-                                    onChange={handleChangeGeolocationRadiusInput}
-                                    value={
-                                        typeof radiusGeolocationInputValue === 'number'
-                                            ? radiusGeolocationInputValue
-                                            : 0
-                                    }
+                                    onChange={handleChangeRadius}
+                                    value={typeof radius === 'number' ? radius : 0}
                                 />
                             </Col>
                             <Col span={4}>
@@ -88,18 +83,17 @@ export const Geolocation = () => {
                                     min={1}
                                     max={10}
                                     style={{ marginLeft: 16 }}
-                                    value={radiusGeolocationInputValue}
-                                    onChange={handleChangeGeolocationRadiusInput}
+                                    value={radius}
+                                    onChange={handleChangeRadius}
                                 />
                             </Col>
                         </Row>
                         <p style={{ marginTop: '10px' }}>
                             Panoramata budou náhodně generována v okolí
                             {' '}
-                            {radiusGeolocationInputValue}
+                            {radius}
                             {' '}
-                            km od vaší
-                            aktuální polohy.
+                            km od vaší aktuální polohy.
                         </p>
                         <Button type="primary" disabled={isSubmitting} onClick={handleSubmit}>
                             Hrát

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
 import { Button, Progress, Typography } from 'antd';
-import ResultSMapWrapper from '../../components/SMap/ResultSMapWrapper';
-import { roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util';
+import ResultSMapWrapper from '../components/SMap/ResultSMapWrapper';
+import { roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../util';
 
 const { Title } = Typography;
 
-const Result = () => {
+export const Result = () => {
     const location = useLocation();
     const [playAgainSelected, setPlayAgainSelected] = useState(false);
 
@@ -42,5 +42,3 @@ const Result = () => {
     }
     return <Redirect to={{ pathname: '/' }} />;
 };
-
-export default Result;
