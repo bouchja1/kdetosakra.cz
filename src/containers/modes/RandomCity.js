@@ -3,10 +3,10 @@ import ReactGA from 'react-ga';
 import { Redirect } from 'react-router-dom';
 import { Formik } from 'formik';
 import { Button } from 'antd';
-import { CATEGORIES } from '../../../enums/gaCategories';
-import { generateRandomRadius } from '../../../util';
+import { CATEGORIES } from '../../enums/gaCategories';
+import { generateRandomRadius } from '../../util';
 
-const RandomCity = () => {
+export const RandomCity = () => {
     const [randomCityFormSubmitted, setRandomCityFormSubmitted] = useState(false);
 
     if (randomCityFormSubmitted) {
@@ -49,5 +49,3 @@ const RandomCity = () => {
         </Formik>
     );
 };
-
-export default RandomCity;

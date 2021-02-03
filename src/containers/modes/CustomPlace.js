@@ -1,4 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, {
+    useContext, useEffect, useRef, useState
+} from 'react';
 import { Redirect } from 'react-router-dom';
 import { Formik } from 'formik';
 import ReactGA from 'react-ga';
@@ -6,20 +8,19 @@ import {
     Button, Row, Col, Slider, InputNumber, Tooltip
 } from 'antd';
 import * as Yup from 'yup';
-import KdetosakraContext from '../../../context/KdetosakraContext';
-import { CATEGORIES } from '../../../enums/gaCategories';
-import { RADIUS_DESCRIPTION } from '../../../util';
+import KdetosakraContext from '../../context/KdetosakraContext';
+import { CATEGORIES } from '../../enums/gaCategories';
+import { RADIUS_DESCRIPTION } from '../../util';
 
-const Custom = () => {
-    const [suggestInput] = useState(React.createRef());
+export const CustomPlace = () => {
     const mapyContext = useContext(KdetosakraContext);
-    const [mapyContextApiLoaded, setMapyContextApiLoaded] = useState(false);
-    const [submittedSuggestedData, setSubmittedSuggestedData] = useState(null);
-    const [playSuggested, setPlaySuggested] = useState(false);
-    const [radiusCustomInputValue, setRadiusCustomInputValue] = useState(1);
+    const suggestInput = useRef();
+    const [selectedPlaceData, setSelectedPlaceData] = useState(null);
+    const [playGame, setPlayGame] = useState(false);
+    const [radius, setRadius] = useState(1);
 
-    const useInitSuggest = () => {
-        if (mapyContextApiLoaded) {
+    useEffect(() => {
+        if (mapyContext.loadedMapApi) {
             const suggest = new mapyContext.SMap.Suggest(suggestInput.current);
             suggest.urlParams({
                 // omezeni pro celou CR
@@ -27,23 +28,17 @@ const Custom = () => {
             });
             suggest
                 .addListener('suggest', suggestedData => {
-                    setSubmittedSuggestedData(suggestedData);
+                    setSelectedPlaceData(suggestedData);
                 })
                 .addListener('close', () => {});
         }
+    }, [mapyContext]);
+
+    const handleChangeRadius = value => {
+        setRadius(value);
     };
 
-    useInitSuggest();
-
-    useEffect(() => {
-        setMapyContextApiLoaded(mapyContext.loadedMapApi);
-    }, [mapyContext.loadedMapApi]);
-
-    const onChangeGeolocationRadiusInput = value => {
-        setRadiusCustomInputValue(value);
-    };
-
-    if (playSuggested) {
+    if (playGame) {
         ReactGA.event({
             category: CATEGORIES.SUGGESTED,
             action: 'Play suggested city game',
@@ -56,11 +51,11 @@ const Custom = () => {
                         radius: 1,
                         city: {
                             coordinates: {
-                                latitude: submittedSuggestedData.data.latitude,
-                                longitude: submittedSuggestedData.data.longitude,
+                                latitude: selectedPlaceData.data.latitude,
+                                longitude: selectedPlaceData.data.longitude,
                             },
-                            place: submittedSuggestedData.data.title,
-                            info: submittedSuggestedData.data.secondRow,
+                            place: selectedPlaceData.data.title,
+                            info: selectedPlaceData.data.secondRow,
                         },
                         mode: 'suggested',
                     },
@@ -68,13 +63,14 @@ const Custom = () => {
             />
         );
     }
+
     return (
         <>
             <Formik
-                initialValues={{ radius: 1, city: '' }}
+                initialValues={{ radius: 1 }}
                 onSubmit={(values, { setSubmitting }) => {
-                    values.radius = radiusCustomInputValue;
-                    setPlaySuggested(true);
+                    values.radius = radius;
+                    setPlayGame(true);
                 }}
                 validationSchema={Yup.object().shape({
                     radius: Yup.number().required('Required'),
@@ -102,8 +98,8 @@ const Custom = () => {
                                     <Slider
                                         min={1}
                                         max={10}
-                                        onChange={onChangeGeolocationRadiusInput}
-                                        value={typeof radiusCustomInputValue === 'number' ? radiusCustomInputValue : 0}
+                                        onChange={handleChangeRadius}
+                                        value={typeof radius === 'number' ? radius : 0}
                                     />
                                 </Col>
                                 <Col span={4}>
@@ -111,20 +107,19 @@ const Custom = () => {
                                         min={1}
                                         max={10}
                                         style={{ marginLeft: 16 }}
-                                        value={radiusCustomInputValue}
-                                        onChange={onChangeGeolocationRadiusInput}
+                                        value={radius}
+                                        onChange={handleChangeRadius}
                                     />
                                 </Col>
                             </Row>
                             <p style={{ marginTop: '10px' }}>
                                 Panoramata budou náhodně generována v okolí
                                 {' '}
-                                {radiusCustomInputValue}
+                                {radius}
                                 {' '}
-                                km od vámi
-                                vybraného místa.
+                                km od vámi vybraného místa.
                             </p>
-                            <Button disabled={!submittedSuggestedData} type="primary" onClick={handleSubmit}>
+                            <Button disabled={!selectedPlaceData} type="primary" onClick={handleSubmit}>
                                 Hrát
                             </Button>
                         </form>
@@ -134,5 +129,3 @@ const Custom = () => {
         </>
     );
 };
-
-export default Custom;

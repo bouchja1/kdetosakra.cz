@@ -138,7 +138,7 @@ label {
 
 .smap-suggest {
     position: relative;
-    bottom: 1px;
+    bottom: -25px;
 }
 
 .result-container {

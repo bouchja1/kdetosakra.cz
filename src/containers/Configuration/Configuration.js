@@ -2,10 +2,9 @@ import React, { useEffect } from 'react';
 import { Card, Typography } from 'antd';
 import cryptoRandomString from 'crypto-random-string';
 import { writeStorage, useLocalStorage } from '@rehooks/local-storage';
-import Custom from '../selectGameModes/Custom';
-import RegionCity from '../selectGameModes/RegionCity';
-import RandomCity from '../selectGameModes/RandomCity';
-import Geolocation from '../selectGameModes/Geolocation';
+import {
+    CustomPlace, RegionCity, RandomCity, Geolocation
+} from '../modes';
 import pragueCover from '../../assets/images/city/prague.jpg';
 import randomCover from '../../assets/images/city/random.jpg';
 import suggestedCover from '../../assets/images/city/suggested.jpg';
@@ -14,7 +13,7 @@ import youtubeCover from '../../assets/images/youtube.jpg';
 
 const { Text } = Typography;
 
-const Configuration = function() {
+const Configuration = () => {
     const [randomUserResultToken] = useLocalStorage('randomUserResultToken'); // send the key to be tracked.
 
     useEffect(() => {
@@ -47,18 +46,18 @@ const Configuration = function() {
                 </p>
                 <RandomCity />
             </Card>
-            <Card cover={<img alt="Herní mód - Podle mojí geolokace" src={geolocationCover} />}>
-                <h1>Podle mojí geolokace</h1>
-                <p>Zaměř svou polohu a ukaž, kdo je tady pánem a znalcem svého bezprostředního okolí!</p>
-                <Geolocation />
-            </Card>
             <Card cover={<img alt="Herní mód - Zadat vlastní místo" src={suggestedCover} />}>
                 <h1>Zadat vlastní místo</h1>
                 <p>
                     Chceš si zahrát a nebydlíš přitom v krajském městě? Nevadí, přesně tohle je výzva pro tebe. Svou
                     obec či jiné zajímavé místo, které chceš více poznat, vyhledej ve formuláři níže. Šťastnou cestu!
                 </p>
-                <Custom />
+                <CustomPlace />
+            </Card>
+            <Card cover={<img alt="Herní mód - Podle mojí geolokace" src={geolocationCover} />}>
+                <h1>Podle mojí geolokace</h1>
+                <p>Zaměř svou polohu a ukaž, kdo je tady pánem a znalcem svého bezprostředního okolí!</p>
+                <Geolocation />
             </Card>
             {/* source: https://similarpng.com/youtube-player-video-preumim-vector-png */}
             <Card cover={<img alt="Herní mód - Zadat vlastní místo" src={youtubeCover} />}>

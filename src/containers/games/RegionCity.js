@@ -1,16 +1,16 @@
 import React from 'react';
-import { Layout } from 'antd';
 import { Redirect, useLocation } from 'react-router-dom';
-import Game from '../../Game';
-import useGameMenuResize from '../../../hooks/useGameMenuResize';
+import { Layout } from 'antd';
+import Game from '../Game';
+import useGameMenuResize from '../../hooks/useGameMenuResize';
 
 const { Content } = Layout;
 
-const RandomCity = () => {
+export const RegionCity = () => {
     const location = useLocation();
     useGameMenuResize();
 
-    if (location?.state?.mode === 'random') {
+    if (location?.state?.radius && location?.state?.city) {
         return (
             <Content>
                 <Game location={location} />
@@ -25,5 +25,3 @@ const RandomCity = () => {
         />
     );
 };
-
-export default RandomCity;

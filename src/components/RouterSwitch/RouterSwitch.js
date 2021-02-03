@@ -2,10 +2,9 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 import NotFound from '../../pages/404';
-import RegionCity from '../gameModes/RegionCity';
-import RandomCity from '../gameModes/RandomCity';
-import Geolocation from '../gameModes/Geolocation';
-import Custom from '../gameModes/Custom';
+import {
+    CustomPlace, RegionCity, RandomCity, Geolocation
+} from '../../containers/games';
 import Home from '../../pages/home';
 import Info from '../../pages/info';
 import Result from '../../pages/result';
@@ -29,7 +28,7 @@ const RouterSwitch = () => {
                 <Result />
             </Route>
             <Route path="/vlastni">
-                <Custom />
+                <CustomPlace />
             </Route>
             <Route path="/info">
                 <Info />

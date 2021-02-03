@@ -8,10 +8,10 @@ import {
     Button, Col, InputNumber, Row, Slider, Tooltip
 } from 'antd';
 
-import { CATEGORIES } from '../../../enums/gaCategories';
-import { RADIUS_DESCRIPTION } from '../../../util';
+import { CATEGORIES } from '../../enums/gaCategories';
+import { RADIUS_DESCRIPTION } from '../../util';
 
-const Geolocation = () => {
+export const Geolocation = () => {
     const geolocation = useGeolocation();
     const [geoFormSubmitted, setGeoFormSubmitted] = useState(false);
     const [geoFormValues, setGeoFormValues] = useState({});
@@ -112,5 +112,3 @@ const Geolocation = () => {
         <p>Geografickou polohu se nepodařilo načíst.</p>
     );
 };
-
-export default Geolocation;

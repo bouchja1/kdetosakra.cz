@@ -6,13 +6,13 @@ import {
 import { Redirect } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { cities } from '../../../data/cities';
-import { CATEGORIES } from '../../../enums/gaCategories';
-import { RADIUS_DESCRIPTION } from '../../../util';
+import { cities } from '../../data/cities';
+import { CATEGORIES } from '../../enums/gaCategories';
+import { RADIUS_DESCRIPTION } from '../../util';
 
 const { Option } = Select;
 
-const RegionCity = () => {
+export const RegionCity = () => {
     const [citySelected, setCitySelected] = useState(null);
     const [maxCityRadius, setMaxCityRadius] = useState(null);
     const [cityFormSubmitted, setCityFormSubmitted] = useState(false);
@@ -148,5 +148,3 @@ const RegionCity = () => {
         </Formik>
     );
 };
-
-export default RegionCity;

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Layout } from 'antd';
 import { Redirect, useLocation } from 'react-router-dom';
-import Game from '../../Game';
-import useGameMenuResize from '../../../hooks/useGameMenuResize';
+import Game from '../Game';
+import useGameMenuResize from '../../hooks/useGameMenuResize';
 
 const { Content } = Layout;
 
-const Geolocation = () => {
+export const Geolocation = () => {
     const location = useLocation();
     useGameMenuResize();
 
@@ -25,5 +25,3 @@ const Geolocation = () => {
         />
     );
 };
-
-export default Geolocation;
