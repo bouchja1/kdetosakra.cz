@@ -2,12 +2,12 @@ import React, { useContext, useEffect, useState } from 'react';
 import {
     Modal, Progress, Button, Typography
 } from 'antd';
-import GuessingMap from '../../components/GuessingMap';
-import { crCities } from '../../data/cr';
-import KdetosakraContext from '../../context/KdetosakraContext';
-import { pointInCircle, roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../../util';
-import useWindowHeight from '../../hooks/useWindowHeight';
-import useSMapResize from '../../hooks/useSMapResize';
+import GuessingMap from '../components/GuessingMap';
+import { crCities } from '../data/cr';
+import KdetosakraContext from '../context/KdetosakraContext';
+import { pointInCircle, roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../util';
+import useWindowHeight from '../hooks/useWindowHeight';
+import useSMapResize from '../hooks/useSMapResize';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -16,7 +16,7 @@ const MAX_SCORE_PERCENT = 100;
 const MAX_PANORAMA_TRIES = 5;
 const DEFAULT_PANORAMA_TOLERANCE = 50;
 
-const Game = ({ location }) => {
+export const GameScreen = ({ location }) => {
     const windowHeight = useWindowHeight();
     const { width, height } = useSMapResize();
     const [panorama] = useState(React.createRef());
@@ -297,5 +297,3 @@ const Game = ({ location }) => {
         </>
     );
 };
-
-export default Game;

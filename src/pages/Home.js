@@ -1,13 +1,13 @@
 import React from 'react';
 import { Layout } from 'antd';
-import Configuration from '../containers/Configuration';
+import { ModesOverview } from '../containers/ModesOverview';
 
 const { Content } = Layout;
 
 export const Home = () => {
     return (
         <Content>
-            <Configuration />
+            <ModesOverview />
         </Content>
     );
 };

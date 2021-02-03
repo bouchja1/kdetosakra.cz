@@ -7,7 +7,9 @@ import useSMapResize from '../../hooks/useSMapResize';
 
 const DEFAULT_MODE_ZOOM = 14;
 
-const SMap = props => {
+const SMap = ({
+    guessedPoints, type, onMapClick, refLayeredMapValue, refLayerValue, refVectorLayerSMapValue,
+}) => {
     const location = useLocation();
     const { width } = useSMapResize();
     const [map] = useState(React.createRef());
@@ -103,8 +105,7 @@ const SMap = props => {
             dataProvider.setMapSet(SMapContext.MAPSET_BASE);
             dataProvider.enable();
 
-            if (props.type && props.type === 'result') {
-                const { guessedPoints } = props;
+            if (type === 'result') {
                 const options = {
                     color: '#f00',
                     width: 3,
@@ -144,10 +145,7 @@ const SMap = props => {
                     );
                     layerSMap.addMarker(markerPanorama);
                 }
-            } else if (props.type === 'round') {
-                const {
-                    onMapClick, refLayeredMapValue, refLayerValue, refVectorLayerSMapValue,
-                } = props;
+            } else {
                 // assign vrstva se značkami
                 refLayerValue.current = layerSMap;
                 // assing layered map value

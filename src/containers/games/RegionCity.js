@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
 import { Layout } from 'antd';
-import Game from '../Game';
+import { GameScreen } from '../GameScreen';
 import useGameMenuResize from '../../hooks/useGameMenuResize';
 
 const { Content } = Layout;
@@ -13,7 +13,7 @@ export const RegionCity = () => {
     if (location?.state?.radius && location?.state?.city) {
         return (
             <Content>
-                <Game location={location} />
+                <GameScreen location={location} />
             </Content>
         );
     }

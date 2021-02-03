@@ -4,16 +4,16 @@ import cryptoRandomString from 'crypto-random-string';
 import { writeStorage, useLocalStorage } from '@rehooks/local-storage';
 import {
     CustomPlace, RegionCity, RandomCity, Geolocation
-} from '../modes';
-import pragueCover from '../../assets/images/city/prague.jpg';
-import randomCover from '../../assets/images/city/random.jpg';
-import suggestedCover from '../../assets/images/city/suggested.jpg';
-import geolocationCover from '../../assets/images/city/geolocation.jpg';
-import youtubeCover from '../../assets/images/youtube.jpg';
+} from './modes';
+import pragueCover from '../assets/images/city/prague.jpg';
+import randomCover from '../assets/images/city/random.jpg';
+import suggestedCover from '../assets/images/city/suggested.jpg';
+import geolocationCover from '../assets/images/city/geolocation.jpg';
+import youtubeCover from '../assets/images/youtube.jpg';
 
 const { Text } = Typography;
 
-const Configuration = () => {
+export const ModesOverview = () => {
     const [randomUserResultToken] = useLocalStorage('randomUserResultToken'); // send the key to be tracked.
 
     useEffect(() => {
@@ -92,5 +92,3 @@ const Configuration = () => {
         </>
     );
 };
-
-export default Configuration;

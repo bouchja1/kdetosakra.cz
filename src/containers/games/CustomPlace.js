@@ -1,7 +1,7 @@
 import React from 'react';
 import { Layout } from 'antd';
 import { Redirect, useLocation } from 'react-router-dom';
-import Game from '../Game';
+import { GameScreen } from '../GameScreen';
 import useGameMenuResize from '../../hooks/useGameMenuResize';
 
 const { Content } = Layout;
@@ -13,10 +13,11 @@ export const CustomPlace = () => {
     if (location?.state?.city) {
         return (
             <Content>
-                <Game location={location} />
+                <GameScreen location={location} />
             </Content>
         );
     }
+
     return (
         <Redirect
             to={{
