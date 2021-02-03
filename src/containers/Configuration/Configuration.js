@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Card } from 'antd';
+import { Card, Typography } from 'antd';
 import cryptoRandomString from 'crypto-random-string';
 import { writeStorage, useLocalStorage } from '@rehooks/local-storage';
 import Custom from '../selectGameModes/Custom';
@@ -10,6 +10,9 @@ import pragueCover from '../../assets/images/city/prague.jpg';
 import randomCover from '../../assets/images/city/random.jpg';
 import suggestedCover from '../../assets/images/city/suggested.jpg';
 import geolocationCover from '../../assets/images/city/geolocation.jpg';
+import youtubeCover from '../../assets/images/youtube.jpg';
+
+const { Text } = Typography;
 
 const Configuration = function() {
     const [randomUserResultToken] = useLocalStorage('randomUserResultToken'); // send the key to be tracked.
@@ -56,6 +59,36 @@ const Configuration = function() {
                     obec či jiné zajímavé místo, které chceš více poznat, vyhledej ve formuláři níže. Šťastnou cestu!
                 </p>
                 <Custom />
+            </Card>
+            {/* source: https://similarpng.com/youtube-player-video-preumim-vector-png */}
+            <Card cover={<img alt="Herní mód - Zadat vlastní místo" src={youtubeCover} />}>
+                <h1>Let&apos;s play videa</h1>
+                <p>
+                    Nechce se ti dneska nikam klikat? No tak se můžeš jen koukat a hraní nechat na druhých! Komunita
+                    skvělých fanoušků totiž natáčí, komentuje a sdílí svá videa z toulání se po mapě na
+                    {' '}
+                    <Text className="highlighted">YouTube</Text>
+                    .
+                </p>
+                <h3>YouTube kanály</h3>
+                <ul>
+                    <li>
+                        <a
+                            href="https://www.youtube.com/playlist?list=PLtFesIeBF_meZrA0cGcPhMp_nUl79_AWI"
+                            target="_blank"
+                        >
+                            Kdepak jsme?
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="https://www.youtube.com/playlist?list=PLgtWt-mElPivScJgTABHu--vjAB9uOzxe"
+                            target="_blank"
+                        >
+                            LakelyDorton
+                        </a>
+                    </li>
+                </ul>
             </Card>
         </>
     );
