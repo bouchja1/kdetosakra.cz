@@ -39,9 +39,7 @@ function App() {
                 <Footer style={{ textAlign: 'center' }}>
                     Postaveno na
                     {' '}
-                    <a href="http://mapy.cz/">Mapy.cz</a>
-                    {' '}
-                    <a href="https://api.mapy.cz/">API</a>
+                    <a href="https://api.mapy.cz/">Mapy.cz API</a>
                     {' '}
                     <HeartTwoTone twoToneColor="#eb2f96" />
                 </Footer>

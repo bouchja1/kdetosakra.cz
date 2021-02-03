@@ -12,7 +12,7 @@ const Info = () => {
             <Typography className="about-container">
                 <Title>KdeToSakra.cz</Title>
                 <Paragraph>
-                    ...je český klon populární online zěměpisné hry
+                    ...je český klon populární zeměpisné online hry
                     {' '}
                     <a href="https://geoguessr.com/">GeoGuessr</a>
                     .
