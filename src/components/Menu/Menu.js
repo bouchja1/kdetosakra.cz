@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
-    FacebookFilled, HomeFilled, InfoCircleFilled, MailOutlined
+    FacebookFilled, HomeOutlined, InfoCircleOutlined, MailOutlined
 } from '@ant-design/icons';
 import smilingLogo from '../../assets/images/kdetosakraSmile.svg';
 import { decryptEmail } from '../../util';
@@ -11,7 +11,7 @@ const Menu = () => {
         <div id="menu-container" className="section menu-container">
             <div className="menu">
                 <div className="menu-item home">
-                    <HomeFilled style={{ color: 'rgb(97, 95, 95)' }} />
+                    <HomeOutlined style={{ color: 'rgb(97, 95, 95)' }} />
                     <div className="home-menu-item">
                         <Link to="/">Herní módy</Link>
                     </div>
@@ -20,7 +20,7 @@ const Menu = () => {
                     <img id="kdetosakra-logo" src={smilingLogo} alt="logo" className="kdetosakra-logo" width="85%" />
                 </div>
                 <div className="menu-item info">
-                    <InfoCircleFilled style={{ color: 'rgb(97, 95, 95)' }} />
+                    <InfoCircleOutlined style={{ color: 'rgb(97, 95, 95)' }} />
                     <div className="info-menu-item">
                         <Link to="/info">O hře</Link>
                     </div>

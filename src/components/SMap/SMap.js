@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Divider } from 'antd';
 import KdetosakraContext from '../../context/KdetosakraContext';
-import { DEFAUL_MARKER_ICON, DEFAUL_MARKER_PLACE_ICON } from '../../constants/icons';
+import { DEFAUL_MARKER_ICON, MARKER_PLACE_ICON_KDETOSAKRA } from '../../constants/icons';
 import useSMapResize from '../../hooks/useSMapResize';
 import gameModes from '../../enums/modes';
 
@@ -20,7 +20,7 @@ const markerOptions = {
     anchor: { left: 10, bottom: 1 },
 };
 const markerPanoramaOptions = {
-    url: DEFAUL_MARKER_PLACE_ICON,
+    url: MARKER_PLACE_ICON_KDETOSAKRA,
     anchor: { left: 10, bottom: 15 },
 };
 

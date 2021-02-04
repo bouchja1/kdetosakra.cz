@@ -5,7 +5,7 @@ import { Button } from 'antd';
 import KdetosakraContext from '../../context/KdetosakraContext';
 import { MAX_SCORE_PERCENT, MIN_DISTANCE_FOR_POINTS_RANDOM, TOTAL_ROUNDS_MAX } from '../../constants/game';
 import { storeResult } from '../../util/result';
-import { DEFAUL_MARKER_PLACE_ICON, DEFAUL_MARKER_ICON } from '../../constants/icons';
+import { MARKER_PLACE_ICON_KDETOSAKRA, DEFAUL_MARKER_ICON } from '../../constants/icons';
 import { RoundSMapWrapper } from '../SMap/RoundSMapWrapper';
 import { ResultSMapWrapper } from '../SMap/ResultSMapWrapper';
 import gameModes from '../../enums/modes';
@@ -78,7 +78,7 @@ const GuessingMap = ({
 
     const drawGuessedDistance = (currentPanoramaPositionPoint, selectedPointOnMap, panoramaCoordinates) => {
         const markerPanoramaOptions = {
-            url: DEFAUL_MARKER_PLACE_ICON,
+            url: MARKER_PLACE_ICON_KDETOSAKRA,
             anchor: { left: 10, bottom: 15 },
         };
 

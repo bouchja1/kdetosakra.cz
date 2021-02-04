@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactGA from 'react-ga';
-import { Layout } from 'antd';
-import { HeartTwoTone } from '@ant-design/icons';
+import { Layout, Typography } from 'antd';
+import { HeartTwoTone, CoffeeOutlined } from '@ant-design/icons';
 import * as Sentry from '@sentry/browser';
 
 import useScript from './hooks/useScript';
@@ -11,6 +11,7 @@ import { KdetosakraProvider } from './context/KdetosakraContext';
 import Menu from './components/Menu';
 
 const { Footer } = Layout;
+const { Text } = Typography;
 
 function initializeReactGA() {
     ReactGA.initialize('UA-151784741-1');
@@ -35,12 +36,25 @@ function App() {
                         <RouterSwitch />
                     </KdetosakraProvider>
                 )}
-                <Footer style={{ textAlign: 'center' }}>
-                    Postaveno na
-                    {' '}
-                    <a href="https://api.mapy.cz/">Mapy.cz API</a>
-                    {' '}
-                    <HeartTwoTone twoToneColor="#eb2f96" />
+                <Footer style={{ textAlign: 'center', fontSize: '14px' }}>
+                    <Text>
+                        Postaveno s
+                        {' '}
+                        <HeartTwoTone twoToneColor="#eb2f96" />
+                        {' '}
+                        na
+                        {' '}
+                        <a href="https://api.mapy.cz/">Mapy.cz API</a>
+                        {' '}
+                    </Text>
+                    {' | '}
+                    <Text>
+                        <a href="https://www.buymeacoffee.com/mmwbwdq" target="_blank">
+                            Kup mi kafe - podpoříš provoz a další vývoj
+                            {' '}
+                            <CoffeeOutlined />
+                        </a>
+                    </Text>
                 </Footer>
             </Layout>
         </>

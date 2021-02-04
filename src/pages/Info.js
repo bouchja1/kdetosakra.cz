@@ -1,7 +1,9 @@
 import React from 'react';
 import { GithubOutlined, MailOutlined } from '@ant-design/icons';
 import { Typography, Layout } from 'antd';
-import { decryptEmail } from '../util';
+import { Link } from 'react-router-dom';
+import { decryptEmail, generateRandomRadius } from '../util';
+import gameModes from '../enums/modes';
 
 const { Content } = Layout;
 const { Title, Paragraph, Text } = Typography;
@@ -10,47 +12,10 @@ export const Info = () => {
     return (
         <Content>
             <Typography className="about-container">
-                <Title>KdeToSakra.cz</Title>
                 <Paragraph>
-                    ...je český klon populární zeměpisné online hry
+                    <Text className="highlighted">kdetosakra.cz</Text>
                     {' '}
-                    <a href="https://geoguessr.com/">GeoGuessr</a>
-                    .
-                </Paragraph>
-                <Paragraph>
-                    Hra
-                    {' '}
-                    <Text className="highlighted">GeoGuessr</Text>
-                    {' '}
-                    je založena na snímcích ze služby Google Street
-                    View, zatímco
-                    {' '}
-                    <Text className="highlighted">KdeToSakra.cz</Text>
-                    {' '}
-                    využívá mapových podkladů aplikace
-                    Mapy.cz vyvíjené společností Seznam. Hratelnost je takřka neomezená a jedinými limity jsou hranice
-                    České republiky.
-                </Paragraph>
-                <Paragraph>
-                    Hra nabízí
-                    {' '}
-                    <Text className="highlighted">čtyři herní módy</Text>
-                    . V rámci vybraného módu je vaším
-                    úkolem poznat místo na území ČR a následně toto místo označit na mapě. Čím blíž svůj odhad na mapě
-                    umístíte, tím víc bodů v herním kole získáte. Hra předpokládá, že pokud si zvolíte jiný herní mód
-                    než
-                    {' '}
-                    <i>Náhodné místo v Česku</i>
-                    , hádané okolí alespoň trochu znáte, takže penalizace za větší
-                    vzdálenost je vyšší než u náhodně vygenerovaného místa.
-                </Paragraph>
-                <Paragraph>
-                    Hádání není časově omezeno. Pro přesnější odhad se tak můžete v panoramatu libovolně pohybovat a
-                    dojet až na místo, které je vám povědomé. Nebo spatříte název místa na billboardu. Nebo dojedete až
-                    k ceduli označující název obce.
-                </Paragraph>
-                <Paragraph>
-                    Projekt jsem naprogramoval jako
+                    je zeměpisná online hra a česká
                     {' '}
                     <a href="https://github.com/bouchja1/kdetosakra.cz" target="_blank" rel="noopener noreferrer">
                         open-source
@@ -58,16 +23,72 @@ export const Info = () => {
                     {' '}
                     <GithubOutlined />
                     {' '}
-                    v rámci studia JavaScript knihovny React.js. Code reviews, pull requesty a
-                    připomínky jsou víc než vítány!
+                    alternativa k populární zahraniční hře
+                    {' '}
+                    <a href="https://geoguessr.com/" target="_blank">
+                        GeoGuessr
+                    </a>
+                    .
+                </Paragraph>
+                <Paragraph>
+                    Hra využívá panoramata a mapové podklady aplikace
+                    {' '}
+                    <a href="https://api.mapy.cz/" target="_blank">
+                        Mapy.cz od Seznamu
+                    </a>
+                    . Hratelnost je takřka neomezená a jedinými limity jsou hranice České republiky 🇨🇿
+                </Paragraph>
+                <Title level={3}>O projektu</Title>
+                <Paragraph>
+                    Hru jsem naprogramoval koncem roku 2019 za účelem seznámení se s JS knihovnou React.js. Jedná se o
+                    hobby projekt, který postupně vylepšuji. V plánu jsou i další rozšíření. Pokud vám hra dělá radost,
+                    můžete
+                    {' '}
+                    <a href="https://www.buymeacoffee.com/mmwbwdq">podpořit její provoz nebo mi koupit kafe </a>
+                    {' '}
+                    ☕ ✌️️
+                </Paragraph>
+                <Title level={3}>Jak hrát?</Title>
+                <Paragraph>
+                    Hra nabízí
+                    {' '}
+                    <Text className="highlighted">čtyři herní módy</Text>
+                    . Vaším úkolem je vypátrat v
+                    několika kolech &quot;vaši&quot; polohu v různých místech České republiky. Pátrání začínáte v
+                    náhodně vygenerovaném panoramatickém snímku a v přiložené mapě se snažíte s co nejvyšší přesností
+                    určit, kde (v panoramatu) se právě nacházíte.
+                </Paragraph>
+                <Paragraph>Čím blíž svůj odhad na mapě umístíte, tím víc bodů v herním kole získáte.</Paragraph>
+                <Paragraph>
+                    Pokud zvolíte jiný herní mód než
+                    {' '}
+                    <Link
+                        to={{
+                            pathname: '/nahodne',
+                            state: {
+                                radius: generateRandomRadius(),
+                                city: null,
+                                mode: gameModes.random,
+                            },
+                        }}
+                    >
+                        Náhodné místo v Česku
+                    </Link>
+                    , hra předpokládá, že vybrané okolí alespoň trochu znáte. Proto je za horší odhad vyšší bodová
+                    penalizace než u náhodně generovaných míst.
+                </Paragraph>
+                <Paragraph>
+                    Hádání není časově omezeno. Pro přesnější odhad a lepší výsledek se tak můžete v panoramatu
+                    libovolně pohybovat a dostat se až na místo, které je vám povědomé. Nebo spatříte název místa na
+                    billboardu. Nebo dojedete až k ceduli označující název obce... nebo si vypracujete vlastní herní
+                    strategii. To už je na vás.
                 </Paragraph>
                 <Paragraph>
                     Máte dotaz? Tak mi
                     {' '}
                     <a href={decryptEmail('amFuLmJvdWNobmVyQGdtYWlsLmNvbQ==')}>napište</a>
                     {' '}
-                    <MailOutlined />
-                    .
+                    ✉️.
                 </Paragraph>
             </Typography>
         </Content>
