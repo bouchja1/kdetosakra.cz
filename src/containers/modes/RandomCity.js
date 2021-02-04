@@ -1,36 +1,34 @@
 import React, { useState } from 'react';
 import ReactGA from 'react-ga';
-import { Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button } from 'antd';
 import { CATEGORIES } from '../../enums/gaCategories';
 import { generateRandomRadius } from '../../util';
+import gameModes from '../../enums/modes';
 
 export const RandomCity = () => {
-    const [playGame, setPlayGame] = useState(false);
-
-    if (playGame) {
-        const randomRadius = generateRandomRadius();
-        ReactGA.event({
-            category: CATEGORIES.RANDOM_CITY,
-            action: 'Play random city game',
-        });
-        return (
-            <Redirect
+    return (
+        <Button
+            type="primary"
+            onClick={() => {
+                ReactGA.event({
+                    category: CATEGORIES.RANDOM_CITY,
+                    action: 'Play random city game',
+                });
+            }}
+        >
+            <Link
                 to={{
                     pathname: '/nahodne',
                     state: {
-                        radius: randomRadius,
+                        radius: generateRandomRadius(),
                         city: null,
-                        mode: 'random',
+                        mode: gameModes.random,
                     },
                 }}
-            />
-        );
-    }
-
-    return (
-        <Button type="primary" disabled={playGame} onClick={() => setPlayGame(true)}>
-            Hrát
+            >
+                Hrát
+            </Link>
         </Button>
     );
 };

@@ -1,36 +1,31 @@
-import React, { useState, useContext } from 'react';
-import { useLocation, Redirect } from 'react-router-dom';
+import React, { useState, useContext, useRef } from 'react';
+import { useLocation, Link } from 'react-router-dom';
 import { useLocalStorage } from '@rehooks/local-storage';
 import { Button } from 'antd';
 import KdetosakraContext from '../../context/KdetosakraContext';
-import { roundToTwoDecimal, generateRandomRadius } from '../../util';
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
+import { storeResult } from '../../util/result';
 import { DEFAUL_MARKER_PLACE_ICON, DEFAUL_MARKER_ICON } from '../../constants/icons';
 import { RoundSMapWrapper } from '../SMap/RoundSMapWrapper';
-import { saveRandomScore, saveCityScore } from '../../services/api';
 import { ResultSMapWrapper } from '../SMap/ResultSMapWrapper';
 
 const GuessingMap = ({
     updateCalculation,
     calculateDistance,
     makeRefreshPanorama,
-    generateRandomCzechPlace,
     totalRoundScore,
     totalRounds,
     guessedPoints,
 }) => {
+    const mapyContext = useContext(KdetosakraContext);
     const location = useLocation();
     const [randomUserResultToken] = useLocalStorage('randomUserResultToken'); // send the key to be tracked.
-    const mapyContext = useContext(KdetosakraContext);
-    const [layeredMap] = useState(null);
-    const [layer] = useState(null);
-    const [vectorLayerSMap] = useState(null);
-    const [gameCompleted, setGameCompleted] = useState(false);
+
     const [roundGuessed, setRoundGuessed] = useState(false);
 
-    const refLayerValue = React.useRef(layer);
-    const refVectorLayerSMapValue = React.useRef(vectorLayerSMap);
-    const refLayeredMapValue = React.useRef(layeredMap);
+    const refLayerValue = useRef();
+    const refVectorLayerSMapValue = useRef();
+    const refLayeredMapValue = useRef();
 
     const [guessButtonDisabled, setGuessButtonDisabled] = useState(true);
     const [nextRoundButtonVisible, setNextRoundButtonVisible] = useState(false);
@@ -43,17 +38,12 @@ const GuessingMap = ({
      * Refresh map for a new guessing!
      */
     const refreshMap = () => {
-        let { radius, city, mode } = location.state;
+        makeRefreshPanorama(); // TODO tohle mam pocit, ze nekdy kurvi - ve smyslu, ze to nekdy nepregeneruje mapu - mozna budu muset cekat na promise?
         refLayerValue.current.removeAll();
         refVectorLayerSMapValue.current.removeAll();
         setNextRoundButtonVisible(false);
         setGuessButtonDisabled(true);
         setRoundGuessed(false);
-        if (mode === 'random') {
-            radius = generateRandomRadius();
-            city = generateRandomCzechPlace();
-        }
-        makeRefreshPanorama(radius, city);
         window.scrollTo(0, 0);
     };
 
@@ -82,50 +72,29 @@ const GuessingMap = ({
         // }
     };
 
-    const resolveRounds = () => {
-        setGameCompleted(true);
-    };
-
-    const storeResult = () => {
-        const locationObj = location.state;
-        const percent = roundToTwoDecimal(totalRoundScore / TOTAL_ROUNDS_MAX);
-        if (randomUserResultToken && locationObj) {
-            if (locationObj.mode === 'random') {
-                saveRandomScore(randomUserResultToken, percent).catch(err => {
-                    // we ignore this
-                });
-            } else if (locationObj.mode === 'city') {
-                saveCityScore(locationObj.city.name, randomUserResultToken, percent).catch(err => {
-                    // we ignore this
-                });
-            }
-        }
-    };
-
-    const renderGuessingMapButtons = () => {
-        if (gameCompleted) {
-            storeResult();
-            return (
-                <Redirect
-                    to={{
-                        pathname: '/vysledek',
-                        state: {
-                            totalRoundScore,
-                            guessedPoints,
-                        },
-                    }}
-                />
-            );
-        }
+    const getMapButton = () => {
         if (totalRounds >= TOTAL_ROUNDS_MAX) {
             return (
                 <Button
-                    onClick={() => {
-                        resolveRounds();
-                    }}
                     type="primary"
+                    onClick={() => storeResult(
+                            location?.state?.mode,
+                            location?.state?.city.name,
+                            totalRoundScore,
+                            randomUserResultToken,
+                    )}
                 >
-                    Vyhodnotit hru
+                    <Link
+                        to={{
+                            pathname: '/vysledek',
+                            state: {
+                                totalRoundScore,
+                                guessedPoints,
+                            },
+                        }}
+                    >
+                        Vyhodnotit hru
+                    </Link>
                 </Button>
             );
         }
@@ -199,7 +168,7 @@ const GuessingMap = ({
             ) : (
                 <ResultSMapWrapper guessedPoints={[guessedPoints[guessedPoints.length - 1]]} />
             )}
-            {renderGuessingMapButtons()}
+            {getMapButton()}
         </>
     );
 };

@@ -1,20 +1,20 @@
 import React, {
     useContext, useEffect, useRef, useState
 } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import ReactGA from 'react-ga';
 import {
     Button, Row, Col, Slider, InputNumber, Tooltip
 } from 'antd';
 import KdetosakraContext from '../../context/KdetosakraContext';
 import { CATEGORIES } from '../../enums/gaCategories';
+import gameModes from '../../enums/modes';
 import { RADIUS_DESCRIPTION } from '../../util';
 
 export const CustomPlace = () => {
     const mapyContext = useContext(KdetosakraContext);
     const suggestInput = useRef();
     const [selectedPlaceData, setSelectedPlaceData] = useState(null);
-    const [playGame, setPlayGame] = useState(false);
     const [radius, setRadius] = useState(1);
 
     useEffect(() => {
@@ -35,32 +35,6 @@ export const CustomPlace = () => {
     const handleChangeRadius = value => {
         setRadius(value);
     };
-
-    if (playGame) {
-        ReactGA.event({
-            category: CATEGORIES.SUGGESTED,
-            action: 'Play suggested city game',
-        });
-        return (
-            <Redirect
-                to={{
-                    pathname: '/vlastni',
-                    state: {
-                        radius: Number(radius),
-                        city: {
-                            coordinates: {
-                                latitude: selectedPlaceData.data.latitude,
-                                longitude: selectedPlaceData.data.longitude,
-                            },
-                            place: selectedPlaceData.data.title,
-                            info: selectedPlaceData.data.secondRow,
-                        },
-                        mode: 'suggested',
-                    },
-                }}
-            />
-        );
-    }
 
     return (
         <form>
@@ -103,8 +77,33 @@ export const CustomPlace = () => {
                 {' '}
                 km od vámi vybraného místa.
             </p>
-            <Button disabled={!selectedPlaceData} type="primary" onClick={() => setPlayGame(true)}>
-                Hrát
+            <Button
+                disabled={!selectedPlaceData}
+                type="primary"
+                onClick={() => ReactGA.event({
+                    category: CATEGORIES.SUGGESTED,
+                    action: 'Play suggested city game',
+                })}
+            >
+                <Link
+                    to={{
+                        pathname: '/vlastni',
+                        state: {
+                            radius: Number(radius),
+                            city: {
+                                coordinates: {
+                                    latitude: selectedPlaceData?.data?.latitude,
+                                    longitude: selectedPlaceData?.data?.longitude,
+                                },
+                                place: selectedPlaceData?.data?.title,
+                                info: selectedPlaceData?.data?.secondRow,
+                            },
+                            mode: gameModes.custom,
+                        },
+                    }}
+                >
+                    Hrát
+                </Link>
             </Button>
         </form>
     );

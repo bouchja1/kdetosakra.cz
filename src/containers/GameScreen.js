@@ -5,7 +5,9 @@ import KdetosakraContext from '../context/KdetosakraContext';
 import { MAX_SCORE_PERCENT, MIN_DISTANCE_FOR_POINTS_RANDOM } from '../constants/game';
 import useSMapResize from '../hooks/useSMapResize';
 import Panorama from '../components/Panorama';
+import { generateRandomRadius } from '../util';
 import RoundResultModal from '../components/RoundResultModal';
+import gameModes from '../enums/modes';
 
 const getRandomCzechPlace = () => {
     let randomCity = crCities[Math.floor(Math.random() * crCities.length)];
@@ -39,7 +41,7 @@ export const GameScreen = ({ location }) => {
         if (location?.state) {
             let { city } = location.state;
             const { radius, mode } = location.state;
-            if (mode === 'random') {
+            if (mode === gameModes.random) {
                 city = getRandomCzechPlace();
             }
             setCurrentCity(city);
@@ -48,7 +50,12 @@ export const GameScreen = ({ location }) => {
         // TODO add some cleanup maybe
     }, [mapyContext.loadedMapApi, location]);
 
-    const makeRefreshPanorama = (radius, city) => {
+    const makeRefreshPanorama = () => {
+        let { radius, city, mode } = location.state;
+        if (mode === gameModes.random) {
+            radius = generateRandomRadius();
+            city = getRandomCzechPlace();
+        }
         setCurrentCity(city);
         setCurrentRadius(radius);
         setRefreshPanorama(true);
@@ -84,7 +91,7 @@ export const GameScreen = ({ location }) => {
             dist *= 1.609344; // convert to kilometers
             distance = dist;
         }
-        if (locationObject.mode === 'random') {
+        if (locationObject.mode === gameModes.random) {
             const { obec, okres, kraj } = currentCity;
             setGuessedPlace({
                 obec,
@@ -99,7 +106,7 @@ export const GameScreen = ({ location }) => {
     const calculateScore = distance => {
         const { radius, mode } = location.state;
         let minDistanceForPoints;
-        if (mode === 'random') {
+        if (mode === gameModes.random) {
             minDistanceForPoints = MIN_DISTANCE_FOR_POINTS_RANDOM;
         } else {
             minDistanceForPoints = radius + 2;
@@ -149,10 +156,10 @@ export const GameScreen = ({ location }) => {
                     updateCalculation={updateCalculation}
                     calculateDistance={calculateDistance}
                     makeRefreshPanorama={makeRefreshPanorama}
-                    generateRandomCzechPlace={getRandomCzechPlace}
                     totalRoundScore={totalRoundScore}
                     totalRounds={totalRounds}
                     guessedPoints={guessedPoints}
+                    gameMode={location.state.mode}
                 />
             </div>
             <RoundResultModal

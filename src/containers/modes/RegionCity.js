@@ -9,6 +9,7 @@ import * as Yup from 'yup';
 import { cities } from '../../data/cities';
 import { CATEGORIES } from '../../enums/gaCategories';
 import { RADIUS_DESCRIPTION } from '../../util';
+import gameModes from '../../enums/modes';
 
 const { Option } = Select;
 
@@ -63,7 +64,7 @@ export const RegionCity = () => {
                     state: {
                         radius: Number(radius),
                         city: selectedCity[0],
-                        mode: 'city',
+                        mode: gameModes.city,
                     },
                 }}
             />

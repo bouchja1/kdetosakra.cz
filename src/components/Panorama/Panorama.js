@@ -51,24 +51,29 @@ const Panorama = ({
                 tolerance = 5000;
             }
 
-            SMap.Pano.getBest(position, tolerance)
-                .then(
-                    place => {
-                        panoramaScene.show(place);
-                    },
-                    () => {
-                        // panorama could not be shown
-                        if (findPanoramaTriesCounter < MAX_PANORAMA_TRIES) {
-                            setFindPanoramaTriesCounter(findPanoramaTriesCounter + 1);
-                            makeRefreshPanorama(radius, city);
-                        } else {
-                            throw new Error('Panorama was not found');
-                        }
-                    },
-                )
-                .catch(err => {
-                    setPanoramaFounded(false);
-                });
+            const getBestPanorama = async () => {
+                await SMap.Pano.getBest(position, tolerance)
+                    .then(
+                        place => {
+                            panoramaScene.show(place);
+                            // TODO dodelat tady nejaky indikator, ze je to uz nacteno a zrusit loading
+                        },
+                        () => {
+                            // panorama could not be shown
+                            if (findPanoramaTriesCounter < MAX_PANORAMA_TRIES) {
+                                setFindPanoramaTriesCounter(findPanoramaTriesCounter + 1);
+                                makeRefreshPanorama();
+                            } else {
+                                throw new Error('Panorama was not found');
+                            }
+                        },
+                    )
+                    .catch(err => {
+                        setPanoramaFounded(false);
+                    });
+            };
+
+            getBestPanorama();
         }
     }, [radius, city, mapyContext.loadedMapApi, panoramaScene, refresh]);
 

@@ -10,7 +10,7 @@ export const CustomPlace = () => {
     const location = useLocation();
     useGameMenuResize();
 
-    if (location?.state?.city) {
+    if (location?.state?.city && location?.state?.radius) {
         return (
             <Content>
                 <GameScreen location={location} />

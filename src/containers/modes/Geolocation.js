@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ReactGA from 'react-ga';
-import { Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import useGeolocation from 'react-hook-geolocation';
@@ -10,51 +10,25 @@ import {
 
 import { CATEGORIES } from '../../enums/gaCategories';
 import { RADIUS_DESCRIPTION } from '../../util';
+import gameModes from '../../enums/modes';
 
 export const Geolocation = () => {
     const geolocationData = useGeolocation();
-    const [playGame, setPlayGame] = useState(false);
-    const [geolocationFormValues, setGeolocationFormValues] = useState({});
     const [radius, setRadius] = useState(1);
 
     const handleChangeRadius = value => {
         setRadius(value);
     };
 
-    if (playGame) {
-        ReactGA.event({
-            category: CATEGORIES.GEOLOCATION,
-            action: 'Play geolocation city game',
-        });
-        return (
-            <Redirect
-                to={{
-                    pathname: '/geolokace',
-                    state: {
-                        radius: Number(radius),
-                        city: geolocationFormValues.city,
-                        mode: 'geolocation',
-                    },
-                }}
-            />
-        );
-    }
-
     // browser is allowed to access user's LAT and LONG
     return geolocationData?.latitude && geolocationData?.longitude ? (
         <Formik
             initialValues={{ radius: 1 }}
             onSubmit={(values, { setSubmitting }) => {
-                setGeolocationFormValues({
-                    ...values,
-                    city: {
-                        coordinates: {
-                            longitude: geolocationData.longitude,
-                            latitude: geolocationData.latitude,
-                        },
-                    },
+                ReactGA.event({
+                    category: CATEGORIES.GEOLOCATION,
+                    action: 'Play geolocation city game',
                 });
-                setPlayGame(true);
             }}
             validationSchema={Yup.object().shape({
                 radius: Yup.number().required('Required'),
@@ -96,7 +70,23 @@ export const Geolocation = () => {
                             km od vaší aktuální polohy.
                         </p>
                         <Button type="primary" disabled={isSubmitting} onClick={handleSubmit}>
-                            Hrát
+                            <Link
+                                to={{
+                                    pathname: '/geolokace',
+                                    state: {
+                                        radius: Number(radius),
+                                        city: {
+                                            coordinates: {
+                                                longitude: geolocationData.longitude,
+                                                latitude: geolocationData.latitude,
+                                            },
+                                        },
+                                        mode: gameModes.geolocation,
+                                    },
+                                }}
+                            >
+                                Hrát
+                            </Link>
                         </Button>
                     </form>
                 );
