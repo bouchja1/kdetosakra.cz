@@ -4,6 +4,7 @@ import { Layout, Typography } from 'antd';
 import { HeartTwoTone, CoffeeOutlined } from '@ant-design/icons';
 import * as Sentry from '@sentry/browser';
 
+import { useLocation } from 'react-router-dom';
 import useScript from './hooks/useScript';
 import useMapLoader from './hooks/useMapLoader';
 import RouterSwitch from './components/RouterSwitch';
@@ -26,6 +27,9 @@ function App() {
     }
     const [loaded, error] = useScript('https://api.mapy.cz/loader.js');
     const [mapLoader] = useMapLoader(loaded);
+    const location = useLocation();
+
+    const { pathname } = location;
 
     return (
         <>
@@ -47,14 +51,18 @@ function App() {
                         <a href="https://api.mapy.cz/">Mapy.cz API</a>
                         {' '}
                     </Text>
-                    {' | '}
-                    <Text>
-                        <a href="https://www.buymeacoffee.com/mmwbwdq" target="_blank">
-                            Kup mi kafe - podpoříš provoz a další vývoj
-                            {' '}
-                            <CoffeeOutlined />
-                        </a>
-                    </Text>
+                    {!pathname.includes('info') && (
+                        <>
+                            {' | '}
+                            <Text>
+                                <a href="https://www.buymeacoffee.com/mmwbwdq" target="_blank">
+                                    Kup mi kafe - podpoříš provoz a další vývoj
+                                    {' '}
+                                    <CoffeeOutlined />
+                                </a>
+                            </Text>
+                        </>
+                    )}
                 </Footer>
             </Layout>
         </>
