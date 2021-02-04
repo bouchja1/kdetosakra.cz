@@ -9,7 +9,6 @@ import useMapLoader from './hooks/useMapLoader';
 import RouterSwitch from './components/RouterSwitch';
 import { KdetosakraProvider } from './context/KdetosakraContext';
 import Menu from './components/Menu';
-import { MAPY_API_URL } from './constants';
 
 const { Footer } = Layout;
 
@@ -24,7 +23,7 @@ function App() {
     if (window._env_.REACT_APP_SENTRY_DNS) {
         Sentry.init({ dsn: window._env_.REACT_APP_SENTRY_DNS });
     }
-    const [loaded, error] = useScript(MAPY_API_URL);
+    const [loaded, error] = useScript('https://api.mapy.cz/loader.js');
     const [mapLoader] = useMapLoader(loaded);
 
     return (

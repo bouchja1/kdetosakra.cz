@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Divider } from 'antd';
 import KdetosakraContext from '../../context/KdetosakraContext';
-import { DEFAUL_MARKER_ICON, DEFAUL_MARKER_PLACE_ICON } from '../../util';
+import { DEFAUL_MARKER_ICON, DEFAUL_MARKER_PLACE_ICON } from '../../constants/icons';
 import useSMapResize from '../../hooks/useSMapResize';
 
 const DEFAULT_MODE_ZOOM = 14;

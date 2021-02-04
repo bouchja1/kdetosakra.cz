@@ -1,25 +1,28 @@
 import React, { useContext, useEffect, useState } from 'react';
-import {
-    Modal, Progress, Button, Typography
-} from 'antd';
 import GuessingMap from '../components/GuessingMap';
 import { crCities } from '../data/cr';
 import KdetosakraContext from '../context/KdetosakraContext';
-import { pointInCircle, roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../util';
-import useWindowHeight from '../hooks/useWindowHeight';
+import { MAX_SCORE_PERCENT, MIN_DISTANCE_FOR_POINTS_RANDOM } from '../constants/game';
 import useSMapResize from '../hooks/useSMapResize';
+import Panorama from '../components/Panorama';
+import RoundResultModal from '../components/RoundResultModal';
 
-const { Title, Paragraph, Text } = Typography;
-
-const MIN_DISTANCE_FOR_POINTS_RANDOM = 250;
-const MAX_SCORE_PERCENT = 100;
-const MAX_PANORAMA_TRIES = 5;
-const DEFAULT_PANORAMA_TOLERANCE = 50;
+const getRandomCzechPlace = () => {
+    let randomCity = crCities[Math.floor(Math.random() * crCities.length)];
+    randomCity = {
+        ...randomCity,
+        coordinates: {
+            latitude: randomCity.latitude,
+            longitude: randomCity.longitude,
+        },
+    };
+    return randomCity;
+};
 
 export const GameScreen = ({ location }) => {
-    const windowHeight = useWindowHeight();
+    const mapyContext = useContext(KdetosakraContext);
     const { width, height } = useSMapResize();
-    const [panorama] = useState(React.createRef());
+
     const [panoramaScene, setPanoramaScene] = useState(null);
     const [totalRoundScore, setTotalRoundScore] = useState(0);
     const [totalRounds, setTotalRounds] = useState(0);
@@ -27,96 +30,40 @@ export const GameScreen = ({ location }) => {
     const [guessedDistance, setGuessedDistance] = useState(null);
     const [guessedPlace, setGuessedPlace] = useState(null);
     const [guessedPoints, setGuessedPoints] = useState([]);
-    const mapyContext = useContext(KdetosakraContext);
-    const [panoramaFounded, setPanoramaFounded] = useState(true);
     const [currentCity, setCurrentCity] = useState(null);
+    const [currentRadius, setCurrentRadius] = useState(null);
     const [resultModalVisible, setResultModalVisible] = useState(false);
+    const [refreshPanorama, setRefreshPanorama] = useState(false);
 
-    const checkPanoramaFounded = () => {
-        setPanoramaFounded(false);
-    };
-
-    const loadPanoramaMap = (radius, locationCity, rerender, counter = 0, panoramaSceneParam = null) => {
-        if (rerender && counter === 0) {
-            while (panorama.current.firstChild) {
-                panorama.current.firstChild.remove();
+    useEffect(() => {
+        if (location?.state) {
+            let { city } = location.state;
+            const { radius, mode } = location.state;
+            if (mode === 'random') {
+                city = getRandomCzechPlace();
             }
+            setCurrentCity(city);
+            setCurrentRadius(radius);
         }
-        const options = {
-            nav: true,
-            blend: 300,
-            pitchRange: [0, 0], // zakazeme vertikalni rozhled
-        };
-        const { SMap } = mapyContext;
+        // TODO add some cleanup maybe
+    }, [mapyContext.loadedMapApi, location]);
 
-        if (SMap) {
-            let panoramaSceneSMap;
-            if (panoramaSceneParam) {
-                panoramaSceneSMap = panoramaSceneParam;
-            } else {
-                panoramaSceneSMap = new SMap.Pano.Scene(panorama.current, options);
-            }
-            // kolem teto pozice chceme nejblizsi panorama
-            const generatedPanoramaPlace = generatePlaceInRadius(radius, locationCity);
-            const position = SMap.Coords.fromWGS84(generatedPanoramaPlace.longitude, generatedPanoramaPlace.latitude);
-            // hledame s toleranci 50m
-            let tolerance = DEFAULT_PANORAMA_TOLERANCE;
-            if (counter > 0) {
-                tolerance = 5000;
-            }
-            SMap.Pano.getBest(position, tolerance)
-                .then(
-                    place => {
-                        panoramaSceneSMap.show(place);
-                        setPanoramaScene(panoramaSceneSMap);
-                    },
-                    () => {
-                        // alert('GuessingMap se nepodařilo zobrazit!');
-                        if (counter < MAX_PANORAMA_TRIES) {
-                            counter += 1;
-                            loadPanoramaMap(radius, locationCity, true, counter, panoramaSceneSMap);
-                        } else {
-                            throw new Error('Panorama was not found');
-                        }
-                    },
-                )
-                .catch(err => {
-                    checkPanoramaFounded(false);
-                });
-        }
+    const makeRefreshPanorama = (radius, city) => {
+        setCurrentCity(city);
+        setCurrentRadius(radius);
+        setRefreshPanorama(true);
     };
 
-    const generateRandomCzechPlace = () => {
-        let randomCity = crCities[Math.floor(Math.random() * crCities.length)];
-        randomCity = {
-            ...randomCity,
-            coordinates: {
-                latitude: randomCity.latitude,
-                longitude: randomCity.longitude,
-            },
-        };
-        setCurrentCity(randomCity);
-        return randomCity;
+    const makePanoramaScene = scene => {
+        setPanoramaScene(scene);
     };
 
-    const generatePlaceInRadius = (radius, locationCity) => {
-        radius *= 1000; // to meters
-        const generatedPlace = pointInCircle(
-            {
-                longitude: locationCity.coordinates.longitude,
-                latitude: locationCity.coordinates.latitude,
-            },
-            radius,
-        );
-        return generatedPlace;
+    const closeModal = () => {
+        setResultModalVisible(false);
     };
 
     const calculateDistance = mapCoordinates => {
         const locationObject = location.state;
-        let { city } = location.state;
-        if (!city) {
-            city = currentCity;
-        }
         // eslint-disable-next-line no-underscore-dangle
         const panoramaCoordinates = panoramaScene._place._data.mark;
         let distance;
@@ -138,7 +85,7 @@ export const GameScreen = ({ location }) => {
             distance = dist;
         }
         if (locationObject.mode === 'random') {
-            const { obec, okres, kraj } = city;
+            const { obec, okres, kraj } = currentCity;
             setGuessedPlace({
                 obec,
                 okres,
@@ -182,29 +129,16 @@ export const GameScreen = ({ location }) => {
         setResultModalVisible(true);
     };
 
-    useEffect(() => {
-        if (location) {
-            let { city } = location.state;
-            const { radius, mode } = location.state;
-            if (mode === 'random') {
-                city = generateRandomCzechPlace();
-            }
-            if (mapyContext.loadedMapApi) {
-                loadPanoramaMap(radius, city, false);
-            }
-        }
-        // TODO add some cleanup maybe
-    }, [mapyContext.loadedMapApi, location]);
-
     return (
         <>
-            <div className="panorama-container" style={{ height: windowHeight - 130 }}>
-                {!panoramaFounded ? (
-                    <p>V okruhu 5 km od vašeho místa nebylo nalezeno žádné panorama.</p>
-                ) : (
-                    <div ref={panorama} />
-                )}
-            </div>
+            <Panorama
+                city={currentCity}
+                radius={currentRadius}
+                refresh={refreshPanorama}
+                makeRefreshPanorama={makeRefreshPanorama}
+                panoramaScene={panoramaScene}
+                makePanoramaScene={makePanoramaScene}
+            />
             <div
                 id="smap-container"
                 className="smap-container"
@@ -214,86 +148,22 @@ export const GameScreen = ({ location }) => {
                 <GuessingMap
                     updateCalculation={updateCalculation}
                     calculateDistance={calculateDistance}
-                    loadPanoramaMap={loadPanoramaMap}
-                    generateRandomCzechPlace={generateRandomCzechPlace}
+                    makeRefreshPanorama={makeRefreshPanorama}
+                    generateRandomCzechPlace={getRandomCzechPlace}
                     totalRoundScore={totalRoundScore}
                     totalRounds={totalRounds}
                     guessedPoints={guessedPoints}
                 />
             </div>
-            <Modal
+            <RoundResultModal
                 visible={resultModalVisible}
-                style={{ top: 20 }}
-                onOk={() => setResultModalVisible(false)}
-                onCancel={() => setResultModalVisible(false)}
-                footer={[
-                    <div className="result-modal-button">
-                        <Button key="submit" type="primary" onClick={() => setResultModalVisible(false)}>
-                            Okej
-                        </Button>
-                    </div>,
-                ]}
-            >
-                <Typography className="result-modal-container">
-                    {totalRounds > 0 ? (
-                        <div className="result-modal-container-item">
-                            <Title level={2}>
-                                Kolo:
-                                {' '}
-                                {totalRounds}
-                                /
-                                {TOTAL_ROUNDS_MAX}
-                            </Title>
-                            {guessedDistance ? (
-                                <Paragraph>
-                                    Vzdušná vzdálenost místa od tvého odhadu:
-                                    {' '}
-                                    <Text className="highlighted">
-                                        {roundToTwoDecimal(guessedDistance)}
-                                        {' '}
-                                        km
-                                    </Text>
-                                </Paragraph>
-                            ) : null}
-                        </div>
-                    ) : null}
-                    {roundScore >= 0 && guessedDistance ? (
-                        <div className="result-modal-container-item">
-                            <Title level={3}>Přesnost v rámci kola</Title>
-                            {roundScore >= 0 && guessedDistance ? <Progress percent={roundScore} /> : null}
-                        </div>
-                    ) : null}
-                    {totalRoundScore >= 0 ? (
-                        <div className="result-modal-container-item">
-                            <Paragraph>
-                                Průběžný počet bodů:
-                                {' '}
-                                <Text className="highlighted">{roundToTwoDecimal(totalRoundScore)}</Text>
-                            </Paragraph>
-                        </div>
-                    ) : null}
-                    {guessedPlace && guessedDistance ? (
-                        <div className="result-modal-container-item">
-                            <Title level={4}>Bližší informace</Title>
-                            <Paragraph>
-                                <Text className="highlighted">Obec:</Text>
-                                {' '}
-                                {guessedPlace.obec}
-                            </Paragraph>
-                            <Paragraph>
-                                <Text className="highlighted">Okres:</Text>
-                                {' '}
-                                {guessedPlace.okres}
-                            </Paragraph>
-                            <Paragraph>
-                                <Text className="highlighted">Kraj:</Text>
-                                {' '}
-                                {guessedPlace.kraj}
-                            </Paragraph>
-                        </div>
-                    ) : null}
-                </Typography>
-            </Modal>
+                closeModal={closeModal}
+                totalRounds={totalRounds}
+                guessedDistance={guessedDistance}
+                roundScore={roundScore}
+                totalRoundScore={totalRoundScore}
+                guessedPlace={guessedPlace}
+            />
         </>
     );
 };

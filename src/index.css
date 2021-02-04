@@ -90,6 +90,7 @@ ul {
 
 .ant-card {
     width: 375px !important;
+    margin: 0 1px 0 1px !important;
 }
 
 .ant-card-bordered {

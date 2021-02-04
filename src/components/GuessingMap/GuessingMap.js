@@ -3,13 +3,9 @@ import { useLocation, Redirect } from 'react-router-dom';
 import { useLocalStorage } from '@rehooks/local-storage';
 import { Button } from 'antd';
 import KdetosakraContext from '../../context/KdetosakraContext';
-import {
-    DEFAUL_MARKER_PLACE_ICON,
-    DEFAUL_MARKER_ICON,
-    roundToTwoDecimal,
-    TOTAL_ROUNDS_MAX,
-    generateRandomRadius,
-} from '../../util';
+import { roundToTwoDecimal, generateRandomRadius } from '../../util';
+import { TOTAL_ROUNDS_MAX } from '../../constants/game';
+import { DEFAUL_MARKER_PLACE_ICON, DEFAUL_MARKER_ICON } from '../../constants/icons';
 import { RoundSMapWrapper } from '../SMap/RoundSMapWrapper';
 import { saveRandomScore, saveCityScore } from '../../services/api';
 import { ResultSMapWrapper } from '../SMap/ResultSMapWrapper';
@@ -17,7 +13,7 @@ import { ResultSMapWrapper } from '../SMap/ResultSMapWrapper';
 const GuessingMap = ({
     updateCalculation,
     calculateDistance,
-    loadPanoramaMap,
+    makeRefreshPanorama,
     generateRandomCzechPlace,
     totalRoundScore,
     totalRounds,
@@ -57,7 +53,7 @@ const GuessingMap = ({
             radius = generateRandomRadius();
             city = generateRandomCzechPlace();
         }
-        loadPanoramaMap(radius, city, true);
+        makeRefreshPanorama(radius, city);
         window.scrollTo(0, 0);
     };
 

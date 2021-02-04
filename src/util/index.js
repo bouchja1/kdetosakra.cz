@@ -82,7 +82,4 @@ export const generateRandomRadius = () => {
     return RANDOM_RADIUS_ARRAY[Math.floor(Math.random() * (0, RANDOM_RADIUS_ARRAY.length - 1))];
 };
 
-export const DEFAUL_MARKER_PLACE_ICON = 'https://kdetosakra.cz/questionmark.png';
-export const DEFAUL_MARKER_ICON = 'https://kdetosakra.cz/marker.png';
-export const TOTAL_ROUNDS_MAX = 5;
 export const RADIUS_DESCRIPTION = 'Poloměr kružnice, ve které se náhodně vygeneruje panorama (středem je dle zvoleného módu buď centrum obce nebo vaše poloha).';

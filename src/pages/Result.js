@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
 import { Button, Progress, Typography } from 'antd';
 import { ResultSMapWrapper } from '../components/SMap/ResultSMapWrapper';
-import { roundToTwoDecimal, TOTAL_ROUNDS_MAX } from '../util';
+import { roundToTwoDecimal } from '../util';
+import { TOTAL_ROUNDS_MAX } from '../constants/game';
 
 const { Title } = Typography;
 
