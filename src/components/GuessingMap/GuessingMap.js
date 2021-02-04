@@ -3,19 +3,23 @@ import { useLocation, Link } from 'react-router-dom';
 import { useLocalStorage } from '@rehooks/local-storage';
 import { Button } from 'antd';
 import KdetosakraContext from '../../context/KdetosakraContext';
-import { TOTAL_ROUNDS_MAX } from '../../constants/game';
+import { MAX_SCORE_PERCENT, MIN_DISTANCE_FOR_POINTS_RANDOM, TOTAL_ROUNDS_MAX } from '../../constants/game';
 import { storeResult } from '../../util/result';
 import { DEFAUL_MARKER_PLACE_ICON, DEFAUL_MARKER_ICON } from '../../constants/icons';
 import { RoundSMapWrapper } from '../SMap/RoundSMapWrapper';
 import { ResultSMapWrapper } from '../SMap/ResultSMapWrapper';
+import gameModes from '../../enums/modes';
 
 const GuessingMap = ({
-    updateCalculation,
-    calculateDistance,
+    makeCountScore,
     makeRefreshPanorama,
     totalRoundScore,
     totalRounds,
     guessedPoints,
+    makeRoundResult,
+    panoramaScene,
+    makeGuessedPlace,
+    panoramaLoading,
 }) => {
     const mapyContext = useContext(KdetosakraContext);
     const location = useLocation();
@@ -38,7 +42,7 @@ const GuessingMap = ({
      * Refresh map for a new guessing!
      */
     const refreshMap = () => {
-        makeRefreshPanorama(); // TODO tohle mam pocit, ze nekdy kurvi - ve smyslu, ze to nekdy nepregeneruje mapu - mozna budu muset cekat na promise?
+        makeRefreshPanorama();
         refLayerValue.current.removeAll();
         refVectorLayerSMapValue.current.removeAll();
         setNextRoundButtonVisible(false);
@@ -72,69 +76,13 @@ const GuessingMap = ({
         // }
     };
 
-    const getMapButton = () => {
-        if (totalRounds >= TOTAL_ROUNDS_MAX) {
-            return (
-                <Button
-                    type="primary"
-                    onClick={() => storeResult(
-                            location?.state?.mode,
-                            location?.state?.city.name,
-                            totalRoundScore,
-                            randomUserResultToken,
-                    )}
-                >
-                    <Link
-                        to={{
-                            pathname: '/vysledek',
-                            state: {
-                                totalRoundScore,
-                                guessedPoints,
-                            },
-                        }}
-                    >
-                        Vyhodnotit hru
-                    </Link>
-                </Button>
-            );
-        }
-        return (
-            <>
-                {!nextRoundButtonVisible ? (
-                    <Button
-                        disabled={guessButtonDisabled}
-                        onClick={() => {
-                            calculateCoords();
-                        }}
-                        type="primary"
-                    >
-                        Hádej!
-                    </Button>
-                ) : null}
-                {nextRoundButtonVisible ? (
-                    <Button onClick={() => refreshMap()} type="primary">
-                        Další kolo
-                    </Button>
-                ) : null}
-            </>
-        );
-    };
-
-    const calculateCoords = () => {
+    const drawGuessedDistance = (currentPanoramaPositionPoint, selectedPointOnMap, panoramaCoordinates) => {
         const markerPanoramaOptions = {
             url: DEFAUL_MARKER_PLACE_ICON,
             anchor: { left: 10, bottom: 15 },
         };
-        setGuessButtonDisabled(true);
-        setNextRoundButtonVisible(true);
-        setRoundGuessed(true);
 
-        const panoramaCoordinates = calculateDistance(guessedCoordinates);
-
-        const pointPanorama = mapyContext.SMap.Coords.fromWGS84(panoramaCoordinates.lon, panoramaCoordinates.lat);
-        const pointMap = mapyContext.SMap.Coords.fromWGS84(guessedCoordinates.mapLon, guessedCoordinates.mapLat);
-
-        const guessedVectorPathCoordinates = [pointPanorama, pointMap];
+        const guessedVectorPathCoordinates = [currentPanoramaPositionPoint, selectedPointOnMap];
         const vectorPathOptions = {
             color: '#f00',
             width: 3,
@@ -153,7 +101,82 @@ const GuessingMap = ({
             markerPanoramaOptions,
         );
         refLayerValue.current.addMarker(markerPanorama);
-        updateCalculation({ pointPanorama, pointMap });
+    };
+
+    const calculateScore = distance => {
+        const { radius, mode } = location.state;
+        let minDistanceForPoints;
+        if (mode === gameModes.random) {
+            minDistanceForPoints = MIN_DISTANCE_FOR_POINTS_RANDOM;
+        } else {
+            minDistanceForPoints = radius + 2;
+        }
+        let score;
+        // distance less than 20 meters
+        if (distance < 0.2) {
+            score = 100;
+        } else {
+            score = (minDistanceForPoints - distance) / (minDistanceForPoints / MAX_SCORE_PERCENT);
+            if (score < 0) {
+                score = 0;
+            } else {
+                score = score ** 2 / MAX_SCORE_PERCENT + distance / minDistanceForPoints;
+                score = Math.max(0, score);
+                score = Math.min(MAX_SCORE_PERCENT, score);
+            }
+        }
+        makeRoundResult(score, distance);
+    };
+
+    const calculateDistance = () => {
+        const locationObject = location.state;
+        // eslint-disable-next-line no-underscore-dangle
+        const panoramaCoordinates = panoramaScene._place._data.mark;
+        let distance;
+        if (
+            panoramaCoordinates.lat === guessedCoordinates.mapLat
+            && panoramaCoordinates.lon === guessedCoordinates.mapLon
+        ) {
+            distance = 0;
+        } else {
+            const radlat1 = (Math.PI * panoramaCoordinates.lat) / 180;
+            const radlat2 = (Math.PI * guessedCoordinates.mapLat) / 180;
+            const theta = panoramaCoordinates.lon - guessedCoordinates.mapLon;
+            const radtheta = (Math.PI * theta) / 180;
+            let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+            if (dist > 1) {
+                dist = 1;
+            }
+            dist = Math.acos(dist);
+            dist = (dist * 180) / Math.PI;
+            dist = dist * 60 * 1.1515;
+            dist *= 1.609344; // convert to kilometers
+            distance = dist;
+        }
+        if (locationObject.mode === gameModes.random) {
+            makeGuessedPlace();
+        }
+        calculateScore(distance);
+        return panoramaCoordinates;
+    };
+
+    const calculateCoordsAndDrawGuess = () => {
+        setGuessButtonDisabled(true);
+        setNextRoundButtonVisible(true);
+        setRoundGuessed(true);
+
+        const panoramaCoordinates = calculateDistance();
+
+        const currentPanoramaPositionPoint = mapyContext.SMap.Coords.fromWGS84(
+            panoramaCoordinates.lon,
+            panoramaCoordinates.lat,
+        );
+        const selectedPointOnMap = mapyContext.SMap.Coords.fromWGS84(
+            guessedCoordinates.mapLon,
+            guessedCoordinates.mapLat,
+        );
+        drawGuessedDistance(currentPanoramaPositionPoint, selectedPointOnMap, panoramaCoordinates);
+        makeCountScore({ pointPanorama: currentPanoramaPositionPoint, pointMap: selectedPointOnMap });
     };
 
     return (
@@ -168,7 +191,48 @@ const GuessingMap = ({
             ) : (
                 <ResultSMapWrapper guessedPoints={[guessedPoints[guessedPoints.length - 1]]} />
             )}
-            {getMapButton()}
+            {totalRounds >= TOTAL_ROUNDS_MAX ? (
+                <Button
+                    type="primary"
+                    onClick={() => storeResult(
+                            location?.state?.mode,
+                            location?.state?.city?.name,
+                            totalRoundScore,
+                            randomUserResultToken,
+                    )}
+                >
+                    <Link
+                        to={{
+                            pathname: '/vysledek',
+                            state: {
+                                totalRoundScore,
+                                guessedPoints,
+                            },
+                        }}
+                    >
+                        Vyhodnotit hru
+                    </Link>
+                </Button>
+            ) : (
+                <>
+                    {!nextRoundButtonVisible ? (
+                        <Button
+                            disabled={guessButtonDisabled || panoramaLoading}
+                            onClick={() => {
+                                calculateCoordsAndDrawGuess();
+                            }}
+                            type="primary"
+                        >
+                            Hádej!
+                        </Button>
+                    ) : null}
+                    {nextRoundButtonVisible ? (
+                        <Button onClick={() => refreshMap()} type="primary">
+                            Další kolo
+                        </Button>
+                    ) : null}
+                </>
+            )}
         </>
     );
 };

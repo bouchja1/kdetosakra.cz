@@ -177,6 +177,10 @@ label {
     justify-content: center;
 }
 
+.ant-spin-nested-loading {
+    width: 100% !important;
+}
+
 .panorama-container {
     width: 100%;
     display: flex;

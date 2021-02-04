@@ -1,50 +1,33 @@
-import React, {
-    useContext, useEffect, useRef, useState
-} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { Spin } from 'antd';
 import useWindowHeight from '../../hooks/useWindowHeight';
 import KdetosakraContext from '../../context/KdetosakraContext';
 import { DEFAULT_PANORAMA_TOLERANCE, MAX_PANORAMA_TRIES } from '../../constants/game';
-import { pointInCircle } from '../../util';
 
-const panoramaSceneOptions = {
+export const panoramaSceneOptions = {
     nav: true,
     blend: 300,
     pitchRange: [0, 0], // zakazeme vertikalni rozhled
 };
 
-const generatePlaceInRadius = (radius, locationCity) => {
-    radius *= 1000; // to meters
-    const generatedPlace = pointInCircle(
-        {
-            longitude: locationCity.coordinates.longitude,
-            latitude: locationCity.coordinates.latitude,
-        },
-        radius,
-    );
-    return generatedPlace;
-};
-
 const Panorama = ({
-    radius, city, refresh, makeRefreshPanorama, panoramaScene, makePanoramaScene,
+    makeRefreshPanorama,
+    panoramaScene,
+    refPanoramaView,
+    panoramaPlace,
+    panoramaLoading,
+    makeSetPanoramaLoading,
 }) => {
     const mapyContext = useContext(KdetosakraContext);
     const windowHeight = useWindowHeight();
-    const panoramaView = useRef();
     const [findPanoramaTriesCounter, setFindPanoramaTriesCounter] = useState(0);
     const [panoramaFounded, setPanoramaFounded] = useState(true);
 
     useEffect(() => {
-        if (mapyContext.loadedMapApi && !panoramaScene) {
-            makePanoramaScene(new mapyContext.SMap.Pano.Scene(panoramaView.current, panoramaSceneOptions));
-        }
-    }, [mapyContext.loadedMapApi]);
-
-    useEffect(() => {
-        if (mapyContext.loadedMapApi && radius && city && panoramaScene) {
+        if (mapyContext.loadedMapApi && panoramaPlace && panoramaScene) {
             const { SMap } = mapyContext;
             // kolem teto pozice chceme nejblizsi panorama
-            const generatedPanoramaPlace = generatePlaceInRadius(radius, city);
-            const position = SMap.Coords.fromWGS84(generatedPanoramaPlace.longitude, generatedPanoramaPlace.latitude);
+            const position = SMap.Coords.fromWGS84(panoramaPlace.longitude, panoramaPlace.latitude);
             // hledame s toleranci 50m
             let tolerance = DEFAULT_PANORAMA_TOLERANCE;
             if (findPanoramaTriesCounter > 0) {
@@ -56,7 +39,7 @@ const Panorama = ({
                     .then(
                         place => {
                             panoramaScene.show(place);
-                            // TODO dodelat tady nejaky indikator, ze je to uz nacteno a zrusit loading
+                            makeSetPanoramaLoading(false);
                         },
                         () => {
                             // panorama could not be shown
@@ -72,19 +55,21 @@ const Panorama = ({
                         setPanoramaFounded(false);
                     });
             };
-
             getBestPanorama();
         }
-    }, [radius, city, mapyContext.loadedMapApi, panoramaScene, refresh]);
+    }, [mapyContext.loadedMapApi, panoramaScene, panoramaPlace]);
 
     return (
-        <div className="panorama-container" style={{ height: windowHeight - 130 }}>
-            {!panoramaFounded ? (
-                <p>V okruhu 5 km od vašeho místa nebylo nalezeno žádné panorama.</p>
-            ) : (
-                <div ref={panoramaView} />
-            )}
-        </div>
+        <Spin tip="Načítám panorama..." spinning={panoramaLoading}>
+            {' '}
+            <div className="panorama-container" style={{ height: windowHeight - 130 }}>
+                {!panoramaFounded ? (
+                    <p>V okruhu 5 km od vašeho místa nebylo nalezeno žádné panorama.</p>
+                ) : (
+                    <div ref={refPanoramaView} />
+                )}
+            </div>
+        </Spin>
     );
 };
 

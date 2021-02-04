@@ -1,3 +1,5 @@
+import { crCities } from '../data/cr';
+
 const EARTH_RADIUS = 6371000; /* meters  */
 const DEG_TO_RAD = Math.PI / 180.0;
 const THREE_PI = Math.PI * 3;
@@ -80,6 +82,30 @@ export const decryptEmail = encoded => {
 export const generateRandomRadius = () => {
     const RANDOM_RADIUS_ARRAY = [0.05, 0.1, 0.3, 0.5, 1.0];
     return RANDOM_RADIUS_ARRAY[Math.floor(Math.random() * (0, RANDOM_RADIUS_ARRAY.length - 1))];
+};
+
+export const getRandomCzechPlace = () => {
+    let randomCity = crCities[Math.floor(Math.random() * crCities.length)];
+    randomCity = {
+        ...randomCity,
+        coordinates: {
+            latitude: randomCity.latitude,
+            longitude: randomCity.longitude,
+        },
+    };
+    return randomCity;
+};
+
+export const generatePlaceInRadius = (radius, locationCity) => {
+    radius *= 1000; // to meters
+    const generatedPlace = pointInCircle(
+        {
+            longitude: locationCity.coordinates.longitude,
+            latitude: locationCity.coordinates.latitude,
+        },
+        radius,
+    );
+    return generatedPlace;
 };
 
 export const RADIUS_DESCRIPTION = 'Poloměr kružnice, ve které se náhodně vygeneruje panorama (středem je dle zvoleného módu buď centrum obce nebo vaše poloha).';
