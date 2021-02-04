@@ -13,6 +13,8 @@
     "crypto-random-string": "^3.2.0",
     "customize-cra": "^0.9.1",
     "dotenv": "^8.2.0",
+    "firebase": "^8.2.5",
+    "firebaseui": "^4.7.3",
     "formik": "^2.2.6",
     "husky": "^4.3.6",
     "less": "^3.11.1",
@@ -68,8 +70,8 @@
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.1.0",
     "eslint-config-prettier": "^6.10.1",
-    "eslint-plugin-json": "^2.1.2",
     "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-json": "^2.1.2",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^2.5.1"

@@ -1,9 +1,11 @@
 import React from 'react';
-import { GithubOutlined, MailOutlined } from '@ant-design/icons';
+import { GithubOutlined } from '@ant-design/icons';
 import { Typography, Layout } from 'antd';
 import { Link } from 'react-router-dom';
 import { decryptEmail, generateRandomRadius } from '../util';
 import gameModes from '../enums/modes';
+import FirebaseAuth from '../components/FirebaseAuth';
+import { firebaseUiConfig } from '../constants/firebase';
 
 const { Content } = Layout;
 const { Title, Paragraph, Text } = Typography;
@@ -91,6 +93,7 @@ export const Info = () => {
                     ✉️.
                 </Paragraph>
             </Typography>
+            <FirebaseAuth uiConfig={firebaseUiConfig} />
         </Content>
     );
 };

@@ -10,6 +10,7 @@ import useMapLoader from './hooks/useMapLoader';
 import RouterSwitch from './components/RouterSwitch';
 import { KdetosakraProvider } from './context/KdetosakraContext';
 import Menu from './components/Menu';
+import './services/firebase';
 
 const { Footer } = Layout;
 const { Text } = Typography;
