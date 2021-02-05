@@ -4,7 +4,7 @@ export default function useGameMenuResize() {
     useEffect(() => {
         const menuContainerElement = window.document.getElementById('menu-container');
         menuContainerElement.classList.add('game-menu');
-        const menuLogoElement = document.querySelector('#menu-container > div > div:nth-child(2) > img');
+        const menuLogoElement = document.querySelector('#menu-container > img');
         menuLogoElement.classList.add('logo-not-displayed');
         return () => {
             menuContainerElement.classList.remove('game-menu');

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Card, Typography } from 'antd';
+import { Button, Card, Typography } from 'antd';
 import cryptoRandomString from 'crypto-random-string';
 import { writeStorage, useLocalStorage } from '@rehooks/local-storage';
 import {

@@ -6,13 +6,16 @@ import ReactGA from 'react-ga';
 import {
     Button, Row, Col, Slider, InputNumber, Tooltip
 } from 'antd';
-import KdetosakraContext from '../../context/KdetosakraContext';
+import { useDispatch } from 'react-redux';
+import MapyCzContext from '../../context/MapyCzContext';
 import { CATEGORIES } from '../../enums/gaCategories';
 import gameModes from '../../enums/modes';
 import { RADIUS_DESCRIPTION } from '../../util';
+import { setCurrentGame } from '../../redux/actions/game';
 
 export const CustomPlace = () => {
-    const mapyContext = useContext(KdetosakraContext);
+    const dispatch = useDispatch();
+    const mapyContext = useContext(MapyCzContext);
     const suggestInput = useRef();
     const [selectedPlaceData, setSelectedPlaceData] = useState(null);
     const [radius, setRadius] = useState(1);
@@ -79,16 +82,18 @@ export const CustomPlace = () => {
             </p>
             <Button
                 disabled={!selectedPlaceData}
+                className="button-play"
                 type="primary"
-                onClick={() => ReactGA.event({
-                    category: CATEGORIES.SUGGESTED,
-                    action: 'Play suggested city game',
-                })}
-            >
-                <Link
-                    to={{
-                        pathname: '/vlastni',
-                        state: {
+                onClick={() => {
+                    ReactGA.event({
+                        category: CATEGORIES.SUGGESTED,
+                        action: 'Play suggested city game',
+                    });
+                    dispatch(
+                        setCurrentGame({
+                            mode: gameModes.custom,
+                            round: 1,
+                            totalScore: 0,
                             radius: Number(radius),
                             city: {
                                 coordinates: {
@@ -98,11 +103,33 @@ export const CustomPlace = () => {
                                 place: selectedPlaceData?.data?.title,
                                 info: selectedPlaceData?.data?.secondRow,
                             },
-                            mode: gameModes.custom,
-                        },
+                        }),
+                    );
+                }}
+            >
+                <Link
+                    to={{
+                        pathname: '/vlastni',
                     }}
                 >
                     Hrát
+                </Link>
+            </Button>
+            <Button
+                disabled={!selectedPlaceData}
+                className="button-play"
+                type="primary"
+                onClick={() => ReactGA.event({
+                    category: CATEGORIES.SUGGESTED,
+                    action: 'Play suggested city game',
+                })}
+            >
+                <Link
+                    to={{
+                        pathname: '/vlastni',
+                    }}
+                >
+                    Hrát proti přátelům
                 </Link>
             </Button>
         </form>

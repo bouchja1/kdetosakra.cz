@@ -4,7 +4,6 @@ import { Typography, Layout } from 'antd';
 import { Link } from 'react-router-dom';
 import { decryptEmail, generateRandomRadius } from '../util';
 import gameModes from '../enums/modes';
-import FirebaseAuth from '../components/FirebaseAuth';
 import { firebaseUiConfig } from '../constants/firebase';
 
 const { Content } = Layout;
@@ -67,11 +66,6 @@ export const Info = () => {
                     <Link
                         to={{
                             pathname: '/nahodne',
-                            state: {
-                                radius: generateRandomRadius(),
-                                city: null,
-                                mode: gameModes.random,
-                            },
                         }}
                     >
                         Náhodné místo v Česku
@@ -93,7 +87,6 @@ export const Info = () => {
                     ✉️.
                 </Paragraph>
             </Typography>
-            <FirebaseAuth uiConfig={firebaseUiConfig} />
         </Content>
     );
 };

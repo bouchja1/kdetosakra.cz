@@ -4,16 +4,19 @@ import {
     Button, Col, InputNumber, Row, Select, Slider, Tooltip
 } from 'antd';
 import { Redirect } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { cities } from '../../data/cities';
 import { CATEGORIES } from '../../enums/gaCategories';
 import { RADIUS_DESCRIPTION } from '../../util';
 import gameModes from '../../enums/modes';
+import { setCurrentGame } from '../../redux/actions/game';
 
 const { Option } = Select;
 
 export const RegionCity = () => {
+    const dispatch = useDispatch();
     const [citySelected, setCitySelected] = useState(null);
     const [maxCityRadius, setMaxCityRadius] = useState(null);
     const [playGame, setPlayGame] = useState(false);
@@ -53,19 +56,10 @@ export const RegionCity = () => {
         const selectedCity = cities.filter(city => {
             return city.name === selectedCityData.city;
         });
-        ReactGA.event({
-            category: CATEGORIES.CITY,
-            action: 'Play city game',
-        });
         return (
             <Redirect
                 to={{
                     pathname: '/mesto',
-                    state: {
-                        radius: Number(radius),
-                        city: selectedCity[0],
-                        mode: gameModes.city,
-                    },
                 }}
             />
         );
@@ -75,7 +69,23 @@ export const RegionCity = () => {
         <Formik
             initialValues={{ radius: 1, city: '' }}
             onSubmit={(values, { setSubmitting }) => {
+                ReactGA.event({
+                    category: CATEGORIES.CITY,
+                    action: 'Play city game',
+                });
                 setSelectedCityData(values);
+                const selectedCity = cities.filter(city => {
+                    return city.name === values.city;
+                });
+                dispatch(
+                    setCurrentGame({
+                        mode: gameModes.city,
+                        round: 1,
+                        totalScore: 0,
+                        radius: Number(radius),
+                        city: selectedCity[0],
+                    }),
+                );
                 setPlayGame(true);
             }}
             validationSchema={Yup.object().shape({
@@ -136,8 +146,21 @@ export const RegionCity = () => {
                                     {' '}
                                     km od středu krajského města.
                                 </p>
-                                <Button type="primary" disabled={isSubmitting} onClick={handleSubmit}>
-                                    Hrát
+                                <Button
+                                    className="button-play"
+                                    type="primary"
+                                    disabled={isSubmitting}
+                                    onClick={handleSubmit}
+                                >
+                                    Hrát sám
+                                </Button>
+                                <Button
+                                    className="button-play"
+                                    type="primary"
+                                    disabled={isSubmitting}
+                                    onClick={handleSubmit}
+                                >
+                                    Hrát proti přátelům
                                 </Button>
                             </div>
                         ) : null}

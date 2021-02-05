@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Spin } from 'antd';
 import useWindowHeight from '../../hooks/useWindowHeight';
-import KdetosakraContext from '../../context/KdetosakraContext';
+import MapyCzContext from '../../context/MapyCzContext';
 import { DEFAULT_PANORAMA_TOLERANCE, MAX_PANORAMA_TRIES } from '../../constants/game';
 
 export const panoramaSceneOptions = {
@@ -18,7 +18,7 @@ const Panorama = ({
     panoramaLoading,
     makeSetPanoramaLoading,
 }) => {
-    const mapyContext = useContext(KdetosakraContext);
+    const mapyContext = useContext(MapyCzContext);
     const windowHeight = useWindowHeight();
     const [findPanoramaTriesCounter, setFindPanoramaTriesCounter] = useState(0);
     const [panoramaFounded, setPanoramaFounded] = useState(true);

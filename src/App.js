@@ -1,16 +1,19 @@
+import './services/firebase';
 import React from 'react';
+import { PersistGate } from 'redux-persist/integration/react';
 import ReactGA from 'react-ga';
+import { Provider } from 'react-redux';
 import { Layout, Typography } from 'antd';
 import { HeartTwoTone, CoffeeOutlined } from '@ant-design/icons';
 import * as Sentry from '@sentry/browser';
-
 import { useLocation } from 'react-router-dom';
+
+import store, { persistor } from './redux/store';
 import useScript from './hooks/useScript';
 import useMapLoader from './hooks/useMapLoader';
 import RouterSwitch from './components/RouterSwitch';
-import { KdetosakraProvider } from './context/KdetosakraContext';
+import { MapyCzProvider } from './context/MapyCzContext';
 import Menu from './components/Menu';
-import './services/firebase';
 
 const { Footer } = Layout;
 const { Text } = Typography;
@@ -33,40 +36,42 @@ function App() {
     const { pathname } = location;
 
     return (
-        <>
-            <Menu />
-            <Layout className="layout">
-                {loaded && !error && (
-                    <KdetosakraProvider value={mapLoader}>
-                        <RouterSwitch />
-                    </KdetosakraProvider>
-                )}
-                <Footer style={{ textAlign: 'center', fontSize: '14px' }}>
-                    <Text>
-                        Postaveno s
-                        {' '}
-                        <HeartTwoTone twoToneColor="#eb2f96" />
-                        {' '}
-                        na
-                        {' '}
-                        <a href="https://api.mapy.cz/">Mapy.cz API</a>
-                        {' '}
-                    </Text>
-                    {!pathname.includes('info') && (
-                        <>
-                            {' | '}
-                            <Text>
-                                <a href="https://www.buymeacoffee.com/mmwbwdq" target="_blank">
-                                    Kup mi kafe - podpoříš provoz a další vývoj
-                                    {' '}
-                                    <CoffeeOutlined />
-                                </a>
-                            </Text>
-                        </>
+        <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+                <Menu />
+                <Layout className="layout">
+                    {loaded && !error && (
+                        <MapyCzProvider value={mapLoader}>
+                            <RouterSwitch />
+                        </MapyCzProvider>
                     )}
-                </Footer>
-            </Layout>
-        </>
+                    <Footer style={{ textAlign: 'center', fontSize: '14px' }}>
+                        <Text>
+                            Postaveno s
+                            {' '}
+                            <HeartTwoTone twoToneColor="#eb2f96" />
+                            {' '}
+                            na
+                            {' '}
+                            <a href="https://api.mapy.cz/">Mapy.cz API</a>
+                            {' '}
+                        </Text>
+                        {!pathname.includes('info') && (
+                            <>
+                                {' | '}
+                                <Text>
+                                    <a href="https://www.buymeacoffee.com/mmwbwdq" target="_blank">
+                                        Kup mi kafe - podpoříš provoz a další rozvoj
+                                        {' '}
+                                        <CoffeeOutlined />
+                                    </a>
+                                </Text>
+                            </>
+                        )}
+                    </Footer>
+                </Layout>
+            </PersistGate>
+        </Provider>
     );
 }
 

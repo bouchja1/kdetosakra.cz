@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Divider } from 'antd';
-import KdetosakraContext from '../../context/KdetosakraContext';
+import MapyCzContext from '../../context/MapyCzContext';
 import { DEFAUL_MARKER_ICON, MARKER_PLACE_ICON_KDETOSAKRA } from '../../constants/icons';
 import useSMapResize from '../../hooks/useSMapResize';
 import gameModes from '../../enums/modes';
@@ -30,7 +30,7 @@ const SMap = ({
     const location = useLocation();
     const { width } = useSMapResize();
     const map = useRef();
-    const mapyContext = useContext(KdetosakraContext);
+    const mapyContext = useContext(MapyCzContext);
 
     useEffect(() => {
         if (mapyContext.loadedMapApi) {
@@ -169,7 +169,11 @@ const SMap = ({
     return (
         <>
             {width <= 961 ? <Divider /> : null}
-            <div id="smap" className={width > 960 ? 'smap smap-style' : 'smap'} ref={map} />
+            <div
+                id="smap"
+                className={`${width > 960 ? 'smap smap-style' : 'smap'} ${type === 'result' ? 'smap-result' : ''}`}
+                ref={map}
+            />
         </>
     );
 };

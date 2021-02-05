@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import useGeolocation from 'react-hook-geolocation';
+import { useDispatch } from 'react-redux';
 import {
     Button, Col, InputNumber, Row, Slider, Tooltip
 } from 'antd';
@@ -11,8 +12,10 @@ import {
 import { CATEGORIES } from '../../enums/gaCategories';
 import { RADIUS_DESCRIPTION } from '../../util';
 import gameModes from '../../enums/modes';
+import { setCurrentGame } from '../../redux/actions/game';
 
 export const Geolocation = () => {
+    const dispatch = useDispatch();
     const geolocationData = useGeolocation();
     const [radius, setRadius] = useState(1);
 
@@ -29,6 +32,20 @@ export const Geolocation = () => {
                     category: CATEGORIES.GEOLOCATION,
                     action: 'Play geolocation city game',
                 });
+                dispatch(
+                    setCurrentGame({
+                        mode: gameModes.geolocation,
+                        round: 1,
+                        totalScore: 0,
+                        radius: Number(radius),
+                        city: {
+                            coordinates: {
+                                longitude: geolocationData.longitude,
+                                latitude: geolocationData.latitude,
+                            },
+                        },
+                    }),
+                );
             }}
             validationSchema={Yup.object().shape({
                 radius: Yup.number().required('Required'),
@@ -73,16 +90,6 @@ export const Geolocation = () => {
                             <Link
                                 to={{
                                     pathname: '/geolokace',
-                                    state: {
-                                        radius: Number(radius),
-                                        city: {
-                                            coordinates: {
-                                                longitude: geolocationData.longitude,
-                                                latitude: geolocationData.latitude,
-                                            },
-                                        },
-                                        mode: gameModes.geolocation,
-                                    },
                                 }}
                             >
                                 Hrát

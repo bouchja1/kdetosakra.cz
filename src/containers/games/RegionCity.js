@@ -1,19 +1,23 @@
 import React from 'react';
-import { Redirect, useLocation } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { Layout } from 'antd';
+import { useSelector } from 'react-redux';
 import { GameScreen } from '../GameScreen';
 import useGameMenuResize from '../../hooks/useGameMenuResize';
+import gameModes from '../../enums/modes';
 
 const { Content } = Layout;
 
 export const RegionCity = () => {
-    const location = useLocation();
     useGameMenuResize();
+    const currentGame = useSelector(state => state.game.currentGame);
 
-    if (location?.state?.radius && location?.state?.city) {
+    const { mode, radius, city } = currentGame;
+
+    if (radius && mode === gameModes.city && city) {
         return (
             <Content>
-                <GameScreen location={location} />
+                <GameScreen mode={mode} radius={radius} city={city} />
             </Content>
         );
     }

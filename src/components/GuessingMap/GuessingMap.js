@@ -1,19 +1,19 @@
 import React, { useState, useContext, useRef } from 'react';
-import { useLocation, Link } from 'react-router-dom';
-import { useLocalStorage } from '@rehooks/local-storage';
+import { Link } from 'react-router-dom';
 import { Button } from 'antd';
-import KdetosakraContext from '../../context/KdetosakraContext';
+import { useDispatch, useSelector } from 'react-redux';
+import MapyCzContext from '../../context/MapyCzContext';
 import { MAX_SCORE_PERCENT, MIN_DISTANCE_FOR_POINTS_RANDOM, TOTAL_ROUNDS_MAX } from '../../constants/game';
-import { storeResult } from '../../util/result';
 import { MARKER_PLACE_ICON_KDETOSAKRA, DEFAUL_MARKER_ICON } from '../../constants/icons';
+import { setLastResult } from '../../redux/actions/result';
 import { RoundSMapWrapper } from '../SMap/RoundSMapWrapper';
 import { ResultSMapWrapper } from '../SMap/ResultSMapWrapper';
 import gameModes from '../../enums/modes';
+import { setTotalRoundCounter } from '../../redux/actions/game';
 
 const GuessingMap = ({
     makeCountScore,
     makeRefreshPanorama,
-    totalRoundScore,
     totalRounds,
     guessedPoints,
     makeRoundResult,
@@ -21,9 +21,9 @@ const GuessingMap = ({
     makeGuessedPlace,
     panoramaLoading,
 }) => {
-    const mapyContext = useContext(KdetosakraContext);
-    const location = useLocation();
-    const [randomUserResultToken] = useLocalStorage('randomUserResultToken'); // send the key to be tracked.
+    const dispatch = useDispatch();
+    const mapyContext = useContext(MapyCzContext);
+    const currentGame = useSelector(state => state.game.currentGame);
 
     const [roundGuessed, setRoundGuessed] = useState(false);
 
@@ -37,6 +37,10 @@ const GuessingMap = ({
         mapLon: 0,
         mapLat: 0,
     });
+
+    const {
+        mode, radius, city, totalScore, round,
+    } = currentGame;
 
     /**
      * Refresh map for a new guessing!
@@ -104,7 +108,6 @@ const GuessingMap = ({
     };
 
     const calculateScore = distance => {
-        const { radius, mode } = location.state;
         let minDistanceForPoints;
         if (mode === gameModes.random) {
             minDistanceForPoints = MIN_DISTANCE_FOR_POINTS_RANDOM;
@@ -129,7 +132,6 @@ const GuessingMap = ({
     };
 
     const calculateDistance = () => {
-        const locationObject = location.state;
         // eslint-disable-next-line no-underscore-dangle
         const panoramaCoordinates = panoramaScene._place._data.mark;
         let distance;
@@ -153,7 +155,7 @@ const GuessingMap = ({
             dist *= 1.609344; // convert to kilometers
             distance = dist;
         }
-        if (locationObject.mode === gameModes.random) {
+        if (mode === gameModes.random) {
             makeGuessedPlace();
         }
         calculateScore(distance);
@@ -191,23 +193,17 @@ const GuessingMap = ({
             ) : (
                 <ResultSMapWrapper guessedPoints={[guessedPoints[guessedPoints.length - 1]]} />
             )}
-            {totalRounds >= TOTAL_ROUNDS_MAX ? (
+            {totalRounds >= TOTAL_ROUNDS_MAX && roundGuessed ? (
                 <Button
                     type="primary"
-                    onClick={() => storeResult(
-                            location?.state?.mode,
-                            location?.state?.city?.name,
-                            totalRoundScore,
-                            randomUserResultToken,
-                    )}
+                    onClick={() => {
+                        // storeResult(mode, city?.name, totalRoundScore, randomUserResultToken) // not used now
+                        dispatch(setLastResult({ guessedPoints, totalScore }));
+                    }}
                 >
                     <Link
                         to={{
                             pathname: '/vysledek',
-                            state: {
-                                totalRoundScore,
-                                guessedPoints,
-                            },
                         }}
                     >
                         Vyhodnotit hru
@@ -227,7 +223,15 @@ const GuessingMap = ({
                         </Button>
                     ) : null}
                     {nextRoundButtonVisible ? (
-                        <Button onClick={() => refreshMap()} type="primary">
+                        <Button
+                            onClick={() => {
+                                refreshMap();
+                                if (round < TOTAL_ROUNDS_MAX) {
+                                    dispatch(setTotalRoundCounter(round + 1));
+                                }
+                            }}
+                            type="primary"
+                        >
                             Další kolo
                         </Button>
                     ) : null}

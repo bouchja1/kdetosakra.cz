@@ -1,22 +1,26 @@
 import React, {
     useContext, useEffect, useRef, useState
 } from 'react';
+import { ResizableBox } from 'react-resizable';
+import 'react-resizable/css/styles.css';
+import { useDispatch, useSelector } from 'react-redux';
 import GuessingMap from '../components/GuessingMap';
-import KdetosakraContext from '../context/KdetosakraContext';
+import MapyCzContext from '../context/MapyCzContext';
+import { setTotalRoundScore, setTotalRoundCounter } from '../redux/actions/game';
 import useSMapResize from '../hooks/useSMapResize';
 import Panorama, { panoramaSceneOptions } from '../components/Panorama';
 import { generatePlaceInRadius, generateRandomRadius, getRandomCzechPlace } from '../util';
 import RoundResultModal from '../components/RoundResultModal';
 import gameModes from '../enums/modes';
 
-export const GameScreen = ({ location }) => {
-    const mapyContext = useContext(KdetosakraContext);
+export const GameScreen = ({ mode, radius, city }) => {
+    const dispatch = useDispatch();
+    const mapyContext = useContext(MapyCzContext);
     const { width, height } = useSMapResize();
     const refPanoramaView = useRef();
+    const currentGame = useSelector(state => state.game.currentGame);
 
     const [panoramaScene, setPanoramaScene] = useState(null);
-    const [totalRoundScore, setTotalRoundScore] = useState(0);
-    const [totalRounds, setTotalRounds] = useState(0);
     const [roundScore, setRoundScore] = useState(0);
     const [guessedDistance, setGuessedDistance] = useState(null);
     const [guessedPlace, setGuessedPlace] = useState(null);
@@ -26,6 +30,8 @@ export const GameScreen = ({ location }) => {
     const [panoramaPlace, setPanoramaPlace] = useState(null);
     const [panoramaLoading, setPanoramaLoading] = useState(false);
 
+    const { round, totalScore } = currentGame;
+
     useEffect(() => {
         if (mapyContext.loadedMapApi) {
             setPanoramaScene(new mapyContext.SMap.Pano.Scene(refPanoramaView.current, panoramaSceneOptions));
@@ -33,18 +39,13 @@ export const GameScreen = ({ location }) => {
     }, [mapyContext.loadedMapApi]);
 
     useEffect(() => {
-        if (location?.state) {
-            let { city } = location.state;
-            const { radius, mode } = location.state;
-            if (mode === gameModes.random) {
-                city = getRandomCzechPlace();
-            }
-            // init panorama
-            setPanoramaPlace(generatePlaceInRadius(radius, city));
-            setCurrentCity(city);
+        if (mode === gameModes.random) {
+            city = getRandomCzechPlace();
         }
-        // TODO add some cleanup maybe
-    }, [mapyContext.loadedMapApi, location]);
+        // init panorama
+        setPanoramaPlace(generatePlaceInRadius(radius, city));
+        setCurrentCity(city);
+    }, [mapyContext.loadedMapApi, mode, radius, city]);
 
     const makeSetPanoramaLoading = loading => {
         setPanoramaLoading(loading);
@@ -52,7 +53,6 @@ export const GameScreen = ({ location }) => {
 
     const makeRefreshPanorama = () => {
         setPanoramaLoading(true);
-        let { radius, city, mode } = location.state;
         if (mode === gameModes.random) {
             radius = generateRandomRadius();
             city = getRandomCzechPlace();
@@ -64,8 +64,7 @@ export const GameScreen = ({ location }) => {
 
     const makeRoundResult = (score, distance) => {
         setRoundScore(Math.round(score));
-        setTotalRoundScore(prevScore => Math.round(prevScore + score));
-        setTotalRounds(prevRoundCount => prevRoundCount + 1);
+        dispatch(setTotalRoundScore(Math.round(totalScore + score)));
         setGuessedDistance(distance);
     };
 
@@ -83,6 +82,8 @@ export const GameScreen = ({ location }) => {
         setGuessedPlace({ obec, okres, kraj });
     };
 
+    const defaultDimensions = width > 960 ? { height: height / 2, width: width / 3 } : null;
+
     return (
         <>
             <Panorama
@@ -93,31 +94,38 @@ export const GameScreen = ({ location }) => {
                 panoramaLoading={panoramaLoading}
                 makeSetPanoramaLoading={makeSetPanoramaLoading}
             />
-            <div
-                id="smap-container"
-                className="smap-container"
-                style={width > 960 ? { height: height / 2, width: width / 3 } : null}
+            <ResizableBox
+                className="box"
+                width={defaultDimensions?.width ?? window.innerWidth}
+                height={defaultDimensions?.height ?? window.innerWidth}
+                resizeHandles={['nw']}
+                lockAspectRatio
+                axis={!defaultDimensions ? 'none' : 'both'}
             >
-                <GuessingMap
-                    makeCountScore={makeCountScore}
-                    makeRefreshPanorama={makeRefreshPanorama}
-                    totalRoundScore={totalRoundScore}
-                    totalRounds={totalRounds}
-                    guessedPoints={guessedPoints}
-                    gameMode={location.state.mode}
-                    panoramaScene={panoramaScene}
-                    makeRoundResult={makeRoundResult}
-                    makeGuessedPlace={makeGuessedPlace}
-                    panoramaLoading={panoramaLoading}
-                />
-            </div>
+                {/*
+                <img id="kdetosakra-logo" src={smilingLogo} alt="logo" className="kdetosakra-logo" width="15%" />
+                */}
+                <div id="smap-container" className="smap-container">
+                    <GuessingMap
+                        makeCountScore={makeCountScore}
+                        makeRefreshPanorama={makeRefreshPanorama}
+                        totalRounds={round}
+                        guessedPoints={guessedPoints}
+                        gameMode={mode}
+                        panoramaScene={panoramaScene}
+                        makeRoundResult={makeRoundResult}
+                        makeGuessedPlace={makeGuessedPlace}
+                        panoramaLoading={panoramaLoading}
+                    />
+                </div>
+            </ResizableBox>
             <RoundResultModal
                 visible={resultModalVisible}
                 closeModal={closeModal}
-                totalRounds={totalRounds}
+                totalRounds={round}
                 guessedDistance={guessedDistance}
                 roundScore={roundScore}
-                totalRoundScore={totalRoundScore}
+                totalRoundScore={totalScore}
                 guessedPlace={guessedPlace}
             />
         </>

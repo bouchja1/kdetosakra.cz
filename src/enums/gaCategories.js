@@ -3,4 +3,5 @@ export const CATEGORIES = {
     CITY: 'City',
     GEOLOCATION: 'Geolocation',
     SUGGESTED: 'SuggestedCity',
+    BATTLE: 'Battle',
 };

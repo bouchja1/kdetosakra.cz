@@ -1,16 +1,31 @@
 import { useState, useEffect } from 'react';
 
 export default function useSMapResize() {
-    const [height, setHeight] = useState(window.innerHeight);
-    const [width, setWidth] = useState(window.innerWidth);
+    // Initialize state with undefined width/height so server and client renders match
+    const [windowSize, setWindowSize] = useState({
+        width: window.innerWidth,
+        height: window.innerHeight,
+    });
 
     useEffect(() => {
-        setHeight(window.innerHeight);
-        setWidth(window.innerWidth);
-    }, [window.innerHeight, window.innerWidth]);
+        function handleResize() {
+            setWindowSize({
+                width: window.innerWidth,
+                height: window.innerHeight,
+            });
+        }
+
+        window.addEventListener('resize', handleResize);
+
+        // Call handler right away so state gets updated with initial window size
+        handleResize();
+
+        // Remove event listener on cleanup
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     return {
-        height,
-        width,
+        height: windowSize.height,
+        width: windowSize.width,
     };
 }
