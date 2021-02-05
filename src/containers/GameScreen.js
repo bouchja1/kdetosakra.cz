@@ -100,11 +100,9 @@ export const GameScreen = ({ mode, radius, city }) => {
                 makeSetPanoramaLoading={makeSetPanoramaLoading}
             />
             <ResizableBox
-                className="box"
                 width={defaultDimensions?.width ?? window.innerWidth}
                 height={defaultDimensions?.height ?? window.innerWidth}
                 resizeHandles={['nw']}
-                lockAspectRatio
                 axis={!defaultDimensions ? 'none' : 'both'}
                 onResize={handleMapResize}
             >

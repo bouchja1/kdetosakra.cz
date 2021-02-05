@@ -8,12 +8,14 @@ const useMapLoader = function(loaded) {
     });
 
     useEffect(() => {
+        console.log('NOOOOOOOOO: ', loaded);
         if (loaded) {
             window.Loader.async = true;
             window.Loader.load(null, { pano: true, suggest: true, poi: true }, () => {
                 setMapLoader({
                     loadedMapApi: true,
                     SMap: window.SMap,
+                    JAK: window.JAK,
                 });
             });
         }
