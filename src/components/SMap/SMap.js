@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
 import { Divider } from 'antd';
+import { useSelector } from 'react-redux';
 import MapyCzContext from '../../context/MapyCzContext';
 import { DEFAUL_MARKER_ICON, MARKER_PLACE_ICON_KDETOSAKRA } from '../../constants/icons';
 import useSMapResize from '../../hooks/useSMapResize';
@@ -25,12 +25,20 @@ const markerPanoramaOptions = {
 };
 
 const SMap = ({
-    guessedPoints, type, onMapClick, refLayeredMapValue, refLayerValue, refVectorLayerSMapValue,
+    guessedPoints,
+    type,
+    onMapClick,
+    refLayeredMapValue,
+    refLayerValue,
+    refVectorLayerSMapValue,
+    mapSize,
 }) => {
-    const location = useLocation();
     const { width } = useSMapResize();
     const map = useRef();
     const mapyContext = useContext(MapyCzContext);
+    const currentGame = useSelector(state => state.game.currentGame);
+
+    const { mode, city, radius } = currentGame;
 
     useEffect(() => {
         if (mapyContext.loadedMapApi) {
@@ -39,36 +47,21 @@ const SMap = ({
             let mapInstance;
             if (SMapContext) {
                 let defaultModeZoom = DEFAULT_MODE_ZOOM - 1;
-                const locationStateMode = location?.state?.mode;
-                if (
-                    locationStateMode === gameModes.geolocation
-                    || locationStateMode === gameModes.city
-                    || locationStateMode === gameModes.custom
-                ) {
+                if ((mode === gameModes.geolocation || mode === gameModes.city || mode === gameModes.custom) && city) {
                     // not random mode
-                    const center = SMapContext.Coords.fromWGS84(
-                        location.state.city.coordinates.longitude,
-                        location.state.city.coordinates.latitude,
-                    );
+                    const center = SMapContext.Coords.fromWGS84(city.coordinates.longitude, city.coordinates.latitude);
                     mapInstance = new SMapContext(map.current, center, 7);
-                    const locationModeRadius = location.state.radius;
-                    if (locationModeRadius > 2 && locationModeRadius <= 6 && locationModeRadius <= 10) {
-                        if (location.state.city.cityRange) {
-                            defaultModeZoom
-                                -= location.state.city.cityRange > 1
-                                    ? location.state.city.cityRange - 1
-                                    : location.state.city.cityRange;
+                    if (radius > 2 && radius <= 6 && radius <= 10) {
+                        if (city.cityRange) {
+                            defaultModeZoom -= city.cityRange > 1 ? city.cityRange - 1 : city.cityRange;
                         }
-                    } else if (locationModeRadius > 6 && locationModeRadius <= 10) {
-                        if (location.state.city.cityRange) {
-                            defaultModeZoom -= location.state.city.cityRange;
+                    } else if (radius > 6 && radius <= 10) {
+                        if (city.cityRange) {
+                            defaultModeZoom -= city.cityRange;
                         }
                     }
                     mapInstance.setCenterZoom(
-                        SMapContext.Coords.fromWGS84(
-                            location.state.city.coordinates.longitude,
-                            location.state.city.coordinates.latitude,
-                        ),
+                        SMapContext.Coords.fromWGS84(city.coordinates.longitude, city.coordinates.latitude),
                         defaultModeZoom,
                         true,
                     );
@@ -164,7 +157,7 @@ const SMap = ({
                 }
             }
         }
-    }, [mapyContext.loadedMapApi]);
+    }, [mapyContext.loadedMapApi, mapSize]);
 
     return (
         <>

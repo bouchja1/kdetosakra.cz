@@ -20,6 +20,7 @@ const GuessingMap = ({
     panoramaScene,
     makeGuessedPlace,
     panoramaLoading,
+    mapSize,
 }) => {
     const dispatch = useDispatch();
     const mapyContext = useContext(MapyCzContext);
@@ -189,6 +190,7 @@ const GuessingMap = ({
                     refLayeredMapValue={refLayeredMapValue}
                     refLayerValue={refLayerValue}
                     refVectorLayerSMapValue={refVectorLayerSMapValue}
+                    mapSize={mapSize}
                 />
             ) : (
                 <ResultSMapWrapper guessedPoints={[guessedPoints[guessedPoints.length - 1]]} />

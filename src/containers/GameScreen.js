@@ -6,7 +6,7 @@ import 'react-resizable/css/styles.css';
 import { useDispatch, useSelector } from 'react-redux';
 import GuessingMap from '../components/GuessingMap';
 import MapyCzContext from '../context/MapyCzContext';
-import { setTotalRoundScore, setTotalRoundCounter } from '../redux/actions/game';
+import { setTotalRoundScore } from '../redux/actions/game';
 import useSMapResize from '../hooks/useSMapResize';
 import Panorama, { panoramaSceneOptions } from '../components/Panorama';
 import { generatePlaceInRadius, generateRandomRadius, getRandomCzechPlace } from '../util';
@@ -20,6 +20,7 @@ export const GameScreen = ({ mode, radius, city }) => {
     const refPanoramaView = useRef();
     const currentGame = useSelector(state => state.game.currentGame);
 
+    const [mapSize, setMapSize] = useState();
     const [panoramaScene, setPanoramaScene] = useState(null);
     const [roundScore, setRoundScore] = useState(0);
     const [guessedDistance, setGuessedDistance] = useState(null);
@@ -46,6 +47,10 @@ export const GameScreen = ({ mode, radius, city }) => {
         setPanoramaPlace(generatePlaceInRadius(radius, city));
         setCurrentCity(city);
     }, [mapyContext.loadedMapApi, mode, radius, city]);
+
+    const handleMapResize = (event, { size }) => {
+        setMapSize(size);
+    };
 
     const makeSetPanoramaLoading = loading => {
         setPanoramaLoading(loading);
@@ -101,6 +106,7 @@ export const GameScreen = ({ mode, radius, city }) => {
                 resizeHandles={['nw']}
                 lockAspectRatio
                 axis={!defaultDimensions ? 'none' : 'both'}
+                onResize={handleMapResize}
             >
                 {/*
                 <img id="kdetosakra-logo" src={smilingLogo} alt="logo" className="kdetosakra-logo" width="15%" />
@@ -116,6 +122,7 @@ export const GameScreen = ({ mode, radius, city }) => {
                         makeRoundResult={makeRoundResult}
                         makeGuessedPlace={makeGuessedPlace}
                         panoramaLoading={panoramaLoading}
+                        mapSize={mapSize}
                     />
                 </div>
             </ResizableBox>
