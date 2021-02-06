@@ -1,7 +1,11 @@
 import { getType } from 'typesafe-actions';
 
 import {
-    addPlayerToBattle, removePlayerFromBattle, setCurrentBattle, setBattlePlayers
+    removePlayerFromBattle,
+    resetCurrentBattle,
+    setCurrentBattle,
+    setBattlePlayers,
+    setMyUserInfoToCurrentBattle,
 } from '../actions/battle';
 
 const initialState = {
@@ -12,11 +16,13 @@ const initialState = {
         mode: null,
         round: null,
         rounds: [],
-        totalScore: 0,
+        myTotalScore: 0,
+        myNickname: null,
         isGameFinishedSuccessfully: false,
         isGameActive: false,
         isGameStarted: false,
         players: [],
+        radius: null,
     },
 };
 
@@ -38,16 +44,17 @@ const gameReducer = (state = initialState, action) => {
                     players: action.payload,
                 },
             };
-        case getType(addPlayerToBattle): {
-            // add to array
+        case getType(setMyUserInfoToCurrentBattle):
             return {
                 ...state,
                 currentBattle: {
                     ...state.currentBattle,
-                    ...action.payload,
+                    myNickname: action.payload.myNickname,
+                    myTotalScore: action.payload.myTotalScore,
                 },
             };
-        }
+        case getType(resetCurrentBattle):
+            return initialState;
         case getType(removePlayerFromBattle): {
             // find player by ID and remove from array
             return {

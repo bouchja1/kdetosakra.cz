@@ -4,6 +4,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 
 import { firebaseConfig } from '../constants/firebase';
+import { generateRandomRadius } from '../util';
 
 firebase.initializeApp(firebaseConfig);
 firebase.analytics();
@@ -26,16 +27,27 @@ export const getBattleDetail = battleId => {
  * @param mode
  * @returns {Promise<firebase.firestore.DocumentReference<firebase.firestore.DocumentData>>}
  */
-export const createBattle = (authorId, mode) => {
+export const createBattle = (authorId, mode, radius, selectedCity) => {
     return db.collection(COLLECTION_BATTLE).add({
         created: firebase.firestore.FieldValue.serverTimestamp(),
         createdBy: authorId,
         mode,
         rounds: [],
+        radius: radius ?? generateRandomRadius(), // maybe not necessary here
+        selectedCity: selectedCity ?? null,
         isGameActive: true,
         isGameStarted: false,
         isGameFinishedSuccessfully: false,
+        countdown: 60,
+        withCountdown: true,
     });
+};
+
+export const updateBattle = (battleId, itemsToUpdate) => {
+    return db
+        .collection(COLLECTION_BATTLE)
+        .doc(battleId)
+        .update(itemsToUpdate);
 };
 
 export const streamBattlePlayersDetail = (battleId, observer) => {
@@ -76,13 +88,6 @@ export const updateBattlePlayer = (battleId, userId, itemsToUpdate) => {
             }
             throw new Error('user-not-found-error');
         });
-};
-
-export const updateBattle = (battleId, itemsToUpdate) => {
-    return db
-        .collection(COLLECTION_BATTLE)
-        .doc(battleId)
-        .update(itemsToUpdate);
 };
 
 export const addPlayerToBattle = (newPlayer, battleId) => {

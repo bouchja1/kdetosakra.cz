@@ -1,5 +1,5 @@
 import React, {
-    useContext, useEffect, useRef, useState
+    useContext, useEffect, useRef, useState, useMemo
 } from 'react';
 import { Link } from 'react-router-dom';
 import ReactGA from 'react-ga';
@@ -45,6 +45,17 @@ export const CustomPlace = ({ multiplayerSupported }) => {
     const handleChangeRadius = value => {
         setRadius(value);
     };
+
+    const cityData = useMemo(() => {
+        return {
+            coordinates: {
+                latitude: selectedPlaceData?.data?.latitude,
+                longitude: selectedPlaceData?.data?.longitude,
+            },
+            place: selectedPlaceData?.data?.title,
+            info: selectedPlaceData?.data?.secondRow,
+        };
+    }, [selectedPlaceData]);
 
     return (
         <form>
@@ -102,14 +113,7 @@ export const CustomPlace = ({ multiplayerSupported }) => {
                             round: 1,
                             totalScore: 0,
                             radius: Number(radius),
-                            city: {
-                                coordinates: {
-                                    latitude: selectedPlaceData?.data?.latitude,
-                                    longitude: selectedPlaceData?.data?.longitude,
-                                },
-                                place: selectedPlaceData?.data?.title,
-                                info: selectedPlaceData?.data?.secondRow,
-                            },
+                            city: cityData,
                         }),
                     );
                 }}
@@ -140,6 +144,8 @@ export const CustomPlace = ({ multiplayerSupported }) => {
                 visible={battleModalVisible}
                 handleBattleModalVisibility={handleBattleModalVisibility}
                 mode={gameModes.custom}
+                radius={Number(radius)}
+                selectedCity={cityData}
             />
         </form>
     );

@@ -3,9 +3,10 @@ import { Button, Input, Modal } from 'antd';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { createBattle } from '../../services/firebase';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
-import gameModes from '../../enums/modes';
 
-const BattleLinkModal = ({ visible, handleBattleModalVisibility, mode }) => {
+const BattleLinkModal = ({
+    visible, handleBattleModalVisibility, mode, radius, selectedCity,
+}) => {
     const randomUserToken = useGetRandomUserToken();
     const [battleLink, setBattleLink] = useState(null);
     const [isCopied, setIsCopied] = useState(false);
@@ -19,8 +20,6 @@ const BattleLinkModal = ({ visible, handleBattleModalVisibility, mode }) => {
     const handleOnCopy = () => {
         setIsCopied(true);
     };
-
-    console.log('BAAATLE LINK: ', battleLink);
 
     return (
         <Modal title="Basic Modal" visible={visible} footer={null} onCancel={handleCancel}>
@@ -40,14 +39,14 @@ const BattleLinkModal = ({ visible, handleBattleModalVisibility, mode }) => {
             )}
             <Button
                 type="primary"
-                onClick={() => createBattle(randomUserToken, mode)
-                    .then(docRef => {
-                        console.log('DOC REF: ', docRef);
-                        setBattleLink(`http://localhost:3000/battle/${docRef.id}`);
-                    })
-                    .catch(err => {
-                        console.log('ERR: ', err);
-                    })}
+                onClick={() =>
+                    // TODO city!!!!!
+                    // eslint-disable-next-line implicit-arrow-linebreak
+                    createBattle(randomUserToken, mode, radius, selectedCity)
+                        .then(docRef => {
+                            setBattleLink(`http://localhost:3000/battle/${docRef.id}`);
+                        })
+                        .catch(err => {})}
             >
                 Vygenerovat link
             </Button>

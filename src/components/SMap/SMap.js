@@ -27,7 +27,13 @@ const markerPanoramaOptions = {
 };
 
 const SMap = ({
-    guessedPoints, type, onMapClick, refLayeredMapValue, refLayerValue, refVectorLayerSMapValue,
+    guessedPoints,
+    type,
+    onMapClick,
+    refLayeredMapValue,
+    refLayerValue,
+    refVectorLayerSMapValue,
+    resultPathColors,
 }) => {
     const { width } = useSMapResize();
     const map = useRef();
@@ -103,12 +109,10 @@ const SMap = ({
             const pointMap = mapyContext.SMap.Coords.fromWGS84(pointsObject.pointMap.x, pointsObject.pointMap.y);
             const pointsVectorArray = [pointPanorama, pointMap];
 
-            const path = new mapyContext.SMap.Geometry(
-                mapyContext.SMap.GEOMETRY_POLYLINE,
-                null,
-                pointsVectorArray,
-                options,
-            );
+            const path = new mapyContext.SMap.Geometry(mapyContext.SMap.GEOMETRY_POLYLINE, null, pointsVectorArray, {
+                color: resultPathColors ? resultPathColors[i] : options.color,
+                width: 3,
+            });
             vectorLayer.addGeometry(path);
 
             // my guessed marker

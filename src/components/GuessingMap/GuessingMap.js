@@ -21,6 +21,8 @@ const GuessingMap = ({
     makeGuessedPlace,
     panoramaLoading,
     isGameStarted,
+    currentCity,
+    isBattle,
 }) => {
     const dispatch = useDispatch();
     const mapyContext = useContext(MapyCzContext);
@@ -130,6 +132,7 @@ const GuessingMap = ({
             }
         }
         makeRoundResult(score, distance);
+        return score;
     };
 
     const calculateDistance = () => {
@@ -159,8 +162,12 @@ const GuessingMap = ({
         if (mode === gameModes.random) {
             makeGuessedPlace();
         }
-        calculateScore(distance);
-        return panoramaCoordinates;
+        const score = calculateScore(distance);
+        return {
+            panoramaCoordinates,
+            distance,
+            score,
+        };
     };
 
     const calculateCoordsAndDrawGuess = () => {
@@ -168,7 +175,7 @@ const GuessingMap = ({
         setNextRoundButtonVisible(true);
         setRoundGuessed(true);
 
-        const panoramaCoordinates = calculateDistance();
+        const { panoramaCoordinates, distance, score } = calculateDistance();
 
         const currentPanoramaPositionPoint = mapyContext.SMap.Coords.fromWGS84(
             panoramaCoordinates.lon,
@@ -179,7 +186,13 @@ const GuessingMap = ({
             guessedCoordinates.mapLat,
         );
         drawGuessedDistance(currentPanoramaPositionPoint, selectedPointOnMap, panoramaCoordinates);
-        makeCountScore({ pointPanorama: currentPanoramaPositionPoint, pointMap: selectedPointOnMap });
+        makeCountScore({
+            pointPanorama: currentPanoramaPositionPoint,
+            pointMap: selectedPointOnMap,
+            currentCity,
+            distance,
+            score,
+        });
     };
 
     return (
@@ -223,7 +236,7 @@ const GuessingMap = ({
                             Hádej!
                         </Button>
                     ) : null}
-                    {nextRoundButtonVisible ? (
+                    {!isBattle && nextRoundButtonVisible ? (
                         <Button
                             onClick={() => {
                                 refreshMap();

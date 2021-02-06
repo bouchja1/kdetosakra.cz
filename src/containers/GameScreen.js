@@ -21,6 +21,7 @@ export const GameScreen = ({
     const { width, height } = useSMapResize();
     const refPanoramaView = useRef();
     const currentGame = useSelector(state => state.game.currentGame);
+    const currentBattleInfo = useSelector(state => state.battle.currentBattle);
 
     const [panoramaScene, setPanoramaScene] = useState(null);
     const [roundScore, setRoundScore] = useState(0);
@@ -41,15 +42,27 @@ export const GameScreen = ({
     }, [mapyContext.loadedMapApi, isGameStarted]);
 
     useEffect(() => {
-        if (mode === gameModes.random) {
-            city = getRandomCzechPlace();
+        if (isBattle) {
+            const { round: lastGuessedRound, rounds } = currentBattleInfo;
+            console.log('CUUUUUURENT BATTLE INFO');
+            if (rounds.length) {
+                const roundToGuess = rounds[lastGuessedRound];
+                console.log('**** round to guess: ', roundToGuess);
+                const { city: cityToGuess, panoramaPlace: panoramaPlaceToGuess } = roundToGuess;
+                setPanoramaPlace(panoramaPlaceToGuess);
+                setCurrentCity(cityToGuess);
+            }
+        } else {
+            if (mode === gameModes.random) {
+                city = getRandomCzechPlace();
+            }
+            // init panorama
+            if (radius && city) {
+                setPanoramaPlace(generatePlaceInRadius(radius, city));
+                setCurrentCity(city);
+            }
         }
-        // init panorama
-        if (radius && city) {
-            setPanoramaPlace(generatePlaceInRadius(radius, city));
-            setCurrentCity(city);
-        }
-    }, [mapyContext.loadedMapApi, mode, radius, city]);
+    }, [mapyContext.loadedMapApi, mode, radius, city, isBattle]);
 
     const makeSetPanoramaLoading = loading => {
         setPanoramaLoading(loading);
@@ -119,6 +132,8 @@ export const GameScreen = ({
                     makeGuessedPlace={makeGuessedPlace}
                     panoramaLoading={panoramaLoading}
                     isGameStarted={isGameStarted}
+                    isBattle={isBattle}
+                    currentCity={currentCity}
                 />
             </div>
             <RoundResultModal

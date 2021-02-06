@@ -54,7 +54,7 @@ export const RegionCity = ({ multiplayerSupported }) => {
                 return city.name === selectedValue;
             });
             setMaxCityRadius(selectedCity[0].radiusMax);
-            setCitySelected(selectedCity[0].name);
+            setCitySelected(selectedCity[0]);
         }
     };
 
@@ -172,6 +172,8 @@ export const RegionCity = ({ multiplayerSupported }) => {
                                     visible={battleModalVisible}
                                     handleBattleModalVisibility={handleBattleModalVisibility}
                                     mode={gameModes.city}
+                                    radius={Number(radius)}
+                                    selectedCity={citySelected}
                                 />
                             </div>
                         ) : null}

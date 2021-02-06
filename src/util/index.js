@@ -1,4 +1,5 @@
 import { crCities } from '../data/cr';
+import randomNicknames from '../constants/nicknames';
 
 const EARTH_RADIUS = 6371000; /* meters  */
 const DEG_TO_RAD = Math.PI / 180.0;
@@ -96,6 +97,10 @@ export const getRandomCzechPlace = () => {
     return randomCity;
 };
 
+export const getRandomNickname = () => {
+    return randomNicknames[Math.floor(Math.random() * randomNicknames.length)];
+};
+
 export const generatePlaceInRadius = (radius, locationCity) => {
     radius *= 1000; // to meters
     const generatedPlace = pointInCircle(
@@ -106,6 +111,38 @@ export const generatePlaceInRadius = (radius, locationCity) => {
         radius,
     );
     return generatedPlace;
+};
+
+export const sortBattleRoundsById = roundsArray => {
+    return roundsArray.sort((a, b) => {
+        if (a.roundId < b.roundId) {
+            return -1;
+        }
+        if (a.roundId > b.roundId) {
+            return 1;
+        }
+        return 0;
+    });
+};
+
+export const findLastGuessedRound = roundsArray => {
+    const sortedRounds = sortBattleRoundsById(roundsArray);
+    for (let i = 0; i < sortedRounds.length; i++) {
+        const { isGuessed, roundId } = sortedRounds[i];
+        if (isGuessed) {
+            return roundId;
+        }
+    }
+    return 0;
+};
+
+export const findMyUserFromBattle = (battlePlayersFromFirestore, randomUserToken) => {
+    for (let i = 0; i < battlePlayersFromFirestore.length; i++) {
+        if (battlePlayersFromFirestore[i].userId === randomUserToken) {
+            return battlePlayersFromFirestore[i];
+        }
+    }
+    return null;
 };
 
 export const RADIUS_DESCRIPTION = 'Poloměr kružnice, ve které se náhodně vygeneruje panorama (středem je dle zvoleného módu buď centrum obce nebo vaše poloha).';
