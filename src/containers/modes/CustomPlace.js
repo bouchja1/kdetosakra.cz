@@ -12,13 +12,20 @@ import { CATEGORIES } from '../../enums/gaCategories';
 import gameModes from '../../enums/modes';
 import { RADIUS_DESCRIPTION } from '../../util';
 import { setCurrentGame } from '../../redux/actions/game';
+import BattleLinkModal from '../../components/BattleLinkModal';
+import { showMultiplayerWarningModal } from '../../util/multiplayer';
 
-export const CustomPlace = () => {
+export const CustomPlace = ({ multiplayerSupported }) => {
     const dispatch = useDispatch();
     const mapyContext = useContext(MapyCzContext);
     const suggestInput = useRef();
     const [selectedPlaceData, setSelectedPlaceData] = useState(null);
     const [radius, setRadius] = useState(1);
+    const [battleModalVisible, setBattleModalVisible] = useState(false);
+
+    const handleBattleModalVisibility = isVisible => {
+        setBattleModalVisible(isVisible);
+    };
 
     useEffect(() => {
         if (mapyContext.loadedMapApi) {
@@ -119,19 +126,21 @@ export const CustomPlace = () => {
                 disabled={!selectedPlaceData}
                 className="button-play"
                 type="primary"
-                onClick={() => ReactGA.event({
-                    category: CATEGORIES.SUGGESTED,
-                    action: 'Play suggested city game',
-                })}
+                onClick={() => {
+                    if (multiplayerSupported) {
+                        setBattleModalVisible(true);
+                    } else {
+                        showMultiplayerWarningModal();
+                    }
+                }}
             >
-                <Link
-                    to={{
-                        pathname: '/vlastni',
-                    }}
-                >
-                    Hrát proti přátelům
-                </Link>
+                Hrát proti přátelům
             </Button>
+            <BattleLinkModal
+                visible={battleModalVisible}
+                handleBattleModalVisibility={handleBattleModalVisibility}
+                mode={gameModes.custom}
+            />
         </form>
     );
 };

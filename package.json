@@ -12,6 +12,7 @@
     "core-js": "^3.8.2",
     "crypto-random-string": "^3.2.0",
     "customize-cra": "^0.9.1",
+    "date-fns": "^2.17.0",
     "dotenv": "^8.2.0",
     "firebase": "^8.2.5",
     "firebaseui": "^4.7.3",

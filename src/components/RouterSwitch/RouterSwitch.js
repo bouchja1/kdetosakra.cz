@@ -2,10 +2,10 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 import {
-    Battle, Home, Info, Result, NotFound
+    Home, Info, Result, NotFound
 } from '../../pages';
 import {
-    CustomPlace, RegionCity, RandomCity, Geolocation, BattleGame
+    CustomPlace, RegionCity, RandomCity, Geolocation, Battle
 } from '../../containers/games';
 import routeNames from '../../constants/routes';
 
@@ -33,11 +33,8 @@ const RouterSwitch = () => {
             <Route path={`/${routeNames.info}`}>
                 <Info />
             </Route>
-            <Route path={`/${routeNames.geolokace}/:battleId`}>
+            <Route path={`/${routeNames.battle}/:battleId`}>
                 <Battle />
-            </Route>
-            <Route path={`/${routeNames.battle}`}>
-                <BattleGame />
             </Route>
             <Route path="*">
                 <NotFound />

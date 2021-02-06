@@ -12,19 +12,25 @@ import { CATEGORIES } from '../../enums/gaCategories';
 import { RADIUS_DESCRIPTION } from '../../util';
 import gameModes from '../../enums/modes';
 import { setCurrentGame } from '../../redux/actions/game';
+import { showMultiplayerWarningModal } from '../../util/multiplayer';
+import BattleLinkModal from '../../components/BattleLinkModal';
 
 const { Option } = Select;
 
-export const RegionCity = () => {
+export const RegionCity = ({ multiplayerSupported }) => {
     const dispatch = useDispatch();
+    const [battleModalVisible, setBattleModalVisible] = useState(false);
     const [citySelected, setCitySelected] = useState(null);
     const [maxCityRadius, setMaxCityRadius] = useState(null);
     const [playGame, setPlayGame] = useState(false);
-    const [selectedCityData, setSelectedCityData] = useState({});
     const [radius, setRadius] = useState(1);
 
     const handleChangeRadius = value => {
         setRadius(value);
+    };
+
+    const handleBattleModalVisibility = isVisible => {
+        setBattleModalVisible(isVisible);
     };
 
     const createCitiesOptions = () => {
@@ -53,9 +59,6 @@ export const RegionCity = () => {
     };
 
     if (playGame) {
-        const selectedCity = cities.filter(city => {
-            return city.name === selectedCityData.city;
-        });
         return (
             <Redirect
                 to={{
@@ -69,24 +72,27 @@ export const RegionCity = () => {
         <Formik
             initialValues={{ radius: 1, city: '' }}
             onSubmit={(values, { setSubmitting }) => {
-                ReactGA.event({
-                    category: CATEGORIES.CITY,
-                    action: 'Play city game',
-                });
-                setSelectedCityData(values);
-                const selectedCity = cities.filter(city => {
-                    return city.name === values.city;
-                });
-                dispatch(
-                    setCurrentGame({
-                        mode: gameModes.city,
-                        round: 1,
-                        totalScore: 0,
-                        radius: Number(radius),
-                        city: selectedCity[0],
-                    }),
-                );
-                setPlayGame(true);
+                if (multiplayerSupported) {
+                    ReactGA.event({
+                        category: CATEGORIES.CITY,
+                        action: 'Play city game',
+                    });
+                    const selectedCity = cities.filter(city => {
+                        return city.name === values.city;
+                    });
+                    dispatch(
+                        setCurrentGame({
+                            mode: gameModes.city,
+                            round: 1,
+                            totalScore: 0,
+                            radius: Number(radius),
+                            city: selectedCity[0],
+                        }),
+                    );
+                    setPlayGame(true);
+                } else {
+                    showMultiplayerWarningModal();
+                }
             }}
             validationSchema={Yup.object().shape({
                 radius: Yup.number().required('Required'),
@@ -158,10 +164,15 @@ export const RegionCity = () => {
                                     className="button-play"
                                     type="primary"
                                     disabled={isSubmitting}
-                                    onClick={handleSubmit}
+                                    onClick={() => setBattleModalVisible(true)}
                                 >
                                     Hrát proti přátelům
                                 </Button>
+                                <BattleLinkModal
+                                    visible={battleModalVisible}
+                                    handleBattleModalVisibility={handleBattleModalVisibility}
+                                    mode={gameModes.city}
+                                />
                             </div>
                         ) : null}
                     </form>

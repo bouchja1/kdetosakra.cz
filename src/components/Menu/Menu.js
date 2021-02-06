@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { FacebookFilled, HomeOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import smilingLogo from '../../assets/images/kdetosakraSmile.svg';
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
+import gameModes from '../../enums/modes';
 import routeNames from '../../constants/routes';
 
 const isGameInfoShown = pathname => {
@@ -19,10 +20,42 @@ const isGameInfoShown = pathname => {
 const Menu = () => {
     const location = useLocation();
     const currentGameInfo = useSelector(state => state.game.currentGame);
+    const currentBattleInfo = useSelector(state => state.battle.currentBattle);
 
     const { pathname } = location;
 
-    const { mode, round, totalScore } = currentGameInfo;
+    const isBattle = pathname.includes(routeNames.battle);
+
+    const mapModeName = () => {
+        const mode = isBattle ? currentBattleInfo.mode : currentGameInfo.mode;
+        switch (mode) {
+            case gameModes.random:
+                return 'náhodné místo';
+            case gameModes.custom:
+                return 'vlastní místo';
+            case gameModes.geolocation:
+                return 'moje poloha';
+            case gameModes.city:
+                return 'krajské město';
+            default:
+        }
+        return '';
+    };
+
+    const showBattleInfo = () => {
+        const { isGameFinishedSuccessfully, isGameActive, isGameStarted } = currentBattleInfo;
+        return isGameStarted ? 'JO' : 'NE';
+    };
+
+    const showRoundInfo = () => {
+        const round = isBattle ? currentBattleInfo.round : currentGameInfo.round;
+        return `${round ?? 0} / ${TOTAL_ROUNDS_MAX}`;
+    };
+
+    const showTotalScoreInfo = () => {
+        const totalScore = isBattle ? currentBattleInfo.totalScore : currentGameInfo.totalScore;
+        return totalScore ?? 0;
+    };
 
     return (
         <div id="menu-container" className="section menu-container">
@@ -42,23 +75,26 @@ const Menu = () => {
                 </a>
             </div>
             <img id="kdetosakra-logo" src={smilingLogo} alt="logo" className="kdetosakra-logo" width="85%" />
+            {isBattle && <div className="battle-info">{showBattleInfo()}</div>}
             {isGameInfoShown(pathname) && (
                 <div className="menu-game-info">
+                    {isBattle && (
+                        <div className="menu-game-info-box">
+                            <div className="menu-game-info-box-head">přezdívka</div>
+                            <div className="menu-game-info-box-item">sněhurka</div>
+                        </div>
+                    )}
                     <div className="menu-game-info-box">
                         <div className="menu-game-info-box-head">kolo</div>
-                        <div className="menu-game-info-box-item">
-                            {round ?? 0}
-                            /
-                            {TOTAL_ROUNDS_MAX}
-                        </div>
+                        <div className="menu-game-info-box-item">{showRoundInfo()}</div>
                     </div>
                     <div className="menu-game-info-box">
                         <div className="menu-game-info-box-head">celkové skóre</div>
-                        <div className="menu-game-info-box-item">{totalScore ?? 0}</div>
+                        <div className="menu-game-info-box-item">{showTotalScoreInfo()}</div>
                     </div>
                     <div className="menu-game-info-box">
                         <div className="menu-game-info-box-head">mód</div>
-                        <div className="menu-game-info-box-item">{mode}</div>
+                        <div className="menu-game-info-box-item">{mapModeName()}</div>
                     </div>
                 </div>
             )}

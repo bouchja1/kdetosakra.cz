@@ -27,13 +27,7 @@ const markerPanoramaOptions = {
 };
 
 const SMap = ({
-    guessedPoints,
-    type,
-    onMapClick,
-    refLayeredMapValue,
-    refLayerValue,
-    refVectorLayerSMapValue,
-    mapSize,
+    guessedPoints, type, onMapClick, refLayeredMapValue, refLayerValue, refVectorLayerSMapValue,
 }) => {
     const { width } = useSMapResize();
     const map = useRef();
@@ -178,7 +172,7 @@ const SMap = ({
                 refVectorLayerSMapValue.current = vectorLayer;
             }
         }
-    }, [mapyContext.loadedMapApi, mapSize, instance, mapLayer]);
+    }, [mapyContext.loadedMapApi, instance, mapLayer]);
 
     return (
         <>

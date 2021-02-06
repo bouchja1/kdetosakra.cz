@@ -8,8 +8,9 @@ import { generateRandomRadius } from '../../util';
 import { setCurrentGame } from '../../redux/actions/game';
 import gameModes from '../../enums/modes';
 import BattleLinkModal from '../../components/BattleLinkModal';
+import { showMultiplayerWarningModal } from '../../util/multiplayer';
 
-export const RandomCity = () => {
+export const RandomCity = ({ multiplayerSupported }) => {
     const dispatch = useDispatch();
     const [battleModalVisible, setBattleModalVisible] = useState(false);
 
@@ -49,7 +50,11 @@ export const RandomCity = () => {
                 type="primary"
                 className="button-play"
                 onClick={() => {
-                    setBattleModalVisible(true);
+                    if (multiplayerSupported) {
+                        setBattleModalVisible(true);
+                    } else {
+                        showMultiplayerWarningModal();
+                    }
                 }}
             >
                 Hrát proti přátelům

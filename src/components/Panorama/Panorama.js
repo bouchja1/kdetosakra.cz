@@ -17,6 +17,7 @@ const Panorama = ({
     panoramaPlace,
     panoramaLoading,
     makeSetPanoramaLoading,
+    isGameStarted,
 }) => {
     const mapyContext = useContext(MapyCzContext);
     const windowHeight = useWindowHeight();
@@ -24,7 +25,7 @@ const Panorama = ({
     const [panoramaFounded, setPanoramaFounded] = useState(true);
 
     useEffect(() => {
-        if (mapyContext.loadedMapApi && panoramaPlace && panoramaScene) {
+        if (mapyContext.loadedMapApi && panoramaPlace && panoramaScene && isGameStarted) {
             const { SMap } = mapyContext;
             // kolem teto pozice chceme nejblizsi panorama
             const position = SMap.Coords.fromWGS84(panoramaPlace.longitude, panoramaPlace.latitude);
@@ -57,10 +58,14 @@ const Panorama = ({
             };
             getBestPanorama();
         }
-    }, [mapyContext.loadedMapApi, panoramaScene, panoramaPlace]);
+    }, [mapyContext.loadedMapApi, panoramaScene, panoramaPlace, isGameStarted]);
 
     return (
-        <Spin tip="Načítám panorama..." spinning={panoramaLoading}>
+        <Spin
+            tip={!isGameStarted ? 'Čekám, až budou všichni hráči připraveni' : 'Načítám panorama...'}
+            spinning={!isGameStarted || panoramaLoading}
+            size="large"
+        >
             {' '}
             <div className="panorama-container" style={{ height: windowHeight - 130 }}>
                 {!panoramaFounded ? (

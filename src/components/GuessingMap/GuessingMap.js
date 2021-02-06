@@ -20,7 +20,7 @@ const GuessingMap = ({
     panoramaScene,
     makeGuessedPlace,
     panoramaLoading,
-    mapSize,
+    isGameStarted,
 }) => {
     const dispatch = useDispatch();
     const mapyContext = useContext(MapyCzContext);
@@ -190,7 +190,6 @@ const GuessingMap = ({
                     refLayeredMapValue={refLayeredMapValue}
                     refLayerValue={refLayerValue}
                     refVectorLayerSMapValue={refVectorLayerSMapValue}
-                    mapSize={mapSize}
                 />
             ) : (
                 <ResultSMapWrapper guessedPoints={[guessedPoints[guessedPoints.length - 1]]} />
@@ -215,7 +214,7 @@ const GuessingMap = ({
                 <>
                     {!nextRoundButtonVisible ? (
                         <Button
-                            disabled={guessButtonDisabled || panoramaLoading}
+                            disabled={guessButtonDisabled || panoramaLoading || !isGameStarted}
                             onClick={() => {
                                 calculateCoordsAndDrawGuess();
                             }}

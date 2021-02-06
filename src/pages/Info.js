@@ -2,9 +2,7 @@ import React from 'react';
 import { GithubOutlined } from '@ant-design/icons';
 import { Typography, Layout } from 'antd';
 import { Link } from 'react-router-dom';
-import { decryptEmail, generateRandomRadius } from '../util';
-import gameModes from '../enums/modes';
-import { firebaseUiConfig } from '../constants/firebase';
+import { decryptEmail } from '../util';
 
 const { Content } = Layout;
 const { Title, Paragraph, Text } = Typography;

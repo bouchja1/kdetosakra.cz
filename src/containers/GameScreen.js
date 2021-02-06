@@ -1,7 +1,6 @@
 import React, {
     useContext, useEffect, useRef, useState
 } from 'react';
-import { ResizableBox } from 'react-resizable';
 import 'react-resizable/css/styles.css';
 import { useDispatch, useSelector } from 'react-redux';
 import GuessingMap from '../components/GuessingMap';
@@ -12,15 +11,17 @@ import Panorama, { panoramaSceneOptions } from '../components/Panorama';
 import { generatePlaceInRadius, generateRandomRadius, getRandomCzechPlace } from '../util';
 import RoundResultModal from '../components/RoundResultModal';
 import gameModes from '../enums/modes';
+import BattleUsers from '../components/BattleUsers';
 
-export const GameScreen = ({ mode, radius, city }) => {
+export const GameScreen = ({
+    mode, radius, city, isGameStarted = true, isBattle,
+}) => {
     const dispatch = useDispatch();
     const mapyContext = useContext(MapyCzContext);
     const { width, height } = useSMapResize();
     const refPanoramaView = useRef();
     const currentGame = useSelector(state => state.game.currentGame);
 
-    const [mapSize, setMapSize] = useState();
     const [panoramaScene, setPanoramaScene] = useState(null);
     const [roundScore, setRoundScore] = useState(0);
     const [guessedDistance, setGuessedDistance] = useState(null);
@@ -31,39 +32,24 @@ export const GameScreen = ({ mode, radius, city }) => {
     const [panoramaPlace, setPanoramaPlace] = useState(null);
     const [panoramaLoading, setPanoramaLoading] = useState(false);
 
-    const [defaultDimensions, setDefaultDimensions] = useState(null);
-    const [resizeWidth, setResizeWidth] = useState();
-    const [resizeHeight, setResizeHeight] = useState();
-
     const { round, totalScore } = currentGame;
 
     useEffect(() => {
-        const defaultWindowBasedDimensions = width > 960 ? { height: height / 2, width: width / 3 } : null;
-        setResizeWidth(defaultWindowBasedDimensions?.width ?? window.innerWidth);
-        setResizeHeight(defaultWindowBasedDimensions?.height ?? window.innerWidth);
-        setDefaultDimensions(defaultWindowBasedDimensions);
-    }, [width]);
-
-    useEffect(() => {
-        if (mapyContext.loadedMapApi) {
+        if (mapyContext.loadedMapApi && isGameStarted) {
             setPanoramaScene(new mapyContext.SMap.Pano.Scene(refPanoramaView.current, panoramaSceneOptions));
         }
-    }, [mapyContext.loadedMapApi]);
+    }, [mapyContext.loadedMapApi, isGameStarted]);
 
     useEffect(() => {
         if (mode === gameModes.random) {
             city = getRandomCzechPlace();
         }
         // init panorama
-        setPanoramaPlace(generatePlaceInRadius(radius, city));
-        setCurrentCity(city);
+        if (radius && city) {
+            setPanoramaPlace(generatePlaceInRadius(radius, city));
+            setCurrentCity(city);
+        }
     }, [mapyContext.loadedMapApi, mode, radius, city]);
-
-    const handleMapResize = (event, { size }) => {
-        setMapSize(size);
-        setResizeHeight(size.height);
-        setResizeWidth(size.width);
-    };
 
     const makeSetPanoramaLoading = loading => {
         setPanoramaLoading(loading);
@@ -102,21 +88,25 @@ export const GameScreen = ({ mode, radius, city }) => {
 
     return (
         <>
-            <Panorama
-                panoramaPlace={panoramaPlace}
-                makeRefreshPanorama={makeRefreshPanorama}
-                panoramaScene={panoramaScene}
-                refPanoramaView={refPanoramaView}
-                panoramaLoading={panoramaLoading}
-                makeSetPanoramaLoading={makeSetPanoramaLoading}
-            />
+            <div className="game-screen-container">
+                {isBattle && <BattleUsers />}
+                <Panorama
+                    panoramaPlace={panoramaPlace}
+                    makeRefreshPanorama={makeRefreshPanorama}
+                    panoramaScene={panoramaScene}
+                    refPanoramaView={refPanoramaView}
+                    panoramaLoading={panoramaLoading}
+                    makeSetPanoramaLoading={makeSetPanoramaLoading}
+                    isGameStarted={isGameStarted}
+                />
+            </div>
             {/*
                 <img id="kdetosakra-logo" src={smilingLogo} alt="logo" className="kdetosakra-logo" width="15%" />
                 */}
             <div
                 id="smap-container"
                 className="smap-container"
-                style={{ height: `calc(${resizeHeight}px + 0px)`, width: `calc(${resizeWidth}px + 0px)` }}
+                style={width > 960 ? { height: height / 2, width: width / 3 } : null}
             >
                 <GuessingMap
                     makeCountScore={makeCountScore}
@@ -128,7 +118,7 @@ export const GameScreen = ({ mode, radius, city }) => {
                     makeRoundResult={makeRoundResult}
                     makeGuessedPlace={makeGuessedPlace}
                     panoramaLoading={panoramaLoading}
-                    mapSize={mapSize}
+                    isGameStarted={isGameStarted}
                 />
             </div>
             <RoundResultModal
