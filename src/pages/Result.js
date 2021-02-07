@@ -91,7 +91,7 @@ export const Result = () => {
                         Hrát znovu
                     </Button>
                 </div>
-                <ResultSMap guessedPoints={guessedPoints} />
+                <ResultSMap guessedPoints={guessedPoints} isBattle={false} />
             </>
         );
     }

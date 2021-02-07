@@ -251,9 +251,10 @@ const GuessingMap = ({
                     refLayeredMapValue={refLayeredMapValue}
                     refLayerValue={refLayerValue}
                     refVectorLayerSMapValue={refVectorLayerSMapValue}
+                    isBattle={isBattle}
                 />
             ) : (
-                <ResultSMapWrapper guessedPoints={[guessedPoints[guessedPoints.length - 1]]} />
+                <ResultSMapWrapper guessedPoints={[guessedPoints[guessedPoints.length - 1]]} isBattle={isBattle} />
             )}
             {totalRounds >= TOTAL_ROUNDS_MAX && roundGuessed ? (
                 <Button
@@ -282,31 +283,37 @@ const GuessingMap = ({
                                         withCountdown,
                                         countdown,
                                     } = currentBattleInfo;
+                                    console.log('POZOR POZOR: ', currentGuessedRoundNumber);
                                     const currentRound = rounds[currentGuessedRoundNumber - 1];
                                     const { isGuessed, guessedTime } = currentRound;
 
                                     const { pointMap, distance, score } = guessedRoundPoint;
                                     const playerRoundGuess = {
                                         roundId: currentGuessedRoundNumber,
-                                        pointMap,
+                                        pointMap: {
+                                            x: pointMap.x,
+                                            y: pointMap.y,
+                                        },
                                         distance,
                                         score,
                                     };
 
                                     if (!isGuessed) {
-                                        updateBattleRound(battleId, currentGuessedRoundNumber, {
-                                            isGuessed: true,
-                                            guessedTime: getUnixTimestamp(new Date()),
-                                        })
+                                        addGuessedRoundToPlayer(battleId, myDocumentId, playerRoundGuess)
+                                            .then(res => {
+                                                return updateBattleRound(battleId, currentGuessedRoundNumber, {
+                                                    isGuessed: true,
+                                                    guessedTime: getUnixTimestamp(new Date()),
+                                                });
+                                            })
                                             .then(res => console.log('JOO UPDATOVAL JSEM BATTLE ROUND'))
                                             .catch(err => console.log('EEEEERRR: ', err));
-                                        // TODO zaznamenat guess do player's rounds
                                     } else {
-                                        // check jestli jeste zbyva cas nebo ne -> jakoze uz neumoznime umistit odhad, zapiseme mu 0 vysledek
-                                        // rozdil mezi guessedtime a timeoutem
+                                        // TODO check jestli jeste zbyva cas nebo ne -> jakoze uz neumoznime umistit odhad, zapiseme mu 0 vysledek
+                                        // spocti rozdil mezi guessedtime a timeoutem
                                         addGuessedRoundToPlayer(battleId, myDocumentId, playerRoundGuess)
-                                            .then(res => console.log('LALALA: ', res))
-                                            .catch(err => console.log('NEEE PROOOC ERR: ', err));
+                                            .then(res => {})
+                                            .catch(err => {});
                                     }
                                 }
                             }}

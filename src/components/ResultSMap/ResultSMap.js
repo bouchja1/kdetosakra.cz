@@ -1,22 +1,26 @@
 import { Divider } from 'antd';
-import React, {
-    useContext, useRef, useState, useEffect
-} from 'react';
+import React, { useContext, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import useSMapResize from '../../hooks/useSMapResize';
 import MapyCzContext from '../../context/MapyCzContext';
 import { getMapInstanceByGameMode, setupMapInstanceAndLayers, drawAllResultsLayerToMap } from '../../util/map';
 
-const ResultSMap = ({ guessedPoints }) => {
+const ResultSMap = ({ guessedPoints, isBattle }) => {
     const { width } = useSMapResize();
     const map = useRef();
     const mapyContext = useContext(MapyCzContext);
     const currentGame = useSelector(state => state.game.currentGame);
+    const currentBattleInfo = useSelector(state => state.battle.currentBattle);
 
     const { mode, city, radius } = currentGame;
+    const {
+        mode: battleMode, radius: battleRadius, rounds, round,
+    } = currentBattleInfo;
 
     const initSMap = () => {
-        const mapInstance = getMapInstanceByGameMode(mapyContext.SMap, mode, city, radius, map.current);
+        const mapInstance = isBattle
+            ? getMapInstanceByGameMode(mapyContext.SMap, mode, city, radius, map.current)
+            : getMapInstanceByGameMode(mapyContext.SMap, battleMode, rounds[round - 1].city, battleRadius, map.current);
         setupMapInstanceAndLayers(mapyContext.SMap, mapInstance);
 
         // vrstva se značkami

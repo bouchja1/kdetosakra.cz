@@ -167,6 +167,7 @@ export const addRoundBatchToBattleRounds = async (battleId, roundsArray) => {
 };
 
 export const addGuessedRoundToPlayer = (battleId, playerId, newRound) => {
+    console.log('NOOOO: ', newRound);
     return db
         .collection(COLLECTION_BATTLE)
         .doc(battleId)
@@ -185,10 +186,10 @@ export const updateBattleRound = (battleId, roundId, itemsToUpdate) => {
     // .update(itemsToUpdate);
 
     return battleRoundToUpdate.get().then(querySnapshot => {
-        console.log('querySnapshot doc: ', querySnapshot);
-        console.log('querySnapshot size: ', querySnapshot.size);
-        console.log('querySnapshot empty: ', querySnapshot.empty);
-        return querySnapshot.update(itemsToUpdate);
+        // should iterate always once because roundId should be uniq
+        querySnapshot.forEach(doc => {
+            doc.ref.update(itemsToUpdate);
+        });
     });
 };
 

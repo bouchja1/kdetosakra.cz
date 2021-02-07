@@ -8,19 +8,29 @@ import useSMapResize from '../../hooks/useSMapResize';
 import { getMapInstanceByGameMode, setupMapInstanceAndLayers, drawSingleRoundResultLayerToMap } from '../../util/map';
 
 const SMap = ({
-    guessedPoints, type, onMapClick, refLayeredMapValue, refLayerValue, refVectorLayerSMapValue,
+    guessedPoints,
+    type,
+    onMapClick,
+    refLayeredMapValue,
+    refLayerValue,
+    refVectorLayerSMapValue,
+    isBattle,
 }) => {
     const { width } = useSMapResize();
     const map = useRef();
     const mapyContext = useContext(MapyCzContext);
     const currentGame = useSelector(state => state.game.currentGame);
+    const currentBattleInfo = useSelector(state => state.battle.currentBattle);
 
     const { mode, city, radius } = currentGame;
-
-    // console.log('**** NA TOHLE KOUNKNI V MULTIPLAYERU: ', currentGame);
+    const {
+        mode: battleMode, radius: battleRadius, rounds, round,
+    } = currentBattleInfo;
 
     const initSMap = () => {
-        const mapInstance = getMapInstanceByGameMode(mapyContext.SMap, mode, city, radius, map.current);
+        const mapInstance = isBattle
+            ? getMapInstanceByGameMode(mapyContext.SMap, mode, city, radius, map.current)
+            : getMapInstanceByGameMode(mapyContext.SMap, battleMode, rounds[round - 1].city, battleRadius, map.current);
         setupMapInstanceAndLayers(mapyContext.SMap, mapInstance);
 
         // vrstva se značkami
@@ -48,10 +58,10 @@ const SMap = ({
     };
 
     useEffect(() => {
-        if (mapyContext.loadedMapApi) {
+        if (mapyContext.loadedMapApi && currentGame && currentBattleInfo) {
             initSMap();
         }
-    }, [mapyContext.loadedMapApi]);
+    }, [mapyContext.loadedMapApi, currentGame, currentBattleInfo]);
 
     return (
         <>
