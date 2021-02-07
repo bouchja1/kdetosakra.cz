@@ -19,7 +19,6 @@ const initialState = {
         myTotalScore: 0,
         myNickname: null,
         isGameFinishedSuccessfully: false,
-        isGameActive: false,
         isGameStarted: false,
         players: [],
         radius: null,
@@ -36,7 +35,7 @@ const gameReducer = (state = initialState, action) => {
                     ...action.payload,
                 },
             };
-        case getType(setBattlePlayers):
+        case getType(setBattlePlayers): {
             return {
                 ...state,
                 currentBattle: {
@@ -44,6 +43,7 @@ const gameReducer = (state = initialState, action) => {
                     players: action.payload,
                 },
             };
+        }
         case getType(setMyUserInfoToCurrentBattle):
             return {
                 ...state,

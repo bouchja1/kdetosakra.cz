@@ -135,7 +135,6 @@ export const Battle = () => {
                 isGameFinishedSuccessfully,
                 withCountdown,
                 countdown,
-                isGameActive,
                 isGameStarted,
                 mode,
                 radius,
@@ -159,16 +158,15 @@ export const Battle = () => {
                     isGameFinishedSuccessfully,
                     withCountdown,
                     countdown,
-                    isGameActive,
                     isGameStarted,
                 }),
             );
         }
     }, [battleFromFirestore]);
 
+    // load my user in the beginning
     useEffect(() => {
         if (battlePlayersFromFirestore) {
-            dispatch(setBattlePlayers(battlePlayersFromFirestore));
             const myUser = findMyUserFromBattle(battlePlayersFromFirestore, randomUserToken);
             if (myUser) {
                 const { name, totalScore } = myUser;
@@ -220,7 +218,12 @@ export const Battle = () => {
     useEffect(() => {
         const unsubscribe = streamBattlePlayersDetail(battleId, {
             next: querySnapshot => {
-                const updatedBattlePlayers = querySnapshot.docs.map(docSnapshot => docSnapshot.data());
+                const updatedBattlePlayers = querySnapshot.docs.map(docSnapshot => {
+                    return {
+                        documentId: docSnapshot.id,
+                        ...docSnapshot.data(),
+                    };
+                });
                 dispatch(setBattlePlayers(updatedBattlePlayers));
             },
             error: err => {},

@@ -35,7 +35,6 @@ export const createBattle = (authorId, mode, radius, selectedCity) => {
         rounds: [],
         radius: radius ?? generateRandomRadius(), // maybe not necessary here
         selectedCity: selectedCity ?? null,
-        isGameActive: true,
         isGameStarted: false,
         isGameFinishedSuccessfully: false,
         countdown: 60,
@@ -113,4 +112,18 @@ export const addPlayerToBattle = (newPlayer, battleId) => {
             }
             throw new Error('duplicate-item-error');
         });
+};
+
+export const deleteNotPreparedBattlePlayers = battleId => {
+    const notReadyPlayers = db
+        .collection(COLLECTION_BATTLE)
+        .doc(battleId)
+        .collection('players')
+        .where('isReady', '==', false);
+
+    return notReadyPlayers.get().then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+            doc.ref.delete();
+        });
+    });
 };

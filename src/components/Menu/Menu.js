@@ -43,7 +43,7 @@ const Menu = () => {
 
     const showBattleInfo = () => {
         const {
-            isGameFinishedSuccessfully, isGameActive, isGameStarted, withCountdown, countdown,
+            isGameFinishedSuccessfully, isGameStarted, withCountdown, countdown,
         } = currentBattleInfo;
         return isGameStarted ? 'JO' : 'NE';
     };

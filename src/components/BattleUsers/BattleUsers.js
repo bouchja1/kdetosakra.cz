@@ -4,9 +4,8 @@ import {
 } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { CheckCircleTwoTone } from '@ant-design/icons';
 
-import { updateBattle } from '../../services/firebase';
+import { updateBattle, deleteNotPreparedBattlePlayers } from '../../services/firebase';
 import useSMapResize from '../../hooks/useSMapResize';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import { findMyUserFromBattle } from '../../util';
@@ -35,23 +34,6 @@ const BattleUsers = () => {
         updateBattle(battleId, itemsToUpdate)
             .then(docRef => {})
             .catch(err => {});
-    };
-
-    const getInvolvedBattlePlayers = () => {
-        const players = currentBattlePlayers ?? [];
-        return players.map((player, i) => {
-            const { name, isReady } = player;
-            return (
-                <>
-                    <div key={i} className="battle-players-detail">
-                        <div className="battle-players-detail--name">{name}</div>
-                        <div className="battle-players-detail--status">
-                            {isReady ? <CheckCircleTwoTone twoToneColor="#52c41a" /> : <Spin size="small" />}
-                        </div>
-                    </div>
-                </>
-            );
-        });
     };
 
     return (
@@ -114,22 +96,23 @@ const BattleUsers = () => {
                                 />
                             </>
                         )}
-                        {/*
-                                                <p>
-                            Jako tvůrce hry máte možnost začít hru bez čekání na potvrzení od zbylých hráčů. Ti, co
-                            nezvolili možnost <b>Připraven</b>, budou ale ze hry vyhozeni.
+                        <p>
+                            Jako admin hry můžete začít hru ihned bez čekání na potvrzení zbylých hráčů. Ti, co
+                            nezvolili možnost
+                            {' '}
+                            <b>Připraven</b>
+                            , budou ale ze hry vyhozeni.
                         </p>
                         <Button
                             type="primary"
                             onClick={() => {
-                                updateBattle(battleId, { isGameStarted: true })
-                                    .then(docRef => {})
+                                deleteNotPreparedBattlePlayers(battleId)
+                                    .then(res => {})
                                     .catch(err => {});
                             }}
                         >
-                            Začít hru bez čekání
+                            Začít hru ihned
                         </Button>
-                        */}
                     </div>
                 )}
             </div>
