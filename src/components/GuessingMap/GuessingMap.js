@@ -1,7 +1,7 @@
 import React, {
     useState, useContext, useRef, useEffect
 } from 'react';
-import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { Button } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import MapyCzContext from '../../context/MapyCzContext';
@@ -44,6 +44,7 @@ const GuessingMap = ({
     const refVectorLayerSMapValue = useRef();
     const refLayeredMapValue = useRef();
 
+    const [showResult, setShowResult] = useState(false);
     const [guessButtonDisabled, setGuessButtonDisabled] = useState(true);
     const [nextRoundButtonVisible, setNextRoundButtonVisible] = useState(false);
     const [guessedCoordinates, setGuessedCoordinates] = useState({
@@ -226,6 +227,18 @@ const GuessingMap = ({
         });
     };
 
+    if (showResult) {
+        return (
+            <Redirect
+                to={{
+                    pathname: '/vysledek',
+                }}
+            >
+                Vyhodnotit hru
+            </Redirect>
+        );
+    }
+
     return (
         <>
             {!roundGuessed ? (
@@ -244,15 +257,10 @@ const GuessingMap = ({
                     onClick={() => {
                         // storeResult(mode, city?.name, totalRoundScore, randomUserResultToken) // not used now
                         dispatch(setLastResult({ guessedPoints, totalScore }));
+                        setShowResult(true);
                     }}
                 >
-                    <Link
-                        to={{
-                            pathname: '/vysledek',
-                        }}
-                    >
-                        Vyhodnotit hru
-                    </Link>
+                    Vyhodnotit hru
                 </Button>
             ) : (
                 <>

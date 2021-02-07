@@ -11,13 +11,13 @@ const { Content } = Layout;
 
 export const RandomCity = () => {
     const dispatch = useDispatch();
-    useGameMenuResize();
     const currentGame = useSelector(state => state.game.currentGame);
+    useGameMenuResize();
 
-    const { mode, radius } = currentGame;
+    const { radius } = currentGame;
 
     // we want to access random game from everywhere - does not matter which city or radius or etc. is picked from the homepage
-    if (mode !== gameModes.random) {
+    if (currentGame?.mode !== gameModes.random) {
         dispatch(
             setCurrentGame({
                 mode: gameModes.random,

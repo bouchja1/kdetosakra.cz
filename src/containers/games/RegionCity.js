@@ -9,8 +9,8 @@ import gameModes from '../../enums/modes';
 const { Content } = Layout;
 
 export const RegionCity = () => {
-    useGameMenuResize();
     const currentGame = useSelector(state => state.game.currentGame);
+    useGameMenuResize();
 
     const { mode, radius, city } = currentGame;
 

@@ -37,16 +37,6 @@ export const Info = () => {
                     </a>
                     . Hratelnost je takřka neomezená a jedinými limity jsou hranice České republiky 🇨🇿
                 </Paragraph>
-                <Title level={3}>O projektu</Title>
-                <Paragraph>
-                    Hru jsem naprogramoval koncem roku 2019 za účelem seznámení se s JS knihovnou React.js. Jedná se o
-                    hobby projekt, který postupně vylepšuji. V plánu jsou i další rozšíření. Pokud vám hra dělá radost,
-                    můžete
-                    {' '}
-                    <a href="https://www.buymeacoffee.com/mmwbwdq">podpořit její provoz nebo mi koupit kafe </a>
-                    {' '}
-                    ☕ ✌️️
-                </Paragraph>
                 <Title level={3}>Jak hrát?</Title>
                 <Paragraph>
                     Hra nabízí
@@ -76,6 +66,16 @@ export const Info = () => {
                     libovolně pohybovat a dostat se až na místo, které je vám povědomé. Nebo spatříte název místa na
                     billboardu. Nebo dojedete až k ceduli označující název obce... nebo si vypracujete vlastní herní
                     strategii. To už je na vás.
+                </Paragraph>
+                <Title level={3}>O projektu</Title>
+                <Paragraph>
+                    Hru jsem naprogramoval koncem roku 2019 za účelem seznámení se s JS knihovnou React.js. Jedná se o
+                    hobby projekt, který postupně vylepšuji. V plánu jsou i další rozšíření. Pokud vám hra dělá radost,
+                    můžete
+                    {' '}
+                    <a href="https://www.buymeacoffee.com/mmwbwdq">podpořit její provoz nebo mi koupit kafe </a>
+                    {' '}
+                    ☕ ✌️️
                 </Paragraph>
                 <Paragraph>
                     Máte dotaz? Tak mi

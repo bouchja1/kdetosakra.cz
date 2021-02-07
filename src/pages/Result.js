@@ -2,14 +2,12 @@ import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Button, Progress, Typography } from 'antd';
-import { ResultSMapWrapper } from '../components/SMap/ResultSMapWrapper';
 import { roundToTwoDecimal } from '../util';
-import { TOTAL_ROUNDS_MAX } from '../constants/game';
+import { TOTAL_ROUNDS_MAX, resultPathColors } from '../constants/game';
 import useGameMenuResize from '../hooks/useGameMenuResize';
+import ResultSMap from '../components/ResultSMap';
 
 const { Title } = Typography;
-
-const resultPathColors = ['#00bc57', '#6e45f9', '#29c2ff', '#f99b45', '#f945a9'];
 
 export const Result = () => {
     useGameMenuResize();
@@ -93,7 +91,7 @@ export const Result = () => {
                         Hrát znovu
                     </Button>
                 </div>
-                <ResultSMapWrapper guessedPoints={guessedPoints} resultPathColors={resultPathColors} />
+                <ResultSMap guessedPoints={guessedPoints} />
             </>
         );
     }

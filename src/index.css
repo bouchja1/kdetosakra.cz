@@ -180,7 +180,7 @@ label {
 }
 
 .result-container {
-    min-height: 250px;
+    height: 200px;
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -379,7 +379,7 @@ label {
 }
 
 .smap {
-    height: 450px;
+    height: 450px !important;
     margin-bottom: 5px;
 }
 
@@ -392,10 +392,6 @@ label {
     display: flex;
     flex-direction: column;
     justify-content: center;
-}
-
-.smap-result {
-    height: 450px;
 }
 
 .highlighted {

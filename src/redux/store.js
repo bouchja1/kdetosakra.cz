@@ -15,11 +15,7 @@ const persistConfig = {
 
 const persistedCombinedReducers = persistCombineReducers(persistConfig, reducers);
 
-const initialState = {
-    something: [],
-};
-
-const store = createStore(persistedCombinedReducers, initialState, composeWithDevTools(applyMiddleware()));
+const store = createStore(persistedCombinedReducers, composeWithDevTools(applyMiddleware()));
 
 const persistor = persistStore(store);
 
