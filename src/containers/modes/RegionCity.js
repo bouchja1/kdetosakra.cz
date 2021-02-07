@@ -166,7 +166,7 @@ export const RegionCity = ({ multiplayerSupported }) => {
                                     disabled={isSubmitting}
                                     onClick={() => setBattleModalVisible(true)}
                                 >
-                                    Hrát proti přátelům
+                                    Hrát s přáteli
                                 </Button>
                                 <BattleLinkModal
                                     visible={battleModalVisible}

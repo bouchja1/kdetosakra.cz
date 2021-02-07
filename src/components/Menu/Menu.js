@@ -7,7 +7,7 @@ import { TOTAL_ROUNDS_MAX } from '../../constants/game';
 import gameModes from '../../enums/modes';
 import routeNames from '../../constants/routes';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
-import { findMyUserFromBattle } from '../../util';
+import { findMyUserFromBattle, mapGameModeName } from '../../util';
 
 const isGameInfoShown = (pathname, battleId) => {
     return (
@@ -38,18 +38,7 @@ const Menu = () => {
 
     const mapModeName = () => {
         const mode = isBattle ? currentBattleInfo.mode : currentGameInfo.mode;
-        switch (mode) {
-            case gameModes.random:
-                return 'náhodné místo';
-            case gameModes.custom:
-                return 'vlastní místo';
-            case gameModes.geolocation:
-                return 'moje poloha';
-            case gameModes.city:
-                return 'krajské město';
-            default:
-        }
-        return '';
+        return mapGameModeName(mode);
     };
 
     const showBattleInfo = () => {

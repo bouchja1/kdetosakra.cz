@@ -1,5 +1,6 @@
 import { crCities } from '../data/cr';
 import randomNicknames from '../constants/nicknames';
+import gameModes from '../enums/modes';
 
 const EARTH_RADIUS = 6371000; /* meters  */
 const DEG_TO_RAD = Math.PI / 180.0;
@@ -146,3 +147,18 @@ export const findMyUserFromBattle = (battlePlayersFromFirestore, randomUserToken
 };
 
 export const RADIUS_DESCRIPTION = 'Poloměr kružnice, ve které se náhodně vygeneruje panorama (středem je dle zvoleného módu buď centrum obce nebo vaše poloha).';
+
+export const mapGameModeName = mode => {
+    switch (mode) {
+        case gameModes.random:
+            return 'náhodné místo';
+        case gameModes.custom:
+            return 'vlastní místo';
+        case gameModes.geolocation:
+            return 'moje poloha';
+        case gameModes.city:
+            return 'krajské město';
+        default:
+    }
+    return '';
+};

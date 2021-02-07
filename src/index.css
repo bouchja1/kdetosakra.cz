@@ -343,6 +343,24 @@ label {
     font-size: 13px;
 }
 
+.battle-link-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.battle-link-container .ant-input {
+    display: flex;
+    width: 90%;
+}
+
+.battle-link-container--clipboard {
+    display: flex;
+    width: 10%;
+    justify-content: center;
+    align-items: center;
+}
+
 .battle-players-detail--status {
     display: flex;
     flex: 1;

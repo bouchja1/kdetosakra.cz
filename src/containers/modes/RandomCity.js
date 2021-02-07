@@ -57,7 +57,7 @@ export const RandomCity = ({ multiplayerSupported }) => {
                     }
                 }}
             >
-                Hrát proti přátelům
+                Hrát s přáteli
             </Button>
             <BattleLinkModal
                 visible={battleModalVisible}
