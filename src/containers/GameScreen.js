@@ -34,6 +34,7 @@ export const GameScreen = ({
     const [panoramaLoading, setPanoramaLoading] = useState(false);
 
     const { round, totalScore } = currentGame;
+    const { round: lastGuessedRound, rounds } = currentBattleInfo;
 
     useEffect(() => {
         if (mapyContext.loadedMapApi && isGameStarted) {
@@ -43,8 +44,7 @@ export const GameScreen = ({
 
     useEffect(() => {
         if (isBattle) {
-            const { round: lastGuessedRound, rounds } = currentBattleInfo;
-            if (rounds.length) {
+            if (rounds.length && isGameStarted) {
                 const roundToGuess = rounds[lastGuessedRound];
                 const { city: cityToGuess, panoramaPlace: panoramaPlaceToGuess } = roundToGuess;
                 setPanoramaPlace(panoramaPlaceToGuess);
@@ -60,7 +60,7 @@ export const GameScreen = ({
                 setCurrentCity(city);
             }
         }
-    }, [mapyContext.loadedMapApi, mode, radius, city, isBattle, isGameStarted]);
+    }, [mapyContext.loadedMapApi, mode, radius, city, isBattle, isGameStarted, rounds, lastGuessedRound]);
 
     const makeSetPanoramaLoading = loading => {
         setPanoramaLoading(loading);

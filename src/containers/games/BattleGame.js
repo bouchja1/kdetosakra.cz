@@ -44,15 +44,17 @@ export const Battle = () => {
     const [localUserForbidden, setLocalUserForbidden] = useState(false);
 
     useEffect(() => {
-        if (currentBattleInfo?.battleId !== battleId) {
+        if (currentBattleInfo && currentBattleInfo.battleId !== battleId) {
             dispatch(resetCurrentBattle());
         }
-        if (currentBattlePlayers.length) {
+        if (currentBattlePlayers && currentBattlePlayers.length && randomUserToken) {
             const localUserMemberOfGameArray = currentBattlePlayers.filter(player => player.userId === randomUserToken);
-            setLocalUserForbidden(!localUserMemberOfGameArray.length);
-            dispatch(resetCurrentBattle());
+            if (currentBattleInfo.isGameStarted && !localUserMemberOfGameArray.length) {
+                setLocalUserForbidden(!localUserMemberOfGameArray.length);
+                dispatch(resetCurrentBattle());
+            }
         }
-    }, []);
+    }, [currentBattleInfo, currentBattlePlayers, randomUserToken]);
 
     // multiplayer game is being started!
     useEffect(() => {
@@ -117,7 +119,6 @@ export const Battle = () => {
 
     useEffect(() => {
         if (battleFromFirestore && battleRoundsFromFirestore) {
-            console.log('*** battleRoundsFromFirestore: ', battleRoundsFromFirestore);
             dispatch(
                 setCurrentBattleRound(
                     battleFromFirestore.isGameStarted ? findLastGuessedRound(battleRoundsFromFirestore) : 0,
@@ -135,6 +136,7 @@ export const Battle = () => {
                     if (battleDetail.exists) {
                         const battleData = battleDetail.data();
                         // don't add an user when the game is started
+
                         if (randomUserToken && !battleData.isGameStarted) {
                             addPlayerToBattle(
                                 {

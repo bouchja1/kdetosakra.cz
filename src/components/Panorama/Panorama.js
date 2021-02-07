@@ -46,7 +46,6 @@ const Panorama = ({
                             // panorama could not be shown
                             if (findPanoramaTriesCounter < MAX_PANORAMA_TRIES) {
                                 setFindPanoramaTriesCounter(findPanoramaTriesCounter + 1);
-                                makeRefreshPanorama();
                             } else {
                                 throw new Error('Panorama was not found');
                             }
@@ -58,14 +57,9 @@ const Panorama = ({
             };
             getBestPanorama();
         }
-    }, [mapyContext.loadedMapApi, panoramaScene, panoramaPlace, isGameStarted]);
+    }, [mapyContext.loadedMapApi, panoramaScene, panoramaPlace, isGameStarted, findPanoramaTriesCounter]);
 
     const isPanoramaLoading = !panoramaPlace || !isGameStarted || panoramaLoading;
-
-    console.log('NOO: ', isPanoramaLoading);
-    console.log('panoramaPlace: ', panoramaPlace);
-    console.log('isGameStarted: ', isGameStarted);
-    console.log('panoramaLoading: ', panoramaLoading);
 
     return (
         <Spin
