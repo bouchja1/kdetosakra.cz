@@ -147,7 +147,7 @@ export const addRoundToBattleRounds = (battleId, newRound) => {
         .add(newRound);
 };
 
-export const addRoundBatchToBattleRounds = (battleId, roundsArray) => {
+export const addRoundBatchToBattleRounds = async (battleId, roundsArray) => {
     const batch = db.batch();
     roundsArray.forEach(doc => {
         const docRef = db

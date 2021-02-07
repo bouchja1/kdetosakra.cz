@@ -15,8 +15,6 @@ const ResultSMap = ({ guessedPoints }) => {
 
     const { mode, city, radius } = currentGame;
 
-    console.log('**** NA TOHLE KOUNKNI V RESULTU #######: ', currentGame);
-
     const initSMap = () => {
         const mapInstance = getMapInstanceByGameMode(mapyContext.SMap, mode, city, radius, map.current);
         setupMapInstanceAndLayers(mapyContext.SMap, mapInstance);

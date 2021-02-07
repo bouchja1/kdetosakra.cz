@@ -1,6 +1,7 @@
 import { createAction } from 'typesafe-actions';
 
 export const setCurrentBattle = createAction('@battle/SET_CURRENT_BATTLE')();
+export const setCurrentBattleRounds = createAction('@battle/SET_CURRENT_BATTLEROUNDS')();
 export const setMyUserInfoToCurrentBattle = createAction('@battle/SET_MY_USER_INFO_TO_CURRENT_BATTLE')();
 export const setRoundsToCurrentBattle = createAction('@battle/SET_ROUNDS_TO_CURRENT_BATTLE')();
 export const setBattlePlayers = createAction('@battle/SET_BATTLE_PLAYERS')();

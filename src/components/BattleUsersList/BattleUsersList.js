@@ -3,11 +3,68 @@ import { Button, Spin, Typography } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { CheckCircleTwoTone } from '@ant-design/icons';
-import { updateBattlePlayer } from '../../services/firebase';
-import { findMyUserFromBattle } from '../../util';
+import { addRoundBatchToBattleRounds, updateBattlePlayer } from '../../services/firebase';
+import {
+    findMyUserFromBattle, generatePlaceInRadius, generateRandomRadius, getRandomCzechPlace
+} from '../../util';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
+import { TOTAL_ROUNDS_MAX } from '../../constants/game';
+import gameModes from '../../enums/modes';
 
 const { Title } = Typography;
+
+const generateRounds = (mode, battleId) => {
+    const generatedRounds = [];
+    // pokud krajske mesto
+    /*
+    5x vygeneroat panorama place s radius a city vybreanym - setPanoramaPlace(generatePlaceInRadius(radius, city));
+     */
+
+    // pokud nahoda
+    /*
+    5x vygenervoat nahodne city city = getRandomCzechPlace();
+    5x vygenervoat nahodne radius radius = generateRandomRadius();
+    5x z toho vygeneroat panorama place - setPanoramaPlace(generatePlaceInRadius(radius, city));
+     */
+
+    // pokud vlastni misto
+    /*
+    5x vygeneroat panorama place s radius a city vybreanym - setPanoramaPlace(generatePlaceInRadius(radius, city));
+     */
+
+    for (let i = 0; i < TOTAL_ROUNDS_MAX; i++) {
+        switch (mode) {
+            case gameModes.random: {
+                const roundCity = getRandomCzechPlace();
+                const roundRadius = generateRandomRadius();
+                const panoramaPlace = generatePlaceInRadius(roundRadius, roundCity);
+                generatedRounds.push({
+                    roundId: i + 1,
+                    panoramaPlace,
+                    isGuessed: false,
+                    guessedTime: 0,
+                    city: roundCity,
+                });
+                break;
+            }
+            case gameModes.city: {
+                generatedRounds.push();
+                break;
+            }
+            case gameModes.custom: {
+                generatedRounds.push();
+                break;
+            }
+            default:
+        }
+    }
+
+    if (generatedRounds.length) {
+        addRoundBatchToBattleRounds(battleId, generatedRounds)
+            .then(docRef => {})
+            .catch(err => {});
+    }
+};
 
 const BattleUsersList = () => {
     const randomUserToken = useGetRandomUserToken();
@@ -71,6 +128,10 @@ const BattleUsersList = () => {
                         disabled={myPlayer?.isReady}
                         type="primary"
                         onClick={() => {
+                            // if the user is a battle creator, he will generate rounds here
+                            if (currentBattleInfo.createdById === randomUserToken) {
+                                generateRounds(currentBattleInfo.mode, currentBattleInfo.battleId);
+                            }
                             updateBattlePlayer(battleId, randomUserToken, { isReady: true })
                                 .then(docRef => {})
                                 .catch(err => {});

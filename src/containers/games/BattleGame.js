@@ -14,16 +14,9 @@ import {
     streamBattleRoundsDetail,
     updateBattle,
 } from '../../services/firebase';
-import { TOTAL_ROUNDS_MAX } from '../../constants/game';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import {
-    getRandomCzechPlace,
-    getRandomNickname,
-    generateRandomRadius,
-    generatePlaceInRadius,
-    findMyUserFromBattle,
-    findLastGuessedRound,
-    sortBattleRoundsById,
+    getRandomNickname, findMyUserFromBattle, findLastGuessedRound, sortBattleRoundsById
 } from '../../util';
 import useGameMenuResize from '../../hooks/useGameMenuResize';
 import {
@@ -34,68 +27,8 @@ import {
     setRoundsToCurrentBattle,
 } from '../../redux/actions/battle';
 import { GameScreen } from '../GameScreen';
-import gameModes from '../../enums/modes';
 
 const { Content } = Layout;
-
-const checkGenerateRounds = (isGameStarted, mode, battleId) => {
-    const generatedRounds = [];
-    // pokud krajske mesto
-    /*
-    5x vygeneroat panorama place s radius a city vybreanym - setPanoramaPlace(generatePlaceInRadius(radius, city));
-     */
-
-    // pokud nahoda
-    /*
-    5x vygenervoat nahodne city city = getRandomCzechPlace();
-    5x vygenervoat nahodne radius radius = generateRandomRadius();
-    5x z toho vygeneroat panorama place - setPanoramaPlace(generatePlaceInRadius(radius, city));
-     */
-
-    // pokud vlastni misto
-    /*
-    5x vygeneroat panorama place s radius a city vybreanym - setPanoramaPlace(generatePlaceInRadius(radius, city));
-     */
-
-    if (isGameStarted) {
-        for (let i = 0; i < TOTAL_ROUNDS_MAX; i++) {
-            switch (mode) {
-                case gameModes.random: {
-                    const roundCity = getRandomCzechPlace();
-                    const roundRadius = generateRandomRadius();
-                    const panoramaPlace = generatePlaceInRadius(roundRadius, roundCity);
-                    generatedRounds.push({
-                        roundId: i + 1,
-                        panoramaPlace,
-                        isGuessed: false,
-                        guessedTime: 0,
-                        city: roundCity,
-                    });
-                    break;
-                }
-                case gameModes.city: {
-                    generatedRounds.push();
-                    break;
-                }
-                case gameModes.custom: {
-                    generatedRounds.push();
-                    break;
-                }
-                default:
-            }
-        }
-    }
-
-    if (generatedRounds.length) {
-        console.log('--------------------------------------------------------: ', generatedRounds.length);
-        console.log('generatedRounds: ', generatedRounds);
-        addRoundBatchToBattleRounds(battleId, generatedRounds)
-            .then(docRef => {})
-            .catch(err => {});
-    }
-
-    return generatedRounds;
-};
 
 export const Battle = () => {
     useGameMenuResize();
@@ -147,13 +80,6 @@ export const Battle = () => {
                 selectedCity,
             } = battleFromFirestore;
 
-            console.log('LALALALALALALAAAAAAAAA: ', battleRoundsFromFirestore);
-
-            // if rounds are empty, this is a new game
-            const roundsToStore = battleRoundsFromFirestore.length
-                ? battleRoundsFromFirestore
-                : checkGenerateRounds(isGameStarted, mode, battleId);
-
             // sum meho score
 
             dispatch(
@@ -162,8 +88,8 @@ export const Battle = () => {
                     battleId,
                     createdById: createdBy,
                     mode,
-                    round: isGameStarted ? findLastGuessedRound(roundsToStore) : 0,
-                    rounds: sortBattleRoundsById(roundsToStore),
+                    round: isGameStarted ? findLastGuessedRound(battleRoundsFromFirestore) : 0,
+                    rounds: sortBattleRoundsById(battleRoundsFromFirestore),
                     isGameFinishedSuccessfully,
                     withCountdown,
                     countdown,
@@ -189,13 +115,6 @@ export const Battle = () => {
             }
         }
     }, [battlePlayersFromFirestore]);
-
-    // load battle rounds in the beginning
-    useEffect(() => {
-        if (battleRoundsFromFirestore) {
-            dispatch(setRoundsToCurrentBattle(battleRoundsFromFirestore));
-        }
-    }, [battleRoundsFromFirestore]);
 
     useEffect(() => {
         if (battleId) {
@@ -286,12 +205,12 @@ export const Battle = () => {
                         ...docSnapshot.data(),
                     };
                 });
-                dispatch(setRoundsToCurrentBattle(updatedBattleRounds));
+                setBattleRoundsFromFirestore(updatedBattleRounds);
             },
             error: err => {},
         });
         return unsubscribe;
-    }, [battleId, setRoundsToCurrentBattle]);
+    }, [battleId, setBattleRoundsFromFirestore]);
 
     useEffect(() => {
         const unsubscribe = streamBattleDetail(battleId, {
@@ -304,7 +223,7 @@ export const Battle = () => {
         return unsubscribe;
     }, [battleId, setBattleFromFirestore]);
 
-    console.log('current battle info: ', currentBattleInfo);
+    // console.log('current battle info: ', currentBattleInfo);
 
     if (notFound || localUserForbidden) {
         return (
