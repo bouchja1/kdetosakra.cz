@@ -24,6 +24,8 @@ const Panorama = ({
     const [findPanoramaTriesCounter, setFindPanoramaTriesCounter] = useState(0);
     const [panoramaFounded, setPanoramaFounded] = useState(true);
 
+    console.log('TAK CO SEM XHODI???????: panoramaPlace: ', panoramaPlace);
+
     useEffect(() => {
         if (mapyContext.loadedMapApi && panoramaPlace && panoramaScene && isGameStarted) {
             const { SMap } = mapyContext;
@@ -60,10 +62,14 @@ const Panorama = ({
         }
     }, [mapyContext.loadedMapApi, panoramaScene, panoramaPlace, isGameStarted]);
 
+    const isPanoramaLoading = !panoramaPlace || !isGameStarted || panoramaLoading;
+
+    console.log(' OOOOOOOOOOOOO: ', isPanoramaLoading);
+
     return (
         <Spin
             tip={!isGameStarted ? 'Čekám, až budou všichni hráči připraveni' : 'Načítám panorama...'}
-            spinning={!isGameStarted || panoramaLoading}
+            spinning={isPanoramaLoading}
             size="large"
         >
             {' '}

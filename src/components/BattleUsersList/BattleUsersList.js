@@ -16,8 +16,6 @@ const BattleUsersList = () => {
     const currentBattlePlayers = useSelector(state => state.battle.currentBattle.players);
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
 
-    console.log('currentBattlePlayers: ', currentBattlePlayers);
-
     useEffect(() => {
         // find my user
         setMyPlayer(findMyUserFromBattle(currentBattlePlayers, randomUserToken));
@@ -60,15 +58,14 @@ const BattleUsersList = () => {
     return (
         <>
             {' '}
-            <Title level={5}>Hráči hádají:</Title>
             {currentBattleInfo.isGameStarted ? (
                 <>
-                    {' '}
+                    <Title level={5}>Hráči hádají:</Title>
                     <div className="battle-players">{battleId && getGuessingBattlePlayers()}</div>
                 </>
             ) : (
                 <>
-                    {' '}
+                    <Title level={5}>Hráči:</Title>
                     <div className="battle-players">{battleId && getWaitingBattlePlayers()}</div>
                     <Button
                         disabled={myPlayer?.isReady}

@@ -134,7 +134,7 @@ export const findLastGuessedRound = roundsArray => {
             return roundId;
         }
     }
-    return 0;
+    return 1;
 };
 
 export const findMyUserFromBattle = (battlePlayersFromFirestore, randomUserToken) => {
@@ -161,4 +161,9 @@ export const mapGameModeName = mode => {
         default:
     }
     return '';
+};
+
+export const getUnixTimestamp = date => {
+    // eslint-disable-next-line no-bitwise
+    return (date.getTime() / 1000) | 0;
 };

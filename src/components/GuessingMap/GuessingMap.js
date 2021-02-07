@@ -12,6 +12,8 @@ import { RoundSMapWrapper } from '../SMap/RoundSMapWrapper';
 import { ResultSMapWrapper } from '../SMap/ResultSMapWrapper';
 import gameModes from '../../enums/modes';
 import { setTotalRoundCounter } from '../../redux/actions/game';
+import { addGuessedRoundToPlayer, updateBattleRound } from '../../services/firebase';
+import { getUnixTimestamp } from '../../util';
 
 const GuessingMap = ({
     makeCountScore,
@@ -218,13 +220,15 @@ const GuessingMap = ({
             guessedCoordinates.mapLat,
         );
         drawGuessedDistance(currentPanoramaPositionPoint, selectedPointOnMap, panoramaCoordinates);
-        makeCountScore({
+        const guessedRoundPoint = {
             pointPanorama: currentPanoramaPositionPoint,
             pointMap: selectedPointOnMap,
             currentCity,
             distance,
             score,
-        });
+        };
+        makeCountScore(guessedRoundPoint);
+        return guessedRoundPoint;
     };
 
     if (showResult) {
@@ -268,7 +272,43 @@ const GuessingMap = ({
                         <Button
                             disabled={guessButtonDisabled || panoramaLoading || !isGameStarted}
                             onClick={() => {
-                                calculateCoordsAndDrawGuess();
+                                const guessedRoundPoint = calculateCoordsAndDrawGuess();
+                                if (isBattle) {
+                                    const {
+                                        battleId,
+                                        myDocumentId,
+                                        round: currentGuessedRoundNumber,
+                                        rounds,
+                                        withCountdown,
+                                        countdown,
+                                    } = currentBattleInfo;
+                                    const currentRound = rounds[currentGuessedRoundNumber - 1];
+                                    const { isGuessed, guessedTime } = currentRound;
+
+                                    const { pointMap, distance, score } = guessedRoundPoint;
+                                    const playerRoundGuess = {
+                                        roundId: currentGuessedRoundNumber,
+                                        pointMap,
+                                        distance,
+                                        score,
+                                    };
+
+                                    if (!isGuessed) {
+                                        updateBattleRound(battleId, currentGuessedRoundNumber, {
+                                            isGuessed: true,
+                                            guessedTime: getUnixTimestamp(new Date()),
+                                        })
+                                            .then(res => console.log('JOO UPDATOVAL JSEM BATTLE ROUND'))
+                                            .catch(err => console.log('EEEEERRR: ', err));
+                                        // TODO zaznamenat guess do player's rounds
+                                    } else {
+                                        // check jestli jeste zbyva cas nebo ne -> jakoze uz neumoznime umistit odhad, zapiseme mu 0 vysledek
+                                        // rozdil mezi guessedtime a timeoutem
+                                        addGuessedRoundToPlayer(battleId, myDocumentId, playerRoundGuess)
+                                            .then(res => console.log('LALALA: ', res))
+                                            .catch(err => console.log('NEEE PROOOC ERR: ', err));
+                                    }
+                                }
                             }}
                             type="primary"
                         >

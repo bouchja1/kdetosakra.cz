@@ -5,10 +5,13 @@ import { Spin, Layout } from 'antd';
 
 import {
     addPlayerToBattle,
+    addRoundBatchToBattleRounds,
     getBattleDetail,
     getBattlePlayers,
+    getBattleRounds,
     streamBattleDetail,
     streamBattlePlayersDetail,
+    streamBattleRoundsDetail,
     updateBattle,
 } from '../../services/firebase';
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
@@ -28,6 +31,7 @@ import {
     setBattlePlayers,
     resetCurrentBattle,
     setMyUserInfoToCurrentBattle,
+    setRoundsToCurrentBattle,
 } from '../../redux/actions/battle';
 import { GameScreen } from '../GameScreen';
 import gameModes from '../../enums/modes';
@@ -83,7 +87,9 @@ const checkGenerateRounds = (isGameStarted, mode, battleId) => {
     }
 
     if (generatedRounds.length) {
-        updateBattle(battleId, { rounds: generatedRounds })
+        console.log('--------------------------------------------------------: ', generatedRounds.length);
+        console.log('generatedRounds: ', generatedRounds);
+        addRoundBatchToBattleRounds(battleId, generatedRounds)
             .then(docRef => {})
             .catch(err => {});
     }
@@ -98,6 +104,7 @@ export const Battle = () => {
     const [notFound, setNotFound] = useState(false);
     const [battleFromFirestore, setBattleFromFirestore] = useState();
     const [battlePlayersFromFirestore, setBattlePlayersFromFirestore] = useState();
+    const [battleRoundsFromFirestore, setBattleRoundsFromFirestore] = useState();
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
     const currentBattlePlayers = useSelector(state => state.battle.currentBattle.players);
     const randomUserToken = useGetRandomUserToken();
@@ -119,7 +126,7 @@ export const Battle = () => {
         const readyPlayers = currentBattlePlayers.filter(player => player.isReady);
         if (!isGameStarted && currentBattlePlayers.length > 1 && readyPlayers.length === currentBattlePlayers.length) {
             // all players are ready! lets start the game
-            updateBattle(battleId, { isGameStarted: true })
+            updateBattle(battleId, { isGameStarted: true, round: 1 })
                 .then(docRef => {})
                 .catch(err => {});
         }
@@ -127,11 +134,10 @@ export const Battle = () => {
 
     // lets setup a new game or modify existing one
     useEffect(() => {
-        if (battleFromFirestore) {
+        if (battleFromFirestore && battleRoundsFromFirestore) {
             const {
                 created,
                 createdBy,
-                rounds,
                 isGameFinishedSuccessfully,
                 withCountdown,
                 countdown,
@@ -141,9 +147,12 @@ export const Battle = () => {
                 selectedCity,
             } = battleFromFirestore;
 
+            console.log('LALALALALALALAAAAAAAAA: ', battleRoundsFromFirestore);
+
             // if rounds are empty, this is a new game
-            const roundsToStore = rounds.length ? rounds : checkGenerateRounds(isGameStarted, mode, battleId);
-            const lastGuessedRound = findLastGuessedRound(roundsToStore);
+            const roundsToStore = battleRoundsFromFirestore.length
+                ? battleRoundsFromFirestore
+                : checkGenerateRounds(isGameStarted, mode, battleId);
 
             // sum meho score
 
@@ -153,7 +162,7 @@ export const Battle = () => {
                     battleId,
                     createdById: createdBy,
                     mode,
-                    round: lastGuessedRound,
+                    round: isGameStarted ? findLastGuessedRound(roundsToStore) : 0,
                     rounds: sortBattleRoundsById(roundsToStore),
                     isGameFinishedSuccessfully,
                     withCountdown,
@@ -162,18 +171,31 @@ export const Battle = () => {
                 }),
             );
         }
-    }, [battleFromFirestore]);
+    }, [battleFromFirestore, battleRoundsFromFirestore]);
 
     // load my user in the beginning
     useEffect(() => {
         if (battlePlayersFromFirestore) {
             const myUser = findMyUserFromBattle(battlePlayersFromFirestore, randomUserToken);
             if (myUser) {
-                const { name, totalScore } = myUser;
-                dispatch(setMyUserInfoToCurrentBattle({ myNickname: name, myTotalScore: totalScore }));
+                const { name, totalScore, documentId } = myUser;
+                dispatch(
+                    setMyUserInfoToCurrentBattle({
+                        myNickname: name,
+                        myTotalScore: totalScore,
+                        myDocumentId: documentId,
+                    }),
+                );
             }
         }
     }, [battlePlayersFromFirestore]);
+
+    // load battle rounds in the beginning
+    useEffect(() => {
+        if (battleRoundsFromFirestore) {
+            dispatch(setRoundsToCurrentBattle(battleRoundsFromFirestore));
+        }
+    }, [battleRoundsFromFirestore]);
 
     useEffect(() => {
         if (battleId) {
@@ -205,9 +227,31 @@ export const Battle = () => {
 
             // get and store battle players from firebase
             getBattlePlayers(battleId)
-                .then(querySnapshot => querySnapshot.docs.map(x => x.data()))
+                .then(querySnapshot => {
+                    return querySnapshot.docs.map(docSnapshot => {
+                        return {
+                            documentId: docSnapshot.id,
+                            ...docSnapshot.data(),
+                        };
+                    });
+                })
                 .then(battlePlayers => {
                     setBattlePlayersFromFirestore(battlePlayers);
+                })
+                .catch(err => {});
+
+            // get and store battle players from firebase
+            getBattleRounds(battleId)
+                .then(querySnapshot => {
+                    return querySnapshot.docs.map(docSnapshot => {
+                        return {
+                            documentId: docSnapshot.id,
+                            ...docSnapshot.data(),
+                        };
+                    });
+                })
+                .then(battleRounds => {
+                    setBattleRoundsFromFirestore(battleRounds);
                 })
                 .catch(err => {});
         }
@@ -230,6 +274,24 @@ export const Battle = () => {
         });
         return unsubscribe;
     }, [battleId, setBattlePlayers]);
+
+    // Use an effect hook to subscribe to the battle rounds
+    // automatically unsubscribe when the component unmounts.
+    useEffect(() => {
+        const unsubscribe = streamBattleRoundsDetail(battleId, {
+            next: querySnapshot => {
+                const updatedBattleRounds = querySnapshot.docs.map(docSnapshot => {
+                    return {
+                        documentId: docSnapshot.id,
+                        ...docSnapshot.data(),
+                    };
+                });
+                dispatch(setRoundsToCurrentBattle(updatedBattleRounds));
+            },
+            error: err => {},
+        });
+        return unsubscribe;
+    }, [battleId, setRoundsToCurrentBattle]);
 
     useEffect(() => {
         const unsubscribe = streamBattleDetail(battleId, {

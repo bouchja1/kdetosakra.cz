@@ -6,6 +6,7 @@ import {
     setCurrentBattle,
     setBattlePlayers,
     setMyUserInfoToCurrentBattle,
+    setRoundsToCurrentBattle,
 } from '../actions/battle';
 
 const initialState = {
@@ -51,6 +52,15 @@ const gameReducer = (state = initialState, action) => {
                     ...state.currentBattle,
                     myNickname: action.payload.myNickname,
                     myTotalScore: action.payload.myTotalScore,
+                    myDocumentId: action.payload.myDocumentId,
+                },
+            };
+        case getType(setRoundsToCurrentBattle):
+            return {
+                ...state,
+                currentBattle: {
+                    ...state.currentBattle,
+                    rounds: action.payload,
                 },
             };
         case getType(resetCurrentBattle):

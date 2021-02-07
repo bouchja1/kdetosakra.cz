@@ -44,13 +44,16 @@ export const GameScreen = ({
     useEffect(() => {
         if (isBattle) {
             const { round: lastGuessedRound, rounds } = currentBattleInfo;
+            console.log('LOL: ', rounds);
             if (rounds.length) {
                 const roundToGuess = rounds[lastGuessedRound];
                 const { city: cityToGuess, panoramaPlace: panoramaPlaceToGuess } = roundToGuess;
+                console.log('PAAAAAANORAMA: ', panoramaPlaceToGuess);
                 setPanoramaPlace(panoramaPlaceToGuess);
                 setCurrentCity(cityToGuess);
             }
         } else {
+            console.log('LOOOOOOOOOOOOOOOL');
             if (mode === gameModes.random) {
                 city = getRandomCzechPlace();
             }
@@ -60,13 +63,14 @@ export const GameScreen = ({
                 setCurrentCity(city);
             }
         }
-    }, [mapyContext.loadedMapApi, mode, radius, city, isBattle]);
+    }, [mapyContext.loadedMapApi, mode, radius, city, isBattle, isGameStarted]);
 
     const makeSetPanoramaLoading = loading => {
         setPanoramaLoading(loading);
     };
 
     const makeRefreshPanorama = () => {
+        console.log('NEREFRESJHUJE SE TO NAHODOUM??M??????');
         setPanoramaLoading(true);
         if (mode === gameModes.random) {
             radius = generateRandomRadius();

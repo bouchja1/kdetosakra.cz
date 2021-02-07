@@ -10,16 +10,10 @@ firebase.initializeApp(firebaseConfig);
 firebase.analytics();
 const db = firebase.firestore();
 
-// TODo auth, gets, posts...
-
 const COLLECTION_BATTLE = 'battle';
-
-export const getBattleDetail = battleId => {
-    return db
-        .collection(COLLECTION_BATTLE)
-        .doc(battleId)
-        .get();
-};
+const COLLECTION_BATTLE_PLAYERS = 'players';
+const COLLECTION_BATTLE_ROUNDS = 'battleRounds';
+const COLLECTION_PLAYER_ROUNDS = 'playerRounds';
 
 /**
  * Create a new battle with default setup. Returns documentId of created battle.
@@ -32,7 +26,6 @@ export const createBattle = (authorId, mode, radius, selectedCity) => {
         created: firebase.firestore.FieldValue.serverTimestamp(),
         createdBy: authorId,
         mode,
-        rounds: [],
         radius: radius ?? generateRandomRadius(), // maybe not necessary here
         selectedCity: selectedCity ?? null,
         isGameStarted: false,
@@ -53,7 +46,15 @@ export const streamBattlePlayersDetail = (battleId, observer) => {
     return db
         .collection(COLLECTION_BATTLE)
         .doc(battleId)
-        .collection('players')
+        .collection(COLLECTION_BATTLE_PLAYERS)
+        .onSnapshot(observer);
+};
+
+export const streamBattleRoundsDetail = (battleId, observer) => {
+    return db
+        .collection(COLLECTION_BATTLE)
+        .doc(battleId)
+        .collection(COLLECTION_BATTLE_ROUNDS)
         .onSnapshot(observer);
 };
 
@@ -64,11 +65,35 @@ export const streamBattleDetail = (battleId, observer) => {
         .onSnapshot(observer);
 };
 
+export const getBattleDetail = battleId => {
+    return db
+        .collection(COLLECTION_BATTLE)
+        .doc(battleId)
+        .get();
+};
+
 export const getBattlePlayers = battleId => {
     return db
         .collection(COLLECTION_BATTLE)
         .doc(battleId)
-        .collection('players')
+        .collection(COLLECTION_BATTLE_PLAYERS)
+        .get();
+};
+
+export const getBattleRounds = battleId => {
+    return db
+        .collection(COLLECTION_BATTLE)
+        .doc(battleId)
+        .collection(COLLECTION_BATTLE_ROUNDS)
+        .get();
+};
+
+export const getSingleBattlePlayer = (battleId, playerId) => {
+    return db
+        .collection(COLLECTION_BATTLE)
+        .doc(battleId)
+        .collection(COLLECTION_BATTLE_PLAYERS)
+        .doc(playerId)
         .get();
 };
 
@@ -81,7 +106,7 @@ export const updateBattlePlayer = (battleId, userId, itemsToUpdate) => {
                 return db
                     .collection(COLLECTION_BATTLE)
                     .doc(battleId)
-                    .collection('players')
+                    .collection(COLLECTION_BATTLE_PLAYERS)
                     .doc(matchingPlayer.id)
                     .update(itemsToUpdate);
             }
@@ -101,7 +126,7 @@ export const addPlayerToBattle = (newPlayer, battleId) => {
                 return db
                     .collection(COLLECTION_BATTLE)
                     .doc(battleId)
-                    .collection('players')
+                    .collection(COLLECTION_BATTLE_PLAYERS)
                     .add({
                         name: existingNickname.length ? getRandomNickname() : name,
                         joined: firebase.firestore.FieldValue.serverTimestamp(),
@@ -114,11 +139,64 @@ export const addPlayerToBattle = (newPlayer, battleId) => {
         });
 };
 
+export const addRoundToBattleRounds = (battleId, newRound) => {
+    return db
+        .collection(COLLECTION_BATTLE)
+        .doc(battleId)
+        .collection(COLLECTION_BATTLE_ROUNDS)
+        .add(newRound);
+};
+
+export const addRoundBatchToBattleRounds = (battleId, roundsArray) => {
+    const batch = db.batch();
+    roundsArray.forEach(doc => {
+        const docRef = db
+            .collection(COLLECTION_BATTLE)
+            .doc(battleId)
+            .collection(COLLECTION_BATTLE_ROUNDS)
+            .doc(); // automatically generate unique id
+        batch.set(docRef, doc);
+    });
+    // Commit the batch
+    return batch
+        .commit()
+        .then(res => {
+            console.log('JOOOO BATCH COMMITNUTA: ', res);
+        })
+        .catch(err => console.log('EEER BATCH: ', err));
+};
+
+export const addGuessedRoundToPlayer = (battleId, playerId, newRound) => {
+    return db
+        .collection(COLLECTION_BATTLE)
+        .doc(battleId)
+        .collection(COLLECTION_BATTLE_PLAYERS)
+        .doc(playerId)
+        .collection(COLLECTION_PLAYER_ROUNDS)
+        .add(newRound);
+};
+
+export const updateBattleRound = (battleId, roundId, itemsToUpdate) => {
+    const battleRoundToUpdate = db
+        .collection(COLLECTION_BATTLE)
+        .doc(battleId)
+        .collection(COLLECTION_BATTLE_ROUNDS)
+        .where('roundId', '==', roundId);
+    // .update(itemsToUpdate);
+
+    return battleRoundToUpdate.get().then(querySnapshot => {
+        console.log('querySnapshot doc: ', querySnapshot);
+        console.log('querySnapshot size: ', querySnapshot.size);
+        console.log('querySnapshot empty: ', querySnapshot.empty);
+        return querySnapshot.update(itemsToUpdate);
+    });
+};
+
 export const deleteNotPreparedBattlePlayers = battleId => {
     const notReadyPlayers = db
         .collection(COLLECTION_BATTLE)
         .doc(battleId)
-        .collection('players')
+        .collection(COLLECTION_BATTLE_PLAYERS)
         .where('isReady', '==', false);
 
     return notReadyPlayers.get().then(querySnapshot => {
