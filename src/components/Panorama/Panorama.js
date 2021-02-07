@@ -18,6 +18,7 @@ const Panorama = ({
     panoramaLoading,
     makeSetPanoramaLoading,
     isGameStarted,
+    isBattle,
 }) => {
     const mapyContext = useContext(MapyCzContext);
     const windowHeight = useWindowHeight();
@@ -46,6 +47,9 @@ const Panorama = ({
                             // panorama could not be shown
                             if (findPanoramaTriesCounter < MAX_PANORAMA_TRIES) {
                                 setFindPanoramaTriesCounter(findPanoramaTriesCounter + 1);
+                                if (!isBattle) {
+                                    makeRefreshPanorama();
+                                }
                             } else {
                                 throw new Error('Panorama was not found');
                             }

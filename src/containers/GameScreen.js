@@ -109,6 +109,7 @@ export const GameScreen = ({
                     panoramaLoading={panoramaLoading}
                     makeSetPanoramaLoading={makeSetPanoramaLoading}
                     isGameStarted={isGameStarted}
+                    isBattle={isBattle}
                 />
             </div>
             {/*
