@@ -62,6 +62,11 @@ const Panorama = ({
 
     const isPanoramaLoading = !panoramaPlace || !isGameStarted || panoramaLoading;
 
+    console.log('NOO: ', isPanoramaLoading);
+    console.log('panoramaPlace: ', panoramaPlace);
+    console.log('isGameStarted: ', isGameStarted);
+    console.log('panoramaLoading: ', panoramaLoading);
+
     return (
         <Spin
             tip={!isGameStarted ? 'Čekám, až budou všichni hráči připraveni' : 'Načítám panorama...'}

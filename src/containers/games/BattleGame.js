@@ -5,7 +5,6 @@ import { Spin, Layout } from 'antd';
 
 import {
     addPlayerToBattle,
-    addRoundBatchToBattleRounds,
     getBattleDetail,
     getBattlePlayers,
     getBattleRounds,
@@ -25,6 +24,7 @@ import {
     resetCurrentBattle,
     setMyUserInfoToCurrentBattle,
     setRoundsToCurrentBattle,
+    setCurrentBattleRound,
 } from '../../redux/actions/battle';
 import { GameScreen } from '../GameScreen';
 
@@ -50,6 +50,7 @@ export const Battle = () => {
         if (currentBattlePlayers.length) {
             const localUserMemberOfGameArray = currentBattlePlayers.filter(player => player.userId === randomUserToken);
             setLocalUserForbidden(!localUserMemberOfGameArray.length);
+            dispatch(resetCurrentBattle());
         }
     }, []);
 
@@ -67,7 +68,7 @@ export const Battle = () => {
 
     // lets setup a new game or modify existing one
     useEffect(() => {
-        if (battleFromFirestore && battleRoundsFromFirestore) {
+        if (battleFromFirestore) {
             const {
                 created,
                 createdBy,
@@ -88,8 +89,6 @@ export const Battle = () => {
                     battleId,
                     createdById: createdBy,
                     mode,
-                    round: isGameStarted ? findLastGuessedRound(battleRoundsFromFirestore) : 0,
-                    rounds: sortBattleRoundsById(battleRoundsFromFirestore),
                     isGameFinishedSuccessfully,
                     withCountdown,
                     countdown,
@@ -97,7 +96,7 @@ export const Battle = () => {
                 }),
             );
         }
-    }, [battleFromFirestore, battleRoundsFromFirestore]);
+    }, [battleFromFirestore]);
 
     // load my user in the beginning
     useEffect(() => {
@@ -115,6 +114,18 @@ export const Battle = () => {
             }
         }
     }, [battlePlayersFromFirestore]);
+
+    useEffect(() => {
+        if (battleFromFirestore && battleRoundsFromFirestore) {
+            console.log('*** battleRoundsFromFirestore: ', battleRoundsFromFirestore);
+            dispatch(
+                setCurrentBattleRound(
+                    battleFromFirestore.isGameStarted ? findLastGuessedRound(battleRoundsFromFirestore) : 0,
+                ),
+            );
+            dispatch(setRoundsToCurrentBattle(sortBattleRoundsById(battleRoundsFromFirestore)));
+        }
+    }, [battleFromFirestore, battleRoundsFromFirestore]);
 
     useEffect(() => {
         if (battleId) {

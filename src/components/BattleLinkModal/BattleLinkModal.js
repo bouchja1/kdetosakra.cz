@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-    Button, Input, Modal, Typography, Tooltip, Image
+    Button, Input, Modal, Typography, Tooltip, Image, Spin
 } from 'antd';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { CopyTwoTone } from '@ant-design/icons';
@@ -54,29 +54,30 @@ const BattleLinkModal = ({
                     {isCopied ? <span style={{ color: 'red' }}>Zkopírováno do schránky</span> : null}
                 </>
             )}
-            {!battleLink && (
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <Button
-                        disable={generateLinkInProgress}
-                        type="primary"
-                        onClick={() => {
-                            setGenerateLinkInProgress(true);
-                            // TODO city!!!!!
-                            // eslint-disable-next-line implicit-arrow-linebreak
-                            createBattle(randomUserToken, mode, radius, selectedCity)
-                                .then(docRef => {
-                                    setGenerateLinkInProgress(false);
-                                    setBattleLink(`http://localhost:3000/battle/${docRef.id}`);
-                                })
-                                .catch(err => {
-                                    setGenerateLinkInProgress(false);
-                                });
-                        }}
-                    >
-                        Vygenerovat pozvánku
-                    </Button>
-                </div>
-            )}
+            <Spin spinning={generateLinkInProgress} size="large">
+                {!battleLink && (
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <Button
+                            type="primary"
+                            onClick={() => {
+                                setGenerateLinkInProgress(true);
+                                // TODO city!!!!!
+                                // eslint-disable-next-line implicit-arrow-linebreak
+                                createBattle(randomUserToken, mode, radius, selectedCity)
+                                    .then(docRef => {
+                                        setGenerateLinkInProgress(false);
+                                        setBattleLink(`http://localhost:3000/battle/${docRef.id}`);
+                                    })
+                                    .catch(err => {
+                                        setGenerateLinkInProgress(false);
+                                    });
+                            }}
+                        >
+                            Vygenerovat pozvánku
+                        </Button>
+                    </div>
+                )}
+            </Spin>
             <p style={{ marginTop: '15px' }}>
                 Ten, kdo vygeneroval odkaz, má jako admin možnost zvolit na začátku styl hry - zda bude v každém kole po
                 tipu nejrychlejšího hráče zahájen
