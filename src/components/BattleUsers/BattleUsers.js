@@ -26,8 +26,6 @@ const BattleUsers = () => {
 
     const isBattleCreator = currentBattleInfo?.createdById === randomUserToken;
 
-    console.log('CUUURENT BATTLE INFO: ', currentBattleInfo);
-
     useEffect(() => {
         // find my user
         setMyPlayer(findMyUserFromBattle(currentBattlePlayers, randomUserToken));
@@ -84,12 +82,6 @@ const BattleUsers = () => {
                     </>
                 )}
                 <BattleUsersList />
-                <p style={{ marginTop: '10px' }}>
-                    Hra začíná, až všichni hráči zvolí možnost
-                    {' '}
-                    <b>Připraven</b>
-                    .
-                </p>
                 {isBattleCreator && !currentBattleInfo?.isGameStarted && (
                     <div className="battle-settings">
                         <Title level={5}>Nastavení hry:</Title>
@@ -122,12 +114,10 @@ const BattleUsers = () => {
                                 />
                             </>
                         )}
-                        <p>
+                        {/*
+                                                <p>
                             Jako tvůrce hry máte možnost začít hru bez čekání na potvrzení od zbylých hráčů. Ti, co
-                            nezvolili možnost
-                            {' '}
-                            <b>Připraven</b>
-                            , budou ale ze hry vyhozeni.
+                            nezvolili možnost <b>Připraven</b>, budou ale ze hry vyhozeni.
                         </p>
                         <Button
                             type="primary"
@@ -139,6 +129,7 @@ const BattleUsers = () => {
                         >
                             Začít hru bez čekání
                         </Button>
+                        */}
                     </div>
                 )}
             </div>

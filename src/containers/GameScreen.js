@@ -44,10 +44,8 @@ export const GameScreen = ({
     useEffect(() => {
         if (isBattle) {
             const { round: lastGuessedRound, rounds } = currentBattleInfo;
-            console.log('CUUUUUURENT BATTLE INFO');
             if (rounds.length) {
                 const roundToGuess = rounds[lastGuessedRound];
-                console.log('**** round to guess: ', roundToGuess);
                 const { city: cityToGuess, panoramaPlace: panoramaPlaceToGuess } = roundToGuess;
                 setPanoramaPlace(panoramaPlaceToGuess);
                 setCurrentCity(cityToGuess);

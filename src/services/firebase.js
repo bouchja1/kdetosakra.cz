@@ -4,7 +4,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 
 import { firebaseConfig } from '../constants/firebase';
-import { generateRandomRadius } from '../util';
+import { generateRandomRadius, getRandomNickname } from '../util';
 
 firebase.initializeApp(firebaseConfig);
 firebase.analytics();
@@ -94,15 +94,17 @@ export const addPlayerToBattle = (newPlayer, battleId) => {
     const { name, userId } = newPlayer;
     return getBattlePlayers(battleId)
         .then(querySnapshot => querySnapshot.docs)
-        .then(battlePlayers => battlePlayers.find(player => player.data().userId === userId))
-        .then(matchingPlayer => {
-            if (!matchingPlayer) {
+        .then(querySnapshotDocs => querySnapshotDocs.map(x => x.data()))
+        .then(mappedBattlePlayers => {
+            const matchingPlayer = mappedBattlePlayers.filter(player => player.userId === userId);
+            const existingNickname = mappedBattlePlayers.filter(player => player.name === name);
+            if (matchingPlayer.length === 0) {
                 return db
                     .collection(COLLECTION_BATTLE)
                     .doc(battleId)
                     .collection('players')
                     .add({
-                        name,
+                        name: existingNickname.length ? getRandomNickname() : name,
                         joined: firebase.firestore.FieldValue.serverTimestamp(),
                         userId,
                         isReady: false,

@@ -101,10 +101,15 @@ export const Battle = () => {
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
     const currentBattlePlayers = useSelector(state => state.battle.currentBattle.players);
     const randomUserToken = useGetRandomUserToken();
+    const [localUserForbidden, setLocalUserForbidden] = useState(false);
 
     useEffect(() => {
         if (currentBattleInfo?.battleId !== battleId) {
             dispatch(resetCurrentBattle());
+        }
+        if (currentBattlePlayers.length) {
+            const localUserMemberOfGameArray = currentBattlePlayers.filter(player => player.userId === randomUserToken);
+            setLocalUserForbidden(!localUserMemberOfGameArray.length);
         }
     }, []);
 
@@ -112,10 +117,7 @@ export const Battle = () => {
     useEffect(() => {
         const { isGameStarted } = currentBattleInfo;
         const readyPlayers = currentBattlePlayers.filter(player => player.isReady);
-        console.log('NOOOOO: ', currentBattlePlayers);
-        console.log('NOOOO: ', readyPlayers);
         if (!isGameStarted && currentBattlePlayers.length > 1 && readyPlayers.length === currentBattlePlayers.length) {
-            console.log('CHACHACHA');
             // all players are ready! lets start the game
             updateBattle(battleId, { isGameStarted: true })
                 .then(docRef => {})
@@ -139,12 +141,6 @@ export const Battle = () => {
                 radius,
                 selectedCity,
             } = battleFromFirestore;
-
-            // check if game is started
-            console.log(
-                'battleFromFirestorebattleFromFirestorebattleFromFirestorebattleFromFirestore: ',
-                battleFromFirestore,
-            );
 
             // if rounds are empty, this is a new game
             const roundsToStore = rounds.length ? rounds : checkGenerateRounds(isGameStarted, mode, battleId);
@@ -188,7 +184,8 @@ export const Battle = () => {
                 .then(battleDetail => {
                     if (battleDetail.exists) {
                         const battleData = battleDetail.data();
-                        if (randomUserToken) {
+                        // don't add an user when the game is started
+                        if (randomUserToken && !battleData.isGameStarted) {
                             addPlayerToBattle(
                                 {
                                     name: getRandomNickname(),
@@ -196,8 +193,12 @@ export const Battle = () => {
                                 },
                                 battleId,
                             )
-                                .then(docRef => {})
-                                .catch(err => {});
+                                .then(docRef => {
+                                    console.log('NOO: ', docRef);
+                                })
+                                .catch(err => {
+                                    console.log('Err: ', err);
+                                });
                         }
                         setBattleFromFirestore(battleData);
                     } else {
@@ -242,7 +243,7 @@ export const Battle = () => {
 
     console.log('current battle info: ', currentBattleInfo);
 
-    if (notFound) {
+    if (notFound || localUserForbidden) {
         return (
             <Redirect
                 to={{
