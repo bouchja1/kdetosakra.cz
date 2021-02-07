@@ -90,7 +90,7 @@ const SMap = ({
 
             setInstance(mapInstance);
         }
-    }, [mapyContext.loadedMapApi]);
+    }, [mapyContext.loadedMapApi, type]);
 
     const drawResultMap = (mapInstance, layerSMap) => {
         const options = {
@@ -176,7 +176,7 @@ const SMap = ({
                 refVectorLayerSMapValue.current = vectorLayer;
             }
         }
-    }, [mapyContext.loadedMapApi, instance, mapLayer]);
+    }, [mapyContext.loadedMapApi, instance, mapLayer, type]);
 
     return (
         <>

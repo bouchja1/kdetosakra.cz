@@ -193,9 +193,7 @@ export const Battle = () => {
                                 },
                                 battleId,
                             )
-                                .then(docRef => {
-                                    console.log('NOO: ', docRef);
-                                })
+                                .then(docRef => {})
                                 .catch(err => {
                                     console.log('Err: ', err);
                                 });

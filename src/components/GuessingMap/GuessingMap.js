@@ -1,4 +1,6 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, {
+    useState, useContext, useRef, useEffect
+} from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
@@ -27,6 +29,14 @@ const GuessingMap = ({
     const dispatch = useDispatch();
     const mapyContext = useContext(MapyCzContext);
     const currentGame = useSelector(state => state.game.currentGame);
+    const currentBattleInfo = useSelector(state => state.battle.currentBattle);
+
+    // common vars for both multiplayer and singleplayer
+    const [mode, setMode] = useState();
+    const [radius, setRadius] = useState();
+    const [totalScore, setTotalScore] = useState();
+    const [round, setRound] = useState();
+    // common vars for both multiplayer and singleplayer
 
     const [roundGuessed, setRoundGuessed] = useState(false);
 
@@ -41,9 +51,30 @@ const GuessingMap = ({
         mapLat: 0,
     });
 
-    const {
-        mode, radius, city, totalScore, round,
-    } = currentGame;
+    useEffect(() => {
+        const setCommonVars = (modeVar, radiusVar, totalScoreVar, roundVar) => {
+            setMode(modeVar);
+            setRadius(radiusVar);
+            setTotalScore(totalScoreVar);
+            setRound(roundVar);
+        };
+
+        if (isBattle && isGameStarted) {
+            const {
+                mode: battleMode, radius: battleRadius, myTotalScore, round: battleRound,
+            } = currentBattleInfo;
+            setCommonVars(battleMode, battleRadius, myTotalScore, battleRound);
+        } else {
+            const {
+                mode: currentGameMode,
+                radius: currentGameRadius,
+                city,
+                totalScore: currentGameTotalScore,
+                round: currentGameRound,
+            } = currentGame;
+            setCommonVars(currentGameMode, currentGameRadius, currentGameTotalScore, currentGameRound);
+        }
+    }, [isBattle, isGameStarted, currentGame, currentBattleInfo]);
 
     /**
      * Refresh map for a new guessing!

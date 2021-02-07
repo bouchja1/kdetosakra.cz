@@ -16,7 +16,7 @@ const BattleUsersList = () => {
     const currentBattlePlayers = useSelector(state => state.battle.currentBattle.players);
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
 
-    console.log('NOOOOO: ', currentBattlePlayers);
+    console.log('currentBattlePlayers: ', currentBattlePlayers);
 
     useEffect(() => {
         // find my user
