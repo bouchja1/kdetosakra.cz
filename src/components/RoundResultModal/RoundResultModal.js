@@ -10,7 +10,7 @@ const { Title, Paragraph, Text } = Typography;
 const RoundResultModal = ({
     closeModal,
     visible,
-    totalRounds,
+    currentRound,
     guessedDistance,
     roundScore,
     totalRoundScore,
@@ -31,12 +31,12 @@ const RoundResultModal = ({
             ]}
         >
             <Typography className="result-modal-container">
-                {totalRounds > 0 ? (
+                {currentRound > 0 ? (
                     <div className="result-modal-container-item">
                         <Title level={2}>
                             Kolo:
                             {' '}
-                            {totalRounds}
+                            {currentRound}
                             /
                             {TOTAL_ROUNDS_MAX}
                         </Title>

@@ -12,13 +12,15 @@ import { RoundSMapWrapper } from '../SMap/RoundSMapWrapper';
 import { ResultSMapWrapper } from '../SMap/ResultSMapWrapper';
 import gameModes from '../../enums/modes';
 import { setTotalRoundCounter } from '../../redux/actions/game';
+import { incrementMyTotalScore } from '../../redux/actions/battle';
 import { addGuessedRoundToPlayer, updateBattleRound } from '../../services/firebase';
 import { getUnixTimestamp } from '../../util';
+import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 
 const GuessingMap = ({
     makeCountScore,
     makeRefreshPanorama,
-    totalRounds,
+    currentRound,
     guessedPoints,
     makeRoundResult,
     panoramaScene,
@@ -41,6 +43,7 @@ const GuessingMap = ({
     // common vars for both multiplayer and singleplayer
 
     const [roundGuessed, setRoundGuessed] = useState(false);
+    const randomUserToken = useGetRandomUserToken();
 
     const refLayerValue = useRef();
     const refVectorLayerSMapValue = useRef();
@@ -256,7 +259,7 @@ const GuessingMap = ({
             ) : (
                 <ResultSMapWrapper guessedPoints={[guessedPoints[guessedPoints.length - 1]]} isBattle={isBattle} />
             )}
-            {totalRounds >= TOTAL_ROUNDS_MAX && roundGuessed ? (
+            {currentRound >= TOTAL_ROUNDS_MAX && roundGuessed ? (
                 <Button
                     type="primary"
                     onClick={() => {
@@ -273,19 +276,22 @@ const GuessingMap = ({
                         <Button
                             disabled={guessButtonDisabled || panoramaLoading || !isGameStarted}
                             onClick={() => {
+                                // TODO mozna neumoznit hadat pokud uz bude po limitu
+
                                 const guessedRoundPoint = calculateCoordsAndDrawGuess();
                                 if (isBattle) {
                                     const {
                                         battleId,
                                         myDocumentId,
+                                        myNickname,
                                         round: currentGuessedRoundNumber,
                                         rounds,
                                         withCountdown,
                                         countdown,
                                     } = currentBattleInfo;
                                     console.log('POZOR POZOR: ', currentGuessedRoundNumber);
-                                    const currentRound = rounds[currentGuessedRoundNumber - 1];
-                                    const { isGuessed, guessedTime } = currentRound;
+                                    const guessedCurrentRound = rounds[currentGuessedRoundNumber - 1];
+                                    const { isGuessed, guessedTime } = guessedCurrentRound;
 
                                     const { pointMap, distance, score } = guessedRoundPoint;
                                     const playerRoundGuess = {
@@ -298,15 +304,21 @@ const GuessingMap = ({
                                         score,
                                     };
 
+                                    dispatch(incrementMyTotalScore(Math.round(score)));
+
                                     if (!isGuessed) {
                                         addGuessedRoundToPlayer(battleId, myDocumentId, playerRoundGuess)
                                             .then(res => {
                                                 return updateBattleRound(battleId, currentGuessedRoundNumber, {
                                                     isGuessed: true,
                                                     guessedTime: getUnixTimestamp(new Date()),
+                                                    firstGuess: {
+                                                        guessedById: randomUserToken,
+                                                        name: myNickname,
+                                                    },
                                                 });
                                             })
-                                            .then(res => console.log('JOO UPDATOVAL JSEM BATTLE ROUND'))
+                                            .then(res => {})
                                             .catch(err => console.log('EEEEERRR: ', err));
                                     } else {
                                         // TODO check jestli jeste zbyva cas nebo ne -> jakoze uz neumoznime umistit odhad, zapiseme mu 0 vysledek

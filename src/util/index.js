@@ -167,3 +167,7 @@ export const getUnixTimestamp = date => {
     // eslint-disable-next-line no-bitwise
     return (date.getTime() / 1000) | 0;
 };
+
+export const getDateFromUnixTimestamp = unixTimestamp => {
+    return new Date(unixTimestamp * 1000);
+};

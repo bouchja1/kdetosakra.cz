@@ -32,9 +32,10 @@ export const GameScreen = ({
     const [resultModalVisible, setResultModalVisible] = useState(false);
     const [panoramaPlace, setPanoramaPlace] = useState(null);
     const [panoramaLoading, setPanoramaLoading] = useState(false);
+    const [currentRound, setCurrentRound] = useState();
 
     const { round, totalScore } = currentGame;
-    const { round: lastGuessedRound, rounds } = currentBattleInfo;
+    const { round: lastGuessedRound, rounds, myTotalScore } = currentBattleInfo;
 
     useEffect(() => {
         if (mapyContext.loadedMapApi && isGameStarted) {
@@ -44,6 +45,7 @@ export const GameScreen = ({
 
     useEffect(() => {
         if (isBattle) {
+            setCurrentRound(lastGuessedRound);
             if (rounds.length && isGameStarted) {
                 // TODO tady lastGuessedRound funguje asi jen pro 1. kolo. ... kdybych uz mel 2 uhodnuty a vracel se ke 3. tak to nebude fungovat a melo bytbyt -1
                 const roundToGuess = rounds[lastGuessedRound];
@@ -52,6 +54,7 @@ export const GameScreen = ({
                 setCurrentCity(cityToGuess);
             }
         } else {
+            setCurrentRound(round);
             if (mode === gameModes.random) {
                 city = getRandomCzechPlace();
             }
@@ -80,7 +83,11 @@ export const GameScreen = ({
 
     const makeRoundResult = (score, distance) => {
         setRoundScore(Math.round(score));
-        dispatch(setTotalRoundScore(Math.round(totalScore + score)));
+        if (isBattle) {
+            dispatch(setTotalRoundScore(Math.round(myTotalScore + score)));
+        } else {
+            dispatch(setTotalRoundScore(Math.round(totalScore + score)));
+        }
         setGuessedDistance(distance);
     };
 
@@ -124,7 +131,7 @@ export const GameScreen = ({
                 <GuessingMap
                     makeCountScore={makeCountScore}
                     makeRefreshPanorama={makeRefreshPanorama}
-                    totalRounds={round}
+                    currentRound={currentRound}
                     guessedPoints={guessedPoints}
                     gameMode={mode}
                     panoramaScene={panoramaScene}
@@ -139,7 +146,7 @@ export const GameScreen = ({
             <RoundResultModal
                 visible={resultModalVisible}
                 closeModal={closeModal}
-                totalRounds={round}
+                currentRound={currentRound}
                 guessedDistance={guessedDistance}
                 roundScore={roundScore}
                 totalRoundScore={totalScore}

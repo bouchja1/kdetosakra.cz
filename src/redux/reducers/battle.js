@@ -8,6 +8,8 @@ import {
     setMyUserInfoToCurrentBattle,
     setRoundsToCurrentBattle,
     setCurrentBattleRound,
+    setMyTotalScore,
+    incrementMyTotalScore,
 } from '../actions/battle';
 
 const initialState = {
@@ -24,6 +26,8 @@ const initialState = {
         isGameStarted: false,
         players: [],
         radius: null,
+        withCountdown: true,
+        countdown: 60,
     },
 };
 
@@ -62,6 +66,22 @@ const gameReducer = (state = initialState, action) => {
                     myNickname: action.payload.myNickname,
                     myTotalScore: action.payload.myTotalScore,
                     myDocumentId: action.payload.myDocumentId,
+                },
+            };
+        case getType(incrementMyTotalScore):
+            return {
+                ...state,
+                currentBattle: {
+                    ...state.currentBattle,
+                    myTotalScore: state.currentBattle.myTotalScore + action.payload,
+                },
+            };
+        case getType(setMyTotalScore):
+            return {
+                ...state,
+                currentBattle: {
+                    ...state.currentBattle,
+                    myTotalScore: action.payload,
                 },
             };
         case getType(setRoundsToCurrentBattle):

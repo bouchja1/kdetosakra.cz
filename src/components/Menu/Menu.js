@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { differenceInSeconds } from 'date-fns';
 import { FacebookFilled, HomeOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import smilingLogo from '../../assets/images/kdetosakraSmile.svg';
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
-import gameModes from '../../enums/modes';
 import routeNames from '../../constants/routes';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
-import { findMyUserFromBattle, mapGameModeName } from '../../util';
+import {
+    findMyUserFromBattle, getDateFromUnixTimestamp, mapGameModeName, sortBattleRoundsById
+} from '../../util';
+import useTimeInterval from '../../hooks/useTimeInterval';
 
 const isGameInfoShown = (pathname, battleId) => {
     return (
@@ -22,15 +25,21 @@ const isGameInfoShown = (pathname, battleId) => {
 
 const Menu = () => {
     const randomUserToken = useGetRandomUserToken();
-    const location = useLocation();
+    const { pathname } = useLocation();
     const currentGameInfo = useSelector(state => state.game.currentGame);
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
     const currentBattlePlayers = useSelector(state => state.battle.currentBattle.players);
     const [myPlayer, setMyPlayer] = useState();
-
-    const { pathname } = location;
+    const [countdownTime, setCountdownTime] = useState(-1);
+    const [countdownIsRunning, setCountdownIsRunning] = useState(false);
 
     const isBattle = pathname.includes(routeNames.battle);
+
+    const handleTick = () => {
+        setCountdownTime(prevTime => prevTime - 1);
+    };
+
+    const { startInterval, stopInterval } = useTimeInterval(handleTick);
 
     useEffect(() => {
         setMyPlayer(findMyUserFromBattle(currentBattlePlayers, randomUserToken));
@@ -41,12 +50,68 @@ const Menu = () => {
         return mapGameModeName(mode);
     };
 
-    const showBattleInfo = () => {
+    useEffect(() => {
+        console.log('effect');
         const {
-            isGameFinishedSuccessfully, isGameStarted, withCountdown, countdown,
+            isGameFinishedSuccessfully,
+            isGameStarted,
+            withCountdown,
+            countdown,
+            round,
+            rounds,
         } = currentBattleInfo;
-        return isGameStarted ? 'JO' : 'NE';
-    };
+        if (isGameStarted && rounds.length) {
+            // check rounds because they are assigned in BattleGame later
+            const currentBattleRound = rounds[round - 1];
+            const { isGuessed, guessedTime, firstGuess } = currentBattleRound;
+            // TODO check if it is not expired already
+            if (isGuessed && withCountdown && !countdownIsRunning) {
+                const { name, guessedById } = firstGuess;
+                const dateNow = new Date();
+                const guessedTimeDate = getDateFromUnixTimestamp(guessedTime);
+                setCountdownTime(countdown - differenceInSeconds(dateNow, guessedTimeDate));
+                startInterval();
+                setCountdownIsRunning(true);
+            }
+        }
+    }, [currentBattleInfo, countdownIsRunning]);
+
+    useEffect(() => {
+        return () => {
+            console.log('cleaned up');
+            stopInterval();
+        };
+    }, [pathname]);
+
+    console.log('countdownTime: ', countdownTime);
+
+    const battleInfo = useMemo(() => {
+        const {
+            isGameFinishedSuccessfully,
+            isGameStarted,
+            withCountdown,
+            countdown,
+            round,
+            rounds,
+        } = currentBattleInfo;
+        // check rounds because they are assigned in BattleGame later
+        if (isGameStarted && round > 0 && rounds.length) {
+            const currentBattleRound = rounds[round - 1];
+            const { isGuessed, guessedTime, firstGuess } = currentBattleRound;
+            // TODO check if it is not expired already
+            if (isGuessed && withCountdown && !countdownIsRunning) {
+                const { name, guessedById } = firstGuess;
+                const dateNow = new Date();
+                const guessedTimeDate = getDateFromUnixTimestamp(guessedTime);
+                setCountdownTime(countdown - differenceInSeconds(dateNow, guessedTimeDate));
+                startInterval();
+                setCountdownIsRunning(true);
+            }
+            return countdownIsRunning ? `no heleee uhodnuto ${countdownTime}` : 'ta druha moznost';
+        }
+
+        return null;
+    }, [currentBattleInfo, countdownTime]);
 
     const showRoundInfo = () => {
         const round = isBattle ? currentBattleInfo.round : currentGameInfo.round;
@@ -76,7 +141,7 @@ const Menu = () => {
                 </a>
             </div>
             <img id="kdetosakra-logo" src={smilingLogo} alt="logo" className="kdetosakra-logo" width="85%" />
-            {isBattle && currentBattleInfo?.battleId && <div className="battle-info">{showBattleInfo()}</div>}
+            {isBattle && currentBattleInfo?.battleId && <div className="battle-info">{battleInfo}</div>}
             {isGameInfoShown(pathname, currentBattleInfo?.battleId) && (
                 <div className="menu-game-info">
                     {isBattle && (

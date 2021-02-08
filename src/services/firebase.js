@@ -88,6 +88,16 @@ export const getBattleRounds = battleId => {
         .get();
 };
 
+export const getBattlePlayerBattleRounds = (battleId, playerId) => {
+    return db
+        .collection(COLLECTION_BATTLE)
+        .doc(battleId)
+        .collection(COLLECTION_BATTLE_PLAYERS)
+        .doc(playerId)
+        .collection(COLLECTION_PLAYER_ROUNDS)
+        .get();
+};
+
 export const getSingleBattlePlayer = (battleId, playerId) => {
     return db
         .collection(COLLECTION_BATTLE)
