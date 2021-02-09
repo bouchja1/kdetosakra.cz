@@ -41,44 +41,22 @@ const BattleUsers = () => {
             <div className="battle-users-container" style={{ width: usersSidebarWidth }}>
                 {!currentBattleInfo?.isGameStarted && (
                     <>
-                        {' '}
                         <p>
                             Tuhle hru hraješ s přezdívkou
                             {' '}
                             <b>{myPlayer?.name}</b>
                             .
                         </p>
-                        {currentBattleInfo?.withCountdown && (
-                            <p>
-                                Poté, co nejrychlejší hráč umístí v daném kole svůj odhad, začíná běžet odpočet
-                                {' '}
-                                <b>
-                                    {currentBattleInfo.countdown}
-                                    {' '}
-                                    sekund
-                                </b>
-                                {' '}
-                                pro volbu ostatních.
-                            </p>
-                        )}
                     </>
                 )}
                 <BattleUsersList />
                 {isBattleCreator && !currentBattleInfo?.isGameStarted && (
                     <div className="battle-settings">
                         <Title level={5}>Nastavení hry:</Title>
-                        <Checkbox
-                            checked={currentBattleInfo.withCountdown}
-                            onChange={e => {
-                                updateBattleSettings({ withCountdown: e.target.checked });
-                            }}
-                        >
-                            hrát s odpočtem
-                        </Checkbox>
                         {currentBattleInfo.withCountdown && (
                             <>
                                 <p>
-                                    Odpočet času do konce hracího kola po umístění tipu nejrychlejšího hráče nastaven na
+                                    Odpočet konce hracího kola po tipu nejrychlejšího hráče:
                                     {' '}
                                     <b>
                                         {currentBattleInfo.countdown}
@@ -97,8 +75,7 @@ const BattleUsers = () => {
                             </>
                         )}
                         <p>
-                            Jako admin hry můžete začít hru ihned bez čekání na potvrzení zbylých hráčů. Ti, co
-                            nezvolili možnost
+                            Admin může začít hru ihned bez čekání na potvrzení zbylých hráčů. Ti, co nezvolili možnost
                             {' '}
                             <b>Připraven</b>
                             , budou ale ze hry vyhozeni.

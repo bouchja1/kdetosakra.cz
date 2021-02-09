@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Spin, Typography } from 'antd';
+import {
+    Button, Spin, Typography, Progress
+} from 'antd';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { CheckCircleTwoTone } from '@ant-design/icons';
+import { differenceInSeconds } from 'date-fns';
 import { addRoundBatchToBattleRounds, updateBattlePlayer } from '../../services/firebase';
 import {
     findMyUserFromBattle,
     generatePlaceInRadius,
     generateRandomRadius,
+    getDateFromUnixTimestamp,
     getRandomCzechPlace,
-    mapGameModeName,
 } from '../../util';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
@@ -99,11 +102,28 @@ const BattleUsersList = () => {
         });
     };
 
-    const getGuessingBattlePlayers = () => {
+    const getOngoingPlayersOrder = round => {
         const players = currentBattlePlayers ?? [];
         return players.map((player, i) => {
             const { name } = player;
-            const { round } = currentBattleInfo;
+            const currentPlayerRound = player[`round${round}`];
+            return (
+                <>
+                    <div key={i} className="battle-players-detail">
+                        <div className="battle-players-detail--name">{name}</div>
+                        <div className="battle-players-detail--status">
+                            <Progress percent={currentPlayerRound?.score ? Math.round(currentPlayerRound.score) : 0} />
+                        </div>
+                    </div>
+                </>
+            );
+        });
+    };
+
+    const getGuessingBattlePlayers = round => {
+        const players = currentBattlePlayers ?? [];
+        return players.map((player, i) => {
+            const { name } = player;
             const currentPlayerRound = player[`round${round}`];
             return (
                 <>
@@ -122,16 +142,43 @@ const BattleUsersList = () => {
         });
     };
 
+    const getGameInProgressPlayers = () => {
+        const { round, rounds, countdown } = currentBattleInfo;
+        console.log('currentBattleInfo: ', currentBattleInfo);
+        const currentRound = rounds[round - 1];
+        console.log('currentRound: ', currentRound);
+        const { guessedTime, isGuessed } = currentRound;
+        const guessedTimeDate = getDateFromUnixTimestamp(guessedTime);
+        const secondsDiff = differenceInSeconds(new Date(), guessedTimeDate);
+
+        // TODO TADY TO NECHAPU
+
+        const isRoundActive = !isGuessed ? true : secondsDiff <= countdown;
+
+        if (!isGuessed && isRoundActive) {
+            return (
+                <>
+                    <Title level={5}>Hráči hádají:</Title>
+                    <div className="battle-players">{battleId && getGuessingBattlePlayers(round)}</div>
+                </>
+            );
+        }
+
+        return (
+            <>
+                <Title level={5}>Pořadí kola:</Title>
+                <div className="battle-players">{battleId && getOngoingPlayersOrder(round)}</div>
+            </>
+        );
+    };
+
     console.log('CHACHACHA: ', currentBattlePlayers);
 
     return (
         <>
             {' '}
-            {currentBattleInfo.isGameStarted ? (
-                <>
-                    <Title level={5}>Hráči hádají:</Title>
-                    <div className="battle-players">{battleId && getGuessingBattlePlayers()}</div>
-                </>
+            {currentBattleInfo.isGameStarted && currentBattleInfo.rounds.length ? (
+                <>{getGameInProgressPlayers()}</>
             ) : (
                 <>
                     <Title level={5}>Hráči:</Title>

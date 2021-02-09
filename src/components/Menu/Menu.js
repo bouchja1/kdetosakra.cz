@@ -8,9 +8,7 @@ import smilingLogo from '../../assets/images/kdetosakraSmile.svg';
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
 import routeNames from '../../constants/routes';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
-import {
-    findMyUserFromBattle, getDateFromUnixTimestamp, mapGameModeName, sortBattleRoundsById
-} from '../../util';
+import { findMyUserFromBattle, getDateFromUnixTimestamp, mapGameModeName } from '../../util';
 import useTimeInterval from '../../hooks/useTimeInterval';
 
 const isGameInfoShown = (pathname, battleId) => {
@@ -67,14 +65,19 @@ const Menu = () => {
             // TODO check if it is not expired already
             if (isGuessed && withCountdown && !countdownIsRunning) {
                 const { name, guessedById } = firstGuess;
-                const dateNow = new Date();
                 const guessedTimeDate = getDateFromUnixTimestamp(guessedTime);
-                setCountdownTime(countdown - differenceInSeconds(dateNow, guessedTimeDate));
+                setCountdownTime(countdown - differenceInSeconds(new Date(), guessedTimeDate));
                 startInterval();
                 setCountdownIsRunning(true);
             }
         }
     }, [currentBattleInfo, countdownIsRunning]);
+
+    useEffect(() => {
+        if (countdownTime < 1) {
+            stopInterval();
+        }
+    }, [countdownTime]);
 
     useEffect(() => {
         return () => {
@@ -109,24 +112,67 @@ const Menu = () => {
                     startCountdown(countdown, guessedTime);
                 }
                 const { name, guessedById } = firstGuess;
-                const alertMessage = (
+                const alertMessageOthers = (
                     <>
-                        <b>{name}</b>
-                        {' '}
-                        byl nejrychlejší. Na tvůj tip ti zbývá
-                        <b>
-                            {' '}
-                            {countdownTime}
-                        </b>
-                        {' '}
-                        sekund.
+                        {countdownTime > 0 ? (
+                            <>
+                                <b>{name}</b>
+                                {' '}
+                                byl nejrychlejší. Na tvůj tip ti zbývá
+                                <b>
+                                    {' '}
+                                    {countdownTime}
+                                </b>
+                                {' '}
+                                sekund.
+                            </>
+                        ) : (
+                            <b>Kolo skončilo.</b>
+                        )}
                     </>
                 );
-                return countdownIsRunning ? <Alert message={alertMessage} type="info" /> : 'ta druha moznost';
+                const alertMessageYouFastest = (
+                    <>
+                        {countdownTime > 0 ? (
+                            <>
+                                Byl jsi nejrychlejší! Do konce kola zbývá
+                                <b>
+                                    {' '}
+                                    {countdownTime}
+                                </b>
+                                {' '}
+                                sekund.
+                            </>
+                        ) : (
+                            <b>Kolo skončilo.</b>
+                        )}
+                    </>
+                );
+                return countdownIsRunning ? (
+                    <Alert
+                        message={guessedById === randomUserToken ? alertMessageYouFastest : alertMessageOthers}
+                        type="info"
+                    />
+                ) : (
+                    'ta druha moznost'
+                );
             }
         }
 
-        return null;
+        const beforeStartMessage = (
+            <>
+                Po nejrychlejším tipu daného kola začne odpočet
+                {' '}
+                <b>
+                    {countdown}
+                    {' '}
+                    sekund
+                </b>
+                .
+            </>
+        );
+
+        return !isGameStarted ? <Alert message={beforeStartMessage} /> : null;
     }, [currentBattleInfo, countdownTime]);
 
     const showRoundInfo = () => {
