@@ -95,6 +95,10 @@ const GuessingMap = ({
         window.scrollTo(0, 0);
     };
 
+    const decideGuessButtonVisibility = () => {
+        return guessButtonDisabled || panoramaLoading || !isGameStarted;
+    };
+
     const clickMapPoint = (e, elm) => {
         // Došlo ke kliknutí, spočítáme kde
         const options = {
@@ -274,7 +278,7 @@ const GuessingMap = ({
                 <>
                     {!nextRoundButtonVisible ? (
                         <Button
-                            disabled={guessButtonDisabled || panoramaLoading || !isGameStarted}
+                            disabled={decideGuessButtonVisibility()}
                             onClick={() => {
                                 // TODO mozna neumoznit hadat pokud uz bude po limitu
 
@@ -289,19 +293,20 @@ const GuessingMap = ({
                                         withCountdown,
                                         countdown,
                                     } = currentBattleInfo;
-                                    console.log('POZOR POZOR: ', currentGuessedRoundNumber);
                                     const guessedCurrentRound = rounds[currentGuessedRoundNumber - 1];
                                     const { isGuessed, guessedTime } = guessedCurrentRound;
 
                                     const { pointMap, distance, score } = guessedRoundPoint;
                                     const playerRoundGuess = {
-                                        roundId: currentGuessedRoundNumber,
-                                        pointMap: {
-                                            x: pointMap.x,
-                                            y: pointMap.y,
+                                        [`round${currentGuessedRoundNumber}`]: {
+                                            roundId: currentGuessedRoundNumber,
+                                            pointMap: {
+                                                x: pointMap.x,
+                                                y: pointMap.y,
+                                            },
+                                            distance,
+                                            score,
                                         },
-                                        distance,
-                                        score,
                                     };
 
                                     dispatch(incrementMyTotalScore(Math.round(score)));

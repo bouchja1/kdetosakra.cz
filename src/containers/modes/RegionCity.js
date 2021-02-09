@@ -119,64 +119,69 @@ export const RegionCity = ({ multiplayerSupported }) => {
                             {createCitiesOptions()}
                         </Select>
                         {errors.city && touched.city && <div className="input-feedback">{errors.color}</div>}
-                        {citySelected ? (
-                            <div>
-                                <label htmlFor="radius">
-                                    <Tooltip title={RADIUS_DESCRIPTION}>
-                                        <span>Radius (km):</span>
-                                    </Tooltip>
-                                </label>
-                                <Row>
-                                    <Col span={12}>
-                                        <Slider
-                                            min={1}
-                                            max={maxCityRadius}
-                                            onChange={handleChangeRadius}
-                                            value={typeof radius === 'number' ? radius : 0}
-                                        />
-                                    </Col>
-                                    <Col span={4}>
-                                        <InputNumber
-                                            min={1}
-                                            max={maxCityRadius}
-                                            style={{ marginLeft: 16 }}
-                                            value={radius}
-                                            onChange={handleChangeRadius}
-                                        />
-                                    </Col>
-                                </Row>
-                                <p style={{ marginTop: '10px' }}>
-                                    Panoramata budou náhodně generována v okolí
-                                    {' '}
-                                    {radius}
-                                    {' '}
-                                    km od středu krajského města.
-                                </p>
-                                <Button
-                                    className="button-play"
-                                    type="primary"
-                                    disabled={isSubmitting}
-                                    onClick={handleSubmit}
-                                >
-                                    Hrát sám
-                                </Button>
-                                <Button
-                                    className="button-play"
-                                    type="primary"
-                                    disabled={isSubmitting}
-                                    onClick={() => setBattleModalVisible(true)}
-                                >
-                                    Hrát s přáteli
-                                </Button>
-                                <BattleLinkModal
-                                    visible={battleModalVisible}
-                                    handleBattleModalVisibility={handleBattleModalVisibility}
-                                    mode={gameModes.city}
-                                    radius={Number(radius)}
-                                    selectedCity={citySelected}
-                                />
-                            </div>
-                        ) : null}
+                        <div>
+                            {citySelected ? (
+                                <>
+                                    <label htmlFor="radius">
+                                        <Tooltip title={RADIUS_DESCRIPTION}>
+                                            <span>Radius (km):</span>
+                                        </Tooltip>
+                                    </label>
+                                    <Row>
+                                        <Col span={12}>
+                                            <Slider
+                                                min={1}
+                                                max={maxCityRadius}
+                                                onChange={handleChangeRadius}
+                                                value={typeof radius === 'number' ? radius : 0}
+                                            />
+                                        </Col>
+                                        <Col span={4}>
+                                            <InputNumber
+                                                min={1}
+                                                max={maxCityRadius}
+                                                style={{ marginLeft: 16 }}
+                                                value={radius}
+                                                onChange={handleChangeRadius}
+                                            />
+                                        </Col>
+                                    </Row>
+                                    <p style={{ marginTop: '10px' }}>
+                                        Panoramata budou náhodně generována v okolí
+                                        {' '}
+                                        {radius}
+                                        {' '}
+                                        km od středu krajského
+                                        města.
+                                    </p>
+                                </>
+                            ) : (
+                                <div style={{ marginBottom: '10px ' }} />
+                            )}
+                            <Button
+                                className="button-play"
+                                type="primary"
+                                disabled={!citySelected || isSubmitting}
+                                onClick={handleSubmit}
+                            >
+                                Hrát sám
+                            </Button>
+                            <Button
+                                className="button-play"
+                                type="primary"
+                                disabled={!citySelected || isSubmitting}
+                                onClick={() => setBattleModalVisible(true)}
+                            >
+                                Hrát s přáteli
+                            </Button>
+                            <BattleLinkModal
+                                visible={battleModalVisible}
+                                handleBattleModalVisibility={handleBattleModalVisibility}
+                                mode={gameModes.city}
+                                radius={Number(radius)}
+                                selectedCity={citySelected}
+                            />
+                        </div>
                     </form>
                 );
             }}

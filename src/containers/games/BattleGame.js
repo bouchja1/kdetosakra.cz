@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Spin, Layout, notification } from 'antd';
+import { Spin, Layout } from 'antd';
 
 import {
     addPlayerToBattle,
     getBattleDetail,
     getBattlePlayers,
-    getBattlePlayerBattleRounds,
     streamBattleDetail,
     streamBattlePlayersDetail,
     streamBattleRoundsDetail,
@@ -15,7 +14,11 @@ import {
 } from '../../services/firebase';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import {
-    getRandomNickname, findMyUserFromBattle, findLastGuessedRound, sortBattleRoundsById
+    getRandomNickname,
+    findMyUserFromBattle,
+    findLastGuessedRound,
+    sortBattleRoundsById,
+    countTotalPlayerScoreFromRounds,
 } from '../../util';
 import useGameMenuResize from '../../hooks/useGameMenuResize';
 import {
@@ -25,7 +28,6 @@ import {
     setMyUserInfoToCurrentBattle,
     setRoundsToCurrentBattle,
     setCurrentBattleRound,
-    incrementMyTotalScore,
     setMyTotalScore,
 } from '../../redux/actions/battle';
 import { GameScreen } from '../GameScreen';
@@ -36,30 +38,13 @@ export const Battle = () => {
     useGameMenuResize();
     const dispatch = useDispatch();
     const { battleId } = useParams();
-    const [api] = notification.useNotification();
     const [notFound, setNotFound] = useState(false);
     const [battleFromFirestore, setBattleFromFirestore] = useState();
-    const [battlePlayersFromFirestore, setBattlePlayersFromFirestore] = useState();
     const [battleRoundsFromFirestore, setBattleRoundsFromFirestore] = useState();
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
     const currentBattlePlayers = useSelector(state => state.battle.currentBattle.players);
     const randomUserToken = useGetRandomUserToken();
     const [localUserForbidden, setLocalUserForbidden] = useState(false);
-
-    const showFirstGuessNotification = (name, countdown) => {
-        /*
-                // do not show this to me if I have guessed this first
-        if (withCountdown && show && guessedById !== randomUserToken) {
-            showFirstGuessNotification(name, countdown);
-        }
-         */
-        api.info({
-            message: `<b>${name}</b> si tipnul jako první!`,
-            description: `Máš ${countdown} vteřin na to udělat tvůj tip.`,
-            placement: 'topRight',
-            duration: 3,
-        });
-    };
 
     useEffect(() => {
         if (battleId) {
@@ -87,31 +72,6 @@ export const Battle = () => {
                     } else {
                         setNotFound(true);
                     }
-                })
-                .catch(err => {});
-
-            // get and store battle players from firebase
-            getBattlePlayers(battleId)
-                .then(querySnapshot => {
-                    return querySnapshot.docs.map(docSnapshot => {
-                        return {
-                            documentId: docSnapshot.id,
-                            ...docSnapshot.data(),
-                        };
-                    });
-                })
-                .then(battlePlayers => {
-                    setBattlePlayersFromFirestore(battlePlayers);
-                    // set total player score when battle page is loaded
-                    const myUser = findMyUserFromBattle(battlePlayers, randomUserToken);
-                    return getBattlePlayerBattleRounds(battleId, myUser.documentId);
-                })
-                .then(playerRoundsQuerySnapshot => {
-                    return playerRoundsQuerySnapshot.docs.map(roundSnapshot => roundSnapshot.data());
-                })
-                .then(playerRounds => {
-                    const totalScoreSum = playerRounds.reduce((total, round) => round.score + total, 0);
-                    dispatch(setMyTotalScore(Math.round(totalScoreSum)));
                 })
                 .catch(err => {});
         }
@@ -174,37 +134,15 @@ export const Battle = () => {
         }
     }, [battleFromFirestore]);
 
-    // load my user in the beginning
-    useEffect(() => {
-        if (battlePlayersFromFirestore) {
-            const myUser = findMyUserFromBattle(battlePlayersFromFirestore, randomUserToken);
-            if (myUser) {
-                const { name, totalScore, documentId } = myUser;
-                dispatch(
-                    setMyUserInfoToCurrentBattle({
-                        myNickname: name,
-                        myTotalScore: totalScore,
-                        myDocumentId: documentId,
-                    }),
-                );
-            }
-        }
-    }, [battlePlayersFromFirestore]);
-
     useEffect(() => {
         if (battleFromFirestore && battleRoundsFromFirestore) {
-            // TODO tady udelat ten odpocet a zaznamenani, ze se neco stalo (asi do reduxu a pak s tim muzu odkudkoliv pracovat)
-            console.log('PORAAAADIII 2: ', battleRoundsFromFirestore);
             const currentBattleRound = battleFromFirestore.isGameStarted
                 ? findLastGuessedRound(battleRoundsFromFirestore)
                 : 0;
             const sortedBattleRounds = sortBattleRoundsById(battleRoundsFromFirestore);
-            console.log('NOOOOO currentBattleRound: ', sortedBattleRounds);
             const currentRound = sortedBattleRounds[currentBattleRound - 1];
-            console.log('JOOOOO currentRound: ', currentRound);
             dispatch(setCurrentBattleRound(currentBattleRound));
             dispatch(setRoundsToCurrentBattle(sortedBattleRounds));
-            // kdybych chtel delat notifiakce - TODO pokud prijde firstGuessm, zkontrolovat, zda je v ramci meho aktualniho kola a zda jsem ho jiz videl nebo ne, pak dispatch
         }
     }, [battleFromFirestore, battleRoundsFromFirestore]);
 
@@ -220,6 +158,18 @@ export const Battle = () => {
                     };
                 });
                 dispatch(setBattlePlayers(updatedBattlePlayers));
+
+                const myUser = findMyUserFromBattle(updatedBattlePlayers, randomUserToken);
+                if (myUser) {
+                    const { name, documentId } = myUser;
+                    dispatch(
+                        setMyUserInfoToCurrentBattle({
+                            myNickname: name,
+                            myTotalScore: countTotalPlayerScoreFromRounds(myUser),
+                            myDocumentId: documentId,
+                        }),
+                    );
+                }
             },
             error: err => {},
         });
@@ -237,7 +187,6 @@ export const Battle = () => {
                         ...docSnapshot.data(),
                     };
                 });
-                console.log('PORAAAADIII 1');
                 setBattleRoundsFromFirestore(updatedBattleRounds);
             },
             error: err => {},

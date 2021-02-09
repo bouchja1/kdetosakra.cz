@@ -5,7 +5,11 @@ import { useSelector } from 'react-redux';
 import { CheckCircleTwoTone } from '@ant-design/icons';
 import { addRoundBatchToBattleRounds, updateBattlePlayer } from '../../services/firebase';
 import {
-    findMyUserFromBattle, generatePlaceInRadius, generateRandomRadius, getRandomCzechPlace
+    findMyUserFromBattle,
+    generatePlaceInRadius,
+    generateRandomRadius,
+    getRandomCzechPlace,
+    mapGameModeName,
 } from '../../util';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
@@ -98,19 +102,27 @@ const BattleUsersList = () => {
     const getGuessingBattlePlayers = () => {
         const players = currentBattlePlayers ?? [];
         return players.map((player, i) => {
-            const { name, isReady } = player;
+            const { name } = player;
+            const { round } = currentBattleInfo;
+            const currentPlayerRound = player[`round${round}`];
             return (
                 <>
                     <div key={i} className="battle-players-detail">
                         <div className="battle-players-detail--name">{name}</div>
                         <div className="battle-players-detail--status">
-                            {isReady ? <CheckCircleTwoTone twoToneColor="#52c41a" /> : <Spin size="small" />}
+                            {currentPlayerRound?.score ? (
+                                <CheckCircleTwoTone twoToneColor="#52c41a" />
+                            ) : (
+                                <Spin size="small" />
+                            )}
                         </div>
                     </div>
                 </>
             );
         });
     };
+
+    console.log('CHACHACHA: ', currentBattlePlayers);
 
     return (
         <>

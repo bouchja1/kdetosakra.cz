@@ -30,6 +30,10 @@ ul {
     justify-content: space-around;
 }
 
+.ant-alert-content {
+    font-size: 15px;
+}
+
 .ant-layout-footer {
     padding: 13px 50px !important;
     background: #ffffff;
@@ -84,12 +88,28 @@ ul {
     padding-left: 70px;
 }
 
+.main-menu--battle {
+    display: flex;
+    flex: 1;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 22px;
+}
+
 .menu-game-info {
     display: flex;
     flex: 1;
     justify-content: flex-end;
     align-items: center;
     padding-right: 70px;
+}
+
+.menu-game-info--battle {
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 22px;
 }
 
 .menu-game-info-box {
@@ -108,7 +128,7 @@ ul {
 
 .menu-game-info-box-item {
     color: rgba(0, 0, 0, 0.85);
-    font-size: 22px;
+    font-size: 18px;
 }
 
 .menu-item {

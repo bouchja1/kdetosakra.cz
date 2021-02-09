@@ -13,7 +13,6 @@ const db = firebase.firestore();
 const COLLECTION_BATTLE = 'battle';
 const COLLECTION_BATTLE_PLAYERS = 'players';
 const COLLECTION_BATTLE_ROUNDS = 'battleRounds';
-const COLLECTION_PLAYER_ROUNDS = 'playerRounds';
 
 /**
  * Create a new battle with default setup. Returns documentId of created battle.
@@ -88,16 +87,6 @@ export const getBattleRounds = battleId => {
         .get();
 };
 
-export const getBattlePlayerBattleRounds = (battleId, playerId) => {
-    return db
-        .collection(COLLECTION_BATTLE)
-        .doc(battleId)
-        .collection(COLLECTION_BATTLE_PLAYERS)
-        .doc(playerId)
-        .collection(COLLECTION_PLAYER_ROUNDS)
-        .get();
-};
-
 export const getSingleBattlePlayer = (battleId, playerId) => {
     return db
         .collection(COLLECTION_BATTLE)
@@ -142,7 +131,6 @@ export const addPlayerToBattle = (newPlayer, battleId) => {
                         joined: firebase.firestore.FieldValue.serverTimestamp(),
                         userId,
                         isReady: false,
-                        totalScore: 0,
                     });
             }
             throw new Error('duplicate-item-error');
@@ -176,15 +164,13 @@ export const addRoundBatchToBattleRounds = async (battleId, roundsArray) => {
         .catch(err => console.log('EEER BATCH: ', err));
 };
 
-export const addGuessedRoundToPlayer = (battleId, playerId, newRound) => {
-    console.log('NOOOO: ', newRound);
+export const addGuessedRoundToPlayer = (battleId, playerDocumentId, newRound) => {
     return db
         .collection(COLLECTION_BATTLE)
         .doc(battleId)
         .collection(COLLECTION_BATTLE_PLAYERS)
-        .doc(playerId)
-        .collection(COLLECTION_PLAYER_ROUNDS)
-        .add(newRound);
+        .doc(playerDocumentId)
+        .update(newRound);
 };
 
 export const updateBattleRound = (battleId, roundId, itemsToUpdate) => {

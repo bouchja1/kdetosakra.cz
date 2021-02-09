@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { Alert } from 'antd';
 import { differenceInSeconds } from 'date-fns';
 import { FacebookFilled, HomeOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import smilingLogo from '../../assets/images/kdetosakraSmile.svg';
@@ -51,7 +52,6 @@ const Menu = () => {
     };
 
     useEffect(() => {
-        console.log('effect');
         const {
             isGameFinishedSuccessfully,
             isGameStarted,
@@ -78,12 +78,17 @@ const Menu = () => {
 
     useEffect(() => {
         return () => {
-            console.log('cleaned up');
             stopInterval();
         };
     }, [pathname]);
 
-    console.log('countdownTime: ', countdownTime);
+    const startCountdown = (countdown, guessedTime) => {
+        const dateNow = new Date();
+        const guessedTimeDate = getDateFromUnixTimestamp(guessedTime);
+        setCountdownTime(countdown - differenceInSeconds(dateNow, guessedTimeDate));
+        startInterval();
+        setCountdownIsRunning(true);
+    };
 
     const battleInfo = useMemo(() => {
         const {
@@ -99,15 +104,26 @@ const Menu = () => {
             const currentBattleRound = rounds[round - 1];
             const { isGuessed, guessedTime, firstGuess } = currentBattleRound;
             // TODO check if it is not expired already
-            if (isGuessed && withCountdown && !countdownIsRunning) {
+            if (isGuessed && withCountdown) {
+                if (!countdownIsRunning) {
+                    startCountdown(countdown, guessedTime);
+                }
                 const { name, guessedById } = firstGuess;
-                const dateNow = new Date();
-                const guessedTimeDate = getDateFromUnixTimestamp(guessedTime);
-                setCountdownTime(countdown - differenceInSeconds(dateNow, guessedTimeDate));
-                startInterval();
-                setCountdownIsRunning(true);
+                const alertMessage = (
+                    <>
+                        <b>{name}</b>
+                        {' '}
+                        byl nejrychlejší. Na tvůj tip ti zbývá
+                        <b>
+                            {' '}
+                            {countdownTime}
+                        </b>
+                        {' '}
+                        sekund.
+                    </>
+                );
+                return countdownIsRunning ? <Alert message={alertMessage} type="info" /> : 'ta druha moznost';
             }
-            return countdownIsRunning ? `no heleee uhodnuto ${countdownTime}` : 'ta druha moznost';
         }
 
         return null;
@@ -125,7 +141,7 @@ const Menu = () => {
 
     return (
         <div id="menu-container" className="section menu-container">
-            <div className="main-menu">
+            <div className={isBattle ? 'main-menu--battle' : 'main-menu'}>
                 <Link to="/">
                     <HomeOutlined style={{ color: 'rgb(97, 95, 95)', marginRight: '10px' }} />
                     <div className="menu-item">Herní módy</div>
@@ -143,7 +159,7 @@ const Menu = () => {
             <img id="kdetosakra-logo" src={smilingLogo} alt="logo" className="kdetosakra-logo" width="85%" />
             {isBattle && currentBattleInfo?.battleId && <div className="battle-info">{battleInfo}</div>}
             {isGameInfoShown(pathname, currentBattleInfo?.battleId) && (
-                <div className="menu-game-info">
+                <div className={isBattle ? 'menu-game-info--battle' : 'menu-game-info'}>
                     {isBattle && (
                         <div className="menu-game-info-box">
                             <div className="menu-game-info-box-head">přezdívka</div>

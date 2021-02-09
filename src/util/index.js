@@ -1,6 +1,7 @@
 import { crCities } from '../data/cr';
 import randomNicknames from '../constants/nicknames';
 import gameModes from '../enums/modes';
+import { TOTAL_ROUNDS_MAX } from '../constants/game';
 
 const EARTH_RADIUS = 6371000; /* meters  */
 const DEG_TO_RAD = Math.PI / 180.0;
@@ -170,4 +171,12 @@ export const getUnixTimestamp = date => {
 
 export const getDateFromUnixTimestamp = unixTimestamp => {
     return new Date(unixTimestamp * 1000);
+};
+
+export const countTotalPlayerScoreFromRounds = firebaseUser => {
+    let total = 0;
+    for (let i = 0; i < TOTAL_ROUNDS_MAX; i++) {
+        total += firebaseUser && firebaseUser[`round${i + 1}`] ? firebaseUser[`round${i + 1}`].score : 0;
+    }
+    return Math.round(total);
 };
