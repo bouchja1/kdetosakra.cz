@@ -11,7 +11,7 @@ import Panorama, { panoramaSceneOptions } from '../components/Panorama';
 import { generatePlaceInRadius, generateRandomRadius, getRandomCzechPlace } from '../util';
 import RoundResultModal from '../components/RoundResultModal';
 import gameModes from '../enums/modes';
-import BattleUsers from '../components/BattleUsers';
+import BattlePlayersPanel from '../components/BattlePlayersPanel';
 
 export const GameScreen = ({
     mode, radius, city, isGameStarted = true, isBattle,
@@ -108,7 +108,7 @@ export const GameScreen = ({
     return (
         <>
             <div className="game-screen-container">
-                {isBattle && <BattleUsers />}
+                {isBattle && <BattlePlayersPanel />}
                 <Panorama
                     panoramaPlace={panoramaPlace}
                     makeRefreshPanorama={makeRefreshPanorama}

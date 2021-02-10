@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Alert } from 'antd';
 import { differenceInSeconds } from 'date-fns';
 import { FacebookFilled, HomeOutlined, InfoCircleOutlined } from '@ant-design/icons';
@@ -10,6 +10,7 @@ import routeNames from '../../constants/routes';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import { findMyUserFromBattle, getDateFromUnixTimestamp, mapGameModeName } from '../../util';
 import useTimeInterval from '../../hooks/useTimeInterval';
+import { setIsRoundActive } from '../../redux/actions/battle';
 
 const isGameInfoShown = (pathname, battleId) => {
     return (
@@ -23,10 +24,12 @@ const isGameInfoShown = (pathname, battleId) => {
 };
 
 const Menu = () => {
+    const dispatch = useDispatch();
     const randomUserToken = useGetRandomUserToken();
     const { pathname } = useLocation();
     const currentGameInfo = useSelector(state => state.game.currentGame);
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
+    const currentBattleRoundId = useSelector(state => state.battle.currentBattle.round);
     const currentBattlePlayers = useSelector(state => state.battle.currentBattle.players);
     const [myPlayer, setMyPlayer] = useState();
     const [countdownTime, setCountdownTime] = useState(-1);
@@ -75,13 +78,21 @@ const Menu = () => {
 
     useEffect(() => {
         if (countdownTime < 1) {
+            dispatch(
+                setIsRoundActive({
+                    roundId: currentBattleRoundId,
+                    active: false,
+                }),
+            );
             stopInterval();
+            setCountdownTime(0);
         }
     }, [countdownTime]);
 
     useEffect(() => {
         return () => {
             stopInterval();
+            setCountdownTime(0);
         };
     }, [pathname]);
 
@@ -148,13 +159,13 @@ const Menu = () => {
                         )}
                     </>
                 );
-                return countdownIsRunning ? (
-                    <Alert
-                        message={guessedById === randomUserToken ? alertMessageYouFastest : alertMessageOthers}
-                        type="info"
-                    />
-                ) : (
-                    'ta druha moznost'
+                return (
+                    countdownIsRunning && (
+                        <Alert
+                            message={guessedById === randomUserToken ? alertMessageYouFastest : alertMessageOthers}
+                            type="info"
+                        />
+                    )
                 );
             }
         }

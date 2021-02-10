@@ -19,6 +19,7 @@ import {
     findLastGuessedRound,
     sortBattleRoundsById,
     countTotalPlayerScoreFromRounds,
+    getIsRoundActive,
 } from '../../util';
 import useGameMenuResize from '../../hooks/useGameMenuResize';
 import {
@@ -28,7 +29,6 @@ import {
     setMyUserInfoToCurrentBattle,
     setRoundsToCurrentBattle,
     setCurrentBattleRound,
-    setMyTotalScore,
 } from '../../redux/actions/battle';
 import { GameScreen } from '../GameScreen';
 
@@ -139,8 +139,12 @@ export const Battle = () => {
             const currentBattleRound = battleFromFirestore.isGameStarted
                 ? findLastGuessedRound(battleRoundsFromFirestore)
                 : 0;
-            const sortedBattleRounds = sortBattleRoundsById(battleRoundsFromFirestore);
-            const currentRound = sortedBattleRounds[currentBattleRound - 1];
+            const sortedBattleRounds = sortBattleRoundsById(battleRoundsFromFirestore).map(round => {
+                return {
+                    ...round,
+                    isRoundActive: getIsRoundActive(round.guessedTime, currentBattleInfo.countdown),
+                };
+            });
             dispatch(setCurrentBattleRound(currentBattleRound));
             dispatch(setRoundsToCurrentBattle(sortedBattleRounds));
         }

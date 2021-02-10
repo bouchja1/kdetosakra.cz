@@ -5,12 +5,12 @@ import {
     resetCurrentBattle,
     setCurrentBattle,
     setBattlePlayers,
-    setMyGuessedRounds,
     setMyUserInfoToCurrentBattle,
     setRoundsToCurrentBattle,
     setCurrentBattleRound,
     setMyTotalScore,
     incrementMyTotalScore,
+    setIsRoundActive,
 } from '../actions/battle';
 
 const initialState = {
@@ -23,7 +23,6 @@ const initialState = {
         rounds: [],
         myTotalScore: 0,
         myNickname: null,
-        myGuessedRounds: [],
         isGameFinishedSuccessfully: false,
         isGameStarted: false,
         players: [],
@@ -49,14 +48,6 @@ const gameReducer = (state = initialState, action) => {
                 currentBattle: {
                     ...state.currentBattle,
                     round: action.payload,
-                },
-            };
-        case getType(setMyGuessedRounds):
-            return {
-                ...state,
-                currentBattle: {
-                    ...state.currentBattle,
-                    myGuessedRounds: action.payload,
                 },
             };
         case getType(setBattlePlayers): {
@@ -102,6 +93,25 @@ const gameReducer = (state = initialState, action) => {
                     rounds: action.payload,
                 },
             };
+        case getType(setIsRoundActive): {
+            // payload = { roundId, active = true|false }
+            return {
+                ...state,
+                currentBattle: {
+                    ...state.currentBattle,
+                    rounds: state.currentBattle.rounds.map(round => {
+                        const { roundId } = round;
+                        if (roundId === action.payload.roundId) {
+                            return {
+                                ...round,
+                                isRoundActive: action.payload.active,
+                            };
+                        }
+                        return round;
+                    }),
+                },
+            };
+        }
         case getType(resetCurrentBattle):
             return initialState;
         case getType(removePlayerFromBattle): {

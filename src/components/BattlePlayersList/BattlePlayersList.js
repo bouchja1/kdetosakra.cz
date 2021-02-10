@@ -12,6 +12,7 @@ import {
     generatePlaceInRadius,
     generateRandomRadius,
     getDateFromUnixTimestamp,
+    getIsRoundActive,
     getRandomCzechPlace,
 } from '../../util';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
@@ -73,7 +74,7 @@ const generateRounds = (mode, battleId) => {
     }
 };
 
-const BattleUsersList = () => {
+const BattlePlayersList = () => {
     const randomUserToken = useGetRandomUserToken();
     const { battleId } = useParams();
     const [myPlayer, setMyPlayer] = useState();
@@ -84,23 +85,6 @@ const BattleUsersList = () => {
         // find my user
         setMyPlayer(findMyUserFromBattle(currentBattlePlayers, randomUserToken));
     }, [currentBattlePlayers]);
-
-    const getWaitingBattlePlayers = () => {
-        const players = currentBattlePlayers ?? [];
-        return players.map((player, i) => {
-            const { name, isReady } = player;
-            return (
-                <>
-                    <div key={i} className="battle-players-detail">
-                        <div className="battle-players-detail--name">{name}</div>
-                        <div className="battle-players-detail--status">
-                            {isReady ? <CheckCircleTwoTone twoToneColor="#52c41a" /> : <Spin size="small" />}
-                        </div>
-                    </div>
-                </>
-            );
-        });
-    };
 
     const getOngoingPlayersOrder = round => {
         const players = currentBattlePlayers ?? [];
@@ -142,47 +126,56 @@ const BattleUsersList = () => {
         });
     };
 
-    const getGameInProgressPlayers = () => {
+    const getPlayersInActiveGame = () => {
         const { round, rounds, countdown } = currentBattleInfo;
-        console.log('currentBattleInfo: ', currentBattleInfo);
         const currentRound = rounds[round - 1];
-        console.log('currentRound: ', currentRound);
-        const { guessedTime, isGuessed } = currentRound;
-        const guessedTimeDate = getDateFromUnixTimestamp(guessedTime);
-        const secondsDiff = differenceInSeconds(new Date(), guessedTimeDate);
+        const { guessedTime, isGuessed, isRoundActive } = currentRound;
 
-        // TODO TADY TO NECHAPU
-
-        const isRoundActive = !isGuessed ? true : secondsDiff <= countdown;
-
-        if (!isGuessed && isRoundActive) {
+        if (isGuessed && !getIsRoundActive(guessedTime, countdown) && !isRoundActive) {
             return (
                 <>
-                    <Title level={5}>Hráči hádají:</Title>
-                    <div className="battle-players">{battleId && getGuessingBattlePlayers(round)}</div>
+                    <Title level={5}>Pořadí kola:</Title>
+                    <div className="battle-players">{battleId && getOngoingPlayersOrder(round)}</div>
                 </>
             );
         }
 
         return (
             <>
-                <Title level={5}>Pořadí kola:</Title>
-                <div className="battle-players">{battleId && getOngoingPlayersOrder(round)}</div>
+                <Title level={5}>Hráči hádají:</Title>
+                <div className="battle-players">{battleId && getGuessingBattlePlayers(round)}</div>
             </>
         );
     };
 
     console.log('CHACHACHA: ', currentBattlePlayers);
 
+    const getPlayersBeforeGameStarted = () => {
+        const players = currentBattlePlayers ?? [];
+        return players.map((player, i) => {
+            const { name, isReady } = player;
+            return (
+                <>
+                    <div key={i} className="battle-players-detail">
+                        <div className="battle-players-detail--name">{name}</div>
+                        <div className="battle-players-detail--status">
+                            {isReady ? <CheckCircleTwoTone twoToneColor="#52c41a" /> : <Spin size="small" />}
+                        </div>
+                    </div>
+                </>
+            );
+        });
+    };
+
     return (
         <>
             {' '}
             {currentBattleInfo.isGameStarted && currentBattleInfo.rounds.length ? (
-                <>{getGameInProgressPlayers()}</>
+                <>{getPlayersInActiveGame()}</>
             ) : (
                 <>
                     <Title level={5}>Hráči:</Title>
-                    <div className="battle-players">{battleId && getWaitingBattlePlayers()}</div>
+                    <div className="battle-players">{battleId && getPlayersBeforeGameStarted()}</div>
                     <Button
                         disabled={myPlayer?.isReady}
                         type="primary"
@@ -210,4 +203,4 @@ const BattleUsersList = () => {
     );
 };
 
-export default BattleUsersList;
+export default BattlePlayersList;

@@ -1,3 +1,4 @@
+import { differenceInSeconds, isBefore } from 'date-fns';
 import { crCities } from '../data/cr';
 import randomNicknames from '../constants/nicknames';
 import gameModes from '../enums/modes';
@@ -179,4 +180,12 @@ export const countTotalPlayerScoreFromRounds = firebaseUser => {
         total += firebaseUser && firebaseUser[`round${i + 1}`] ? firebaseUser[`round${i + 1}`].score : 0;
     }
     return Math.round(total);
+};
+
+export const getIsRoundActive = (guessedTime, countdown) => {
+    if (guessedTime && countdown) {
+        const roundExpirationTime = guessedTime + countdown;
+        return isBefore(new Date(), getDateFromUnixTimestamp(roundExpirationTime));
+    }
+    return false;
 };
