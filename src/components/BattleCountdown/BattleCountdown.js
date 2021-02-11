@@ -6,7 +6,6 @@ import { useLocation, useParams } from 'react-router-dom';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import { getDateFromUnixTimestamp } from '../../util';
 import useTimeInterval from '../../hooks/useTimeInterval';
-import useNextRoundInterval from '../../hooks/useNextRoundInterval';
 import { setIsRoundActive } from '../../redux/actions/battle';
 import { updateBattle } from '../../services/firebase';
 
@@ -68,7 +67,7 @@ const BattleCountDown = ({ currentBattleInfo }) => {
     const { pathname } = useLocation();
 
     const {
-        isGameStarted, countdown, round, rounds,
+        isGameStarted, countdown, round, rounds, currentRoundStart,
     } = currentBattleInfo;
 
     const handleBattleRoundTick = () => {
@@ -80,7 +79,7 @@ const BattleCountDown = ({ currentBattleInfo }) => {
     };
 
     const { startInterval, stopInterval } = useTimeInterval(handleBattleRoundTick);
-    const { startInterval: startNextRoundInterval, stopInterval: stopNextRoundInterval } = useNextRoundInterval(
+    const { startInterval: startNextRoundInterval, stopInterval: stopNextRoundInterval } = useTimeInterval(
         handleNextRoundTick,
     );
 
@@ -111,10 +110,11 @@ const BattleCountDown = ({ currentBattleInfo }) => {
         }
     }, [countdownIsRunning, countdownTime, currentBattlePlayers, round]);
 
+    // TODO tady to budu updatovat, ale pozor!! zase to budou updatovat vsichni, chtelo by to jen aby jeden z nich
     useEffect(() => {
         console.log('LALALALALA: ', nextRoundTime);
         if (nextRoundCountdownIsRunning && nextRoundTime < 1) {
-            // TODO poslat currentRoundStart unix timestamp
+            // FIXME: This is called only from a client of the battle creator to save firestore requests - but should be improved in the future
             updateBattle(battleId, { currentRoundStart: getDateFromUnixTimestamp(new Date()), round: round + 1 })
                 .then(docRef => {
                     console.log('NOOOOOO: ', docRef);

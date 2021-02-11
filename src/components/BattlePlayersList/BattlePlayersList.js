@@ -19,6 +19,7 @@ import gameModes from '../../enums/modes';
 
 const { Title } = Typography;
 
+// TODO cities, custom places
 const generateRounds = (mode, battleId) => {
     const generatedRounds = [];
     // pokud krajske mesto

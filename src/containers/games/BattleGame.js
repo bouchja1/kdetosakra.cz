@@ -56,7 +56,8 @@ export const Battle = () => {
                         const battleData = battleDetail.data();
                         // don't add an user when the game is started
 
-                        if (randomUserToken && !battleData.isGameStarted) {
+                        const isPlayerAlreadyInBattle = findMyUserFromBattle(currentBattlePlayers, randomUserToken) !== null;
+                        if (randomUserToken && !battleData.isGameStarted && !isPlayerAlreadyInBattle) {
                             addPlayerToBattle(
                                 {
                                     name: getRandomNickname(),
@@ -80,7 +81,7 @@ export const Battle = () => {
                 })
                 .catch(err => {});
         }
-    }, [battleId]);
+    }, [battleId, currentBattlePlayers]);
 
     useEffect(() => {
         if (battleId && currentBattleInfo.battleId && currentBattleInfo.battleId !== battleId) {
@@ -95,15 +96,21 @@ export const Battle = () => {
         }
     }, [currentBattleInfo, currentBattlePlayers, randomUserToken]);
 
-    // multiplayer game is being started!
+    // all players are ready! lets start the game - multiplayer game is being started!
     useEffect(() => {
-        const { isGameStarted } = currentBattleInfo;
+        const { isGameStarted, createdById } = currentBattleInfo;
         const readyPlayers = currentBattlePlayers.filter(player => player.isReady);
         if (!isGameStarted && currentBattlePlayers.length > 1 && readyPlayers.length === currentBattlePlayers.length) {
-            // all players are ready! lets start the game
-            updateBattle(battleId, { currentRoundStart: getUnixTimestamp(new Date()), isGameStarted: true, round: 1 })
-                .then(docRef => {})
-                .catch(err => {});
+            // FIXME: This is called only from a client of the battle creator to save firestore requests - but should be improved in the future
+            if (createdById === randomUserToken) {
+                updateBattle(battleId, {
+                    currentRoundStart: getUnixTimestamp(new Date()),
+                    isGameStarted: true,
+                    round: 1,
+                })
+                    .then(docRef => {})
+                    .catch(err => {});
+            }
         }
     }, [currentBattlePlayers, currentBattleInfo]);
 

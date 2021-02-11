@@ -83,23 +83,13 @@ export const getBattlePlayers = battleId => {
         .get();
 };
 
-export const getBattleRounds = battleId => {
-    return db
-        .collection(COLLECTION_BATTLE)
-        .doc(battleId)
-        .collection(COLLECTION_BATTLE_ROUNDS)
-        .get();
-};
-
-export const getSingleBattlePlayer = (battleId, playerId) => {
-    return db
-        .collection(COLLECTION_BATTLE)
-        .doc(battleId)
-        .collection(COLLECTION_BATTLE_PLAYERS)
-        .doc(playerId)
-        .get();
-};
-
+/**
+ * Update that a player is ready to start a battle round
+ * @param battleId
+ * @param userId
+ * @param itemsToUpdate
+ * @returns {Promise<firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>>}
+ */
 export const updateBattlePlayer = (battleId, userId, itemsToUpdate) => {
     return getBattlePlayers(battleId)
         .then(querySnapshot => querySnapshot.docs)
@@ -117,6 +107,12 @@ export const updateBattlePlayer = (battleId, userId, itemsToUpdate) => {
         });
 };
 
+/**
+ * When a player opens the link with invitation.
+ * @param newPlayer
+ * @param battleId
+ * @returns {Promise<firebase.firestore.DocumentData[]>}
+ */
 export const addPlayerToBattle = (newPlayer, battleId) => {
     const { name, userId } = newPlayer;
     return getBattlePlayers(battleId)
@@ -144,14 +140,12 @@ export const addPlayerToBattle = (newPlayer, battleId) => {
         });
 };
 
-export const addRoundToBattleRounds = (battleId, newRound) => {
-    return db
-        .collection(COLLECTION_BATTLE)
-        .doc(battleId)
-        .collection(COLLECTION_BATTLE_ROUNDS)
-        .add(newRound);
-};
-
+/**
+ * Called by the creator when is clicks the 'I am ready button' before a battle is started
+ * @param battleId
+ * @param roundsArray
+ * @returns {Promise<void>}
+ */
 export const addRoundBatchToBattleRounds = async (battleId, roundsArray) => {
     const batch = db.batch();
     roundsArray.forEach(doc => {
@@ -171,6 +165,13 @@ export const addRoundBatchToBattleRounds = async (battleId, roundsArray) => {
         .catch(err => console.log('EEER BATCH: ', err));
 };
 
+/**
+ * Called by the player after his guess
+ * @param battleId
+ * @param playerDocumentId
+ * @param newRound
+ * @returns {Promise<void>}
+ */
 export const addGuessedRoundToPlayer = (battleId, playerDocumentId, newRound) => {
     return db
         .collection(COLLECTION_BATTLE)
@@ -180,6 +181,13 @@ export const addGuessedRoundToPlayer = (battleId, playerDocumentId, newRound) =>
         .update(newRound);
 };
 
+/**
+ * updated by the first player who guess a round
+ * @param battleId
+ * @param roundId
+ * @param itemsToUpdate
+ * @returns {*}
+ */
 export const updateBattleRound = (battleId, roundId, itemsToUpdate) => {
     const battleRoundToUpdate = db
         .collection(COLLECTION_BATTLE)
@@ -196,6 +204,11 @@ export const updateBattleRound = (battleId, roundId, itemsToUpdate) => {
     });
 };
 
+/**
+ * called by the battle creator
+ * @param battleId
+ * @returns {*}
+ */
 export const deleteNotPreparedBattlePlayers = battleId => {
     const notReadyPlayers = db
         .collection(COLLECTION_BATTLE)

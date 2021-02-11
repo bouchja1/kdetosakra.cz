@@ -151,10 +151,10 @@ export const findLastGuessedRound = roundsArray => {
     return 1;
 };
 
-export const findMyUserFromBattle = (battlePlayersFromFirestore, randomUserToken) => {
-    for (let i = 0; i < battlePlayersFromFirestore.length; i++) {
-        if (battlePlayersFromFirestore[i].userId === randomUserToken) {
-            return battlePlayersFromFirestore[i];
+export const findMyUserFromBattle = (battlePlayers, randomUserToken) => {
+    for (let i = 0; i < battlePlayers.length; i++) {
+        if (battlePlayers[i].userId === randomUserToken) {
+            return battlePlayers[i];
         }
     }
     return null;
