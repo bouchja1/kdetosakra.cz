@@ -2,13 +2,15 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Alert } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { differenceInSeconds } from 'date-fns';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import { getDateFromUnixTimestamp } from '../../util';
 import useTimeInterval from '../../hooks/useTimeInterval';
+import useNextRoundInterval from '../../hooks/useNextRoundInterval';
 import { setIsRoundActive } from '../../redux/actions/battle';
+import { updateBattle } from '../../services/firebase';
 
-const getAlertMessageFastestPlayer = countdownTime => (
+const getAlertMessageFastestPlayer = (round, countdownTime) => (
     <>
         {countdownTime > 0 ? (
             <>
@@ -21,12 +23,15 @@ const getAlertMessageFastestPlayer = countdownTime => (
                 sekund.
             </>
         ) : (
-            <b>Kolo skončilo.</b>
+            <b>
+                {round}
+                . kolo skončilo.
+            </b>
         )}
     </>
 );
 
-const getAlertMessageOtherPlayers = (name, countdownTime) => (
+const getAlertMessageOtherPlayers = (round, name, countdownTime) => (
     <>
         {countdownTime > 0 ? (
             <>
@@ -41,34 +46,47 @@ const getAlertMessageOtherPlayers = (name, countdownTime) => (
                 sekund.
             </>
         ) : (
-            <b>Kolo skončilo.</b>
+            <b>
+                {round}
+                . kolo skončilo.
+            </b>
         )}
     </>
 );
 
 const BattleCountDown = ({ currentBattleInfo }) => {
     const dispatch = useDispatch();
+    const { battleId } = useParams();
     const randomUserToken = useGetRandomUserToken();
     const currentBattleRoundId = useSelector(state => state.battle.currentBattle.round);
     const currentBattlePlayers = useSelector(state => state.battle.currentBattle.players);
     const [countdownTime, setCountdownTime] = useState(-1);
+    const [nextRoundTime, setNextRoundTime] = useState(-1);
     const [countdownIsRunning, setCountdownIsRunning] = useState(false);
-    const [currentBattleRound, setCurrentBattleRound] = useState();
+    const [nextRoundCountdownIsRunning, setNextRoundCountdownIsRunning] = useState(false);
+    const [currentRound, setCurrentRound] = useState();
     const { pathname } = useLocation();
 
     const {
-        isGameFinishedSuccessfully, isGameStarted, countdown, round, rounds,
+        isGameStarted, countdown, round, rounds,
     } = currentBattleInfo;
 
-    const handleTick = () => {
+    const handleBattleRoundTick = () => {
         setCountdownTime(prevTime => prevTime - 1);
     };
 
-    const { startInterval, stopInterval } = useTimeInterval(handleTick);
+    const handleNextRoundTick = () => {
+        setNextRoundTime(prevTime => prevTime - 1);
+    };
+
+    const { startInterval, stopInterval } = useTimeInterval(handleBattleRoundTick);
+    const { startInterval: startNextRoundInterval, stopInterval: stopNextRoundInterval } = useNextRoundInterval(
+        handleNextRoundTick,
+    );
 
     useEffect(() => {
         if (round && rounds.length) {
-            setCurrentBattleRound(rounds[round - 1]);
+            setCurrentRound(rounds[round - 1]);
         }
     }, [round, rounds]);
 
@@ -87,15 +105,38 @@ const BattleCountDown = ({ currentBattleInfo }) => {
             );
             stopInterval();
             setCountdownIsRunning(false);
+            if (!nextRoundCountdownIsRunning) {
+                startNextRoundCountdown(); // TODO odpocet do kola
+            }
         }
     }, [countdownIsRunning, countdownTime, currentBattlePlayers, round]);
+
+    useEffect(() => {
+        console.log('LALALALALA: ', nextRoundTime);
+        if (nextRoundCountdownIsRunning && nextRoundTime < 1) {
+            // TODO poslat currentRoundStart unix timestamp
+            updateBattle(battleId, { currentRoundStart: getDateFromUnixTimestamp(new Date()), round: round + 1 })
+                .then(docRef => {
+                    console.log('NOOOOOO: ', docRef);
+                    stopNextRoundInterval();
+                    setNextRoundCountdownIsRunning(false);
+                    setNextRoundTime(0);
+                })
+                .catch(err => {
+                    console.log('NOOOOOOO ERROR: ', err);
+                });
+        }
+    }, [nextRoundTime]);
 
     // clean countdown after a pathname is changed
     useEffect(() => {
         return () => {
             stopInterval();
+            stopNextRoundInterval();
             setCountdownTime(0);
+            setNextRoundTime(0);
             setCountdownIsRunning(false);
+            setNextRoundCountdownIsRunning(false);
         };
     }, [pathname]);
 
@@ -106,13 +147,38 @@ const BattleCountDown = ({ currentBattleInfo }) => {
         setCountdownIsRunning(true);
     };
 
+    const startNextRoundCountdown = guessedTime => {
+        setNextRoundTime(15);
+        startNextRoundInterval();
+        setNextRoundCountdownIsRunning(true);
+    };
+
     const battleInfo = useMemo(() => {
-        if (currentBattleRound) {
+        if (currentRound) {
             const {
                 isGuessed, guessedTime, firstGuess, isRoundActive,
-            } = currentBattleRound;
+            } = currentRound;
             if (isGuessed && !isRoundActive) {
-                return <Alert message={<b>Kolo skončilo.</b>} type="info" />;
+                if (!nextRoundCountdownIsRunning) {
+                    startNextRoundCountdown(); // TODO odpocet do kola
+                }
+                return (
+                    <Alert
+                        message={(
+                            <b>
+                                {round}
+                                . kolo skončilo. Další začne automaticky za
+                                <b>
+                                    {' '}
+                                    {nextRoundTime}
+                                    {' '}
+                                    s
+                                </b>
+                            </b>
+                        )}
+                        type="info"
+                    />
+                );
             }
 
             if (isGuessed && !countdownIsRunning) {
@@ -125,8 +191,8 @@ const BattleCountDown = ({ currentBattleInfo }) => {
                     <Alert
                         message={
                             guessedById === randomUserToken
-                                ? getAlertMessageFastestPlayer(countdownTime)
-                                : getAlertMessageOtherPlayers(name, countdownTime)
+                                ? getAlertMessageFastestPlayer(round, countdownTime)
+                                : getAlertMessageOtherPlayers(round, name, countdownTime)
                         }
                         type="info"
                     />
@@ -135,7 +201,7 @@ const BattleCountDown = ({ currentBattleInfo }) => {
         }
 
         return null;
-    }, [currentBattleRound, countdownTime]);
+    }, [currentRound, countdownTime, nextRoundTime]);
 
     if (!isGameStarted) {
         return (

@@ -33,6 +33,8 @@ export const createBattle = (authorId, mode, radius, selectedCity) => {
         isGameFinishedSuccessfully: false,
         countdown: 60,
         withCountdown: true,
+        round: 0, // current round
+        currentRoundStart: 0,
     });
 };
 

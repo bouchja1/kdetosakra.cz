@@ -15,10 +15,10 @@ import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import {
     getRandomNickname,
     findMyUserFromBattle,
-    findLastGuessedRound,
     sortBattleRoundsById,
     countTotalPlayerScoreFromRounds,
     getIsRoundActive,
+    getUnixTimestamp,
 } from '../../util';
 import useGameMenuResize from '../../hooks/useGameMenuResize';
 import { errorNames } from '../../errors';
@@ -28,7 +28,6 @@ import {
     resetCurrentBattle,
     setMyUserInfoToCurrentBattle,
     setRoundsToCurrentBattle,
-    setCurrentBattleRound,
 } from '../../redux/actions/battle';
 import { GameScreen } from '../GameScreen';
 import { MAX_ALLOWED_BATTLE_PLAYERS } from '../../constants/game';
@@ -84,7 +83,7 @@ export const Battle = () => {
     }, [battleId]);
 
     useEffect(() => {
-        if (currentBattleInfo && currentBattleInfo.battleId !== battleId) {
+        if (battleId && currentBattleInfo.battleId && currentBattleInfo.battleId !== battleId) {
             dispatch(resetCurrentBattle());
         }
         if (currentBattlePlayers && currentBattlePlayers.length && randomUserToken) {
@@ -102,7 +101,7 @@ export const Battle = () => {
         const readyPlayers = currentBattlePlayers.filter(player => player.isReady);
         if (!isGameStarted && currentBattlePlayers.length > 1 && readyPlayers.length === currentBattlePlayers.length) {
             // all players are ready! lets start the game
-            updateBattle(battleId, { isGameStarted: true, round: 1 })
+            updateBattle(battleId, { currentRoundStart: getUnixTimestamp(new Date()), isGameStarted: true, round: 1 })
                 .then(docRef => {})
                 .catch(err => {});
         }
@@ -110,7 +109,7 @@ export const Battle = () => {
 
     // lets setup a new game or modify existing one
     useEffect(() => {
-        if (battleFromFirestore) {
+        if (battleFromFirestore && battleRoundsFromFirestore) {
             const {
                 created,
                 createdBy,
@@ -119,11 +118,18 @@ export const Battle = () => {
                 countdown,
                 isGameStarted,
                 mode,
+                round,
+                currentRoundStart,
                 radius,
                 selectedCity,
             } = battleFromFirestore;
 
-            // sum meho score
+            const sortedBattleRounds = sortBattleRoundsById(battleRoundsFromFirestore).map(roundDetail => {
+                return {
+                    ...roundDetail,
+                    isRoundActive: getIsRoundActive(roundDetail.guessedTime, currentBattleInfo.countdown),
+                };
+            });
 
             dispatch(
                 setCurrentBattle({
@@ -135,23 +141,10 @@ export const Battle = () => {
                     withCountdown,
                     countdown,
                     isGameStarted,
+                    round,
+                    currentRoundStart,
                 }),
             );
-        }
-    }, [battleFromFirestore]);
-
-    useEffect(() => {
-        if (battleFromFirestore && battleRoundsFromFirestore) {
-            const currentBattleRound = battleFromFirestore.isGameStarted
-                ? findLastGuessedRound(battleRoundsFromFirestore)
-                : 0;
-            const sortedBattleRounds = sortBattleRoundsById(battleRoundsFromFirestore).map(round => {
-                return {
-                    ...round,
-                    isRoundActive: getIsRoundActive(round.guessedTime, currentBattleInfo.countdown),
-                };
-            });
-            dispatch(setCurrentBattleRound(currentBattleRound));
             dispatch(setRoundsToCurrentBattle(sortedBattleRounds));
         }
     }, [battleFromFirestore, battleRoundsFromFirestore]);

@@ -303,7 +303,7 @@ label {
 .battle-users-container {
     display: flex;
     flex-direction: column;
-    border: 1px solid #e1e3e8;
+    border-right: 1px solid #e1e3e8;
     padding: 10px 15px 0 15px;
 }
 
@@ -353,7 +353,39 @@ label {
     display: flex;
     flex: 1;
     flex-direction: row;
+    padding-bottom: 5px;
     margin-bottom: 10px;
+    border-bottom: 1px solid #e1e3e8;
+}
+
+.battle-players-detail-result {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #e1e3e8;
+}
+
+.battle-players-detail-player-result {
+    display: flex;
+    flex: 1;
+    justify-content: space-around;
+}
+
+.battle-players-detail-player-result--name {
+    display: flex;
+    width: 90%;
+    justify-content: flex-start;
+    font-size: 13px;
+}
+
+.battle-players-detail-player-result--status {
+    display: flex;
+    width: 10%;
+    justify-content: flex-end;
+    align-items: center;
+
 }
 
 .battle-players-detail--name {
@@ -516,6 +548,7 @@ label {
         padding-right: 30px;
     }
 
+    battle-players-detail-player-result--name,
     .battle-players-detail--name {
         font-size: 10px;
     }

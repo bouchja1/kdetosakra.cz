@@ -128,6 +128,18 @@ export const sortBattleRoundsById = roundsArray => {
     });
 };
 
+export const sortPlayersByHighestScore = playersArray => {
+    return playersArray.sort((a, b) => {
+        if (a.score > b.score) {
+            return -1;
+        }
+        if (a.score < b.score) {
+            return 1;
+        }
+        return 0;
+    });
+};
+
 export const findLastGuessedRound = roundsArray => {
     const sortedRounds = sortBattleRoundsById(roundsArray);
     for (let i = 0; i < sortedRounds.length; i++) {

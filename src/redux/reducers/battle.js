@@ -7,8 +7,6 @@ import {
     setBattlePlayers,
     setMyUserInfoToCurrentBattle,
     setRoundsToCurrentBattle,
-    setCurrentBattleRound,
-    setMyTotalScore,
     incrementMyTotalScore,
     setIsRoundActive,
 } from '../actions/battle';
@@ -22,6 +20,7 @@ const initialState = {
         round: null,
         rounds: [],
         myTotalScore: 0,
+        currentRoundStart: null,
         myNickname: null,
         isGameFinishedSuccessfully: false,
         isGameStarted: false,
@@ -40,14 +39,6 @@ const gameReducer = (state = initialState, action) => {
                 currentBattle: {
                     ...state.currentBattle,
                     ...action.payload,
-                },
-            };
-        case getType(setCurrentBattleRound):
-            return {
-                ...state,
-                currentBattle: {
-                    ...state.currentBattle,
-                    round: action.payload,
                 },
             };
         case getType(setBattlePlayers): {
@@ -75,14 +66,6 @@ const gameReducer = (state = initialState, action) => {
                 currentBattle: {
                     ...state.currentBattle,
                     myTotalScore: state.currentBattle.myTotalScore + action.payload,
-                },
-            };
-        case getType(setMyTotalScore):
-            return {
-                ...state,
-                currentBattle: {
-                    ...state.currentBattle,
-                    myTotalScore: action.payload,
                 },
             };
         case getType(setRoundsToCurrentBattle):

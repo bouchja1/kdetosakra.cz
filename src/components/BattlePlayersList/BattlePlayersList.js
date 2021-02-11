@@ -10,8 +10,8 @@ import {
     findMyUserFromBattle,
     generatePlaceInRadius,
     generateRandomRadius,
-    getIsRoundActive,
     getRandomCzechPlace,
+    sortPlayersByHighestScore,
 } from '../../util';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
@@ -86,15 +86,26 @@ const BattlePlayersList = () => {
 
     const getOngoingPlayersOrder = round => {
         const players = currentBattlePlayers ?? [];
-        return players.map((player, i) => {
-            const { name } = player;
+        const playersRoundResults = players.map(player => {
             const currentPlayerRound = player[`round${round}`];
+            return {
+                name: player.name,
+                score: currentPlayerRound?.score ? Math.round(currentPlayerRound.score) : 0,
+            };
+        });
+        const playersRoundResultsSorted = sortPlayersByHighestScore(playersRoundResults);
+        return playersRoundResultsSorted.map((player, i) => {
             return (
                 <>
-                    <div key={i} className="battle-players-detail">
-                        <div className="battle-players-detail--name">{name}</div>
+                    <div key={i} className="battle-players-detail-result">
+                        <div className="battle-players-detail-player-result">
+                            <div className="battle-players-detail-player-result--name">{player.name}</div>
+                            <div className="battle-players-detail-player-result--status">
+                                <Spin size="small" />
+                            </div>
+                        </div>
                         <div className="battle-players-detail--status">
-                            <Progress percent={currentPlayerRound?.score ? Math.round(currentPlayerRound.score) : 0} />
+                            <Progress percent={player.score} />
                         </div>
                     </div>
                 </>
@@ -125,9 +136,9 @@ const BattlePlayersList = () => {
     };
 
     const getPlayersInActiveGame = () => {
-        const { round, rounds, countdown } = currentBattleInfo;
+        const { round, rounds } = currentBattleInfo;
         const currentRound = rounds[round - 1];
-        const { guessedTime, isGuessed, isRoundActive } = currentRound;
+        const { isGuessed, isRoundActive } = currentRound;
 
         if (isGuessed && !isRoundActive) {
             return (
@@ -147,6 +158,7 @@ const BattlePlayersList = () => {
     };
 
     const getPlayersBeforeGameStarted = () => {
+        console.log('NOOOOOOOOOOOOOO: ', currentBattlePlayers);
         const players = currentBattlePlayers ?? [];
         return players.map((player, i) => {
             const { name, isReady } = player;
