@@ -129,7 +129,7 @@ const BattlePlayersList = () => {
         const currentRound = rounds[round - 1];
         const { guessedTime, isGuessed, isRoundActive } = currentRound;
 
-        if (isGuessed && !getIsRoundActive(guessedTime, countdown) && !isRoundActive) {
+        if (isGuessed && !isRoundActive) {
             return (
                 <>
                     <Title level={5}>Pořadí kola:</Title>
@@ -145,8 +145,6 @@ const BattlePlayersList = () => {
             </>
         );
     };
-
-    console.log('CHACHACHA: ', currentBattlePlayers);
 
     const getPlayersBeforeGameStarted = () => {
         const players = currentBattlePlayers ?? [];

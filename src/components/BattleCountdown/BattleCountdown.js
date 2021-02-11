@@ -8,14 +8,57 @@ import { getDateFromUnixTimestamp } from '../../util';
 import useTimeInterval from '../../hooks/useTimeInterval';
 import { setIsRoundActive } from '../../redux/actions/battle';
 
-const BattleCountDown = () => {
+const getAlertMessageFastestPlayer = countdownTime => (
+    <>
+        {countdownTime > 0 ? (
+            <>
+                Byl jsi nejrychlejší! Do konce kola zbývá
+                <b>
+                    {' '}
+                    {countdownTime}
+                </b>
+                {' '}
+                sekund.
+            </>
+        ) : (
+            <b>Kolo skončilo.</b>
+        )}
+    </>
+);
+
+const getAlertMessageOtherPlayers = (name, countdownTime) => (
+    <>
+        {countdownTime > 0 ? (
+            <>
+                <b>{name}</b>
+                {' '}
+                byl nejrychlejší. Na tvůj tip ti zbývá
+                <b>
+                    {' '}
+                    {countdownTime}
+                </b>
+                {' '}
+                sekund.
+            </>
+        ) : (
+            <b>Kolo skončilo.</b>
+        )}
+    </>
+);
+
+const BattleCountDown = ({ currentBattleInfo }) => {
     const dispatch = useDispatch();
     const randomUserToken = useGetRandomUserToken();
-    const currentBattleInfo = useSelector(state => state.battle.currentBattle);
     const currentBattleRoundId = useSelector(state => state.battle.currentBattle.round);
+    const currentBattlePlayers = useSelector(state => state.battle.currentBattle.players);
     const [countdownTime, setCountdownTime] = useState(-1);
     const [countdownIsRunning, setCountdownIsRunning] = useState(false);
+    const [currentBattleRound, setCurrentBattleRound] = useState();
     const { pathname } = useLocation();
+
+    const {
+        isGameFinishedSuccessfully, isGameStarted, countdown, round, rounds,
+    } = currentBattleInfo;
 
     const handleTick = () => {
         setCountdownTime(prevTime => prevTime - 1);
@@ -23,40 +66,19 @@ const BattleCountDown = () => {
 
     const { startInterval, stopInterval } = useTimeInterval(handleTick);
 
-    const startCountdown = (countdown, guessedTime) => {
-        const dateNow = new Date();
-        const guessedTimeDate = getDateFromUnixTimestamp(guessedTime);
-        setCountdownTime(countdown - differenceInSeconds(dateNow, guessedTimeDate));
-        startInterval();
-        setCountdownIsRunning(true);
-    };
-
     useEffect(() => {
-        const {
-            isGameFinishedSuccessfully,
-            isGameStarted,
-            withCountdown,
-            countdown,
-            round,
-            rounds,
-        } = currentBattleInfo;
-        if (isGameStarted && rounds.length) {
-            // check rounds because they are assigned in BattleGame later
-            const currentBattleRound = rounds[round - 1];
-            const { isGuessed, guessedTime, firstGuess } = currentBattleRound;
-            // TODO check if it is not expired already
-            if (isGuessed && withCountdown && !countdownIsRunning) {
-                const { name, guessedById } = firstGuess;
-                const guessedTimeDate = getDateFromUnixTimestamp(guessedTime);
-                setCountdownTime(countdown - differenceInSeconds(new Date(), guessedTimeDate));
-                startInterval();
-                setCountdownIsRunning(true);
-            }
+        if (round && rounds.length) {
+            setCurrentBattleRound(rounds[round - 1]);
         }
-    }, [currentBattleInfo, countdownIsRunning]);
+    }, [round, rounds]);
 
+    // stop countdown when it finishes or all players make a guess
     useEffect(() => {
-        if (countdownTime < 1) {
+        const playersWithFinishedRoundGuess = currentBattlePlayers.filter(player => player[`round${round}`]);
+        if (
+            countdownIsRunning
+            && (countdownTime < 1 || playersWithFinishedRoundGuess.length === currentBattlePlayers.length)
+        ) {
             dispatch(
                 setIsRoundActive({
                     roundId: currentBattleRoundId,
@@ -64,98 +86,75 @@ const BattleCountDown = () => {
                 }),
             );
             stopInterval();
-            setCountdownTime(0);
+            setCountdownIsRunning(false);
         }
-    }, [countdownTime]);
+    }, [countdownIsRunning, countdownTime, currentBattlePlayers, round]);
 
+    // clean countdown after a pathname is changed
     useEffect(() => {
         return () => {
             stopInterval();
             setCountdownTime(0);
+            setCountdownIsRunning(false);
         };
     }, [pathname]);
 
+    const startCountdown = guessedTime => {
+        const guessedTimeDate = getDateFromUnixTimestamp(guessedTime);
+        setCountdownTime(countdown - differenceInSeconds(new Date(), guessedTimeDate));
+        startInterval();
+        setCountdownIsRunning(true);
+    };
+
     const battleInfo = useMemo(() => {
-        const {
-            isGameFinishedSuccessfully,
-            isGameStarted,
-            withCountdown,
-            countdown,
-            round,
-            rounds,
-        } = currentBattleInfo;
-        // check rounds because they are assigned in BattleGame later
-        if (isGameStarted && round > 0 && rounds.length) {
-            const currentBattleRound = rounds[round - 1];
-            const { isGuessed, guessedTime, firstGuess } = currentBattleRound;
-            // TODO check if it is not expired already
-            if (isGuessed && withCountdown) {
-                if (!countdownIsRunning) {
-                    startCountdown(countdown, guessedTime);
-                }
+        if (currentBattleRound) {
+            const {
+                isGuessed, guessedTime, firstGuess, isRoundActive,
+            } = currentBattleRound;
+            if (isGuessed && !isRoundActive) {
+                return <Alert message={<b>Kolo skončilo.</b>} type="info" />;
+            }
+
+            if (isGuessed && !countdownIsRunning) {
+                startCountdown(guessedTime);
+            }
+
+            if (firstGuess) {
                 const { name, guessedById } = firstGuess;
-                const alertMessageOthers = (
-                    <>
-                        {countdownTime > 0 ? (
-                            <>
-                                <b>{name}</b>
-                                {' '}
-                                byl nejrychlejší. Na tvůj tip ti zbývá
-                                <b>
-                                    {' '}
-                                    {countdownTime}
-                                </b>
-                                {' '}
-                                sekund.
-                            </>
-                        ) : (
-                            <b>Kolo skončilo.</b>
-                        )}
-                    </>
-                );
-                const alertMessageYouFastest = (
-                    <>
-                        {countdownTime > 0 ? (
-                            <>
-                                Byl jsi nejrychlejší! Do konce kola zbývá
-                                <b>
-                                    {' '}
-                                    {countdownTime}
-                                </b>
-                                {' '}
-                                sekund.
-                            </>
-                        ) : (
-                            <b>Kolo skončilo.</b>
-                        )}
-                    </>
-                );
                 return (
-                    countdownIsRunning && (
-                        <Alert
-                            message={guessedById === randomUserToken ? alertMessageYouFastest : alertMessageOthers}
-                            type="info"
-                        />
-                    )
+                    <Alert
+                        message={
+                            guessedById === randomUserToken
+                                ? getAlertMessageFastestPlayer(countdownTime)
+                                : getAlertMessageOtherPlayers(name, countdownTime)
+                        }
+                        type="info"
+                    />
                 );
             }
         }
 
-        const beforeStartMessage = (
-            <>
-                Po nejrychlejším tipu daného kola začne odpočet
-                {' '}
-                <b>
-                    {countdown}
-                    {' '}
-                    sekund
-                </b>
-                .
-            </>
-        );
+        return null;
+    }, [currentBattleRound, countdownTime]);
 
-        return !isGameStarted ? <Alert message={beforeStartMessage} /> : null;
-    }, [currentBattleInfo, countdownTime]);
+    if (!isGameStarted) {
+        return (
+            <Alert
+                message={(
+                    <>
+                        Po nejrychlejším tipu daného kola začne odpočet
+                        {' '}
+                        <b>
+                            {countdown}
+                            {' '}
+                            sekund
+                        </b>
+                        .
+                    </>
+                )}
+            />
+        );
+    }
 
     return <div className="battle-info">{battleInfo}</div>;
 };

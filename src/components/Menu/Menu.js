@@ -51,7 +51,9 @@ const Menu = () => {
                 </a>
             </div>
             <img id="kdetosakra-logo" src={smilingLogo} alt="logo" className="kdetosakra-logo" width="85%" />
-            {isBattle && myPlayer?.userId && <BattleCountDown currentBattleInfo={currentBattleInfo} />}
+            {isBattle && myPlayer?.userId && currentBattleInfo && (
+                <BattleCountDown currentBattleInfo={currentBattleInfo} />
+            )}
             {isGameInfoShown(pathname, currentBattleInfo?.battleId) && (
                 <GameInfo
                     round={currentBattleInfo.round}

@@ -1,4 +1,4 @@
-import { differenceInSeconds, isBefore } from 'date-fns';
+import { isBefore } from 'date-fns';
 import { crCities } from '../data/cr';
 import randomNicknames from '../constants/nicknames';
 import gameModes from '../enums/modes';
