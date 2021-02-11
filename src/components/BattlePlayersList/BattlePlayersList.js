@@ -5,13 +5,11 @@ import {
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { CheckCircleTwoTone } from '@ant-design/icons';
-import { differenceInSeconds } from 'date-fns';
 import { addRoundBatchToBattleRounds, updateBattlePlayer } from '../../services/firebase';
 import {
     findMyUserFromBattle,
     generatePlaceInRadius,
     generateRandomRadius,
-    getDateFromUnixTimestamp,
     getIsRoundActive,
     getRandomCzechPlace,
 } from '../../util';

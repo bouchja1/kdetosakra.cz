@@ -6,7 +6,6 @@ import { Spin, Layout } from 'antd';
 import {
     addPlayerToBattle,
     getBattleDetail,
-    getBattlePlayers,
     streamBattleDetail,
     streamBattlePlayersDetail,
     streamBattleRoundsDetail,
@@ -22,6 +21,7 @@ import {
     getIsRoundActive,
 } from '../../util';
 import useGameMenuResize from '../../hooks/useGameMenuResize';
+import { errorNames } from '../../errors';
 import {
     setCurrentBattle,
     setBattlePlayers,
@@ -31,6 +31,7 @@ import {
     setCurrentBattleRound,
 } from '../../redux/actions/battle';
 import { GameScreen } from '../GameScreen';
+import { MAX_ALLOWED_BATTLE_PLAYERS } from '../../constants/game';
 
 const { Content } = Layout;
 
@@ -40,6 +41,7 @@ export const Battle = () => {
     const { battleId } = useParams();
     const [notFound, setNotFound] = useState(false);
     const [battleFromFirestore, setBattleFromFirestore] = useState();
+    const [playerCapacityExhausted, setPlayerCapacityExhausted] = useState(false);
     const [battleRoundsFromFirestore, setBattleRoundsFromFirestore] = useState();
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
     const currentBattlePlayers = useSelector(state => state.battle.currentBattle.players);
@@ -65,7 +67,11 @@ export const Battle = () => {
                             )
                                 .then(docRef => {})
                                 .catch(err => {
-                                    console.log('Err: ', err);
+                                    if (err.name === errorNames.maxBattleCapacityExhausted) {
+                                        setPlayerCapacityExhausted(true);
+                                    } else {
+                                        console.error(err.toJSON());
+                                    }
                                 });
                         }
                         setBattleFromFirestore(battleData);
@@ -218,6 +224,17 @@ export const Battle = () => {
                     pathname: '/',
                 }}
             />
+        );
+    }
+
+    if (playerCapacityExhausted) {
+        return (
+            <Content>
+                Sem už se bohužel nevejdeš. Maximální počet hráčů, kteří mohou proti sobě hrát, je
+                {' '}
+                {MAX_ALLOWED_BATTLE_PLAYERS}
+                .
+            </Content>
         );
     }
 

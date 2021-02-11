@@ -4,6 +4,8 @@ import 'firebase/auth';
 import 'firebase/firestore';
 
 import { firebaseConfig } from '../constants/firebase';
+import { MAX_ALLOWED_BATTLE_PLAYERS } from '../constants/game';
+import { DuplicatedBattlePlayerError, NotFoundBattlePlayerError, MaxBattleCapacityExhaustedError } from '../errors';
 import { generateRandomRadius, getRandomNickname } from '../util';
 
 firebase.initializeApp(firebaseConfig);
@@ -109,7 +111,7 @@ export const updateBattlePlayer = (battleId, userId, itemsToUpdate) => {
                     .doc(matchingPlayer.id)
                     .update(itemsToUpdate);
             }
-            throw new Error('user-not-found-error');
+            throw new NotFoundBattlePlayerError(`User with id ${userId} was not found in the battle ${battleId}.`);
         });
 };
 
@@ -121,7 +123,11 @@ export const addPlayerToBattle = (newPlayer, battleId) => {
         .then(mappedBattlePlayers => {
             const matchingPlayer = mappedBattlePlayers.filter(player => player.userId === userId);
             const existingNickname = mappedBattlePlayers.filter(player => player.name === name);
-            if (matchingPlayer.length === 0) {
+            if (matchingPlayer.length) {
+                throw new DuplicatedBattlePlayerError(`Duplicated player with ID ${userId}`);
+            } else if (mappedBattlePlayers.length >= MAX_ALLOWED_BATTLE_PLAYERS) {
+                throw new MaxBattleCapacityExhaustedError('Battle capacity was exhausted.');
+            } else {
                 return db
                     .collection(COLLECTION_BATTLE)
                     .doc(battleId)
@@ -133,7 +139,6 @@ export const addPlayerToBattle = (newPlayer, battleId) => {
                         isReady: false,
                     });
             }
-            throw new Error('duplicate-item-error');
         });
 };
 
