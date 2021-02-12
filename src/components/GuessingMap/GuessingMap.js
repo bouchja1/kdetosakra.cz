@@ -338,7 +338,7 @@ const GuessingMap = ({
                 round={round}
                 roundGuessed={roundGuessed}
                 disabled={guessButtonDisabled || panoramaLoading || !isGameStarted}
-                currentRoundBattle={currentRoundBattle}
+                currentRound={isBattle ? currentRoundBattle : currentGame.round}
                 nextRoundButtonVisible={nextRoundButtonVisible}
             />
         </>

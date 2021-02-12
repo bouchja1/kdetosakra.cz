@@ -13,14 +13,16 @@ const GuessingMapButton = ({
     round,
     roundGuessed,
     disabled,
-    currentRoundBattle,
+    currentRound,
     nextRoundButtonVisible,
 }) => {
     const dispatch = useDispatch();
 
+    const evaluateGame = isBattle ? currentRound >= TOTAL_ROUNDS_MAX && roundGuessed : currentRound >= TOTAL_ROUNDS_MAX;
+
     return (
         <>
-            {currentRoundBattle >= TOTAL_ROUNDS_MAX && roundGuessed ? (
+            {evaluateGame ? (
                 <Button type="primary" onClick={makeShowGameResult}>
                     Vyhodnotit hru
                 </Button>
