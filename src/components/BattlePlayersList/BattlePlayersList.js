@@ -200,7 +200,6 @@ const BattlePlayersList = () => {
     };
 
     const getPlayersBeforeGameStarted = () => {
-        console.log('NOOOOOOOOOOOOOO: ', currentBattlePlayers);
         const players = currentBattlePlayers ?? [];
         return players.map((player, i) => {
             const { name, isReady, userId } = player;

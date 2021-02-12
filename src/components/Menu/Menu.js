@@ -9,25 +9,25 @@ import { findUserFromBattleByRandomTokenId } from '../../util';
 import GameInfo from '../GameInfo';
 import BattleCountDown from '../BattleCountdown';
 
-const isGameInfoShown = (pathname, battleId) => {
+const isGameInfoShown = (pathname, isBattle) => {
     return (
-        battleId
-        && (pathname.includes(routeNames.battle)
-            || pathname.includes(routeNames.geolokace)
-            || pathname.includes(routeNames.vlastni)
-            || pathname.includes(routeNames.nahodne)
-            || pathname.includes(routeNames.mesto))
+        isBattle
+        || pathname.includes(routeNames.geolokace)
+        || pathname.includes(routeNames.vlastni)
+        || pathname.includes(routeNames.nahodne)
+        || pathname.includes(routeNames.mesto)
     );
 };
 
 const Menu = () => {
     const randomUserToken = useGetRandomUserToken();
     const { pathname } = useLocation();
+    const currentGame = useSelector(state => state.game.currentGame);
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
     const currentBattlePlayers = useSelector(state => state.battle.currentBattle.players);
     const [myPlayer, setMyPlayer] = useState();
 
-    const isBattle = pathname.includes(routeNames.battle);
+    const isBattle = pathname.includes(routeNames.battle) && currentBattleInfo?.battleId;
 
     useEffect(() => {
         setMyPlayer(findUserFromBattleByRandomTokenId(currentBattlePlayers, randomUserToken));
@@ -54,11 +54,11 @@ const Menu = () => {
             {isBattle && myPlayer?.userId && currentBattleInfo && (
                 <BattleCountDown currentBattleInfo={currentBattleInfo} />
             )}
-            {isGameInfoShown(pathname, currentBattleInfo?.battleId) && (
+            {isGameInfoShown(pathname, isBattle) && (
                 <GameInfo
-                    round={currentBattleInfo.round}
-                    totalScore={currentBattleInfo.myTotalScore}
-                    mode={currentBattleInfo.mode}
+                    round={isBattle ? currentBattleInfo.round : currentGame.round}
+                    totalScore={isBattle ? currentBattleInfo.myTotalScore : currentGame.totalScore}
+                    mode={isBattle ? currentBattleInfo.mode : currentGame.mode}
                     isBattle={isBattle}
                     myPlayer={myPlayer}
                 />

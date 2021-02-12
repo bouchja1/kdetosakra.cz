@@ -45,10 +45,8 @@ export const GameScreen = ({
 
     useEffect(() => {
         if (isBattle) {
-            console.log('LLLAAASTG UEST ROUND: ', lastGuessedRound);
             setCurrentRoundNumber(lastGuessedRound);
             if (rounds.length && isGameStarted) {
-                console.log('Lrounds: ', rounds);
                 const roundToGuess = rounds[lastGuessedRound - 1];
                 const { city: cityToGuess, panoramaPlace: panoramaPlaceToGuess } = roundToGuess;
                 setPanoramaPlace(panoramaPlaceToGuess);
@@ -65,7 +63,7 @@ export const GameScreen = ({
                 setCurrentCity(city);
             }
         }
-    }, [mapyContext.loadedMapApi, mode, radius, city, isBattle, isGameStarted, rounds, lastGuessedRound]);
+    }, [mapyContext.loadedMapApi, mode, radius, city, isBattle, isGameStarted, rounds, lastGuessedRound, round]);
 
     const makeSetPanoramaLoading = loading => {
         setPanoramaLoading(loading);

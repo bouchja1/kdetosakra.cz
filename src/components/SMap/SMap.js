@@ -22,15 +22,7 @@ const SMap = ({
     const currentGame = useSelector(state => state.game.currentGame);
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
 
-    const { mode, city, radius } = currentGame;
-    const {
-        mode: battleMode, radius: battleRadius, rounds, round,
-    } = currentBattleInfo;
-
-    const initSMap = () => {
-        const mapInstance = isBattle
-            ? getMapInstanceByGameMode(mapyContext.SMap, mode, city, radius, map.current)
-            : getMapInstanceByGameMode(mapyContext.SMap, battleMode, rounds[round - 1].city, battleRadius, map.current);
+    const initSMap = mapInstance => {
         setupMapInstanceAndLayers(mapyContext.SMap, mapInstance);
 
         // vrstva se značkami
@@ -58,10 +50,26 @@ const SMap = ({
     };
 
     useEffect(() => {
-        if (mapyContext.loadedMapApi && currentGame && currentBattleInfo) {
-            initSMap();
+        if (isBattle && mapyContext.loadedMapApi) {
+            const {
+                mode: battleMode, radius: battleRadius, rounds, round,
+            } = currentBattleInfo;
+            if (battleMode && round && rounds) {
+                const mapInstance = getMapInstanceByGameMode(
+                    mapyContext.SMap,
+                    battleMode,
+                    rounds[round - 1].city,
+                    battleRadius,
+                    map.current,
+                );
+                initSMap(mapInstance);
+            }
+        } else if (mapyContext.loadedMapApi) {
+            const { mode, city, radius } = currentGame;
+            const mapInstance = getMapInstanceByGameMode(mapyContext.SMap, mode, city, radius, map.current);
+            initSMap(mapInstance);
         }
-    }, [mapyContext.loadedMapApi, currentGame, currentBattleInfo]);
+    }, [mapyContext.loadedMapApi, isBattle, currentBattleInfo, currentGame]);
 
     return (
         <>
