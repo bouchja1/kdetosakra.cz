@@ -25,7 +25,7 @@ const COLLECTION_BATTLE_ROUNDS = 'battleRounds';
 export const createBattle = (authorId, mode, radius, selectedCity) => {
     return db.collection(COLLECTION_BATTLE).add({
         created: firebase.firestore.FieldValue.serverTimestamp(),
-        createdBy: authorId,
+        createdById: authorId,
         mode,
         radius: radius ?? generateRandomRadius(), // maybe not necessary here
         selectedCity: selectedCity ?? null,
@@ -114,7 +114,7 @@ export const updateBattlePlayer = (battleId, userId, itemsToUpdate) => {
  * @returns {Promise<firebase.firestore.DocumentData[]>}
  */
 export const addPlayerToBattle = (newPlayer, battleId) => {
-    const { name, userId } = newPlayer;
+    const { name, userId, isReady } = newPlayer;
     return getBattlePlayers(battleId)
         .then(querySnapshot => querySnapshot.docs)
         .then(querySnapshotDocs => querySnapshotDocs.map(x => x.data()))
@@ -134,7 +134,7 @@ export const addPlayerToBattle = (newPlayer, battleId) => {
                         name: existingNickname.length ? getRandomNickname() : name,
                         joined: firebase.firestore.FieldValue.serverTimestamp(),
                         userId,
-                        isReady: false,
+                        isReady,
                     });
             }
         });

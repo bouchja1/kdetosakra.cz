@@ -370,7 +370,7 @@ label {
 .battle-players-detail-player-result {
     display: flex;
     flex: 1;
-    justify-content: space-around;
+    justify-content: flex-start;
 }
 
 .battle-players-detail-player-result--name {
@@ -378,14 +378,6 @@ label {
     width: 90%;
     justify-content: flex-start;
     font-size: 13px;
-}
-
-.battle-players-detail-player-result--status {
-    display: flex;
-    width: 10%;
-    justify-content: flex-end;
-    align-items: center;
-
 }
 
 .battle-players-detail--name {

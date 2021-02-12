@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import {
-    Button, Spin, Typography, Progress
+    Button, Spin, Typography, Progress, Tooltip
 } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { CheckCircleTwoTone } from '@ant-design/icons';
-import { addRoundBatchToBattleRounds, updateBattlePlayer } from '../../services/firebase';
+import { addRoundBatchToBattleRounds, updateBattle, updateBattlePlayer } from '../../services/firebase';
 import {
-    findMyUserFromBattle,
+    findUserFromBattleByRandomTokenId,
     generatePlaceInRadius,
     generateRandomRadius,
     getRandomCzechPlace,
+    getUnixTimestamp,
+    RADIUS_DESCRIPTION,
     sortPlayersByHighestScore,
 } from '../../util';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
@@ -77,13 +79,25 @@ const BattlePlayersList = () => {
     const randomUserToken = useGetRandomUserToken();
     const { battleId } = useParams();
     const [myPlayer, setMyPlayer] = useState();
+    const [battleCanBeStarted, setBattleCanBeStarted] = useState(false);
     const currentBattlePlayers = useSelector(state => state.battle.currentBattle.players);
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
 
+    const isBattleCreator = currentBattleInfo.createdById !== null && currentBattleInfo.createdById === randomUserToken;
+
     useEffect(() => {
         // find my user
-        setMyPlayer(findMyUserFromBattle(currentBattlePlayers, randomUserToken));
+        setMyPlayer(findUserFromBattleByRandomTokenId(currentBattlePlayers, randomUserToken));
     }, [currentBattlePlayers]);
+
+    // all players are ready! lets start the game - multiplayer game is being started!
+    useEffect(() => {
+        const { isGameStarted } = currentBattleInfo;
+        const readyPlayers = currentBattlePlayers.filter(player => player.isReady);
+        if (!isGameStarted && currentBattlePlayers.length > 1 && readyPlayers.length === currentBattlePlayers.length) {
+            setBattleCanBeStarted(true);
+        }
+    }, [currentBattlePlayers, currentBattleInfo]);
 
     const getOngoingPlayersOrder = round => {
         const players = currentBattlePlayers ?? [];
@@ -101,9 +115,6 @@ const BattlePlayersList = () => {
                     <div key={i} className="battle-players-detail-result">
                         <div className="battle-players-detail-player-result">
                             <div className="battle-players-detail-player-result--name">{player.name}</div>
-                            <div className="battle-players-detail-player-result--status">
-                                <Spin size="small" />
-                            </div>
                         </div>
                         <div className="battle-players-detail--status">
                             <Progress percent={player.score} />
@@ -125,9 +136,13 @@ const BattlePlayersList = () => {
                         <div className="battle-players-detail--name">{name}</div>
                         <div className="battle-players-detail--status">
                             {currentPlayerRound?.score ? (
-                                <CheckCircleTwoTone twoToneColor="#52c41a" />
+                                <Tooltip title="Hráč umístil tip">
+                                    <CheckCircleTwoTone twoToneColor="#52c41a" />
+                                </Tooltip>
                             ) : (
-                                <Spin size="small" />
+                                <Tooltip title="Hráč hádá místo">
+                                    <Spin size="small" />
+                                </Tooltip>
                             )}
                         </div>
                     </div>
@@ -146,6 +161,32 @@ const BattlePlayersList = () => {
                 <>
                     <Title level={5}>Pořadí kola:</Title>
                     <div className="battle-players">{battleId && getOngoingPlayersOrder(round)}</div>
+                    {isBattleCreator && (
+                        <>
+                            <Button
+                                disabled={!battleCanBeStarted}
+                                type="primary"
+                                onClick={() => {
+                                    updateBattle(battleId, {
+                                        currentRoundStart: getUnixTimestamp(new Date()),
+                                        round: round + 1,
+                                    })
+                                        .then(docRef => {
+                                            console.log('NOOOOOO: ', docRef);
+                                        })
+                                        .catch(err => {
+                                            console.log('NOOOOOOO ERROR: ', err);
+                                        });
+                                }}
+                            >
+                                Začít
+                                {' '}
+                                {currentBattleInfo.round + 1}
+                                . kolo
+                            </Button>
+                            <p style={{ marginTop: '10px' }}>Odstartujte jako tvůrce hry další kolo.</p>
+                        </>
+                    )}
                 </>
             );
         }
@@ -162,14 +203,36 @@ const BattlePlayersList = () => {
         console.log('NOOOOOOOOOOOOOO: ', currentBattlePlayers);
         const players = currentBattlePlayers ?? [];
         return players.map((player, i) => {
-            const { name, isReady } = player;
+            const { name, isReady, userId } = player;
             return (
                 <>
                     <div key={i} className="battle-players-detail">
                         <div className="battle-players-detail--name">{name}</div>
-                        <div className="battle-players-detail--status">
-                            {isReady ? <CheckCircleTwoTone twoToneColor="#52c41a" /> : <Spin size="small" />}
-                        </div>
+                        {currentBattleInfo.createdById === userId ? (
+                            <div className="battle-players-detail--status">
+                                {currentBattleInfo.isGameStarted ? (
+                                    <Tooltip title="Hráč připraven ke hře">
+                                        <CheckCircleTwoTone twoToneColor="#52c41a" />
+                                    </Tooltip>
+                                ) : (
+                                    <Tooltip title="Hráč se připravuje">
+                                        <Spin size="small" />
+                                    </Tooltip>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="battle-players-detail--status">
+                                {isReady ? (
+                                    <Tooltip title="Hráč připraven ke hře">
+                                        <CheckCircleTwoTone twoToneColor="#52c41a" />
+                                    </Tooltip>
+                                ) : (
+                                    <Tooltip title="Hráč se připravuje">
+                                        <Spin size="small" />
+                                    </Tooltip>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </>
             );
@@ -185,26 +248,48 @@ const BattlePlayersList = () => {
                 <>
                     <Title level={5}>Hráči:</Title>
                     <div className="battle-players">{battleId && getPlayersBeforeGameStarted()}</div>
-                    <Button
-                        disabled={myPlayer?.isReady}
-                        type="primary"
-                        onClick={() => {
-                            // if the user is a battle creator, he will generate rounds here
-                            if (currentBattleInfo.createdById === randomUserToken) {
+                    {isBattleCreator ? (
+                        <Button
+                            disabled={!battleCanBeStarted}
+                            type="primary"
+                            onClick={() => {
+                                // if the user is a battle creator, he will generate rounds here
                                 generateRounds(currentBattleInfo.mode, currentBattleInfo.battleId);
-                            }
-                            updateBattlePlayer(battleId, randomUserToken, { isReady: true })
-                                .then(docRef => {})
-                                .catch(err => {});
-                        }}
-                    >
-                        Připraven
-                    </Button>
+                                updateBattle(battleId, {
+                                    currentRoundStart: getUnixTimestamp(new Date()),
+                                    isGameStarted: true,
+                                    round: 1,
+                                })
+                                    .then(docRef => {})
+                                    .catch(err => {});
+                            }}
+                        >
+                            Začít hru
+                        </Button>
+                    ) : (
+                        <Button
+                            disabled={myPlayer?.isReady}
+                            type="primary"
+                            onClick={() => {
+                                updateBattlePlayer(battleId, randomUserToken, { isReady: true })
+                                    .then(docRef => {})
+                                    .catch(err => {});
+                            }}
+                        >
+                            Připraven
+                        </Button>
+                    )}
                     <p style={{ marginTop: '10px' }}>
-                        Hra začíná, až všichni hráči zvolí možnost
-                        {' '}
-                        <b>Připraven</b>
-                        .
+                        {isBattleCreator ? (
+                            <>Hru můžete začít, až všichni hráči zvolí, že jsou připraveni.</>
+                        ) : (
+                            <>
+                                Hra začíná, až všichni hráči zvolí možnost
+                                {' '}
+                                <b>Připraven</b>
+                                .
+                            </>
+                        )}
                     </p>
                 </>
             )}

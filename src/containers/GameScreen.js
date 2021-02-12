@@ -45,10 +45,11 @@ export const GameScreen = ({
 
     useEffect(() => {
         if (isBattle) {
+            console.log('LLLAAASTG UEST ROUND: ', lastGuessedRound);
             setCurrentRound(lastGuessedRound);
             if (rounds.length && isGameStarted) {
-                // TODO tady lastGuessedRound funguje asi jen pro 1. kolo. ... kdybych uz mel 2 uhodnuty a vracel se ke 3. tak to nebude fungovat a melo bytbyt -1
-                const roundToGuess = rounds[lastGuessedRound];
+                console.log('Lrounds: ', rounds);
+                const roundToGuess = rounds[lastGuessedRound - 1];
                 const { city: cityToGuess, panoramaPlace: panoramaPlaceToGuess } = roundToGuess;
                 setPanoramaPlace(panoramaPlaceToGuess);
                 setCurrentCity(cityToGuess);

@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 
 import useSMapResize from '../../hooks/useSMapResize';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
-import { findMyUserFromBattle } from '../../util';
+import { findUserFromBattleByRandomTokenId } from '../../util';
 import BattlePlayersList from '../BattlePlayersList';
 import BattleSettings from '../BattleSettings';
 
@@ -18,7 +18,7 @@ const BattlePlayersPanel = () => {
 
     useEffect(() => {
         // find my user
-        setMyPlayer(findMyUserFromBattle(currentBattlePlayers, randomUserToken));
+        setMyPlayer(findUserFromBattleByRandomTokenId(currentBattlePlayers, randomUserToken));
     }, [currentBattlePlayers]);
 
     return (

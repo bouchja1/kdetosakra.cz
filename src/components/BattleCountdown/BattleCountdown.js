@@ -2,14 +2,13 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Alert } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { differenceInSeconds } from 'date-fns';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
-import { getDateFromUnixTimestamp } from '../../util';
+import { findUserFromBattleByRandomTokenId, getDateFromUnixTimestamp } from '../../util';
 import useTimeInterval from '../../hooks/useTimeInterval';
 import { setIsRoundActive } from '../../redux/actions/battle';
-import { updateBattle } from '../../services/firebase';
 
-const getAlertMessageFastestPlayer = (round, countdownTime) => (
+const getAlertMessageFastestPlayer = (round, countdownTime, battleCreatorName) => (
     <>
         {countdownTime > 0 ? (
             <>
@@ -23,14 +22,20 @@ const getAlertMessageFastestPlayer = (round, countdownTime) => (
             </>
         ) : (
             <b>
-                {round}
-                . kolo skončilo.
+                Konec kola.
+                {' '}
+                {battleCreatorName}
+                {' '}
+                odstartuje
+                {' '}
+                {round + 1}
+                . kolo
             </b>
         )}
     </>
 );
 
-const getAlertMessageOtherPlayers = (round, name, countdownTime) => (
+const getAlertMessageOtherPlayers = (round, name, countdownTime, battleCreatorName) => (
     <>
         {countdownTime > 0 ? (
             <>
@@ -46,8 +51,14 @@ const getAlertMessageOtherPlayers = (round, name, countdownTime) => (
             </>
         ) : (
             <b>
-                {round}
-                . kolo skončilo.
+                Konec kola.
+                {' '}
+                {battleCreatorName}
+                {' '}
+                odstartuje
+                {' '}
+                {round + 1}
+                . kolo
             </b>
         )}
     </>
@@ -55,33 +66,23 @@ const getAlertMessageOtherPlayers = (round, name, countdownTime) => (
 
 const BattleCountDown = ({ currentBattleInfo }) => {
     const dispatch = useDispatch();
-    const { battleId } = useParams();
     const randomUserToken = useGetRandomUserToken();
     const currentBattleRoundId = useSelector(state => state.battle.currentBattle.round);
     const currentBattlePlayers = useSelector(state => state.battle.currentBattle.players);
     const [countdownTime, setCountdownTime] = useState(-1);
-    const [nextRoundTime, setNextRoundTime] = useState(-1);
     const [countdownIsRunning, setCountdownIsRunning] = useState(false);
-    const [nextRoundCountdownIsRunning, setNextRoundCountdownIsRunning] = useState(false);
     const [currentRound, setCurrentRound] = useState();
     const { pathname } = useLocation();
 
     const {
-        isGameStarted, countdown, round, rounds, currentRoundStart,
+        isGameStarted, countdown, round, rounds, createdById,
     } = currentBattleInfo;
 
     const handleBattleRoundTick = () => {
         setCountdownTime(prevTime => prevTime - 1);
     };
 
-    const handleNextRoundTick = () => {
-        setNextRoundTime(prevTime => prevTime - 1);
-    };
-
     const { startInterval, stopInterval } = useTimeInterval(handleBattleRoundTick);
-    const { startInterval: startNextRoundInterval, stopInterval: stopNextRoundInterval } = useTimeInterval(
-        handleNextRoundTick,
-    );
 
     useEffect(() => {
         if (round && rounds.length) {
@@ -104,39 +105,15 @@ const BattleCountDown = ({ currentBattleInfo }) => {
             );
             stopInterval();
             setCountdownIsRunning(false);
-            if (!nextRoundCountdownIsRunning) {
-                startNextRoundCountdown(); // TODO odpocet do kola
-            }
         }
     }, [countdownIsRunning, countdownTime, currentBattlePlayers, round]);
-
-    // TODO tady to budu updatovat, ale pozor!! zase to budou updatovat vsichni, chtelo by to jen aby jeden z nich
-    useEffect(() => {
-        console.log('LALALALALA: ', nextRoundTime);
-        if (nextRoundCountdownIsRunning && nextRoundTime < 1) {
-            // FIXME: This is called only from a client of the battle creator to save firestore requests - but should be improved in the future
-            updateBattle(battleId, { currentRoundStart: getDateFromUnixTimestamp(new Date()), round: round + 1 })
-                .then(docRef => {
-                    console.log('NOOOOOO: ', docRef);
-                    stopNextRoundInterval();
-                    setNextRoundCountdownIsRunning(false);
-                    setNextRoundTime(0);
-                })
-                .catch(err => {
-                    console.log('NOOOOOOO ERROR: ', err);
-                });
-        }
-    }, [nextRoundTime]);
 
     // clean countdown after a pathname is changed
     useEffect(() => {
         return () => {
             stopInterval();
-            stopNextRoundInterval();
             setCountdownTime(0);
-            setNextRoundTime(0);
             setCountdownIsRunning(false);
-            setNextRoundCountdownIsRunning(false);
         };
     }, [pathname]);
 
@@ -147,33 +124,25 @@ const BattleCountDown = ({ currentBattleInfo }) => {
         setCountdownIsRunning(true);
     };
 
-    const startNextRoundCountdown = guessedTime => {
-        setNextRoundTime(15);
-        startNextRoundInterval();
-        setNextRoundCountdownIsRunning(true);
-    };
-
     const battleInfo = useMemo(() => {
         if (currentRound) {
             const {
                 isGuessed, guessedTime, firstGuess, isRoundActive,
             } = currentRound;
+            const battleUserCreator = findUserFromBattleByRandomTokenId(currentBattlePlayers, createdById);
             if (isGuessed && !isRoundActive) {
-                if (!nextRoundCountdownIsRunning) {
-                    startNextRoundCountdown(); // TODO odpocet do kola
-                }
                 return (
                     <Alert
                         message={(
                             <b>
-                                {round}
-                                . kolo skončilo. Další začne automaticky za
-                                <b>
-                                    {' '}
-                                    {nextRoundTime}
-                                    {' '}
-                                    s
-                                </b>
+                                Konec kola.
+                                {' '}
+                                {battleUserCreator.name}
+                                {' '}
+                                odstartuje
+                                {' '}
+                                {round + 1}
+                                . kolo
                             </b>
                         )}
                         type="info"
@@ -191,8 +160,8 @@ const BattleCountDown = ({ currentBattleInfo }) => {
                     <Alert
                         message={
                             guessedById === randomUserToken
-                                ? getAlertMessageFastestPlayer(round, countdownTime)
-                                : getAlertMessageOtherPlayers(round, name, countdownTime)
+                                ? getAlertMessageFastestPlayer(round, countdownTime, battleUserCreator.name)
+                                : getAlertMessageOtherPlayers(round, name, countdownTime, battleUserCreator.name)
                         }
                         type="info"
                     />
@@ -201,7 +170,7 @@ const BattleCountDown = ({ currentBattleInfo }) => {
         }
 
         return null;
-    }, [currentRound, countdownTime, nextRoundTime]);
+    }, [currentRound, countdownTime]);
 
     if (!isGameStarted) {
         return (

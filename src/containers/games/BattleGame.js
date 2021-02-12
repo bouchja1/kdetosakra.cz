@@ -14,7 +14,7 @@ import {
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import {
     getRandomNickname,
-    findMyUserFromBattle,
+    findUserFromBattleByRandomTokenId,
     sortBattleRoundsById,
     countTotalPlayerScoreFromRounds,
     getIsRoundActive,
@@ -56,12 +56,13 @@ export const Battle = () => {
                         const battleData = battleDetail.data();
                         // don't add an user when the game is started
 
-                        const isPlayerAlreadyInBattle = findMyUserFromBattle(currentBattlePlayers, randomUserToken) !== null;
+                        const isPlayerAlreadyInBattle = findUserFromBattleByRandomTokenId(currentBattlePlayers, randomUserToken) !== null;
                         if (randomUserToken && !battleData.isGameStarted && !isPlayerAlreadyInBattle) {
                             addPlayerToBattle(
                                 {
                                     name: getRandomNickname(),
                                     userId: randomUserToken,
+                                    isReady: battleData.createdById === randomUserToken,
                                 },
                                 battleId,
                             )
@@ -96,30 +97,12 @@ export const Battle = () => {
         }
     }, [currentBattleInfo, currentBattlePlayers, randomUserToken]);
 
-    // all players are ready! lets start the game - multiplayer game is being started!
-    useEffect(() => {
-        const { isGameStarted, createdById } = currentBattleInfo;
-        const readyPlayers = currentBattlePlayers.filter(player => player.isReady);
-        if (!isGameStarted && currentBattlePlayers.length > 1 && readyPlayers.length === currentBattlePlayers.length) {
-            // FIXME: This is called only from a client of the battle creator to save firestore requests - but should be improved in the future
-            if (createdById === randomUserToken) {
-                updateBattle(battleId, {
-                    currentRoundStart: getUnixTimestamp(new Date()),
-                    isGameStarted: true,
-                    round: 1,
-                })
-                    .then(docRef => {})
-                    .catch(err => {});
-            }
-        }
-    }, [currentBattlePlayers, currentBattleInfo]);
-
     // lets setup a new game or modify existing one
     useEffect(() => {
         if (battleFromFirestore && battleRoundsFromFirestore) {
             const {
                 created,
-                createdBy,
+                createdById,
                 isGameFinishedSuccessfully,
                 withCountdown,
                 countdown,
@@ -142,7 +125,7 @@ export const Battle = () => {
                 setCurrentBattle({
                     dateCreatedInSeconds: created?.seconds,
                     battleId,
-                    createdById: createdBy,
+                    createdById,
                     mode,
                     isGameFinishedSuccessfully,
                     withCountdown,
@@ -169,7 +152,7 @@ export const Battle = () => {
                 });
                 dispatch(setBattlePlayers(updatedBattlePlayers));
 
-                const myUser = findMyUserFromBattle(updatedBattlePlayers, randomUserToken);
+                const myUser = findUserFromBattleByRandomTokenId(updatedBattlePlayers, randomUserToken);
                 if (myUser) {
                     const { name, documentId } = myUser;
                     dispatch(

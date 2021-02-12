@@ -5,7 +5,7 @@ import { FacebookFilled, HomeOutlined, InfoCircleOutlined } from '@ant-design/ic
 import smilingLogo from '../../assets/images/kdetosakraSmile.svg';
 import routeNames from '../../constants/routes';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
-import { findMyUserFromBattle } from '../../util';
+import { findUserFromBattleByRandomTokenId } from '../../util';
 import GameInfo from '../GameInfo';
 import BattleCountDown from '../BattleCountdown';
 
@@ -30,7 +30,7 @@ const Menu = () => {
     const isBattle = pathname.includes(routeNames.battle);
 
     useEffect(() => {
-        setMyPlayer(findMyUserFromBattle(currentBattlePlayers, randomUserToken));
+        setMyPlayer(findUserFromBattleByRandomTokenId(currentBattlePlayers, randomUserToken));
     }, [currentBattlePlayers]);
 
     return (

@@ -42,6 +42,7 @@ const GuessingMap = ({
     const [round, setRound] = useState();
     // common vars for both multiplayer and singleplayer
 
+    const [currentRoundBattle, setCurrentRoundBattle] = useState();
     const [roundGuessed, setRoundGuessed] = useState(false);
     const randomUserToken = useGetRandomUserToken();
 
@@ -57,6 +58,23 @@ const GuessingMap = ({
         mapLat: 0,
     });
 
+    const {
+        battleId,
+        myDocumentId,
+        myNickname,
+        mode: battleMode,
+        radius: battleRadius,
+        myTotalScore,
+        round: battleRound,
+        rounds,
+    } = currentBattleInfo;
+
+    useEffect(() => {
+        if (round && rounds.length) {
+            setCurrentRoundBattle(rounds[round - 1]);
+        }
+    }, [round, rounds]);
+
     useEffect(() => {
         const setCommonVars = (modeVar, radiusVar, totalScoreVar, roundVar) => {
             setMode(modeVar);
@@ -66,9 +84,6 @@ const GuessingMap = ({
         };
 
         if (isBattle && isGameStarted) {
-            const {
-                mode: battleMode, radius: battleRadius, myTotalScore, round: battleRound,
-            } = currentBattleInfo;
             setCommonVars(battleMode, battleRadius, myTotalScore, battleRound);
         } else {
             const {
@@ -263,7 +278,7 @@ const GuessingMap = ({
             ) : (
                 <ResultSMapWrapper guessedPoints={[guessedPoints[guessedPoints.length - 1]]} isBattle={isBattle} />
             )}
-            {currentRound >= TOTAL_ROUNDS_MAX && roundGuessed ? (
+            {currentRoundBattle >= TOTAL_ROUNDS_MAX && roundGuessed ? (
                 <Button
                     type="primary"
                     onClick={() => {
@@ -276,6 +291,7 @@ const GuessingMap = ({
                 </Button>
             ) : (
                 <>
+                    {/* TODO vyresit, at se po skonceni kola a po jeho refreshni nezobrazuje button */}
                     {!nextRoundButtonVisible ? (
                         <Button
                             disabled={decideGuessButtonVisibility()}
@@ -284,22 +300,13 @@ const GuessingMap = ({
 
                                 const guessedRoundPoint = calculateCoordsAndDrawGuess();
                                 if (isBattle) {
-                                    const {
-                                        battleId,
-                                        myDocumentId,
-                                        myNickname,
-                                        round: currentGuessedRoundNumber,
-                                        rounds,
-                                        withCountdown,
-                                        countdown,
-                                    } = currentBattleInfo;
-                                    const guessedCurrentRound = rounds[currentGuessedRoundNumber - 1];
+                                    const guessedCurrentRound = rounds[battleRound - 1];
                                     const { isGuessed, guessedTime } = guessedCurrentRound;
 
                                     const { pointMap, distance, score } = guessedRoundPoint;
                                     const playerRoundGuess = {
-                                        [`round${currentGuessedRoundNumber}`]: {
-                                            roundId: currentGuessedRoundNumber,
+                                        [`round${battleRound}`]: {
+                                            roundId: battleRound,
                                             pointMap: {
                                                 x: pointMap.x,
                                                 y: pointMap.y,
@@ -314,7 +321,7 @@ const GuessingMap = ({
                                     if (!isGuessed) {
                                         addGuessedRoundToPlayer(battleId, myDocumentId, playerRoundGuess)
                                             .then(res => {
-                                                return updateBattleRound(battleId, currentGuessedRoundNumber, {
+                                                return updateBattleRound(battleId, battleRound, {
                                                     isGuessed: true,
                                                     guessedTime: getUnixTimestamp(new Date()),
                                                     firstGuess: {
