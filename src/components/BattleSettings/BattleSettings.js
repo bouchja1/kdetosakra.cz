@@ -28,7 +28,7 @@ const BattleSettings = () => {
                 {currentBattleInfo.withCountdown && (
                     <>
                         <p>
-                            Odpočet konce hracího kola po tipu nejrychlejšího hráče:
+                            Odpočet do konce hracího kola po tipu nejrychlejšího hráče:
                             {' '}
                             <b>
                                 {currentBattleInfo.countdown}

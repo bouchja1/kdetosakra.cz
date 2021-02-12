@@ -12,7 +12,6 @@ import {
     generateRandomRadius,
     getRandomCzechPlace,
     getUnixTimestamp,
-    RADIUS_DESCRIPTION,
     sortPlayersByHighestScore,
 } from '../../util';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
@@ -21,25 +20,11 @@ import gameModes from '../../enums/modes';
 
 const { Title } = Typography;
 
-// TODO cities, custom places
-const generateRounds = (mode, battleId) => {
+const generateRounds = currentBattleInfo => {
     const generatedRounds = [];
-    // pokud krajske mesto
-    /*
-    5x vygeneroat panorama place s radius a city vybreanym - setPanoramaPlace(generatePlaceInRadius(radius, city));
-     */
-
-    // pokud nahoda
-    /*
-    5x vygenervoat nahodne city city = getRandomCzechPlace();
-    5x vygenervoat nahodne radius radius = generateRandomRadius();
-    5x z toho vygeneroat panorama place - setPanoramaPlace(generatePlaceInRadius(radius, city));
-     */
-
-    // pokud vlastni misto
-    /*
-    5x vygeneroat panorama place s radius a city vybreanym - setPanoramaPlace(generatePlaceInRadius(radius, city));
-     */
+    const {
+        mode, battleId, radius, selectedCity,
+    } = currentBattleInfo;
 
     for (let i = 0; i < TOTAL_ROUNDS_MAX; i++) {
         switch (mode) {
@@ -57,11 +42,25 @@ const generateRounds = (mode, battleId) => {
                 break;
             }
             case gameModes.city: {
-                generatedRounds.push();
+                const panoramaPlace = generatePlaceInRadius(radius, selectedCity);
+                generatedRounds.push({
+                    roundId: i + 1,
+                    panoramaPlace,
+                    isGuessed: false,
+                    guessedTime: 0,
+                    city: selectedCity,
+                });
                 break;
             }
             case gameModes.custom: {
-                generatedRounds.push();
+                const panoramaPlace = generatePlaceInRadius(radius, selectedCity);
+                generatedRounds.push({
+                    roundId: i + 1,
+                    panoramaPlace,
+                    isGuessed: false,
+                    guessedTime: 0,
+                    city: selectedCity,
+                });
                 break;
             }
             default:
@@ -253,7 +252,7 @@ const BattlePlayersList = () => {
                             type="primary"
                             onClick={() => {
                                 // if the user is a battle creator, he will generate rounds here
-                                generateRounds(currentBattleInfo.mode, currentBattleInfo.battleId);
+                                generateRounds(currentBattleInfo);
                                 updateBattle(battleId, {
                                     currentRoundStart: getUnixTimestamp(new Date()),
                                     isGameStarted: true,

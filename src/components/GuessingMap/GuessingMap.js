@@ -18,7 +18,7 @@ import GuessingMapButton from '../GuessingMapButton';
 
 const GuessingMap = ({
     makeCountScore,
-    makeRefreshPanorama,
+    makeFindNewPanorama,
     guessedPoints,
     makeRoundResult,
     panoramaScene,
@@ -99,9 +99,11 @@ const GuessingMap = ({
      * Refresh map for a new guessing!
      */
     const refreshMap = () => {
-        makeRefreshPanorama();
+        makeFindNewPanorama();
+        /*
         refLayerValue.current.removeAll();
         refVectorLayerSMapValue.current.removeAll();
+         */
         setNextRoundButtonVisible(false);
         setGuessButtonDisabled(true);
         setRoundGuessed(false);
@@ -122,9 +124,8 @@ const GuessingMap = ({
         };
         // state is not working in event handling
         // if (guessButtonDisabled && refLayerValue.current && !nextRoundButtonVisible) {
-        refLayerValue.current.removeAll();
+        // refLayerValue.current.removeAll();
         const coords = mapyContext.SMap.Coords.fromEvent(e.data.event, refLayeredMapValue.current);
-        // alert("Kliknuto na " + coords.toWGS84(2).reverse().join(" "));
         const marker = new mapyContext.SMap.Marker(
             mapyContext.SMap.Coords.fromWGS84(coords.x, coords.y),
             'Můj odhad',

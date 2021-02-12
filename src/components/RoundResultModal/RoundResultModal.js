@@ -2,6 +2,7 @@ import React from 'react';
 import {
     Button, Modal, Progress, Typography
 } from 'antd';
+import { useSelector } from 'react-redux';
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
 import { roundToTwoDecimal } from '../../util';
 
@@ -10,12 +11,20 @@ const { Title, Paragraph, Text } = Typography;
 const RoundResultModal = ({
     closeModal,
     visible,
-    currentRound,
     guessedDistance,
     roundScore,
     totalRoundScore,
     guessedPlace,
+    isBattle,
 }) => {
+    const currentGame = useSelector(state => state.game.currentGame);
+    const currentBattleInfo = useSelector(state => state.battle.currentBattle);
+
+    const { round } = currentGame;
+    const { round: lastGuessedRound } = currentBattleInfo;
+
+    const currentRound = isBattle ? lastGuessedRound : round;
+
     return (
         <Modal
             visible={visible}

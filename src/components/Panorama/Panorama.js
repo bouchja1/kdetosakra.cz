@@ -11,7 +11,7 @@ export const panoramaSceneOptions = {
 };
 
 const Panorama = ({
-    makeRefreshPanorama,
+    makeFindNewPanorama,
     panoramaScene,
     refPanoramaView,
     panoramaPlace,
@@ -47,9 +47,6 @@ const Panorama = ({
                             // panorama could not be shown
                             if (findPanoramaTriesCounter < MAX_PANORAMA_TRIES) {
                                 setFindPanoramaTriesCounter(findPanoramaTriesCounter + 1);
-                                if (!isBattle) {
-                                    makeRefreshPanorama();
-                                }
                             } else {
                                 throw new Error('Panorama was not found');
                             }

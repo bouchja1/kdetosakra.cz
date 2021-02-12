@@ -18,11 +18,9 @@ const GuessingMapButton = ({
 }) => {
     const dispatch = useDispatch();
 
-    const evaluateGame = isBattle ? currentRound >= TOTAL_ROUNDS_MAX && roundGuessed : currentRound >= TOTAL_ROUNDS_MAX;
-
     return (
         <>
-            {evaluateGame ? (
+            {currentRound >= TOTAL_ROUNDS_MAX && roundGuessed ? (
                 <Button type="primary" onClick={makeShowGameResult}>
                     Vyhodnotit hru
                 </Button>

@@ -9,7 +9,6 @@ import {
     streamBattleDetail,
     streamBattlePlayersDetail,
     streamBattleRoundsDetail,
-    updateBattle,
 } from '../../services/firebase';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import {
@@ -18,7 +17,6 @@ import {
     sortBattleRoundsById,
     countTotalPlayerScoreFromRounds,
     getIsRoundActive,
-    getUnixTimestamp,
 } from '../../util';
 import useGameMenuResize from '../../hooks/useGameMenuResize';
 import { errorNames } from '../../errors';
@@ -133,6 +131,8 @@ export const Battle = () => {
                     isGameStarted,
                     round,
                     currentRoundStart,
+                    radius,
+                    selectedCity,
                 }),
             );
             dispatch(setRoundsToCurrentBattle(sortedBattleRounds));

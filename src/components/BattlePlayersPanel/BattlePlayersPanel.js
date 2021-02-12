@@ -37,18 +37,6 @@ const BattlePlayersPanel = () => {
                 <BattlePlayersList />
                 <BattleSettings />
             </div>
-            {/*
-            <div
-                className="battle-users-container--toggle"
-                style={{
-                    left: usersSidebarWidth,
-                    height: usersSidebarWidth / 8,
-                    width: usersSidebarWidth / 8,
-                }}
-            >
-                LOL
-            </div>
-            */}
         </>
     );
 };

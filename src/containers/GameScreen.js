@@ -32,7 +32,6 @@ export const GameScreen = ({
     const [resultModalVisible, setResultModalVisible] = useState(false);
     const [panoramaPlace, setPanoramaPlace] = useState(null);
     const [panoramaLoading, setPanoramaLoading] = useState(false);
-    const [currentRoundNumber, setCurrentRoundNumber] = useState();
 
     const { round, totalScore } = currentGame;
     const { round: lastGuessedRound, rounds, myTotalScore } = currentBattleInfo;
@@ -45,7 +44,6 @@ export const GameScreen = ({
 
     useEffect(() => {
         if (isBattle) {
-            setCurrentRoundNumber(lastGuessedRound);
             if (rounds.length && isGameStarted) {
                 const roundToGuess = rounds[lastGuessedRound - 1];
                 const { city: cityToGuess, panoramaPlace: panoramaPlaceToGuess } = roundToGuess;
@@ -53,23 +51,11 @@ export const GameScreen = ({
                 setCurrentCity(cityToGuess);
             }
         } else {
-            setCurrentRoundNumber(round);
-            if (mode === gameModes.random) {
-                city = getRandomCzechPlace();
-            }
-            // init panorama
-            if (radius && city) {
-                setPanoramaPlace(generatePlaceInRadius(radius, city));
-                setCurrentCity(city);
-            }
+            makeFindNewPanorama();
         }
-    }, [mapyContext.loadedMapApi, mode, radius, city, isBattle, isGameStarted, rounds, lastGuessedRound, round]);
+    }, [mapyContext.loadedMapApi, isGameStarted, rounds, lastGuessedRound]);
 
-    const makeSetPanoramaLoading = loading => {
-        setPanoramaLoading(loading);
-    };
-
-    const makeRefreshPanorama = () => {
+    const makeFindNewPanorama = () => {
         setPanoramaLoading(true);
         if (mode === gameModes.random) {
             radius = generateRandomRadius();
@@ -78,6 +64,10 @@ export const GameScreen = ({
         setCurrentCity(city);
         const generatedPanoramaPlace = generatePlaceInRadius(radius, city);
         setPanoramaPlace(generatedPanoramaPlace);
+    };
+
+    const makeSetPanoramaLoading = loading => {
+        setPanoramaLoading(loading);
     };
 
     const makeRoundResult = (score, distance) => {
@@ -110,7 +100,7 @@ export const GameScreen = ({
                 {isBattle && <BattlePlayersPanel />}
                 <Panorama
                     panoramaPlace={panoramaPlace}
-                    makeRefreshPanorama={makeRefreshPanorama}
+                    makeFindNewPanorama={makeFindNewPanorama}
                     panoramaScene={panoramaScene}
                     refPanoramaView={refPanoramaView}
                     panoramaLoading={panoramaLoading}
@@ -129,7 +119,7 @@ export const GameScreen = ({
             >
                 <GuessingMap
                     makeCountScore={makeCountScore}
-                    makeRefreshPanorama={makeRefreshPanorama}
+                    makeFindNewPanorama={makeFindNewPanorama}
                     guessedPoints={guessedPoints}
                     gameMode={mode}
                     panoramaScene={panoramaScene}
@@ -144,10 +134,10 @@ export const GameScreen = ({
             <RoundResultModal
                 visible={resultModalVisible}
                 closeModal={closeModal}
-                currentRound={currentRoundNumber}
                 guessedDistance={guessedDistance}
                 roundScore={roundScore}
                 totalRoundScore={totalScore}
+                isBattle={isBattle}
                 guessedPlace={guessedPlace}
             />
         </>
