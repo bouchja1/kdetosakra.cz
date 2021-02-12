@@ -32,7 +32,7 @@ export const GameScreen = ({
     const [resultModalVisible, setResultModalVisible] = useState(false);
     const [panoramaPlace, setPanoramaPlace] = useState(null);
     const [panoramaLoading, setPanoramaLoading] = useState(false);
-    const [currentRound, setCurrentRound] = useState();
+    const [currentRoundNumber, setCurrentRoundNumber] = useState();
 
     const { round, totalScore } = currentGame;
     const { round: lastGuessedRound, rounds, myTotalScore } = currentBattleInfo;
@@ -46,7 +46,7 @@ export const GameScreen = ({
     useEffect(() => {
         if (isBattle) {
             console.log('LLLAAASTG UEST ROUND: ', lastGuessedRound);
-            setCurrentRound(lastGuessedRound);
+            setCurrentRoundNumber(lastGuessedRound);
             if (rounds.length && isGameStarted) {
                 console.log('Lrounds: ', rounds);
                 const roundToGuess = rounds[lastGuessedRound - 1];
@@ -55,7 +55,7 @@ export const GameScreen = ({
                 setCurrentCity(cityToGuess);
             }
         } else {
-            setCurrentRound(round);
+            setCurrentRoundNumber(round);
             if (mode === gameModes.random) {
                 city = getRandomCzechPlace();
             }
@@ -132,7 +132,6 @@ export const GameScreen = ({
                 <GuessingMap
                     makeCountScore={makeCountScore}
                     makeRefreshPanorama={makeRefreshPanorama}
-                    currentRound={currentRound}
                     guessedPoints={guessedPoints}
                     gameMode={mode}
                     panoramaScene={panoramaScene}
@@ -147,7 +146,7 @@ export const GameScreen = ({
             <RoundResultModal
                 visible={resultModalVisible}
                 closeModal={closeModal}
-                currentRound={currentRound}
+                currentRound={currentRoundNumber}
                 guessedDistance={guessedDistance}
                 roundScore={roundScore}
                 totalRoundScore={totalScore}

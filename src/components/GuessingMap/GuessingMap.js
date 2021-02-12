@@ -2,25 +2,23 @@ import React, {
     useState, useContext, useRef, useEffect
 } from 'react';
 import { Redirect } from 'react-router-dom';
-import { Button } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import MapyCzContext from '../../context/MapyCzContext';
-import { MAX_SCORE_PERCENT, MIN_DISTANCE_FOR_POINTS_RANDOM, TOTAL_ROUNDS_MAX } from '../../constants/game';
+import { MAX_SCORE_PERCENT, MIN_DISTANCE_FOR_POINTS_RANDOM } from '../../constants/game';
 import { MARKER_PLACE_ICON_KDETOSAKRA, DEFAUL_MARKER_ICON } from '../../constants/icons';
-import { setLastResult } from '../../redux/actions/result';
 import { RoundSMapWrapper } from '../SMap/RoundSMapWrapper';
 import { ResultSMapWrapper } from '../SMap/ResultSMapWrapper';
 import gameModes from '../../enums/modes';
-import { setTotalRoundCounter } from '../../redux/actions/game';
 import { incrementMyTotalScore } from '../../redux/actions/battle';
+import { setLastResult } from '../../redux/actions/result';
 import { addGuessedRoundToPlayer, updateBattleRound } from '../../services/firebase';
 import { getUnixTimestamp } from '../../util';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
+import GuessingMapButton from '../GuessingMapButton';
 
 const GuessingMap = ({
     makeCountScore,
     makeRefreshPanorama,
-    currentRound,
     guessedPoints,
     makeRoundResult,
     panoramaScene,
@@ -110,8 +108,10 @@ const GuessingMap = ({
         window.scrollTo(0, 0);
     };
 
-    const decideGuessButtonVisibility = () => {
-        return guessButtonDisabled || panoramaLoading || !isGameStarted;
+    const makeShowGameResult = () => {
+        // storeResult(mode, city?.name, totalRoundScore, randomUserResultToken) // not used now
+        dispatch(setLastResult({ guessedPoints, totalScore }));
+        setShowResult(true);
     };
 
     const clickMapPoint = (e, elm) => {
@@ -253,6 +253,57 @@ const GuessingMap = ({
         return guessedRoundPoint;
     };
 
+    const guessBattleRound = () => {
+        // TODO mozna neumoznit hadat pokud uz bude po limitu
+
+        const guessedRoundPoint = calculateCoordsAndDrawGuess();
+        if (isBattle) {
+            const guessedCurrentRound = rounds[battleRound - 1];
+            const { isGuessed, guessedTime } = guessedCurrentRound;
+
+            const { pointMap, distance, score } = guessedRoundPoint;
+            const playerRoundGuess = {
+                [`round${battleRound}`]: {
+                    roundId: battleRound,
+                    pointMap: {
+                        x: pointMap.x,
+                        y: pointMap.y,
+                    },
+                    distance,
+                    score,
+                },
+            };
+
+            dispatch(incrementMyTotalScore(Math.round(score)));
+
+            if (!isGuessed) {
+                addGuessedRoundToPlayer(battleId, myDocumentId, playerRoundGuess)
+                    .then(res => {
+                        return updateBattleRound(battleId, battleRound, {
+                            isGuessed: true,
+                            guessedTime: getUnixTimestamp(new Date()),
+                            firstGuess: {
+                                guessedById: randomUserToken,
+                                name: myNickname,
+                            },
+                        });
+                    })
+                    .then(res => {})
+                    .catch(err => console.log('EEEEERRR: ', err));
+            } else {
+                // TODO check jestli jeste zbyva cas nebo ne -> jakoze uz neumoznime umistit odhad, zapiseme mu 0 vysledek
+                // spocti rozdil mezi guessedtime a timeoutem
+                addGuessedRoundToPlayer(battleId, myDocumentId, playerRoundGuess)
+                    .then(res => {})
+                    .catch(err => {});
+            }
+        }
+    };
+
+    const guessRound = () => {
+        calculateCoordsAndDrawGuess();
+    };
+
     if (showResult) {
         return (
             <Redirect
@@ -278,89 +329,18 @@ const GuessingMap = ({
             ) : (
                 <ResultSMapWrapper guessedPoints={[guessedPoints[guessedPoints.length - 1]]} isBattle={isBattle} />
             )}
-            {currentRoundBattle >= TOTAL_ROUNDS_MAX && roundGuessed ? (
-                <Button
-                    type="primary"
-                    onClick={() => {
-                        // storeResult(mode, city?.name, totalRoundScore, randomUserResultToken) // not used now
-                        dispatch(setLastResult({ guessedPoints, totalScore }));
-                        setShowResult(true);
-                    }}
-                >
-                    Vyhodnotit hru
-                </Button>
-            ) : (
-                <>
-                    {/* TODO vyresit, at se po skonceni kola a po jeho refreshni nezobrazuje button */}
-                    {!nextRoundButtonVisible ? (
-                        <Button
-                            disabled={decideGuessButtonVisibility()}
-                            onClick={() => {
-                                // TODO mozna neumoznit hadat pokud uz bude po limitu
-
-                                const guessedRoundPoint = calculateCoordsAndDrawGuess();
-                                if (isBattle) {
-                                    const guessedCurrentRound = rounds[battleRound - 1];
-                                    const { isGuessed, guessedTime } = guessedCurrentRound;
-
-                                    const { pointMap, distance, score } = guessedRoundPoint;
-                                    const playerRoundGuess = {
-                                        [`round${battleRound}`]: {
-                                            roundId: battleRound,
-                                            pointMap: {
-                                                x: pointMap.x,
-                                                y: pointMap.y,
-                                            },
-                                            distance,
-                                            score,
-                                        },
-                                    };
-
-                                    dispatch(incrementMyTotalScore(Math.round(score)));
-
-                                    if (!isGuessed) {
-                                        addGuessedRoundToPlayer(battleId, myDocumentId, playerRoundGuess)
-                                            .then(res => {
-                                                return updateBattleRound(battleId, battleRound, {
-                                                    isGuessed: true,
-                                                    guessedTime: getUnixTimestamp(new Date()),
-                                                    firstGuess: {
-                                                        guessedById: randomUserToken,
-                                                        name: myNickname,
-                                                    },
-                                                });
-                                            })
-                                            .then(res => {})
-                                            .catch(err => console.log('EEEEERRR: ', err));
-                                    } else {
-                                        // TODO check jestli jeste zbyva cas nebo ne -> jakoze uz neumoznime umistit odhad, zapiseme mu 0 vysledek
-                                        // spocti rozdil mezi guessedtime a timeoutem
-                                        addGuessedRoundToPlayer(battleId, myDocumentId, playerRoundGuess)
-                                            .then(res => {})
-                                            .catch(err => {});
-                                    }
-                                }
-                            }}
-                            type="primary"
-                        >
-                            Hádej!
-                        </Button>
-                    ) : null}
-                    {!isBattle && nextRoundButtonVisible ? (
-                        <Button
-                            onClick={() => {
-                                refreshMap();
-                                if (round < TOTAL_ROUNDS_MAX) {
-                                    dispatch(setTotalRoundCounter(round + 1));
-                                }
-                            }}
-                            type="primary"
-                        >
-                            Další kolo
-                        </Button>
-                    ) : null}
-                </>
-            )}
+            <GuessingMapButton
+                makeShowGameResult={makeShowGameResult}
+                refreshMap={refreshMap}
+                isBattle={isBattle}
+                guessBattleRound={guessBattleRound}
+                guessRound={guessRound}
+                round={round}
+                roundGuessed={roundGuessed}
+                disabled={guessButtonDisabled || panoramaLoading || !isGameStarted}
+                currentRoundBattle={currentRoundBattle}
+                nextRoundButtonVisible={nextRoundButtonVisible}
+            />
         </>
     );
 };
