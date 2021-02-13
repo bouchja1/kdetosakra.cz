@@ -11,14 +11,12 @@ export const panoramaSceneOptions = {
 };
 
 const Panorama = ({
-    makeFindNewPanorama,
     panoramaScene,
     refPanoramaView,
     panoramaPlace,
     panoramaLoading,
     makeSetPanoramaLoading,
     isGameStarted,
-    isBattle,
 }) => {
     const mapyContext = useContext(MapyCzContext);
     const windowHeight = useWindowHeight();
@@ -48,6 +46,7 @@ const Panorama = ({
                             if (findPanoramaTriesCounter < MAX_PANORAMA_TRIES) {
                                 setFindPanoramaTriesCounter(findPanoramaTriesCounter + 1);
                             } else {
+                                makeSetPanoramaLoading(false);
                                 throw new Error('Panorama was not found');
                             }
                         },
@@ -56,6 +55,7 @@ const Panorama = ({
                         setPanoramaFounded(false);
                     });
             };
+            makeSetPanoramaLoading(true);
             getBestPanorama();
         }
     }, [mapyContext.loadedMapApi, panoramaScene, panoramaPlace, isGameStarted, findPanoramaTriesCounter]);

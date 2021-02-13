@@ -11,10 +11,13 @@ import minimizeMap from '../assets/images/map/minimizeMap.png';
 import { setTotalRoundScore } from '../redux/actions/game';
 import useSMapResize from '../hooks/useSMapResize';
 import Panorama, { panoramaSceneOptions } from '../components/Panorama';
-import { generatePlaceInRadius, generateRandomRadius, getRandomCzechPlace } from '../util';
+import {
+    generatePlaceInRadius, generateRandomRadius, getRandomCzechPlace, getUnixTimestamp
+} from '../util';
 import RoundResultModal from '../components/RoundResultModal';
 import gameModes from '../enums/modes';
 import BattlePlayersPanel from '../components/BattlePlayersPanel';
+import { updateBattle } from '../services/firebase';
 
 export const GameScreen = ({
     mode, radius, city, isGameStarted = true, isBattle,
@@ -85,6 +88,19 @@ export const GameScreen = ({
         setPanoramaPlace(generatedPanoramaPlace);
     };
 
+    const makeStartNextBattleRound = (updatedBattleId, nextRoundNumber) => {
+        updateBattle(updatedBattleId, {
+            currentRoundStart: getUnixTimestamp(new Date()),
+            round: nextRoundNumber,
+        })
+            .then(docRef => {
+                console.log('NOOOOOO: ', docRef);
+            })
+            .catch(err => {
+                console.log('NOOOOOOO ERROR: ', err);
+            });
+    };
+
     const makeSetPanoramaLoading = loading => {
         setPanoramaLoading(loading);
     };
@@ -116,16 +132,14 @@ export const GameScreen = ({
     return (
         <>
             <div className="game-screen-container">
-                {isBattle && <BattlePlayersPanel />}
+                {isBattle && <BattlePlayersPanel makeStartNextBattleRound={makeStartNextBattleRound} />}
                 <Panorama
                     panoramaPlace={panoramaPlace}
-                    makeFindNewPanorama={makeFindNewPanorama}
                     panoramaScene={panoramaScene}
                     refPanoramaView={refPanoramaView}
                     panoramaLoading={panoramaLoading}
                     makeSetPanoramaLoading={makeSetPanoramaLoading}
                     isGameStarted={isGameStarted}
-                    isBattle={isBattle}
                 />
             </div>
             {/*
@@ -134,7 +148,7 @@ export const GameScreen = ({
             <div
                 id="smap-container"
                 className="smap-container"
-                style={!isSMapVisible ? { display: 'none' } : smapContainerDimensions}
+                style={!isSMapVisible || (isBattle && !isGameStarted) ? { display: 'none' } : smapContainerDimensions}
             >
                 {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions */}
                 <img

@@ -74,7 +74,7 @@ const generateRounds = currentBattleInfo => {
     }
 };
 
-const BattlePlayersList = () => {
+const BattlePlayersList = ({ makeStartNextBattleRound }) => {
     const randomUserToken = useGetRandomUserToken();
     const { battleId } = useParams();
     const [myPlayer, setMyPlayer] = useState();
@@ -166,16 +166,7 @@ const BattlePlayersList = () => {
                                 disabled={!battleCanBeStarted}
                                 type="primary"
                                 onClick={() => {
-                                    updateBattle(battleId, {
-                                        currentRoundStart: getUnixTimestamp(new Date()),
-                                        round: round + 1,
-                                    })
-                                        .then(docRef => {
-                                            console.log('NOOOOOO: ', docRef);
-                                        })
-                                        .catch(err => {
-                                            console.log('NOOOOOOO ERROR: ', err);
-                                        });
+                                    makeStartNextBattleRound(battleId, round + 1);
                                 }}
                             >
                                 Začít
