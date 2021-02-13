@@ -445,7 +445,7 @@ label {
     margin-bottom: 5px;
 }
 
-.smap-collapsible {
+.smap-collapsible-max {
     width: 50px;
     height: 50px;
     position: absolute;
@@ -454,8 +454,16 @@ label {
     z-index: 2;
 }
 
+.smap-collapsible-min {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
 .smap-style {
-    border-radius: 25px;
     border: 3px solid #fff;
 }
 
@@ -482,6 +490,11 @@ label {
 
     .smap-container {
         width: 100%;
+    }
+
+    .smap-collapsible-max,
+    .smap-collapsible-min {
+        display: none;
     }
 
     .main-menu {
@@ -527,6 +540,11 @@ label {
     .menu-container {
         padding: 30px 0 15px 0;
         height: 20px;
+    }
+
+    .smap-collapsible-max,
+    .smap-collapsible-min {
+        display: none;
     }
 
     .menu {

@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocalStorage, writeStorage } from '@rehooks/local-storage';
 import GuessingMap from '../components/GuessingMap';
 import MapyCzContext from '../context/MapyCzContext';
-import maximizeMap from '../assets/images/map/maximizeMap.png';
-import minimizeMap from '../assets/images/map/minimizeMap.png';
+import maximizeMapShadow from '../assets/images/map/maximizeMapShadow.png';
+import minimizeMapShadow from '../assets/images/map/minimizeMapShadow.png';
 import { setTotalRoundScore } from '../redux/actions/game';
 import useSMapResize from '../hooks/useSMapResize';
 import Panorama, { panoramaSceneOptions } from '../components/Panorama';
@@ -73,9 +73,22 @@ export const GameScreen = ({
         }
     }, [mapyContext.loadedMapApi, isGameStarted, rounds, lastGuessedRound]);
 
-    const smapContainerDimensions = useMemo(() => {
-        return width > 960 ? { height: height / 2, width: width / 3 } : null;
-    }, [width, height]);
+    const sMapCollapseMax = useMemo(() => {
+        if (width > 960) {
+            if (!isSMapVisible || (isBattle && !isGameStarted)) {
+                return { display: 'none' };
+            }
+            return { height: height / 2, width: width / 3 };
+        }
+        return null;
+    }, [width, height, isSMapVisible]);
+
+    const sMapCollapseMin = useMemo(() => {
+        if (width > 960) {
+            return { height: 100, width: 100 };
+        }
+        return null;
+    }, [width, height, isSMapVisible]);
 
     const makeFindNewPanorama = () => {
         setPanoramaLoading(true);
@@ -145,15 +158,11 @@ export const GameScreen = ({
             {/*
                 <img id="kdetosakra-logo" src={smilingLogo} alt="logo" className="kdetosakra-logo" width="15%" />
                 */}
-            <div
-                id="smap-container"
-                className="smap-container"
-                style={!isSMapVisible || (isBattle && !isGameStarted) ? { display: 'none' } : smapContainerDimensions}
-            >
+            <div id="smap-container" className="smap-container" style={sMapCollapseMax}>
                 {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions */}
                 <img
-                    className="smap-collapsible"
-                    src={minimizeMap}
+                    className="smap-collapsible-max"
+                    src={minimizeMapShadow}
                     onClick={() => writeStorage('smapVisible', false)}
                 />
                 <GuessingMap
@@ -171,11 +180,11 @@ export const GameScreen = ({
                 />
             </div>
             {!isSMapVisible && (
-                <div className="smap-container" style={{ height: 50, width: 50 }}>
+                <div className="smap-container" style={sMapCollapseMin}>
                     {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions */}
                     <img
-                        className="smap-collapsible"
-                        src={maximizeMap}
+                        className="smap-collapsible-min"
+                        src={maximizeMapShadow}
                         onClick={() => {
                             writeStorage('smapVisible', true);
                             window.dispatchEvent(new Event('resize'));
