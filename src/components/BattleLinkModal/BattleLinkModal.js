@@ -61,7 +61,6 @@ const BattleLinkModal = ({
                             type="primary"
                             onClick={() => {
                                 setGenerateLinkInProgress(true);
-                                // TODO city!!!!!
                                 // eslint-disable-next-line implicit-arrow-linebreak
                                 createBattle(randomUserToken, mode, radius, selectedCity)
                                     .then(docRef => {

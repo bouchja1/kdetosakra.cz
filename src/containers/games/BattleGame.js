@@ -28,7 +28,7 @@ import {
     setRoundsToCurrentBattle,
 } from '../../redux/actions/battle';
 import { GameScreen } from '../GameScreen';
-import { MAX_ALLOWED_BATTLE_PLAYERS } from '../../constants/game';
+import { MAX_ALLOWED_BATTLE_PLAYERS, TOTAL_ROUNDS_MAX } from '../../constants/game';
 
 const { Content } = Layout;
 
@@ -223,6 +223,17 @@ export const Battle = () => {
 
     if (!battleFromFirestore) {
         return <Spin size="large" />;
+    }
+
+    // check if the battle is finished and should be redirected to results
+    if (currentBattleInfo.round >= TOTAL_ROUNDS_MAX && !currentBattleInfo.rounds[TOTAL_ROUNDS_MAX - 1].isRoundActive) {
+        return (
+            <Redirect
+                to={{
+                    pathname: '/vysledek',
+                }}
+            />
+        );
     }
 
     return (

@@ -311,9 +311,7 @@ const GuessingMap = ({
                 to={{
                     pathname: '/vysledek',
                 }}
-            >
-                Vyhodnotit hru
-            </Redirect>
+            />
         );
     }
 

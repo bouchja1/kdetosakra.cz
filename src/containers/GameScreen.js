@@ -1,10 +1,13 @@
 import React, {
-    useContext, useEffect, useRef, useState
+    useContext, useEffect, useRef, useState, useMemo
 } from 'react';
 import 'react-resizable/css/styles.css';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocalStorage, writeStorage } from '@rehooks/local-storage';
 import GuessingMap from '../components/GuessingMap';
 import MapyCzContext from '../context/MapyCzContext';
+import maximizeMap from '../assets/images/map/maximizeMap.png';
+import minimizeMap from '../assets/images/map/minimizeMap.png';
 import { setTotalRoundScore } from '../redux/actions/game';
 import useSMapResize from '../hooks/useSMapResize';
 import Panorama, { panoramaSceneOptions } from '../components/Panorama';
@@ -22,6 +25,7 @@ export const GameScreen = ({
     const refPanoramaView = useRef();
     const currentGame = useSelector(state => state.game.currentGame);
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
+    const [smapVisibleLocalStorageValue] = useLocalStorage('smapVisible');
 
     const [panoramaScene, setPanoramaScene] = useState(null);
     const [roundScore, setRoundScore] = useState(0);
@@ -32,15 +36,26 @@ export const GameScreen = ({
     const [resultModalVisible, setResultModalVisible] = useState(false);
     const [panoramaPlace, setPanoramaPlace] = useState(null);
     const [panoramaLoading, setPanoramaLoading] = useState(false);
+    const [isSMapVisible, setIsSMapVisible] = useState();
 
-    const { round, totalScore } = currentGame;
+    const { totalScore } = currentGame;
     const { round: lastGuessedRound, rounds, myTotalScore } = currentBattleInfo;
+
+    // FIXME: to load whole map layer when the map is minimized before
+    useEffect(() => {
+        window.dispatchEvent(new Event('resize'));
+    }, []);
 
     useEffect(() => {
         if (mapyContext.loadedMapApi && isGameStarted) {
             setPanoramaScene(new mapyContext.SMap.Pano.Scene(refPanoramaView.current, panoramaSceneOptions));
         }
     }, [mapyContext.loadedMapApi, isGameStarted]);
+
+    useEffect(() => {
+        const localStorageBooleanValue = !!smapVisibleLocalStorageValue;
+        setIsSMapVisible(smapVisibleLocalStorageValue === null ? true : localStorageBooleanValue);
+    }, [smapVisibleLocalStorageValue]);
 
     useEffect(() => {
         if (isBattle) {
@@ -54,6 +69,10 @@ export const GameScreen = ({
             makeFindNewPanorama();
         }
     }, [mapyContext.loadedMapApi, isGameStarted, rounds, lastGuessedRound]);
+
+    const smapContainerDimensions = useMemo(() => {
+        return width > 960 ? { height: height / 2, width: width / 3 } : null;
+    }, [width]);
 
     const makeFindNewPanorama = () => {
         setPanoramaLoading(true);
@@ -115,8 +134,14 @@ export const GameScreen = ({
             <div
                 id="smap-container"
                 className="smap-container"
-                style={width > 960 ? { height: height / 2, width: width / 3 } : null}
+                style={!isSMapVisible ? { display: 'none' } : smapContainerDimensions}
             >
+                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions */}
+                <img
+                    className="smap-collapsible"
+                    src={minimizeMap}
+                    onClick={() => writeStorage('smapVisible', false)}
+                />
                 <GuessingMap
                     makeCountScore={makeCountScore}
                     makeFindNewPanorama={makeFindNewPanorama}
@@ -131,6 +156,19 @@ export const GameScreen = ({
                     currentCity={currentCity}
                 />
             </div>
+            {!isSMapVisible && (
+                <div className="smap-container" style={{ height: 50, width: 50 }}>
+                    {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions */}
+                    <img
+                        className="smap-collapsible"
+                        src={maximizeMap}
+                        onClick={() => {
+                            writeStorage('smapVisible', true);
+                            window.dispatchEvent(new Event('resize'));
+                        }}
+                    />
+                </div>
+            )}
             <RoundResultModal
                 visible={resultModalVisible}
                 closeModal={closeModal}

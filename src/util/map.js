@@ -103,6 +103,7 @@ export const getMapInstanceByGameMode = (SMap, mode, city, radius, mapRefValue) 
 };
 
 export const setupMapInstanceAndLayers = (SMap, mapInstance) => {
+    // FIXME: Lines below abreaks while tiping to the map and resizing of a parent of the map - "cannot ready property scrollLeft of null. (probably some bad styles for parent component)
     const sync = new SMap.Control.Sync({ bottomSpace: 60 });
     mapInstance.addControl(sync); // - aby mapa reagovala na změnu velikosti průhledu - Synchronizuje mapu s portem, potažmo mapu s portem a oknem
     mapInstance.setZoomRange(7, 19);
