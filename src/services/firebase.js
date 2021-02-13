@@ -30,7 +30,6 @@ export const createBattle = (authorId, mode, radius, selectedCity) => {
         radius: radius ?? generateRandomRadius(), // maybe not necessary here
         selectedCity: selectedCity ?? null,
         isGameStarted: false,
-        isGameFinishedSuccessfully: false,
         countdown: 60,
         withCountdown: true,
         round: 0, // current round

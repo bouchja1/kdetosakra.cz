@@ -80,11 +80,11 @@ export const drawAllResultsLayerToMap = (SMap, mapInstance, layerWithMarks, gues
     }
 };
 
-export const drawSingleRoundResultLayerToMap = (SMap, mapInstance, layerWithMarks, point) => {
+export const drawSingleRoundResultLayerToMap = (SMap, mapInstance, layerWithMarks, currentRoundGuessedPoint) => {
     const vectorLayer = new SMap.Layer.Geometry();
     mapInstance.addLayer(vectorLayer);
     vectorLayer.enable();
-    drawResultPathToLayer(SMap, layerWithMarks, vectorLayer, point, '#f00', 'round');
+    drawResultPathToLayer(SMap, layerWithMarks, vectorLayer, currentRoundGuessedPoint, '#f00', 'round');
 };
 
 export const getMapInstanceByGameMode = (SMap, mode, city, radius, mapRefValue) => {

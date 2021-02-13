@@ -8,6 +8,7 @@ import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import { findUserFromBattleByRandomTokenId } from '../../util';
 import GameInfo from '../GameInfo';
 import BattleCountDown from '../BattleCountdown';
+import { TOTAL_ROUNDS_MAX } from '../../constants/game';
 
 const isGameInfoShown = (pathname, isBattle) => {
     return (
@@ -33,6 +34,20 @@ const Menu = () => {
         setMyPlayer(findUserFromBattleByRandomTokenId(currentBattlePlayers, randomUserToken));
     }, [currentBattlePlayers]);
 
+    const isGameFinished = () => {
+        if (currentBattleInfo) {
+            try {
+                const { round, rounds } = currentBattleInfo;
+                const currentRound = rounds[round - 1];
+                const { isGuessed, isRoundActive } = currentRound;
+                return isGuessed && !isRoundActive && round >= TOTAL_ROUNDS_MAX;
+            } catch (err) {
+                return false;
+            }
+        }
+        return false;
+    };
+
     return (
         <div id="menu-container" className="section menu-container">
             <div className={isBattle ? 'main-menu--battle' : 'main-menu'}>
@@ -51,7 +66,7 @@ const Menu = () => {
                 </a>
             </div>
             <img id="kdetosakra-logo" src={smilingLogo} alt="logo" className="kdetosakra-logo" width="85%" />
-            {isBattle && myPlayer?.userId && currentBattleInfo && (
+            {!isGameFinished() && isBattle && myPlayer?.userId && currentBattleInfo && (
                 <BattleCountDown currentBattleInfo={currentBattleInfo} />
             )}
             {isGameInfoShown(pathname, isBattle) && (

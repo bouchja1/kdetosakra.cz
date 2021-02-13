@@ -208,6 +208,13 @@ label {
     flex: 1;
 }
 
+.result-final-order {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 50%;
+}
+
 .result-modal-container {
     display: flex;
     flex: 1;
@@ -222,6 +229,7 @@ label {
     flex-direction: column;
     align-items: center;
     margin: 5px 0 10px 0;
+    line-height: 2em;
 }
 
 .result-rounds-container {

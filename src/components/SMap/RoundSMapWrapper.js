@@ -7,6 +7,7 @@ export const RoundSMapWrapper = ({
     refLayerValue,
     refVectorLayerSMapValue,
     isBattle,
+    currentRoundGuessedPoint,
 }) => {
     return (
         <SMap
@@ -16,6 +17,7 @@ export const RoundSMapWrapper = ({
             refLayerValue={refLayerValue}
             refVectorLayerSMapValue={refVectorLayerSMapValue}
             isBattle={isBattle}
+            currentRoundGuessedPoint={currentRoundGuessedPoint}
         />
     );
 };

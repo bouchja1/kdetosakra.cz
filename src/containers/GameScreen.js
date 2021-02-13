@@ -12,17 +12,23 @@ import { setTotalRoundScore } from '../redux/actions/game';
 import useSMapResize from '../hooks/useSMapResize';
 import Panorama, { panoramaSceneOptions } from '../components/Panorama';
 import {
-    generatePlaceInRadius, generateRandomRadius, getRandomCzechPlace, getUnixTimestamp
+    findUserFromBattleByRandomTokenId,
+    generatePlaceInRadius,
+    generateRandomRadius,
+    getRandomCzechPlace,
+    getUnixTimestamp,
 } from '../util';
 import RoundResultModal from '../components/RoundResultModal';
 import gameModes from '../enums/modes';
 import BattlePlayersPanel from '../components/BattlePlayersPanel';
 import { updateBattle } from '../services/firebase';
+import useGetRandomUserToken from '../hooks/useGetRandomUserToken';
 
 export const GameScreen = ({
     mode, radius, city, isGameStarted = true, isBattle,
 }) => {
     const dispatch = useDispatch();
+    const randomUserToken = useGetRandomUserToken();
     const mapyContext = useContext(MapyCzContext);
     const { width, height } = useSMapResize();
     const refPanoramaView = useRef();
@@ -30,11 +36,15 @@ export const GameScreen = ({
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
     const [smapVisibleLocalStorageValue] = useLocalStorage('smapVisible');
 
+    const refLayerValue = useRef();
+    const refVectorLayerSMapValue = useRef();
+
     const [panoramaScene, setPanoramaScene] = useState(null);
     const [roundScore, setRoundScore] = useState(0);
     const [guessedDistance, setGuessedDistance] = useState(null);
     const [guessedPlace, setGuessedPlace] = useState(null);
     const [guessedPoints, setGuessedPoints] = useState([]);
+    const [currentRoundGuessedPoint, setCurrentRoundGuessedPoint] = useState();
     const [currentCity, setCurrentCity] = useState(null);
     const [resultModalVisible, setResultModalVisible] = useState(false);
     const [panoramaPlace, setPanoramaPlace] = useState(null);
@@ -42,7 +52,9 @@ export const GameScreen = ({
     const [isSMapVisible, setIsSMapVisible] = useState();
 
     const { totalScore } = currentGame;
-    const { round: lastGuessedRound, rounds, myTotalScore } = currentBattleInfo;
+    const {
+        round: lastGuessedRound, rounds, myTotalScore, players,
+    } = currentBattleInfo;
 
     // FIXME: to load whole map layer when the map is minimized before
     useEffect(() => {
@@ -67,13 +79,16 @@ export const GameScreen = ({
                 const { city: cityToGuess, panoramaPlace: panoramaPlaceToGuess } = roundToGuess;
                 setPanoramaPlace(panoramaPlaceToGuess);
                 setCurrentCity(cityToGuess);
+                // load guessed points to be persistent
+                const myUser = findUserFromBattleByRandomTokenId(players, randomUserToken);
+                setCurrentRoundGuessedPoint(myUser[`round${lastGuessedRound}`] ?? null);
             }
         } else {
             makeFindNewPanorama();
         }
-    }, [mapyContext.loadedMapApi, isGameStarted, rounds, lastGuessedRound]);
+    }, [mapyContext.loadedMapApi, isGameStarted, rounds, lastGuessedRound, players]);
 
-    const sMapCollapseMax = useMemo(() => {
+    const getSMapCollapseMax = () => {
         if (width > 960) {
             if (!isSMapVisible || (isBattle && !isGameStarted)) {
                 return { display: 'none' };
@@ -81,14 +96,14 @@ export const GameScreen = ({
             return { height: height / 2, width: width / 3 };
         }
         return null;
-    }, [width, height, isSMapVisible]);
+    };
 
-    const sMapCollapseMin = useMemo(() => {
+    const getSMapCollapseMin = () => {
         if (width > 960) {
             return { height: 100, width: 100 };
         }
         return null;
-    }, [width, height, isSMapVisible]);
+    };
 
     const makeFindNewPanorama = () => {
         setPanoramaLoading(true);
@@ -106,9 +121,7 @@ export const GameScreen = ({
             currentRoundStart: getUnixTimestamp(new Date()),
             round: nextRoundNumber,
         })
-            .then(docRef => {
-                console.log('NOOOOOO: ', docRef);
-            })
+            .then(docRef => {})
             .catch(err => {
                 console.log('NOOOOOOO ERROR: ', err);
             });
@@ -134,6 +147,7 @@ export const GameScreen = ({
 
     const makeCountScore = guessedPointsInRound => {
         setGuessedPoints([...guessedPoints, guessedPointsInRound]);
+        setCurrentRoundGuessedPoint(guessedPointsInRound);
         setResultModalVisible(true);
     };
 
@@ -158,7 +172,7 @@ export const GameScreen = ({
             {/*
                 <img id="kdetosakra-logo" src={smilingLogo} alt="logo" className="kdetosakra-logo" width="15%" />
                 */}
-            <div id="smap-container" className="smap-container" style={sMapCollapseMax}>
+            <div id="smap-container" className="smap-container" style={getSMapCollapseMax()}>
                 {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions */}
                 <img
                     className="smap-collapsible-max"
@@ -169,6 +183,7 @@ export const GameScreen = ({
                     makeCountScore={makeCountScore}
                     makeFindNewPanorama={makeFindNewPanorama}
                     guessedPoints={guessedPoints}
+                    currentRoundGuessedPoint={currentRoundGuessedPoint}
                     gameMode={mode}
                     panoramaScene={panoramaScene}
                     makeRoundResult={makeRoundResult}
@@ -177,10 +192,12 @@ export const GameScreen = ({
                     isGameStarted={isGameStarted}
                     isBattle={isBattle}
                     currentCity={currentCity}
+                    refLayerValue={refLayerValue}
+                    refVectorLayerSMapValue={refVectorLayerSMapValue}
                 />
             </div>
             {!isSMapVisible && (
-                <div className="smap-container" style={sMapCollapseMin}>
+                <div className="smap-container" style={getSMapCollapseMin()}>
                     {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions */}
                     <img
                         className="smap-collapsible-min"

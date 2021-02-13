@@ -1,5 +1,5 @@
 import React, {
-    useState, useContext, useRef, useEffect
+    useState, useContext, useEffect, useRef
 } from 'react';
 import { Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,6 +20,7 @@ const GuessingMap = ({
     makeCountScore,
     makeFindNewPanorama,
     guessedPoints,
+    currentRoundGuessedPoint,
     makeRoundResult,
     panoramaScene,
     makeGuessedPlace,
@@ -27,11 +28,14 @@ const GuessingMap = ({
     isGameStarted,
     currentCity,
     isBattle,
+    refLayerValue,
+    refVectorLayerSMapValue,
 }) => {
     const dispatch = useDispatch();
     const mapyContext = useContext(MapyCzContext);
     const currentGame = useSelector(state => state.game.currentGame);
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
+    const refLayeredMapValue = useRef();
 
     // common vars for both multiplayer and singleplayer
     const [mode, setMode] = useState();
@@ -44,11 +48,6 @@ const GuessingMap = ({
     const [roundGuessed, setRoundGuessed] = useState(false);
     const randomUserToken = useGetRandomUserToken();
 
-    const refLayerValue = useRef();
-    const refVectorLayerSMapValue = useRef();
-    const refLayeredMapValue = useRef();
-
-    const [showResult, setShowResult] = useState(false);
     const [guessButtonDisabled, setGuessButtonDisabled] = useState(true);
     const [nextRoundButtonVisible, setNextRoundButtonVisible] = useState(false);
     const [guessedCoordinates, setGuessedCoordinates] = useState({
@@ -108,20 +107,6 @@ const GuessingMap = ({
         setGuessButtonDisabled(true);
         setRoundGuessed(false);
         window.scrollTo(0, 0);
-    };
-
-    const makeShowGameResult = () => {
-        // storeResult(mode, city?.name, totalRoundScore, randomUserResultToken) // not used now
-        dispatch(
-            setLastResult({
-                guessedPoints,
-                totalScore,
-                mode: currentGame?.mode,
-                city: currentGame?.city,
-                radius: currentGame?.radius,
-            }),
-        );
-        setShowResult(true);
     };
 
     const clickMapPoint = (e, elm) => {
@@ -270,10 +255,16 @@ const GuessingMap = ({
             const guessedCurrentRound = rounds[battleRound - 1];
             const { isGuessed, guessedTime } = guessedCurrentRound;
 
-            const { pointMap, distance, score } = guessedRoundPoint;
+            const {
+                pointMap, pointPanorama, distance, score,
+            } = guessedRoundPoint;
             const playerRoundGuess = {
                 [`round${battleRound}`]: {
                     roundId: battleRound,
+                    pointPanorama: {
+                        x: pointPanorama.x,
+                        y: pointPanorama.y,
+                    },
                     pointMap: {
                         x: pointMap.x,
                         y: pointMap.y,
@@ -313,16 +304,6 @@ const GuessingMap = ({
         calculateCoordsAndDrawGuess();
     };
 
-    if (showResult) {
-        return (
-            <Redirect
-                to={{
-                    pathname: '/vysledek',
-                }}
-            />
-        );
-    }
-
     return (
         <>
             {!roundGuessed ? (
@@ -332,20 +313,23 @@ const GuessingMap = ({
                     refLayerValue={refLayerValue}
                     refVectorLayerSMapValue={refVectorLayerSMapValue}
                     isBattle={isBattle}
+                    currentRoundGuessedPoint={currentRoundGuessedPoint}
                 />
             ) : (
-                <ResultSMapWrapper guessedPoints={[guessedPoints[guessedPoints.length - 1]]} isBattle={isBattle} />
+                <ResultSMapWrapper currentRoundGuessedPoint={currentRoundGuessedPoint} isBattle={isBattle} />
             )}
             <GuessingMapButton
-                makeShowGameResult={makeShowGameResult}
                 refreshMap={refreshMap}
                 isBattle={isBattle}
                 guessBattleRound={guessBattleRound}
                 guessRound={guessRound}
+                guessedPoints={guessedPoints}
                 round={round}
+                totalScore={totalScore}
                 roundGuessed={roundGuessed}
                 disabled={guessButtonDisabled || panoramaLoading || !isGameStarted}
                 currentRound={isBattle ? currentRoundBattle : currentGame.round}
+                currentGame={currentGame}
                 nextRoundButtonVisible={nextRoundButtonVisible}
             />
         </>

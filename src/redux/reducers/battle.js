@@ -22,7 +22,6 @@ const initialState = {
         myTotalScore: 0,
         currentRoundStart: null,
         myNickname: null,
-        isGameFinishedSuccessfully: false,
         isGameStarted: false,
         players: [],
         radius: null,

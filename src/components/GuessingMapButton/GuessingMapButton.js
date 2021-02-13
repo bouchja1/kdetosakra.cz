@@ -1,19 +1,23 @@
 import React from 'react';
 import { Button } from 'antd';
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
 import { setTotalRoundCounter } from '../../redux/actions/game';
+import { setLastResult } from '../../redux/actions/result';
 
 const GuessingMapButton = ({
     refreshMap,
     isBattle,
-    makeShowGameResult,
     guessRound,
+    guessedPoints,
     guessBattleRound,
     round,
+    totalScore,
     roundGuessed,
     disabled,
     currentRound,
+    currentGame,
     nextRoundButtonVisible,
 }) => {
     const dispatch = useDispatch();
@@ -21,8 +25,28 @@ const GuessingMapButton = ({
     return (
         <>
             {currentRound >= TOTAL_ROUNDS_MAX && roundGuessed ? (
-                <Button type="primary" onClick={makeShowGameResult}>
-                    Vyhodnotit hru
+                <Button
+                    type="primary"
+                    onClick={() => {
+                        dispatch(
+                            setLastResult({
+                                guessedPoints,
+                                totalScore,
+                                mode: currentGame?.mode,
+                                city: currentGame?.city,
+                                radius: currentGame?.radius,
+                                isBattle,
+                            }),
+                        );
+                    }}
+                >
+                    <Link
+                        to={{
+                            pathname: '/vysledek',
+                        }}
+                    >
+                        Vyhodnotit hru
+                    </Link>
                 </Button>
             ) : (
                 <>

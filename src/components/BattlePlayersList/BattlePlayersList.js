@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import {
     Button, Spin, Typography, Progress, Tooltip
 } from 'antd';
-import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Link, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { CheckCircleTwoTone } from '@ant-design/icons';
 import { addRoundBatchToBattleRounds, updateBattle, updateBattlePlayer } from '../../services/firebase';
 import {
@@ -17,6 +17,7 @@ import {
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
 import gameModes from '../../enums/modes';
+import { setLastResult } from '../../redux/actions/result';
 
 const { Title } = Typography;
 
@@ -75,6 +76,7 @@ const generateRounds = currentBattleInfo => {
 };
 
 const BattlePlayersList = ({ makeStartNextBattleRound }) => {
+    const dispatch = useDispatch();
     const randomUserToken = useGetRandomUserToken();
     const { battleId } = useParams();
     const [myPlayer, setMyPlayer] = useState();
@@ -150,6 +152,60 @@ const BattlePlayersList = ({ makeStartNextBattleRound }) => {
         });
     };
 
+    const getManagedRoundButton = round => {
+        if (round >= TOTAL_ROUNDS_MAX) {
+            return (
+                <Button
+                    type="primary"
+                    onClick={() => {
+                        dispatch(
+                            setLastResult({
+                                players: currentBattleInfo.players,
+                                round: currentBattleInfo.round,
+                                rounds: currentBattleInfo.rounds,
+                                totalScore: currentBattleInfo.myTotalScore,
+                                mode: currentBattleInfo.mode,
+                                city: currentBattleInfo.selectedCity,
+                                radius: currentBattleInfo.radius,
+                                isBattle: true,
+                            }),
+                        );
+                    }}
+                >
+                    <Link
+                        to={{
+                            pathname: '/vysledek',
+                        }}
+                    >
+                        Zobrazit výsledky hry
+                    </Link>
+                </Button>
+            );
+        }
+
+        if (isBattleCreator) {
+            return (
+                <>
+                    <Button
+                        disabled={!battleCanBeStarted}
+                        type="primary"
+                        onClick={() => {
+                            makeStartNextBattleRound(battleId, round + 1);
+                        }}
+                    >
+                        Začít
+                        {' '}
+                        {currentBattleInfo.round + 1}
+                        . kolo
+                    </Button>
+                    <p style={{ marginTop: '10px' }}>Odstartujte jako tvůrce hry další kolo.</p>
+                </>
+            );
+        }
+
+        return null;
+    };
+
     const getPlayersInActiveGame = () => {
         const { round, rounds } = currentBattleInfo;
         const currentRound = rounds[round - 1];
@@ -160,23 +216,7 @@ const BattlePlayersList = ({ makeStartNextBattleRound }) => {
                 <>
                     <Title level={5}>Pořadí kola:</Title>
                     <div className="battle-players">{battleId && getOngoingPlayersOrder(round)}</div>
-                    {isBattleCreator && (
-                        <>
-                            <Button
-                                disabled={!battleCanBeStarted}
-                                type="primary"
-                                onClick={() => {
-                                    makeStartNextBattleRound(battleId, round + 1);
-                                }}
-                            >
-                                Začít
-                                {' '}
-                                {currentBattleInfo.round + 1}
-                                . kolo
-                            </Button>
-                            <p style={{ marginTop: '10px' }}>Odstartujte jako tvůrce hry další kolo.</p>
-                        </>
-                    )}
+                    {getManagedRoundButton(round)}
                 </>
             );
         }

@@ -10,16 +10,9 @@ const initialState = {
 const gameReducer = (state = initialState, action) => {
     switch (action.type) {
         case getType(setLastResult): {
-            const {
-                guessedPoints, totalScore, mode, radius, city,
-            } = action.payload;
             return {
                 ...state,
-                totalScore,
-                guessedPoints,
-                mode,
-                radius,
-                city,
+                ...action.payload,
             };
         }
         default:

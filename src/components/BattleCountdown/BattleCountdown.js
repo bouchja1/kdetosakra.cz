@@ -2,15 +2,17 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Alert } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { differenceInSeconds } from 'date-fns';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import { findUserFromBattleByRandomTokenId, getDateFromUnixTimestamp } from '../../util';
 import useTimeInterval from '../../hooks/useTimeInterval';
 import { setIsRoundActive } from '../../redux/actions/battle';
+import { TOTAL_ROUNDS_MAX } from '../../constants/game';
+import routeNames from '../../constants/routes';
 
-const getAlertMessageFastestPlayer = (round, countdownTime, battleCreatorName) => (
+const getAlertMessageFastestPlayer = (round, countdownTime) => (
     <>
-        {countdownTime > 0 ? (
+        {countdownTime > 0 && (
             <>
                 Byl jsi nejrychlejší! Do konce kola zbývá
                 <b>
@@ -20,24 +22,13 @@ const getAlertMessageFastestPlayer = (round, countdownTime, battleCreatorName) =
                 {' '}
                 sekund.
             </>
-        ) : (
-            <b>
-                Konec kola.
-                {' '}
-                {battleCreatorName}
-                {' '}
-                odstartuje
-                {' '}
-                {round + 1}
-                . kolo
-            </b>
         )}
     </>
 );
 
-const getAlertMessageOtherPlayers = (round, name, countdownTime, battleCreatorName) => (
+const getAlertMessageOtherPlayers = (round, name, countdownTime) => (
     <>
-        {countdownTime > 0 ? (
+        {countdownTime > 0 && (
             <>
                 <b>{name}</b>
                 {' '}
@@ -49,17 +40,6 @@ const getAlertMessageOtherPlayers = (round, name, countdownTime, battleCreatorNa
                 {' '}
                 sekund.
             </>
-        ) : (
-            <b>
-                Konec kola.
-                {' '}
-                {battleCreatorName}
-                {' '}
-                odstartuje
-                {' '}
-                {round + 1}
-                . kolo
-            </b>
         )}
     </>
 );
@@ -75,7 +55,7 @@ const BattleCountDown = ({ currentBattleInfo }) => {
     const { pathname } = useLocation();
 
     const {
-        isGameStarted, countdown, round, rounds, createdById,
+        battleId, isGameStarted, countdown, round, rounds, createdById,
     } = currentBattleInfo;
 
     const handleBattleRoundTick = () => {
@@ -131,6 +111,10 @@ const BattleCountDown = ({ currentBattleInfo }) => {
             } = currentRound;
             const battleUserCreator = findUserFromBattleByRandomTokenId(currentBattlePlayers, createdById);
             if (isGuessed && !isRoundActive) {
+                if (round >= TOTAL_ROUNDS_MAX) {
+                    return <Alert message={<b>Hra skončila.</b>} type="info" />;
+                }
+
                 return (
                     <Alert
                         message={(
@@ -160,8 +144,8 @@ const BattleCountDown = ({ currentBattleInfo }) => {
                     <Alert
                         message={
                             guessedById === randomUserToken
-                                ? getAlertMessageFastestPlayer(round, countdownTime, battleUserCreator.name)
-                                : getAlertMessageOtherPlayers(round, name, countdownTime, battleUserCreator.name)
+                                ? getAlertMessageFastestPlayer(round, countdownTime)
+                                : getAlertMessageOtherPlayers(round, name, countdownTime)
                         }
                         type="info"
                     />
