@@ -1,55 +1,57 @@
-import { Divider } from 'antd';
-import React, { useContext, useRef, useEffect } from 'react';
+import { Divider, Spin } from 'antd';
+import React, {
+    useContext, useRef, useEffect, useState
+} from 'react';
 import { useSelector } from 'react-redux';
 import useSMapResize from '../../hooks/useSMapResize';
 import MapyCzContext from '../../context/MapyCzContext';
-import { getMapInstanceByGameMode, setupMapInstanceAndLayers, drawAllResultsLayerToMap } from '../../util/map';
+import {
+    getMapInstanceByGameMode,
+    setupMapInstance,
+    drawAllResultsLayerToMap,
+    setupLayerWithMarksAndDataProvider,
+} from '../../util/map';
 
-const ResultSMap = ({ guessedPoints, isBattle }) => {
+const ResultSMap = ({
+    guessedPoints, isBattle, mode, city, radius,
+}) => {
     const { width } = useSMapResize();
-    const map = useRef();
+    const resultMap = useRef();
     const mapyContext = useContext(MapyCzContext);
-    const currentGame = useSelector(state => state.game.currentGame);
+    const [mapLoaded, setMapLoaded] = useState(false);
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
 
-    const initSMap = mapInstance => {
-        setupMapInstanceAndLayers(mapyContext.SMap, mapInstance);
+    const {
+        mode: battleMode, radius: battleRadius, rounds, round,
+    } = currentBattleInfo;
 
-        // vrstva se značkami
-        const layerWithMarks = new mapyContext.SMap.Layer.Marker();
-        mapInstance.addLayer(layerWithMarks);
-        layerWithMarks.enable();
-
-        drawAllResultsLayerToMap(mapyContext.SMap, mapInstance, layerWithMarks, guessedPoints);
-    };
+    const isMapMetaInfoLoaded = isBattle ? battleMode && round && rounds : mode && radius;
 
     useEffect(() => {
-        if (isBattle && mapyContext.loadedMapApi) {
-            const {
-                mode: battleMode, radius: battleRadius, rounds, round,
-            } = currentBattleInfo;
-            if (battleMode && round && rounds) {
-                const mapInstance = getMapInstanceByGameMode(
-                    mapyContext.SMap,
-                    battleMode,
-                    rounds[round - 1].city,
-                    battleRadius,
-                    map.current,
-                );
-                initSMap(mapInstance);
-            }
-        } else if (mapyContext.loadedMapApi) {
-            const { mode, city, radius } = currentGame;
-            const mapInstance = getMapInstanceByGameMode(mapyContext.SMap, mode, city, radius, map.current);
-            initSMap(mapInstance);
+        if (mapyContext.loadedMapApi && mapyContext.SMap && !mapLoaded && isMapMetaInfoLoaded) {
+            const { SMap: SMapContext } = mapyContext;
+            const mapInstanceInitObject = isBattle
+                ? { mapMode: battleMode, mapCity: rounds[round - 1].city, mapRadius: battleRadius }
+                : { mapMode: mode, mapCity: city, mapRadius: radius };
+            const mapInstance = getMapInstanceByGameMode(
+                SMapContext,
+                mapInstanceInitObject.mapMode,
+                mapInstanceInitObject.mapCity,
+                mapInstanceInitObject.mapRadius,
+                resultMap.current,
+            );
+            setupMapInstance(SMapContext, mapInstance);
+            const layerWithMarks = setupLayerWithMarksAndDataProvider(SMapContext, mapInstance);
+            drawAllResultsLayerToMap(mapyContext.SMap, mapInstance, layerWithMarks, guessedPoints);
+            setMapLoaded(true);
         }
-    }, [mapyContext.loadedMapApi, isBattle, currentBattleInfo, currentGame]);
+    }, [mapyContext.loadedMapApi, mapLoaded, isMapMetaInfoLoaded]);
 
     return (
-        <>
+        <Spin spinning={!mapLoaded} size="large">
             {width <= 961 ? <Divider /> : null}
-            <div id="smap" className="smap smap-style" ref={map} />
-        </>
+            <div id="smap" className="smap smap-style" ref={resultMap} />
+        </Spin>
     );
 };
 

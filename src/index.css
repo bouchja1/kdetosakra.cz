@@ -580,7 +580,7 @@ label {
 
     .smap-container {
         position: fixed;
-        bottom: 5px;
+        bottom: 10px;
         right: 15px;
     }
 }

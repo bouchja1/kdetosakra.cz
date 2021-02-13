@@ -14,7 +14,9 @@ export const Result = () => {
     const lastResult = useSelector(state => state.result);
     const [playAgainSelected, setPlayAgainSelected] = useState(false);
 
-    const { totalScore, guessedPoints } = lastResult;
+    const {
+        totalScore, guessedPoints, mode, city, radius,
+    } = lastResult;
 
     // FIXME: to load whole map layer when the map is minimized before
     useEffect(() => {
@@ -96,7 +98,7 @@ export const Result = () => {
                         Hrát znovu
                     </Button>
                 </div>
-                <ResultSMap guessedPoints={guessedPoints} isBattle={false} />
+                <ResultSMap guessedPoints={guessedPoints} isBattle={false} mode={mode} city={city} radius={radius} />
             </>
         );
     }

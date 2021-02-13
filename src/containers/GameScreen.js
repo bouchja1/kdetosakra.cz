@@ -72,7 +72,7 @@ export const GameScreen = ({
 
     const smapContainerDimensions = useMemo(() => {
         return width > 960 ? { height: height / 2, width: width / 3 } : null;
-    }, [width]);
+    }, [width, height]);
 
     const makeFindNewPanorama = () => {
         setPanoramaLoading(true);

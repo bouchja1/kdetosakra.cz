@@ -112,7 +112,15 @@ const GuessingMap = ({
 
     const makeShowGameResult = () => {
         // storeResult(mode, city?.name, totalRoundScore, randomUserResultToken) // not used now
-        dispatch(setLastResult({ guessedPoints, totalScore }));
+        dispatch(
+            setLastResult({
+                guessedPoints,
+                totalScore,
+                mode: currentGame?.mode,
+                city: currentGame?.city,
+                radius: currentGame?.radius,
+            }),
+        );
         setShowResult(true);
     };
 
@@ -124,7 +132,7 @@ const GuessingMap = ({
         };
         // state is not working in event handling
         // if (guessButtonDisabled && refLayerValue.current && !nextRoundButtonVisible) {
-        // refLayerValue.current.removeAll();
+        refLayerValue.current.removeAll();
         const coords = mapyContext.SMap.Coords.fromEvent(e.data.event, refLayeredMapValue.current);
         const marker = new mapyContext.SMap.Marker(
             mapyContext.SMap.Coords.fromWGS84(coords.x, coords.y),

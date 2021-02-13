@@ -2,7 +2,7 @@ import { DEFAUL_MARKER_ICON, MARKER_PLACE_ICON_KDETOSAKRA } from '../constants/i
 import { resultPathColors } from '../constants/game';
 import gameModes from '../enums/modes';
 
-const DEFAULT_MODE_ZOOM = 14;
+export const DEFAULT_MODE_ZOOM = 14;
 
 export const mouseControlOptions = {
     scrollDelay: 5000,
@@ -102,13 +102,11 @@ export const getMapInstanceByGameMode = (SMap, mode, city, radius, mapRefValue) 
     return new SMap(mapRefValue, center, 7);
 };
 
-export const setupMapInstanceAndLayers = (SMap, mapInstance) => {
-    // FIXME: Lines below abreaks while tiping to the map and resizing of a parent of the map - "cannot ready property scrollLeft of null. (probably some bad styles for parent component)
-    const sync = new SMap.Control.Sync({ bottomSpace: 60 });
-    mapInstance.addControl(sync); // - aby mapa reagovala na změnu velikosti průhledu - Synchronizuje mapu s portem, potažmo mapu s portem a oknem
-    mapInstance.setZoomRange(7, 19);
-    mapInstance.addDefaultLayer(SMap.DEF_BASE).enable();
+export const setupMapInstance = (SMap, mapInstance) => {
     mapInstance.addDefaultControls(); // Vyrobí defaultní ovládácí prvky (kompas, zoom, ovládání myší a klávesnicí.)
+    mapInstance.addControl(new SMap.Control.Sync()); // - aby mapa reagovala na změnu velikosti průhledu
+    mapInstance.addDefaultLayer(SMap.DEF_BASE).enable();
+    mapInstance.setZoomRange(7, 19);
 
     // Bitová maska určující, co všechno myš/prst ovládá - konstanty SMapContext.MOUSE_*
     const mouse = new SMap.Control.Mouse(
@@ -117,6 +115,13 @@ export const setupMapInstanceAndLayers = (SMap, mapInstance) => {
         mouseControlOptions,
     ); /* Ovládání myší */
     mapInstance.addControl(mouse);
+};
+
+export const setupLayerWithMarksAndDataProvider = (SMap, mapInstance) => {
+    // vrstva se značkami
+    const layerWithMarks = new SMap.Layer.Marker();
+    mapInstance.addLayer(layerWithMarks);
+    layerWithMarks.enable();
 
     /* znackova vrstva pro ikonky bodu zajmu; poiToolTip - zapneme title jako nazev nad POI */
     const poILayer = new SMap.Layer.Marker(undefined, {
@@ -130,4 +135,6 @@ export const setupMapInstanceAndLayers = (SMap, mapInstance) => {
     dataProvider.addLayer(poILayer);
     dataProvider.setMapSet(SMap.MAPSET_BASE);
     dataProvider.enable();
+
+    return layerWithMarks;
 };
