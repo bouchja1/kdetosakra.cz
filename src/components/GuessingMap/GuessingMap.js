@@ -10,11 +10,11 @@ import { RoundSMapWrapper } from '../SMap/RoundSMapWrapper';
 import { ResultSMapWrapper } from '../SMap/ResultSMapWrapper';
 import gameModes from '../../enums/modes';
 import { incrementMyTotalScore } from '../../redux/actions/battle';
-import { setLastResult } from '../../redux/actions/result';
 import { addGuessedRoundToPlayer, updateBattleRound } from '../../services/firebase';
 import { getUnixTimestamp } from '../../util';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import GuessingMapButton from '../GuessingMapButton';
+import GuessLimitModal from '../GuessLimitModal';
 
 const GuessingMap = ({
     makeCountScore,
@@ -44,6 +44,7 @@ const GuessingMap = ({
     const [round, setRound] = useState();
     // common vars for both multiplayer and singleplayer
 
+    const [showGuessLimitModal, setShowGuessLimitModal] = useState(false);
     const [currentRoundBattle, setCurrentRoundBattle] = useState();
     const [roundGuessed, setRoundGuessed] = useState(false);
     const randomUserToken = useGetRandomUserToken();
@@ -243,65 +244,68 @@ const GuessingMap = ({
             distance,
             score,
         };
-        makeCountScore(guessedRoundPoint);
         return guessedRoundPoint;
     };
 
     const guessBattleRound = () => {
-        // TODO mozna neumoznit hadat pokud uz bude po limitu
-
         const guessedRoundPoint = calculateCoordsAndDrawGuess();
-        if (isBattle) {
-            const guessedCurrentRound = rounds[battleRound - 1];
-            const { isGuessed, guessedTime } = guessedCurrentRound;
+        const guessedCurrentRound = rounds[battleRound - 1];
+        const { isGuessed, isRoundActive } = guessedCurrentRound;
 
-            const {
-                pointMap, pointPanorama, distance, score,
-            } = guessedRoundPoint;
-            const playerRoundGuess = {
-                [`round${battleRound}`]: {
-                    roundId: battleRound,
-                    pointPanorama: {
-                        x: pointPanorama.x,
-                        y: pointPanorama.y,
-                    },
-                    pointMap: {
-                        x: pointMap.x,
-                        y: pointMap.y,
-                    },
-                    distance,
-                    score,
+        /*
+        if (isGuessed && !isRoundActive) {
+            setShowGuessLimitModal(true);
+        } else {
+
+         */
+        makeCountScore(guessedRoundPoint);
+        const {
+            pointMap, pointPanorama, distance, score,
+        } = guessedRoundPoint;
+        const playerRoundGuess = {
+            [`round${battleRound}`]: {
+                roundId: battleRound,
+                pointPanorama: {
+                    x: pointPanorama.x,
+                    y: pointPanorama.y,
                 },
-            };
+                pointMap: {
+                    x: pointMap.x,
+                    y: pointMap.y,
+                },
+                distance,
+                score,
+            },
+        };
 
-            dispatch(incrementMyTotalScore(Math.round(score)));
+        dispatch(incrementMyTotalScore(Math.round(score)));
 
-            if (!isGuessed) {
-                addGuessedRoundToPlayer(battleId, myDocumentId, playerRoundGuess)
-                    .then(res => {
-                        return updateBattleRound(battleId, battleRound, {
-                            isGuessed: true,
-                            guessedTime: getUnixTimestamp(new Date()),
-                            firstGuess: {
-                                guessedById: randomUserToken,
-                                name: myNickname,
-                            },
-                        });
-                    })
-                    .then(res => {})
-                    .catch(err => console.log('EEEEERRR: ', err));
-            } else {
-                // TODO check jestli jeste zbyva cas nebo ne -> jakoze uz neumoznime umistit odhad, zapiseme mu 0 vysledek
-                // spocti rozdil mezi guessedtime a timeoutem
-                addGuessedRoundToPlayer(battleId, myDocumentId, playerRoundGuess)
-                    .then(res => {})
-                    .catch(err => {});
-            }
+        if (!isGuessed) {
+            addGuessedRoundToPlayer(battleId, myDocumentId, playerRoundGuess)
+                .then(res => {
+                    return updateBattleRound(battleId, battleRound, {
+                        isGuessed: true,
+                        guessedTime: getUnixTimestamp(new Date()),
+                        firstGuess: {
+                            guessedById: randomUserToken,
+                            name: myNickname,
+                        },
+                    });
+                })
+                .then(res => {})
+                .catch(err => console.log('EEEEERRR: ', err));
+        } else {
+            // spocti rozdil mezi guessedtime a timeoutem
+            addGuessedRoundToPlayer(battleId, myDocumentId, playerRoundGuess)
+                .then(res => {})
+                .catch(err => {});
         }
+        // }
     };
 
     const guessRound = () => {
-        calculateCoordsAndDrawGuess();
+        const guessedRoundPoint = calculateCoordsAndDrawGuess();
+        makeCountScore(guessedRoundPoint);
     };
 
     return (
@@ -331,6 +335,10 @@ const GuessingMap = ({
                 currentRound={isBattle ? currentRoundBattle : currentGame.round}
                 currentGame={currentGame}
                 nextRoundButtonVisible={nextRoundButtonVisible}
+            />
+            <GuessLimitModal
+                visible={showGuessLimitModal}
+                handleGuessModalVisibility={() => setShowGuessLimitModal(false)}
             />
         </>
     );

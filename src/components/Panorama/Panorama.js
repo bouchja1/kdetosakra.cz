@@ -64,7 +64,7 @@ const Panorama = ({
 
     return (
         <Spin
-            tip={!isGameStarted ? 'Čekám, až budou všichni hráči připraveni' : 'Načítám panorama...'}
+            tip={!isGameStarted ? 'Čekám, až budou všichni hráči připraveni' : 'Načítám panorama, čekej prosím...'}
             spinning={isPanoramaLoading}
             size="large"
         >

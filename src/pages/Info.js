@@ -58,7 +58,7 @@ export const Info = () => {
                     >
                         Náhodné místo v Česku
                     </Link>
-                    , hra předpokládá, že vybrané okolí alespoň trochu znáte. Proto je za horší odhad vyšší bodová
+                    , hra předpokládá, že vybrané okolí alespoň trochu znáte. Proto je za nepřesný odhad vyšší bodová
                     penalizace než u náhodně generovaných míst.
                 </Paragraph>
                 <Paragraph>
