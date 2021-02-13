@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Button, Progress, Typography } from 'antd';
@@ -15,6 +15,11 @@ export const Result = () => {
     const [playAgainSelected, setPlayAgainSelected] = useState(false);
 
     const { totalScore, guessedPoints } = lastResult;
+
+    // FIXME: to load whole map layer when the map is minimized before
+    useEffect(() => {
+        window.dispatchEvent(new Event('resize'));
+    }, []);
 
     const closeResultPage = () => {
         setPlayAgainSelected(true);
