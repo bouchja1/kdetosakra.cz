@@ -1,7 +1,5 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Card, Typography } from 'antd';
-import cryptoRandomString from 'crypto-random-string';
-import { writeStorage, useLocalStorage } from '@rehooks/local-storage';
 import {
     CustomPlace, RegionCity, RandomCity, Geolocation
 } from './modes';
@@ -11,20 +9,15 @@ import suggestedCover from '../assets/images/city/suggested.jpg';
 import geolocationCover from '../assets/images/city/geolocation.jpg';
 import youtubeCover from '../assets/images/youtube.jpg';
 import useSMapResize from '../hooks/useSMapResize';
+import useGetRandomUserToken from '../hooks/useGetRandomUserToken';
 
 const { Text } = Typography;
 
 export const ModesOverview = () => {
-    const [randomUserResultToken] = useLocalStorage('randomUserResultToken'); // send the key to be tracked.
+    useGetRandomUserToken();
     const { width } = useSMapResize();
 
     const isMultiplayerSupported = width > 599;
-
-    useEffect(() => {
-        if (!randomUserResultToken) {
-            writeStorage('randomUserResultToken', cryptoRandomString({ length: 15 }));
-        }
-    }, [randomUserResultToken]);
 
     return (
         <>
