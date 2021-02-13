@@ -70,16 +70,17 @@ export const Result = () => {
                                                 {' '}
                                                 bodů
                                             </div>
-                                            {round?.currentCity && (
-                                                <div className="result-round-other-info">
-                                                    {round.currentCity.obec}
-                                                    ,
-                                                    {round.currentCity.okres}
-                                                    ,
-                                                    {' '}
-                                                    {round.currentCity.kraj}
-                                                </div>
-                                            )}
+                                            {round?.currentCity?.obec
+                                                || (round?.currentCity?.kraj && (
+                                                    <div className="result-round-other-info">
+                                                        {round.currentCity.obec}
+                                                        ,
+                                                        {round.currentCity.okres}
+                                                        ,
+                                                        {' '}
+                                                        {round.currentCity.kraj}
+                                                    </div>
+                                                ))}
                                         </div>
                                     );
                                 })}

@@ -48,10 +48,10 @@ const ResultSMap = ({
     }, [mapyContext.loadedMapApi, mapLoaded, isMapMetaInfoLoaded]);
 
     return (
-        <Spin spinning={!mapLoaded} size="large">
+        <>
             {width <= 961 ? <Divider /> : null}
             <div id="smap" className="smap smap-style" ref={resultMap} />
-        </Spin>
+        </>
     );
 };
 

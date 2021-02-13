@@ -202,13 +202,13 @@ label {
 .result-container {
     height: 200px;
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: flex-start;
     flex: 1;
 }
 
 .result-modal-container {
-    min-height: 250px;
     display: flex;
     flex: 1;
     justify-content: flex-start;
