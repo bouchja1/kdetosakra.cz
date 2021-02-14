@@ -7,7 +7,7 @@ import { CATEGORIES } from '../../enums/gaCategories';
 import { generateRandomRadius } from '../../util';
 import { setCurrentGame } from '../../redux/actions/game';
 import gameModes from '../../enums/modes';
-import BattleLinkModal from '../../components/BattleLinkModal';
+import BattleLinkModal from '../BattleLinkModal';
 import { showMultiplayerWarningModal } from '../../util/multiplayer';
 
 export const RandomCity = ({ multiplayerSupported }) => {

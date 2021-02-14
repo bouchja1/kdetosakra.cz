@@ -12,7 +12,7 @@ import { CATEGORIES } from '../../enums/gaCategories';
 import gameModes from '../../enums/modes';
 import { RADIUS_DESCRIPTION } from '../../util';
 import { setCurrentGame } from '../../redux/actions/game';
-import BattleLinkModal from '../../components/BattleLinkModal';
+import BattleLinkModal from '../BattleLinkModal';
 import { showMultiplayerWarningModal } from '../../util/multiplayer';
 
 export const CustomPlace = ({ multiplayerSupported }) => {

@@ -13,7 +13,7 @@ import { RADIUS_DESCRIPTION } from '../../util';
 import gameModes from '../../enums/modes';
 import { setCurrentGame } from '../../redux/actions/game';
 import { showMultiplayerWarningModal } from '../../util/multiplayer';
-import BattleLinkModal from '../../components/BattleLinkModal';
+import BattleLinkModal from '../BattleLinkModal';
 
 const { Option } = Select;
 

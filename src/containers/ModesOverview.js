@@ -2,7 +2,7 @@ import React from 'react';
 import { Card } from 'antd';
 import {
     CustomPlace, RegionCity, RandomCity, Geolocation
-} from './modes';
+} from '../components/modes';
 import pragueCover from '../assets/images/city/prague.jpg';
 import randomCover from '../assets/images/city/random.jpg';
 import suggestedCover from '../assets/images/city/suggested.jpg';

@@ -25,7 +25,7 @@ export const Result = () => {
                         pathname: '/',
                     }}
                 >
-                    Hrát znovu
+                    Zpět na výběr herního módu
                 </Link>
             </Button>
         </div>

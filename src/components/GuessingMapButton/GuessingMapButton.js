@@ -10,7 +10,7 @@ const GuessingMapButton = ({
     refreshMap,
     isBattle,
     guessRound,
-    guessedPoints,
+    allGuessedPoints,
     guessBattleRound,
     round,
     totalScore,
@@ -30,7 +30,7 @@ const GuessingMapButton = ({
                     onClick={() => {
                         dispatch(
                             setLastResult({
-                                guessedPoints,
+                                allGuessedPoints,
                                 totalScore,
                                 mode: currentGame?.mode,
                                 city: currentGame?.city,

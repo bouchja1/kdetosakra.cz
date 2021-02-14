@@ -27,7 +27,7 @@ import {
     setMyUserInfoToCurrentBattle,
     setRoundsToCurrentBattle,
 } from '../../redux/actions/battle';
-import { GameScreen } from '../GameScreen';
+import { MultiplayerGameScreen } from '../MultiplayerGameScreen';
 import { MAX_ALLOWED_BATTLE_PLAYERS } from '../../constants/game';
 
 const { Content } = Layout;
@@ -226,7 +226,7 @@ export const Battle = ({ type }) => {
     return (
         <>
             <Content>
-                <GameScreen mode={currentBattleInfo.mode} isGameStarted={currentBattleInfo.isGameStarted} isBattle />
+                <MultiplayerGameScreen mode={currentBattleInfo.mode} isGameStarted={currentBattleInfo.isGameStarted} />
             </Content>
         </>
     );
