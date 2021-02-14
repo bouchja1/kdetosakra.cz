@@ -7,7 +7,7 @@ import { findUserFromBattleByRandomTokenId } from '../../util';
 import BattlePlayersList from '../BattlePlayersList';
 import BattleSettings from '../BattleSettings';
 
-const BattlePlayersPanel = ({ makeStartNextBattleRound }) => {
+const BattlePlayersPanel = () => {
     const randomUserToken = useGetRandomUserToken();
     const { width } = useSMapResize();
     const currentBattlePlayers = useSelector(state => state.battle.currentBattle.players);
@@ -23,7 +23,7 @@ const BattlePlayersPanel = ({ makeStartNextBattleRound }) => {
     return (
         <>
             <div className="battle-users-container" style={{ width: usersSidebarWidth }}>
-                <BattlePlayersList makeStartNextBattleRound={makeStartNextBattleRound} myPlayer={myPlayer} />
+                <BattlePlayersList myPlayer={myPlayer} />
                 <BattleSettings />
             </div>
         </>

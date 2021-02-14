@@ -90,11 +90,21 @@ export const BattleResult = ({ renderPlayAgainButton }) => {
                                         return (
                                             <TabPane tab={`${player.name} (${player.score} bodů)`} key={i}>
                                                 {player.guessedPoints.map((round, index) => {
+                                                    if (round) {
+                                                        return (
+                                                            <RoundsSummary
+                                                                index={index}
+                                                                roundScore={round.score}
+                                                                roundDistance={round.distance}
+                                                                roundCity={round?.currentCity}
+                                                            />
+                                                        );
+                                                    }
                                                     return (
                                                         <RoundsSummary
                                                             index={index}
-                                                            roundScore={round.score}
-                                                            roundDistance={round.distance}
+                                                            roundScore={0}
+                                                            roundDistance={-1}
                                                             roundCity={round?.currentCity}
                                                         />
                                                     );

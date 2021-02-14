@@ -11,12 +11,10 @@ import {
     generatePlaceInRadius,
     generateRandomRadius,
     getRandomCzechPlace,
-    getUnixTimestamp,
 } from '../util';
 import RoundResultModal from '../components/RoundResultModal';
 import gameModes from '../enums/modes';
 import BattlePlayersPanel from '../components/BattlePlayersPanel';
-import { updateBattle } from '../services/firebase';
 import useGetRandomUserToken from '../hooks/useGetRandomUserToken';
 import { GuessingMapContainer } from './GuessingMapContainer';
 
@@ -33,8 +31,8 @@ export const GameScreen = ({
 
     const [panoramaScene, setPanoramaScene] = useState(null);
     const [roundScore, setRoundScore] = useState(0);
-    const [guessedDistance, setGuessedDistance] = useState(null);
-    const [guessedPlace, setGuessedPlace] = useState(null);
+    const [roundGuessedDistance, setRoundGuessedDistance] = useState(null);
+    const [guessedRandomPlace, setGuessedRandomPlace] = useState(null);
     const [allGuessedPoints, setAllGuessedPoints] = useState([]);
     const [currentRoundGuessedPoint, setCurrentRoundGuessedPoint] = useState();
     const [currentCity, setCurrentCity] = useState(null);
@@ -81,7 +79,6 @@ export const GameScreen = ({
     }, [mapyContext.loadedMapApi, isGameStarted, rounds, lastGuessedRound, players]);
 
     const findNewPanorama = () => {
-        setPanoramaLoading(true);
         if (mode === gameModes.random) {
             radius = generateRandomRadius();
             city = getRandomCzechPlace();
@@ -91,18 +88,7 @@ export const GameScreen = ({
         setPanoramaPlace(generatedPanoramaPlace);
     };
 
-    const makeStartNextBattleRound = (updatedBattleId, nextRoundNumber) => {
-        updateBattle(updatedBattleId, {
-            currentRoundStart: getUnixTimestamp(new Date()),
-            round: nextRoundNumber,
-        })
-            .then(docRef => {})
-            .catch(err => {
-                console.log('NOOOOOOO ERROR: ', err);
-            });
-    };
-
-    const makeSetPanoramaLoading = loading => {
+    const changePanoramaLoadingState = loading => {
         setPanoramaLoading(loading);
     };
 
@@ -113,42 +99,36 @@ export const GameScreen = ({
         } else {
             dispatch(setTotalRoundScore(Math.round(totalScore + score)));
         }
-        setGuessedDistance(distance);
-    };
-
-    const closeModal = () => {
-        setResultModalVisible(false);
+        setRoundGuessedDistance(distance);
     };
 
     const evaluateGuessedRound = guessedPointsInRound => {
         if (mode === gameModes.random) {
             const { obec, okres, kraj } = currentCity;
-            setGuessedPlace({ obec, okres, kraj });
+            setGuessedRandomPlace({ obec, okres, kraj });
         }
         setAllGuessedPoints([...allGuessedPoints, guessedPointsInRound]);
         setCurrentRoundGuessedPoint(guessedPointsInRound);
         setResultModalVisible(true);
     };
 
-    console.log('JOOOOOOO');
-
     return (
         <>
             <div className="game-screen-container">
-                {isBattle && <BattlePlayersPanel makeStartNextBattleRound={makeStartNextBattleRound} />}
+                {isBattle && <BattlePlayersPanel />}
                 <Panorama
                     panoramaPlace={panoramaPlace}
                     panoramaScene={panoramaScene}
                     refPanoramaView={refPanoramaView}
                     panoramaLoading={panoramaLoading}
-                    makeSetPanoramaLoading={makeSetPanoramaLoading}
+                    changePanoramaLoadingState={changePanoramaLoadingState}
                     isGameStarted={isGameStarted}
                 />
             </div>
             <GuessingMapContainer
                 maximized={isSMapVisible}
                 isBattle={isBattle}
-                visible={isBattle ? isGameStarted : isSMapVisible}
+                visible={isBattle ? isGameStarted && isSMapVisible : isSMapVisible}
                 evaluateGuessedRound={evaluateGuessedRound}
                 currentRoundGuessedPoint={currentRoundGuessedPoint}
                 panoramaLoading={panoramaLoading}
@@ -161,12 +141,12 @@ export const GameScreen = ({
             />
             <RoundResultModal
                 visible={resultModalVisible}
-                closeModal={closeModal}
-                guessedDistance={guessedDistance}
+                closeModal={() => setResultModalVisible(false)}
+                roundGuessedDistance={roundGuessedDistance}
                 roundScore={roundScore}
                 totalRoundScore={totalScore}
                 isBattle={isBattle}
-                guessedPlace={guessedPlace}
+                guessedRandomPlace={guessedRandomPlace}
             />
         </>
     );

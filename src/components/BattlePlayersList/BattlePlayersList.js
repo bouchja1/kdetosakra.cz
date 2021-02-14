@@ -72,7 +72,7 @@ const generateRounds = currentBattleInfo => {
     }
 };
 
-const BattlePlayersList = ({ makeStartNextBattleRound, myPlayer }) => {
+const BattlePlayersList = ({ myPlayer }) => {
     const dispatch = useDispatch();
     const randomUserToken = useGetRandomUserToken();
     const { battleId } = useParams();
@@ -90,6 +90,17 @@ const BattlePlayersList = ({ makeStartNextBattleRound, myPlayer }) => {
             setBattleCanBeStarted(true);
         }
     }, [currentBattlePlayers, currentBattleInfo]);
+
+    const startNextBattleRound = (updatedBattleId, nextRoundNumber) => {
+        updateBattle(updatedBattleId, {
+            currentRoundStart: getUnixTimestamp(new Date()),
+            round: nextRoundNumber,
+        })
+            .then(docRef => {})
+            .catch(err => {
+                console.log('NOOOOOOO ERROR: ', err);
+            });
+    };
 
     const getOngoingPlayersOrder = round => {
         const players = currentBattlePlayers ?? [];
@@ -193,7 +204,7 @@ const BattlePlayersList = ({ makeStartNextBattleRound, myPlayer }) => {
                         disabled={!battleCanBeStarted}
                         type="primary"
                         onClick={() => {
-                            makeStartNextBattleRound(battleId, round + 1);
+                            startNextBattleRound(battleId, round + 1);
                         }}
                     >
                         Začít

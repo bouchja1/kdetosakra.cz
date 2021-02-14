@@ -40,6 +40,7 @@ export const SingleResult = ({ renderPlayAgainButton }) => {
                                     return (
                                         <RoundsSummary
                                             index={i}
+                                            playerName="player"
                                             roundScore={round.score}
                                             roundDistance={round.distance}
                                             roundCity={round?.currentCity}

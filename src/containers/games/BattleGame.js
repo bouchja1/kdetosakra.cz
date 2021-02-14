@@ -112,6 +112,10 @@ export const Battle = ({ type }) => {
             } = battleFromFirestore;
 
             const sortedBattleRounds = sortBattleRoundsById(battleRoundsFromFirestore).map(roundDetail => {
+                console.log(
+                    'NOOOO ACTIVEE????: ',
+                    getIsRoundActive(roundDetail.guessedTime, currentBattleInfo.countdown),
+                );
                 return {
                     ...roundDetail,
                     isRoundActive: getIsRoundActive(roundDetail.guessedTime, currentBattleInfo.countdown),

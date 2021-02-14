@@ -76,7 +76,9 @@ export const drawAllResultsLayerToMap = (SMap, mapInstance, layerWithMarks, gues
     for (let i = 0; i < guessedPoints.length; i++) {
         const pointsObject = guessedPoints[i];
         // `Panorama ${i + 1}`
-        drawResultPathToLayer(SMap, layerWithMarks, vectorLayer, pointsObject, resultPathColors[i], `round${i}`);
+        if (pointsObject) {
+            drawResultPathToLayer(SMap, layerWithMarks, vectorLayer, pointsObject, resultPathColors[i], `round${i}`);
+        }
     }
 };
 

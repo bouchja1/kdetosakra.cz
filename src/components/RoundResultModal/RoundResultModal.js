@@ -7,10 +7,10 @@ import { roundToTwoDecimal } from '../../util';
 const RoundResultModal = ({
     closeModal,
     visible,
-    guessedDistance,
+    roundGuessedDistance,
     roundScore,
     totalRoundScore,
-    guessedPlace,
+    guessedRandomPlace,
     isBattle,
 }) => {
     const currentGame = useSelector(state => state.game.currentGame);
@@ -39,12 +39,12 @@ const RoundResultModal = ({
                             /
                             {TOTAL_ROUNDS_MAX}
                         </h2>
-                        {guessedDistance ? (
+                        {roundGuessedDistance ? (
                             <p>
                                 Vzdušná vzdálenost místa od tvého odhadu:
                                 {' '}
                                 <b>
-                                    {roundToTwoDecimal(guessedDistance)}
+                                    {roundToTwoDecimal(roundGuessedDistance)}
                                     {' '}
                                     km
                                 </b>
@@ -53,10 +53,10 @@ const RoundResultModal = ({
                     </div>
                 ) : null}
                 <div className="result-modal-container-row">
-                    {roundScore >= 0 && guessedDistance ? (
+                    {roundScore >= 0 && roundGuessedDistance ? (
                         <div className="result-modal-container-item">
                             <h3>Přesnost v rámci kola</h3>
-                            {roundScore >= 0 && guessedDistance ? <Progress percent={roundScore} /> : null}
+                            {roundScore >= 0 && roundGuessedDistance ? <Progress percent={roundScore} /> : null}
                         </div>
                     ) : null}
                     {totalRoundScore >= 0 ? (
@@ -66,24 +66,24 @@ const RoundResultModal = ({
                         </div>
                     ) : null}
                 </div>
-                {guessedPlace && guessedDistance ? (
+                {guessedRandomPlace && roundGuessedDistance ? (
                     <div className="result-modal-container-item">
                         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
                             <h3>Bližší informace</h3>
                             <p>
                                 <b>Obec:</b>
                                 {' '}
-                                {guessedPlace.obec}
+                                {guessedRandomPlace.obec}
                             </p>
                             <p>
                                 <b>Okres:</b>
                                 {' '}
-                                {guessedPlace.okres}
+                                {guessedRandomPlace.okres}
                             </p>
                             <p>
                                 <b>Kraj:</b>
                                 {' '}
-                                {guessedPlace.kraj}
+                                {guessedRandomPlace.kraj}
                             </p>
                         </div>
                     </div>

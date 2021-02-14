@@ -199,5 +199,5 @@ export const getIsRoundActive = (guessedTime, countdown) => {
         const roundExpirationTime = guessedTime + countdown;
         return isBefore(new Date(), getDateFromUnixTimestamp(roundExpirationTime));
     }
-    return false;
+    return true;
 };

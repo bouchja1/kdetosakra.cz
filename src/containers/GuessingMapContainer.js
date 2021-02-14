@@ -1,5 +1,5 @@
 import React, {
-    useContext, useEffect, useRef, useState
+    useContext, useEffect, useRef, useState, useMemo
 } from 'react';
 import { writeStorage } from '@rehooks/local-storage';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,7 +11,7 @@ import GuessLimitModal from '../components/GuessLimitModal';
 import { incrementMyTotalScore } from '../redux/actions/battle';
 import GuessingMap from '../components/GuessingMap';
 import { addGuessedRoundToPlayer, updateBattleRound } from '../services/firebase';
-import { getUnixTimestamp } from '../util';
+import { findUserFromBattleByRandomTokenId, getUnixTimestamp } from '../util';
 import gameModes from '../enums/modes';
 import { MAX_SCORE_PERCENT, MIN_DISTANCE_FOR_POINTS_RANDOM } from '../constants/game';
 import { MARKER_PLACE_ICON_KDETOSAKRA } from '../constants/icons';
@@ -66,10 +66,10 @@ export const GuessingMapContainer = ({
         myTotalScore,
         round: battleRound,
         rounds,
+        players,
     } = currentBattleInfo;
 
     useEffect(() => {
-        console.log('-----------');
         const setCommonVars = (modeVar, radiusVar, totalScoreVar, roundVar) => {
             setMode(modeVar);
             setRadius(radiusVar);
@@ -92,17 +92,25 @@ export const GuessingMapContainer = ({
         }
     }, [isBattle, isGameStarted, currentGame, currentBattleInfo]);
 
+    const guessingMapButtonVisible = useMemo(() => {
+        console.log('CUUURENT ROUND BATTLE: ', currentRoundBattle);
+        if (isBattle && currentRoundBattle) {
+            const { isRoundActive } = currentRoundBattle;
+            if (!isRoundActive) {
+                return false;
+            }
+
+            const myUser = findUserFromBattleByRandomTokenId(players, randomUserToken);
+            return !myUser[`round${battleRound}`];
+        }
+        return true;
+    }, [currentRoundBattle]);
+
     const guessBattleRound = () => {
         const guessedRoundPoint = calculateCoordsAndDrawGuess();
-        const guessedCurrentRound = rounds[battleRound - 1];
-        const { isGuessed, isRoundActive } = guessedCurrentRound;
+        const { isGuessed, isRoundActive } = currentRoundBattle;
 
-        /*
-        if (isGuessed && !isRoundActive) {
-            setShowGuessLimitModal(true);
-        } else {
-
-         */
+        // TODO omezit nejak, aby se nemohlo hadat po skonceni casovyho limitu?
 
         evaluateGuessedRound(guessedRoundPoint);
         const {
@@ -146,10 +154,9 @@ export const GuessingMapContainer = ({
                 .then(res => {})
                 .catch(err => {});
         }
-        // }
     };
 
-    const guessRound = () => {
+    const guessSingleplayerRound = () => {
         const guessedRoundPoint = calculateCoordsAndDrawGuess();
         evaluateGuessedRound(guessedRoundPoint);
     };
@@ -301,8 +308,6 @@ export const GuessingMapContainer = ({
         return null;
     };
 
-    console.log('NOOOOOOOOOO');
-
     return (
         <>
             <div id="smap-container" className="smap-container" style={getSMapCollapseMax()}>
@@ -319,20 +324,22 @@ export const GuessingMapContainer = ({
                     refVectorLayerSMapValue={refVectorLayerSMapValue}
                     saveCurrentClickedMapPointCoordinates={saveCurrentClickedMapPointCoordinates}
                 />
-                <GuessingMapButton
-                    refreshMap={refreshMap}
-                    isBattle={isBattle}
-                    guessBattleRound={guessBattleRound}
-                    guessRound={guessRound}
-                    allGuessedPoints={allGuessedPoints}
-                    round={round}
-                    totalScore={totalScore}
-                    roundGuessed={roundGuessed}
-                    disabled={guessButtonDisabled || panoramaLoading || !isGameStarted}
-                    currentRound={isBattle ? currentRoundBattle : currentGame.round}
-                    currentGame={currentGame}
-                    nextRoundButtonVisible={nextRoundButtonVisible}
-                />
+                {guessingMapButtonVisible && (
+                    <GuessingMapButton
+                        refreshMap={refreshMap}
+                        isBattle={isBattle}
+                        guessBattleRound={guessBattleRound}
+                        guessSingleplayerRound={guessSingleplayerRound}
+                        allGuessedPoints={allGuessedPoints}
+                        round={round}
+                        totalScore={totalScore}
+                        roundGuessed={roundGuessed}
+                        disabled={guessButtonDisabled || panoramaLoading || !isGameStarted}
+                        currentRound={isBattle ? currentRoundBattle : currentGame.round}
+                        currentGame={currentGame}
+                        nextRoundButtonVisible={nextRoundButtonVisible}
+                    />
+                )}
             </div>
             {!maximized && (
                 <div className="smap-container" style={getSMapCollapseMin()}>

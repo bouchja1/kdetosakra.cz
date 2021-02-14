@@ -9,7 +9,7 @@ import { setLastResult } from '../../redux/actions/result';
 const GuessingMapButton = ({
     refreshMap,
     isBattle,
-    guessRound,
+    guessSingleplayerRound,
     allGuessedPoints,
     guessBattleRound,
     round,
@@ -52,7 +52,11 @@ const GuessingMapButton = ({
                 <>
                     {/* TODO vyresit isGuessed && !isRoundActive */}
                     {!nextRoundButtonVisible ? (
-                        <Button disabled={disabled} onClick={isBattle ? guessBattleRound : guessRound} type="primary">
+                        <Button
+                            disabled={disabled}
+                            onClick={isBattle ? guessBattleRound : guessSingleplayerRound}
+                            type="primary"
+                        >
                             Hádej!
                         </Button>
                     ) : null}

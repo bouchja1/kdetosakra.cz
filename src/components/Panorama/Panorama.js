@@ -15,7 +15,7 @@ const Panorama = ({
     refPanoramaView,
     panoramaPlace,
     panoramaLoading,
-    makeSetPanoramaLoading,
+    changePanoramaLoadingState,
     isGameStarted,
 }) => {
     const mapyContext = useContext(MapyCzContext);
@@ -39,14 +39,14 @@ const Panorama = ({
                     .then(
                         place => {
                             panoramaScene.show(place);
-                            makeSetPanoramaLoading(false);
+                            changePanoramaLoadingState(false);
                         },
                         () => {
                             // panorama could not be shown
                             if (findPanoramaTriesCounter < MAX_PANORAMA_TRIES) {
                                 setFindPanoramaTriesCounter(findPanoramaTriesCounter + 1);
                             } else {
-                                makeSetPanoramaLoading(false);
+                                changePanoramaLoadingState(false);
                                 throw new Error('Panorama was not found');
                             }
                         },
@@ -55,7 +55,7 @@ const Panorama = ({
                         setPanoramaFounded(false);
                     });
             };
-            makeSetPanoramaLoading(true);
+            changePanoramaLoadingState(true);
             getBestPanorama();
         }
     }, [mapyContext.loadedMapApi, panoramaScene, panoramaPlace, isGameStarted, findPanoramaTriesCounter]);
