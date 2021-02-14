@@ -158,10 +158,8 @@ export const addRoundBatchToBattleRounds = async (battleId, roundsArray) => {
     // Commit the batch
     return batch
         .commit()
-        .then(res => {
-            console.log('JOOOO BATCH COMMITNUTA: ', res);
-        })
-        .catch(err => console.log('EEER BATCH: ', err));
+        .then(res => {})
+        .catch(err => {});
 };
 
 /**

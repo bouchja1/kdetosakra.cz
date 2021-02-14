@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import { deleteNotPreparedBattlePlayers, updateBattle } from '../../services/firebase';
 
-const BattleSettings = () => {
+const BattleSettings = ({ battleCanBeStarted }) => {
     const { battleId } = useParams();
     const randomUserToken = useGetRandomUserToken();
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
@@ -54,6 +54,7 @@ const BattleSettings = () => {
                     ze hry vyhozeni.
                 </p>
                 <Button
+                    disabled={!battleCanBeStarted}
                     type="primary"
                     onClick={() => {
                         deleteNotPreparedBattlePlayers(battleId)

@@ -53,7 +53,7 @@ export const SingleResult = ({ renderPlayAgainButton }) => {
                     </div>
                 </div>
                 {renderPlayAgainButton}
-                <ResultSMap guessedPoints={guessedPoints} isBattle={false} mode={mode} city={city} radius={radius} />
+                <ResultSMap guessedPoints={guessedPoints} mode={mode} city={city} radius={radius} />
             </>
         );
     }

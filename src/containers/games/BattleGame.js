@@ -112,10 +112,6 @@ export const Battle = ({ type }) => {
             } = battleFromFirestore;
 
             const sortedBattleRounds = sortBattleRoundsById(battleRoundsFromFirestore).map(roundDetail => {
-                console.log(
-                    'NOOOO ACTIVEE????: ',
-                    getIsRoundActive(roundDetail.guessedTime, currentBattleInfo.countdown),
-                );
                 return {
                     ...roundDetail,
                     isRoundActive: getIsRoundActive(roundDetail.guessedTime, currentBattleInfo.countdown),
@@ -199,8 +195,6 @@ export const Battle = ({ type }) => {
         });
         return unsubscribe;
     }, [battleId, setBattleFromFirestore]);
-
-    // console.log('current battle info: ', currentBattleInfo);
 
     if (notFound || localUserForbidden) {
         return (

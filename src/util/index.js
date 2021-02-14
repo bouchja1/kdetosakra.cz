@@ -100,6 +100,10 @@ export const getRandomCzechPlace = () => {
     return randomCity;
 };
 
+/**
+ * https://www.kirupa.com/html5/picking_random_item_from_array.htm
+ * @returns {string}
+ */
 export const getRandomNickname = () => {
     return randomNicknames[Math.floor(Math.random() * randomNicknames.length)];
 };

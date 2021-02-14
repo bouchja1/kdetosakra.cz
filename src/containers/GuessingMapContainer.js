@@ -69,6 +69,30 @@ export const GuessingMapContainer = ({
         players,
     } = currentBattleInfo;
 
+    /*
+    When the round is changed
+     */
+    useEffect(() => {
+        if (round && rounds.length) {
+            setCurrentRoundBattle(rounds[round - 1]);
+            if (currentRoundGuessedPoint) {
+                setRoundGuessed(true);
+            } else {
+                // when a new round is switched to
+                if (refLayerValue.current) {
+                    refLayerValue.current.removeAll();
+                }
+                if (refVectorLayerSMapValue.current) {
+                    refVectorLayerSMapValue.current.removeAll();
+                }
+                setGuessButtonDisabled(true);
+                setNextRoundButtonVisible(false);
+                setRoundGuessed(false);
+                window.scrollTo(0, 0);
+            }
+        }
+    }, [round, rounds, currentRoundGuessedPoint]);
+
     useEffect(() => {
         const setCommonVars = (modeVar, radiusVar, totalScoreVar, roundVar) => {
             setMode(modeVar);
@@ -79,7 +103,6 @@ export const GuessingMapContainer = ({
 
         if (isBattle && isGameStarted) {
             setCommonVars(battleMode, battleRadius, myTotalScore, battleRound);
-            setCurrentRoundBattle(rounds[round - 1]);
         } else {
             const {
                 mode: currentGameMode,
@@ -93,8 +116,11 @@ export const GuessingMapContainer = ({
     }, [isBattle, isGameStarted, currentGame, currentBattleInfo]);
 
     const guessingMapButtonVisible = useMemo(() => {
-        console.log('CUUURENT ROUND BATTLE: ', currentRoundBattle);
-        if (isBattle && currentRoundBattle) {
+        if (isBattle) {
+            if (!currentRoundBattle) {
+                return false;
+            }
+
             const { isRoundActive } = currentRoundBattle;
             if (!isRoundActive) {
                 return false;
@@ -108,9 +134,9 @@ export const GuessingMapContainer = ({
 
     const guessBattleRound = () => {
         const guessedRoundPoint = calculateCoordsAndDrawGuess();
-        const { isGuessed, isRoundActive } = currentRoundBattle;
+        const { isGuessed } = currentRoundBattle;
 
-        // TODO omezit nejak, aby se nemohlo hadat po skonceni casovyho limitu?
+        // FIXME: check if I am not making a guess after time expiration
 
         evaluateGuessedRound(guessedRoundPoint);
         const {
@@ -147,7 +173,7 @@ export const GuessingMapContainer = ({
                     });
                 })
                 .then(res => {})
-                .catch(err => console.log('EEEEERRR: ', err));
+                .catch(err => {});
         } else {
             // spocti rozdil mezi guessedtime a timeoutem
             addGuessedRoundToPlayer(battleId, myDocumentId, playerRoundGuess)
@@ -281,10 +307,8 @@ export const GuessingMapContainer = ({
      */
     const refreshMap = () => {
         findNewPanorama();
-        /*
         refLayerValue.current.removeAll();
         refVectorLayerSMapValue.current.removeAll();
-         */
         setNextRoundButtonVisible(false);
         setGuessButtonDisabled(true);
         setRoundGuessed(false);
@@ -321,6 +345,7 @@ export const GuessingMapContainer = ({
                     currentRoundGuessedPoint={currentRoundGuessedPoint}
                     isBattle={isBattle}
                     refLayerValue={refLayerValue}
+                    roundGuessed={roundGuessed}
                     refVectorLayerSMapValue={refVectorLayerSMapValue}
                     saveCurrentClickedMapPointCoordinates={saveCurrentClickedMapPointCoordinates}
                 />

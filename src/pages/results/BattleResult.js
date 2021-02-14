@@ -119,11 +119,9 @@ export const BattleResult = ({ renderPlayAgainButton }) => {
                     </div>
                 </div>
                 {renderPlayAgainButton}
-                {/* FIXME - isBattle={false} - map is not shown otherwise */}
                 {activePlayerStructure && (
                     <ResultSMap
                         guessedPoints={activePlayerStructure.guessedPoints}
-                        isBattle={false}
                         mode={mode}
                         city={city}
                         radius={radius}

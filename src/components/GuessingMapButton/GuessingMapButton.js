@@ -30,7 +30,7 @@ const GuessingMapButton = ({
                     onClick={() => {
                         dispatch(
                             setLastResult({
-                                allGuessedPoints,
+                                guessedPoints: allGuessedPoints,
                                 totalScore,
                                 mode: currentGame?.mode,
                                 city: currentGame?.city,
@@ -50,7 +50,6 @@ const GuessingMapButton = ({
                 </Button>
             ) : (
                 <>
-                    {/* TODO vyresit isGuessed && !isRoundActive */}
                     {!nextRoundButtonVisible ? (
                         <Button
                             disabled={disabled}

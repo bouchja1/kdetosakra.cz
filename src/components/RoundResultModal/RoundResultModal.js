@@ -55,13 +55,13 @@ const RoundResultModal = ({
                 <div className="result-modal-container-row">
                     {roundScore >= 0 && roundGuessedDistance ? (
                         <div className="result-modal-container-item">
-                            <h3>Přesnost v rámci kola</h3>
+                            <h4>Přesnost v rámci kola</h4>
                             {roundScore >= 0 && roundGuessedDistance ? <Progress percent={roundScore} /> : null}
                         </div>
                     ) : null}
                     {totalRoundScore >= 0 ? (
                         <div className="result-modal-container-item">
-                            <h3>Průběžný počet bodů</h3>
+                            <h4>Průběžný počet bodů</h4>
                             {roundToTwoDecimal(totalRoundScore)}
                         </div>
                     ) : null}

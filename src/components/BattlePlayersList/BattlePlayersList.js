@@ -72,24 +72,14 @@ const generateRounds = currentBattleInfo => {
     }
 };
 
-const BattlePlayersList = ({ myPlayer }) => {
+const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
     const dispatch = useDispatch();
     const randomUserToken = useGetRandomUserToken();
     const { battleId } = useParams();
-    const [battleCanBeStarted, setBattleCanBeStarted] = useState(false);
     const currentBattlePlayers = useSelector(state => state.battle.currentBattle.players);
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
 
     const isBattleCreator = currentBattleInfo.createdById !== null && currentBattleInfo.createdById === randomUserToken;
-
-    // all players are ready! lets start the game - multiplayer game is being started!
-    useEffect(() => {
-        const { isGameStarted } = currentBattleInfo;
-        const readyPlayers = currentBattlePlayers.filter(player => player.isReady);
-        if (!isGameStarted && currentBattlePlayers.length > 1 && readyPlayers.length === currentBattlePlayers.length) {
-            setBattleCanBeStarted(true);
-        }
-    }, [currentBattlePlayers, currentBattleInfo]);
 
     const startNextBattleRound = (updatedBattleId, nextRoundNumber) => {
         updateBattle(updatedBattleId, {
@@ -97,9 +87,7 @@ const BattlePlayersList = ({ myPlayer }) => {
             round: nextRoundNumber,
         })
             .then(docRef => {})
-            .catch(err => {
-                console.log('NOOOOOOO ERROR: ', err);
-            });
+            .catch(err => {});
     };
 
     const getOngoingPlayersOrder = round => {
@@ -115,7 +103,7 @@ const BattlePlayersList = ({ myPlayer }) => {
         return playersRoundResultsSorted.map((player, i) => {
             return (
                 <>
-                    <div key={i} className="battle-players-detail-result">
+                    <div key={`ongoing-battle-players-detail-${i}`} className="battle-players-detail-result">
                         <div className="battle-players-detail-player-result">
                             <div
                                 className={`battle-players-detail-player-result--name ${
@@ -141,7 +129,7 @@ const BattlePlayersList = ({ myPlayer }) => {
             const currentPlayerRound = player[`round${round}`];
             return (
                 <>
-                    <div key={i} className="battle-players-detail">
+                    <div key={`guessing-battle-players-detail-${i}`} className="battle-players-detail">
                         <div
                             className={`battle-players-detail--name ${
                                 myPlayer?.userId === userId ? 'highlighted' : ''
@@ -168,6 +156,7 @@ const BattlePlayersList = ({ myPlayer }) => {
 
     const getManagedRoundButton = round => {
         if (round >= TOTAL_ROUNDS_MAX) {
+            console.log('currentBattleInfocurrentBattleInfo: ', currentBattleInfo);
             return (
                 <Button
                     type="primary"
@@ -249,7 +238,7 @@ const BattlePlayersList = ({ myPlayer }) => {
             const { name, isReady, userId } = player;
             return (
                 <>
-                    <div key={i} className="battle-players-detail">
+                    <div key={`waiting-battle-players-detail-${i}`} className="battle-players-detail">
                         <div
                             className={`battle-players-detail--name ${
                                 myPlayer?.userId === userId ? 'highlighted' : ''

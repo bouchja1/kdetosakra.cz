@@ -11,7 +11,9 @@ const BattlePlayersPanel = () => {
     const randomUserToken = useGetRandomUserToken();
     const { width } = useSMapResize();
     const currentBattlePlayers = useSelector(state => state.battle.currentBattle.players);
+    const currentBattleInfo = useSelector(state => state.battle.currentBattle);
     const [myPlayer, setMyPlayer] = useState();
+    const [battleCanBeStarted, setBattleCanBeStarted] = useState(false);
 
     const usersSidebarWidth = width / 6;
 
@@ -20,11 +22,20 @@ const BattlePlayersPanel = () => {
         setMyPlayer(findUserFromBattleByRandomTokenId(currentBattlePlayers, randomUserToken));
     }, [currentBattlePlayers]);
 
+    // all players are ready! lets start the game - multiplayer game is being started!
+    useEffect(() => {
+        const { isGameStarted } = currentBattleInfo;
+        const readyPlayers = currentBattlePlayers.filter(player => player.isReady);
+        if (!isGameStarted && currentBattlePlayers.length > 1 && readyPlayers.length === currentBattlePlayers.length) {
+            setBattleCanBeStarted(true);
+        }
+    }, [currentBattlePlayers, currentBattleInfo]);
+
     return (
         <>
             <div className="battle-users-container" style={{ width: usersSidebarWidth }}>
-                <BattlePlayersList myPlayer={myPlayer} />
-                <BattleSettings />
+                <BattlePlayersList myPlayer={myPlayer} battleCanBeStarted={battleCanBeStarted} />
+                <BattleSettings battleCanBeStarted={battleCanBeStarted} />
             </div>
         </>
     );

@@ -69,10 +69,7 @@ const drawResultPathToLayer = (SMap, layerWithMarks, vectorLayer, point, pathCol
     layerWithMarks.addMarker(markerPanorama);
 };
 
-export const drawAllResultsLayerToMap = (SMap, mapInstance, layerWithMarks, guessedPoints) => {
-    const vectorLayer = new SMap.Layer.Geometry();
-    mapInstance.addLayer(vectorLayer);
-    vectorLayer.enable();
+export const drawAllResultsLayerToMap = (SMap, mapInstance, layerWithMarks, vectorLayer, guessedPoints) => {
     for (let i = 0; i < guessedPoints.length; i++) {
         const pointsObject = guessedPoints[i];
         // `Panorama ${i + 1}`
