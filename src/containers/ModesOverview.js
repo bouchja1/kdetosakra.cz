@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Typography } from 'antd';
+import { Card } from 'antd';
 import {
     CustomPlace, RegionCity, RandomCity, Geolocation
 } from './modes';
@@ -10,8 +10,6 @@ import geolocationCover from '../assets/images/city/geolocation.jpg';
 import youtubeCover from '../assets/images/youtube.jpg';
 import useSMapResize from '../hooks/useSMapResize';
 import useGetRandomUserToken from '../hooks/useGetRandomUserToken';
-
-const { Text } = Typography;
 
 export const ModesOverview = () => {
     useGetRandomUserToken();
@@ -63,7 +61,7 @@ export const ModesOverview = () => {
                     Nechce se ti dneska nikam klikat? No tak se můžeš jen koukat a hraní nechat na druhých! Komunita
                     skvělých fanoušků totiž natáčí, komentuje a sdílí svá videa z toulání se po mapě na
                     {' '}
-                    <Text className="highlighted">YouTube</Text>
+                    <b>YouTube</b>
                     .
                 </p>
                 <h3>YouTube kanály</h3>

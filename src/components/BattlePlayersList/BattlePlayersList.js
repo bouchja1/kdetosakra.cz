@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import {
-    Button, Spin, Typography, Progress, Tooltip
+    Button, Spin, Progress, Tooltip
 } from 'antd';
 import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { CheckCircleTwoTone } from '@ant-design/icons';
 import { addRoundBatchToBattleRounds, updateBattle, updateBattlePlayer } from '../../services/firebase';
 import {
-    findUserFromBattleByRandomTokenId,
     generatePlaceInRadius,
     generateRandomRadius,
     getRandomCzechPlace,
@@ -18,8 +17,6 @@ import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
 import gameModes from '../../enums/modes';
 import { setLastResult } from '../../redux/actions/result';
-
-const { Title } = Typography;
 
 const generateRounds = currentBattleInfo => {
     const generatedRounds = [];
@@ -75,21 +72,15 @@ const generateRounds = currentBattleInfo => {
     }
 };
 
-const BattlePlayersList = ({ makeStartNextBattleRound }) => {
+const BattlePlayersList = ({ makeStartNextBattleRound, myPlayer }) => {
     const dispatch = useDispatch();
     const randomUserToken = useGetRandomUserToken();
     const { battleId } = useParams();
-    const [myPlayer, setMyPlayer] = useState();
     const [battleCanBeStarted, setBattleCanBeStarted] = useState(false);
     const currentBattlePlayers = useSelector(state => state.battle.currentBattle.players);
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
 
     const isBattleCreator = currentBattleInfo.createdById !== null && currentBattleInfo.createdById === randomUserToken;
-
-    useEffect(() => {
-        // find my user
-        setMyPlayer(findUserFromBattleByRandomTokenId(currentBattlePlayers, randomUserToken));
-    }, [currentBattlePlayers]);
 
     // all players are ready! lets start the game - multiplayer game is being started!
     useEffect(() => {
@@ -115,7 +106,13 @@ const BattlePlayersList = ({ makeStartNextBattleRound }) => {
                 <>
                     <div key={i} className="battle-players-detail-result">
                         <div className="battle-players-detail-player-result">
-                            <div className="battle-players-detail-player-result--name">{player.name}</div>
+                            <div
+                                className={`battle-players-detail-player-result--name ${
+                                    myPlayer?.userId === player.userId ? 'highlighted' : ''
+                                }`}
+                            >
+                                {player.name}
+                            </div>
                         </div>
                         <div className="battle-players-detail--status">
                             <Progress percent={player.score} />
@@ -129,12 +126,18 @@ const BattlePlayersList = ({ makeStartNextBattleRound }) => {
     const getGuessingBattlePlayers = round => {
         const players = currentBattlePlayers ?? [];
         return players.map((player, i) => {
-            const { name } = player;
+            const { name, userId } = player;
             const currentPlayerRound = player[`round${round}`];
             return (
                 <>
                     <div key={i} className="battle-players-detail">
-                        <div className="battle-players-detail--name">{name}</div>
+                        <div
+                            className={`battle-players-detail--name ${
+                                myPlayer?.userId === userId ? 'highlighted' : ''
+                            }`}
+                        >
+                            {name}
+                        </div>
                         <div className="battle-players-detail--status">
                             {currentPlayerRound?.score ? (
                                 <Tooltip title="Hráč umístil tip">
@@ -214,7 +217,7 @@ const BattlePlayersList = ({ makeStartNextBattleRound }) => {
         if (isGuessed && !isRoundActive) {
             return (
                 <>
-                    <Title level={5}>Pořadí kola:</Title>
+                    <h3>Pořadí kola</h3>
                     <div className="battle-players">{battleId && getOngoingPlayersOrder(round)}</div>
                     {getManagedRoundButton(round)}
                 </>
@@ -223,7 +226,7 @@ const BattlePlayersList = ({ makeStartNextBattleRound }) => {
 
         return (
             <>
-                <Title level={5}>Hráči hádají:</Title>
+                <h3>Hráči hádají</h3>
                 <div className="battle-players">{battleId && getGuessingBattlePlayers(round)}</div>
             </>
         );
@@ -236,7 +239,13 @@ const BattlePlayersList = ({ makeStartNextBattleRound }) => {
             return (
                 <>
                     <div key={i} className="battle-players-detail">
-                        <div className="battle-players-detail--name">{name}</div>
+                        <div
+                            className={`battle-players-detail--name ${
+                                myPlayer?.userId === userId ? 'highlighted' : ''
+                            }`}
+                        >
+                            {name}
+                        </div>
                         {currentBattleInfo.createdById === userId ? (
                             <div className="battle-players-detail--status">
                                 {currentBattleInfo.isGameStarted ? (
@@ -275,7 +284,7 @@ const BattlePlayersList = ({ makeStartNextBattleRound }) => {
                 <>{getPlayersInActiveGame()}</>
             ) : (
                 <>
-                    <Title level={5}>Hráči:</Title>
+                    <h3>Hráči</h3>
                     <div className="battle-players">{battleId && getPlayersBeforeGameStarted()}</div>
                     {isBattleCreator ? (
                         <Button

@@ -1,11 +1,9 @@
-import { Button, Slider, Typography } from 'antd';
+import { Button, Slider } from 'antd';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import { deleteNotPreparedBattlePlayers, updateBattle } from '../../services/firebase';
-
-const { Title } = Typography;
 
 const BattleSettings = () => {
     const { battleId } = useParams();
@@ -24,9 +22,17 @@ const BattleSettings = () => {
     if (isBattleCreator && !isGameStarted) {
         return (
             <div className="battle-settings">
-                <Title level={5}>Nastavení hry:</Title>
+                <h3>Nastavení hry</h3>
+                <h4>Změnit odpočet</h4>
                 {currentBattleInfo.withCountdown && (
                     <>
+                        <Slider
+                            min={30}
+                            max={300}
+                            onAfterChange={value => updateBattleSettings({ countdown: value })}
+                            defaultValue={currentBattleInfo.countdown}
+                            step={15}
+                        />
                         <p>
                             Odpočet do konce hracího kola po tipu nejrychlejšího hráče:
                             {' '}
@@ -37,20 +43,15 @@ const BattleSettings = () => {
                             </b>
                             .
                         </p>
-                        <Slider
-                            min={30}
-                            max={300}
-                            onAfterChange={value => updateBattleSettings({ countdown: value })}
-                            defaultValue={currentBattleInfo.countdown}
-                            step={15}
-                        />
                     </>
                 )}
+                <h4>Pokročilé</h4>
                 <p>
-                    Admin může začít hru ihned bez čekání na potvrzení zbylých hráčů. Ti, co nezvolili možnost
+                    Lze začít bez čekání na potvrzení všech hráčů. Ti, co nezvolili možnost
                     {' '}
                     <b>Připraven</b>
-                    , budou ale ze hry vyhozeni.
+                    , budou ale
+                    ze hry vyhozeni.
                 </p>
                 <Button
                     type="primary"

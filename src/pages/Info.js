@@ -1,20 +1,18 @@
 import React from 'react';
 import { GithubOutlined } from '@ant-design/icons';
-import { Typography, Layout } from 'antd';
+import { Layout } from 'antd';
 import { Link } from 'react-router-dom';
 import { decryptEmail } from '../util';
 
 const { Content } = Layout;
-const { Title, Paragraph, Text } = Typography;
 
 export const Info = () => {
     return (
         <Content>
-            <Typography className="about-container">
-                <Paragraph>
-                    <Text className="highlighted">kdetosakra.cz</Text>
-                    {' '}
-                    je zeměpisná online hra a česká
+            <div className="about-container">
+                <h2>O hře</h2>
+                <p>
+                    kdetosakra.cz je zeměpisná online hra a česká
                     {' '}
                     <a href="https://github.com/bouchja1/kdetosakra.cz" target="_blank" rel="noopener noreferrer">
                         open-source
@@ -28,27 +26,27 @@ export const Info = () => {
                         GeoGuessr
                     </a>
                     .
-                </Paragraph>
-                <Paragraph>
+                </p>
+                <p>
                     Hra využívá panoramata a mapové podklady aplikace
                     {' '}
                     <a href="https://api.mapy.cz/" target="_blank">
                         Mapy.cz od Seznamu
                     </a>
                     . Hratelnost je takřka neomezená a jedinými limity jsou hranice České republiky 🇨🇿
-                </Paragraph>
-                <Title level={3}>Jak hrát?</Title>
-                <Paragraph>
+                </p>
+                <h3>Jak hrát?</h3>
+                <p>
                     Hra nabízí
                     {' '}
-                    <Text className="highlighted">čtyři herní módy</Text>
-                    . Vaším úkolem je vypátrat v
-                    několika kolech &quot;vaši&quot; polohu v různých místech České republiky. Pátrání začínáte v
-                    náhodně vygenerovaném panoramatickém snímku a v přiložené mapě se snažíte s co nejvyšší přesností
-                    určit, kde (v panoramatu) se právě nacházíte.
-                </Paragraph>
-                <Paragraph>Čím blíž svůj odhad na mapě umístíte, tím víc bodů v herním kole získáte.</Paragraph>
-                <Paragraph>
+                    <b>čtyři herní módy</b>
+                    . Vaším úkolem je vypátrat v několika kolech &quot;vaši&quot;
+                    polohu v různých místech České republiky. Pátrání začínáte v náhodně vygenerovaném panoramatickém
+                    snímku a v přiložené mapě se snažíte s co nejvyšší přesností určit, kde (v panoramatu) se právě
+                    nacházíte.
+                </p>
+                <p>Čím blíž svůj odhad na mapě umístíte, tím víc bodů v herním kole získáte.</p>
+                <p>
                     Pokud zvolíte jiný herní mód než
                     {' '}
                     <Link
@@ -60,15 +58,15 @@ export const Info = () => {
                     </Link>
                     , hra předpokládá, že vybrané okolí alespoň trochu znáte. Proto je za nepřesný odhad vyšší bodová
                     penalizace než u náhodně generovaných míst.
-                </Paragraph>
-                <Paragraph>
+                </p>
+                <p>
                     Hádání není časově omezeno. Pro přesnější odhad a lepší výsledek se tak můžete v panoramatu
                     libovolně pohybovat a dostat se až na místo, které je vám povědomé. Nebo spatříte název místa na
                     billboardu. Nebo dojedete až k ceduli označující název obce... nebo si vypracujete vlastní herní
                     strategii. To už je na vás.
-                </Paragraph>
-                <Title level={3}>O projektu</Title>
-                <Paragraph>
+                </p>
+                <h3>O projektu</h3>
+                <p>
                     Hru jsem naprogramoval koncem roku 2019 za účelem seznámení se s JS knihovnou React.js. Jedná se o
                     hobby projekt, který postupně vylepšuji. V plánu jsou i další rozšíření. Pokud vám hra dělá radost,
                     můžete
@@ -76,15 +74,15 @@ export const Info = () => {
                     <a href="https://www.buymeacoffee.com/mmwbwdq">podpořit její provoz nebo mi koupit kafe </a>
                     {' '}
                     ☕ ✌️️
-                </Paragraph>
-                <Paragraph>
+                </p>
+                <p>
                     Máte dotaz? Tak mi
                     {' '}
                     <a href={decryptEmail('amFuLmJvdWNobmVyQGdtYWlsLmNvbQ==')}>napište</a>
                     {' '}
                     ✉️.
-                </Paragraph>
-            </Typography>
+                </p>
+            </div>
         </Content>
     );
 };

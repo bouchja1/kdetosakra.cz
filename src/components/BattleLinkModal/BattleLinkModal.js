@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import {
-    Button, Input, Modal, Typography, Tooltip, Image, Spin
+    Button, Input, Modal, Tooltip, Image, Spin
 } from 'antd';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { CopyTwoTone } from '@ant-design/icons';
 import { createBattle } from '../../services/firebase';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
-
-const { Title } = Typography;
 
 const BattleLinkModal = ({
     visible, handleBattleModalVisibility, mode, radius, selectedCity,
@@ -29,17 +27,16 @@ const BattleLinkModal = ({
 
     return (
         <Modal visible={visible} footer={null} onCancel={handleCancel}>
-            <Title level={4}>Hra s přáteli (multiplayer)</Title>
-            <p>
-                Chceš hádat stejná místa se svými přáteli a třeba i soupeřit o to, kdo dané místo trefí přesněji?
-                {' '}
-                <b>Vygeneruj si pozvánku!</b>
-            </p>
+            <h2>Hra s přáteli (multiplayer)</h2>
+            <p>Hádej stejná místa se svými přáteli v reálném čase a soupeř o to, kdo bude rychlejší a přesnější.</p>
             {battleLink && (
                 <>
                     <p>
                         Odkaz z pozvánky zkopíruj, pošli přátelům a po jeho zadání do prohlížeče vstoupíte do té samé
-                        hry.
+                        hry. V jedné hře proti sobě může soupeřit až
+                        {' '}
+                        <b>5 hráčů</b>
+                        !
                     </p>
                     <div className="battle-link-container">
                         <Input value={battleLink} onChange={() => {}} />
@@ -77,17 +74,7 @@ const BattleLinkModal = ({
                     </div>
                 )}
             </Spin>
-            <p style={{ marginTop: '15px' }}>
-                Ten, kdo vygeneroval odkaz, má jako admin možnost zvolit na začátku styl hry - zda bude v každém kole po
-                tipu nejrychlejšího hráče zahájen
-                {' '}
-                <i>odpočet zbývajícího času pro tipy ostatních hráčů</i>
-                , nebo je
-                možné hrát
-                <i>bez odpočtu</i>
-                {' '}
-                a projít si tak beze spěchu stejná místa, která se budou generovat i ostatním.
-            </p>
+            <h3 style={{ marginTop: '20px', marginBottom: '10px' }}>Jak hru nastavit?</h3>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <Image
                     alt="Multiplayer před zahájením hry - pohled admina"

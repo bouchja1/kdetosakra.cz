@@ -1,7 +1,6 @@
 import React, {
-    useContext, useEffect, useRef, useState, useMemo
+    useContext, useEffect, useRef, useState
 } from 'react';
-import 'react-resizable/css/styles.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocalStorage, writeStorage } from '@rehooks/local-storage';
 import GuessingMap from '../components/GuessingMap';
@@ -169,9 +168,6 @@ export const GameScreen = ({
                     isGameStarted={isGameStarted}
                 />
             </div>
-            {/*
-                <img id="kdetosakra-logo" src={smilingLogo} alt="logo" className="kdetosakra-logo" width="15%" />
-                */}
             <div id="smap-container" className="smap-container" style={getSMapCollapseMax()}>
                 {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions */}
                 <img

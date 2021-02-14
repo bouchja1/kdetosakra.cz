@@ -3,7 +3,7 @@ import React from 'react';
 import { PersistGate } from 'redux-persist/integration/react';
 import ReactGA from 'react-ga';
 import { Provider } from 'react-redux';
-import { Layout, Typography } from 'antd';
+import { Layout } from 'antd';
 import { HeartTwoTone, CoffeeOutlined } from '@ant-design/icons';
 import * as Sentry from '@sentry/browser';
 import { useLocation } from 'react-router-dom';
@@ -16,7 +16,6 @@ import { MapyCzProvider } from './context/MapyCzContext';
 import Menu from './components/Menu';
 
 const { Footer } = Layout;
-const { Text } = Typography;
 
 function initializeReactGA() {
     ReactGA.initialize('UA-151784741-1');
@@ -46,7 +45,7 @@ function App() {
                         </MapyCzProvider>
                     )}
                     <Footer style={{ textAlign: 'center', fontSize: '14px' }}>
-                        <Text>
+                        <p>
                             Postaveno s
                             {' '}
                             <HeartTwoTone twoToneColor="#eb2f96" />
@@ -55,19 +54,17 @@ function App() {
                             {' '}
                             <a href="https://api.mapy.cz/">Mapy.cz API</a>
                             {' '}
-                        </Text>
-                        {!pathname.includes('info') && (
-                            <>
-                                {' | '}
-                                <Text>
+                            {!pathname.includes('info') && (
+                                <>
+                                    {' | '}
                                     <a href="https://www.buymeacoffee.com/mmwbwdq" target="_blank">
                                         Kup mi kafe - podpoříš provoz a další rozvoj
                                         {' '}
                                         <CoffeeOutlined />
                                     </a>
-                                </Text>
-                            </>
-                        )}
+                                </>
+                            )}
+                        </p>
                     </Footer>
                 </Layout>
             </PersistGate>

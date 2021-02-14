@@ -1,13 +1,11 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { Progress, Typography } from 'antd';
+import { Progress } from 'antd';
 import { roundToTwoDecimal } from '../../util';
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
 import ResultSMap from '../../components/ResultSMap';
 import { RoundsSummary } from './RoundsSummary';
-
-const { Title } = Typography;
 
 export const SingleResult = ({ renderPlayAgainButton }) => {
     const lastResult = useSelector(state => state.result);
@@ -22,7 +20,7 @@ export const SingleResult = ({ renderPlayAgainButton }) => {
                 <div className="result-container">
                     <div className="result-modal-container">
                         <div className="result-modal-container-item">
-                            <Title level={4}>Celkové skóre</Title>
+                            <h3>Celkové skóre</h3>
                             {totalScore}
                             {' '}
                             bodů
@@ -30,13 +28,13 @@ export const SingleResult = ({ renderPlayAgainButton }) => {
                     </div>
                     <div className="result-modal-container">
                         <div className="result-modal-container-item">
-                            <Title level={4}>Celková průměrná přesnost</Title>
+                            <h3>Celková průměrná přesnost</h3>
                             <Progress type="circle" percent={roundToTwoDecimal(totalScore / TOTAL_ROUNDS_MAX)} />
                         </div>
                     </div>
                     <div className="result-modal-container">
                         <div className="result-modal-container-item">
-                            <Title level={4}>Vzdálenost od hádaného místa (km)</Title>
+                            <h3>Vzdálenost od hádaného místa (km)</h3>
                             <div className="result-rounds-container">
                                 {guessedPoints.map((round, i) => {
                                     return (

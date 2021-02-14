@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Progress, Tabs, Typography } from 'antd';
+import { Progress, Tabs } from 'antd';
 import { Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { roundToTwoDecimal, sortPlayersByHighestScore } from '../../util';
@@ -9,7 +9,6 @@ import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import { RoundsSummary } from './RoundsSummary';
 
 const { TabPane } = Tabs;
-const { Title } = Typography;
 
 export const BattleResult = ({ renderPlayAgainButton }) => {
     const randomUserToken = useGetRandomUserToken();
@@ -66,7 +65,7 @@ export const BattleResult = ({ renderPlayAgainButton }) => {
                 <div className="result-container">
                     <div className="result-modal-container">
                         <div className="result-modal-container-item">
-                            <Title level={4}>Celková průměrná přesnost</Title>
+                            <h3>Celková průměrná přesnost</h3>
                             {activePlayerStructure && (
                                 <Progress
                                     type="circle"
@@ -77,7 +76,7 @@ export const BattleResult = ({ renderPlayAgainButton }) => {
                     </div>
                     <div className="result-modal-container">
                         <div className="result-modal-container-item">
-                            <Title level={4}>Pořadí a vzdálenost od hádaného místa (km)</Title>
+                            <h3>Pořadí a vzdálenost od hádaného místa (km)</h3>
                             <div className="result-rounds-container">
                                 <Tabs
                                     defaultActiveKey={`${getMyPlayerOrderToDefaultActiveTab()}`}

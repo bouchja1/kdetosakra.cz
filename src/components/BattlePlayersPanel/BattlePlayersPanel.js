@@ -10,7 +10,6 @@ import BattleSettings from '../BattleSettings';
 const BattlePlayersPanel = ({ makeStartNextBattleRound }) => {
     const randomUserToken = useGetRandomUserToken();
     const { width } = useSMapResize();
-    const currentBattleInfo = useSelector(state => state.battle.currentBattle);
     const currentBattlePlayers = useSelector(state => state.battle.currentBattle.players);
     const [myPlayer, setMyPlayer] = useState();
 
@@ -24,17 +23,7 @@ const BattlePlayersPanel = ({ makeStartNextBattleRound }) => {
     return (
         <>
             <div className="battle-users-container" style={{ width: usersSidebarWidth }}>
-                {!currentBattleInfo?.isGameStarted && (
-                    <>
-                        <p>
-                            Tuhle hru hraješ s přezdívkou
-                            {' '}
-                            <b>{myPlayer?.name}</b>
-                            .
-                        </p>
-                    </>
-                )}
-                <BattlePlayersList makeStartNextBattleRound={makeStartNextBattleRound} />
+                <BattlePlayersList makeStartNextBattleRound={makeStartNextBattleRound} myPlayer={myPlayer} />
                 <BattleSettings />
             </div>
         </>
