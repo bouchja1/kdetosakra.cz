@@ -77,7 +77,7 @@ const BattleLinkModal = ({
             </Spin>
             <div style={{ marginTop: '20px' }}>
                 <p>
-                    Náhled hry a herní princip je v
+                    Náhledy hry a herní princip je popsán v
                     {' '}
                     <Link
                         to={{
