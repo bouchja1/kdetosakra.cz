@@ -8,3 +8,4 @@ export const incrementMyTotalScore = createAction('@battle/INCREMENT_MY_TOTAL_SC
 export const removePlayerFromBattle = createAction('@battle/REMOVE_PLAYER_FROM_BATTLE')();
 export const resetCurrentBattle = createAction('@battle/RESET_CURRENT_BATTLE')();
 export const setIsRoundActive = createAction('@battle/SET_IS_ROUND_ACTIVE')();
+export const setMyUserInfoNicknameToCurrentBattle = createAction('@battle/SET_MY_USER_INFO_BATTLE_NICKNAME')();

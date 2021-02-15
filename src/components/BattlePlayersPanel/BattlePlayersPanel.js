@@ -35,7 +35,7 @@ const BattlePlayersPanel = () => {
         <>
             <div className="battle-users-container" style={{ width: usersSidebarWidth }}>
                 <BattlePlayersList myPlayer={myPlayer} battleCanBeStarted={battleCanBeStarted} />
-                <BattleSettings battleCanBeStarted={battleCanBeStarted} />
+                <BattleSettings />
             </div>
         </>
     );

@@ -43,7 +43,6 @@ export const Battle = ({ type }) => {
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
     const currentBattlePlayers = useSelector(state => state.battle.currentBattle.players);
     const randomUserToken = useGetRandomUserToken();
-    const [localUserForbidden, setLocalUserForbidden] = useState(false);
 
     useEffect(() => {
         if (battleId) {
@@ -86,14 +85,7 @@ export const Battle = ({ type }) => {
         if (battleId && currentBattleInfo.battleId && currentBattleInfo.battleId !== battleId) {
             dispatch(resetCurrentBattle());
         }
-        if (currentBattlePlayers && currentBattlePlayers.length && randomUserToken) {
-            const localUserMemberOfGameArray = currentBattlePlayers.filter(player => player.userId === randomUserToken);
-            if (currentBattleInfo.isGameStarted && !localUserMemberOfGameArray.length) {
-                setLocalUserForbidden(!localUserMemberOfGameArray.length);
-                dispatch(resetCurrentBattle());
-            }
-        }
-    }, [currentBattleInfo, currentBattlePlayers, randomUserToken, battleId, dispatch]);
+    }, [currentBattleInfo, battleId, dispatch]);
 
     // lets setup a new game or modify existing one
     useEffect(() => {
@@ -196,7 +188,17 @@ export const Battle = ({ type }) => {
         return unsubscribe;
     }, [battleId, setBattleFromFirestore]);
 
-    if (notFound || localUserForbidden) {
+    const checkLocalUserForbidden = () => {
+        if (currentBattlePlayers && currentBattlePlayers.length && randomUserToken) {
+            const localUserMemberOfGameArray = currentBattlePlayers.filter(player => player.userId === randomUserToken);
+            if (currentBattleInfo.isGameStarted && localUserMemberOfGameArray.length === 0) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    if (notFound || checkLocalUserForbidden()) {
         return (
             <Redirect
                 to={{

@@ -84,6 +84,7 @@ const Menu = () => {
                     mode={isBattle ? currentBattleInfo.mode : currentGame.mode}
                     isBattle={isBattle}
                     myPlayer={myPlayer}
+                    myNickname={currentBattleInfo?.myNickname}
                 />
             )}
         </div>

@@ -3,9 +3,11 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
-import { deleteNotPreparedBattlePlayers, updateBattle } from '../../services/firebase';
+import { generateRounds } from '../BattlePlayersList/BattlePlayersList';
+import { deleteNotPreparedBattlePlayers, updateBattle, updateBattlePlayer } from '../../services/firebase';
+import { getUnixTimestamp } from '../../util';
 
-const BattleSettings = ({ battleCanBeStarted }) => {
+const BattleSettings = () => {
     const { battleId } = useParams();
     const randomUserToken = useGetRandomUserToken();
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
@@ -54,11 +56,24 @@ const BattleSettings = ({ battleCanBeStarted }) => {
                     ze hry vyhozeni.
                 </p>
                 <Button
-                    disabled={!battleCanBeStarted}
                     type="primary"
                     onClick={() => {
-                        deleteNotPreparedBattlePlayers(battleId)
-                            .then(res => {})
+                        updateBattlePlayer(battleId, randomUserToken, {
+                            name: currentBattleInfo.myNickname,
+                            isReady: true,
+                        })
+                            .then(docRef => {
+                                // if the user is a battle creator, he will generate rounds here
+                                generateRounds(currentBattleInfo);
+                                return updateBattle(battleId, {
+                                    currentRoundStart: getUnixTimestamp(new Date()),
+                                    isGameStarted: true,
+                                    round: 1,
+                                });
+                            })
+                            .then(docRef => {
+                                return deleteNotPreparedBattlePlayers(battleId);
+                            })
                             .catch(err => {});
                     }}
                 >

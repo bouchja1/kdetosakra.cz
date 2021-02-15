@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
-    Button, Spin, Progress, Tooltip
+    Button, Spin, Progress, Tooltip, Input
 } from 'antd';
 import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { CheckCircleTwoTone } from '@ant-design/icons';
-import { addRoundBatchToBattleRounds, updateBattle, updateBattlePlayer } from '../../services/firebase';
+import {
+    addRoundBatchToBattleRounds,
+    deleteNotPreparedBattlePlayers,
+    updateBattle,
+    updateBattlePlayer,
+} from '../../services/firebase';
 import {
     generatePlaceInRadius,
     generateRandomRadius,
@@ -17,8 +22,9 @@ import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
 import gameModes from '../../enums/modes';
 import { setLastResult } from '../../redux/actions/result';
+import { setMyUserInfoNicknameToCurrentBattle } from '../../redux/actions/battle';
 
-const generateRounds = currentBattleInfo => {
+export const generateRounds = currentBattleInfo => {
     const generatedRounds = [];
     const {
         mode, battleId, radius, selectedCity,
@@ -76,10 +82,20 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
     const dispatch = useDispatch();
     const randomUserToken = useGetRandomUserToken();
     const { battleId } = useParams();
+    const inputEl = useRef(null);
     const currentBattlePlayers = useSelector(state => state.battle.currentBattle.players);
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
 
+    const [generatedName, setGeneratedName] = useState();
+
     const isBattleCreator = currentBattleInfo.createdById !== null && currentBattleInfo.createdById === randomUserToken;
+
+    useEffect(() => {
+        if (inputEl.current !== null) {
+            setGeneratedName(currentBattleInfo.myNickname);
+            inputEl.current.focus();
+        }
+    }, [inputEl.current]);
 
     const startNextBattleRound = (updatedBattleId, nextRoundNumber) => {
         updateBattle(updatedBattleId, {
@@ -189,9 +205,20 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
             return (
                 <>
                     <Button
-                        disabled={!battleCanBeStarted}
+                        disabled={
+                            !battleCanBeStarted
+                            || !currentBattleInfo.myNickname
+                            || currentBattleInfo.myNickname.length < 2
+                        }
                         type="primary"
                         onClick={() => {
+                            if (generatedName !== currentBattleInfo.myNickname) {
+                                updateBattlePlayer(battleId, randomUserToken, {
+                                    name: currentBattleInfo.myNickname,
+                                })
+                                    .then(docRef => {})
+                                    .catch(err => {});
+                            }
                             startNextBattleRound(battleId, round + 1);
                         }}
                     >
@@ -238,13 +265,21 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
             return (
                 <>
                     <div key={`waiting-battle-players-detail-${i}`} className="battle-players-detail">
-                        <div
-                            className={`battle-players-detail--name ${
-                                myPlayer?.userId === userId ? 'highlighted' : ''
-                            }`}
-                        >
-                            {name}
-                        </div>
+                        {myPlayer?.userId === userId ? (
+                            <Input
+                                bordered={false}
+                                size="small"
+                                maxLength={20}
+                                defaultValue={name}
+                                disabled={isBattleCreator ? false : isReady}
+                                ref={inputEl}
+                                onChange={e => {
+                                    dispatch(setMyUserInfoNicknameToCurrentBattle(e.target.value));
+                                }}
+                            />
+                        ) : (
+                            <div className="battle-players-detail--name">{name}</div>
+                        )}
                         {currentBattleInfo.createdById === userId ? (
                             <div className="battle-players-detail--status">
                                 {currentBattleInfo.isGameStarted ? (
@@ -291,12 +326,18 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
                             type="primary"
                             onClick={() => {
                                 // if the user is a battle creator, he will generate rounds here
-                                generateRounds(currentBattleInfo);
-                                updateBattle(battleId, {
-                                    currentRoundStart: getUnixTimestamp(new Date()),
-                                    isGameStarted: true,
-                                    round: 1,
+                                updateBattlePlayer(battleId, randomUserToken, {
+                                    name: currentBattleInfo.myNickname,
                                 })
+                                    .then(docRef => {
+                                        // if the user is a battle creator, he will generate rounds here
+                                        generateRounds(currentBattleInfo);
+                                        return updateBattle(battleId, {
+                                            currentRoundStart: getUnixTimestamp(new Date()),
+                                            isGameStarted: true,
+                                            round: 1,
+                                        });
+                                    })
                                     .then(docRef => {})
                                     .catch(err => {});
                             }}
@@ -305,10 +346,17 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
                         </Button>
                     ) : (
                         <Button
-                            disabled={myPlayer?.isReady}
+                            disabled={
+                                myPlayer?.isReady
+                                || !currentBattleInfo.myNickname
+                                || currentBattleInfo.myNickname.length < 2
+                            }
                             type="primary"
                             onClick={() => {
-                                updateBattlePlayer(battleId, randomUserToken, { isReady: true })
+                                updateBattlePlayer(battleId, randomUserToken, {
+                                    name: currentBattleInfo.myNickname,
+                                    isReady: true,
+                                })
                                     .then(docRef => {})
                                     .catch(err => {});
                             }}

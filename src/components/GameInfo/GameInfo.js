@@ -3,7 +3,7 @@ import { TOTAL_ROUNDS_MAX } from '../../constants/game';
 import { mapGameModeName } from '../../util';
 
 const GameInfo = ({
-    round, totalScore, mode, isBattle, myPlayer,
+    round, totalScore, mode, isBattle, myPlayer, myNickname,
 }) => {
     const roundInfo = useMemo(() => {
         return `${round ?? 0} / ${TOTAL_ROUNDS_MAX}`;
@@ -22,7 +22,7 @@ const GameInfo = ({
             {isBattle && (
                 <div className="menu-game-info-box">
                     <div className="menu-game-info-box-head">přezdívka</div>
-                    <div className="menu-game-info-box-item">{myPlayer?.name}</div>
+                    <div className="menu-game-info-box-item">{myNickname}</div>
                 </div>
             )}
             <div className="menu-game-info-box">

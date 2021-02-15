@@ -406,6 +406,13 @@ label {
     border-bottom: 1px solid #e1e3e8;
 }
 
+.battle-players-detail input[type='text'] {
+    padding: 0;
+    margin: 0;
+    font-size: 13px;
+    font-weight: bold;
+}
+
 .battle-players-detail-result {
     display: flex;
     flex: 1;
@@ -456,8 +463,16 @@ label {
 .battle-players-detail--status {
     display: flex;
     flex: 1;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
+}
+
+.battle-players-detail--status .ant-spin {
+    margin-right: 6px;
+}
+
+.battle-players-detail--status .anticon-check-circle {
+    margin-right: 5px;
 }
 
 .panorama {
