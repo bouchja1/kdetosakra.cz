@@ -64,7 +64,7 @@ export const BattleResult = ({ renderPlayAgainButton }) => {
             <>
                 <div className="result-container">
                     <div className="result-modal-container">
-                        <div className="result-modal-container-item">
+                        <div className="result-container-item">
                             <h3>Celková průměrná přesnost</h3>
                             {activePlayerStructure && (
                                 <Progress
@@ -75,7 +75,7 @@ export const BattleResult = ({ renderPlayAgainButton }) => {
                         </div>
                     </div>
                     <div className="result-modal-container">
-                        <div className="result-modal-container-item">
+                        <div className="result-container-item">
                             <h3>Pořadí a vzdálenost od hádaného místa (km)</h3>
                             <div className="result-rounds-container">
                                 <Tabs
@@ -115,7 +115,7 @@ export const BattleResult = ({ renderPlayAgainButton }) => {
                                 </Tabs>
                             </div>
                         </div>
-                        <div className="result-modal-container-item" />
+                        <div className="result-container-item" />
                     </div>
                 </div>
                 {renderPlayAgainButton}

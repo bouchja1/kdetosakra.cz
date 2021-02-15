@@ -19,7 +19,7 @@ export const SingleResult = ({ renderPlayAgainButton }) => {
             <>
                 <div className="result-container">
                     <div className="result-modal-container">
-                        <div className="result-modal-container-item">
+                        <div className="result-container-item">
                             <h3>Celkové skóre</h3>
                             {totalScore}
                             {' '}
@@ -27,13 +27,13 @@ export const SingleResult = ({ renderPlayAgainButton }) => {
                         </div>
                     </div>
                     <div className="result-modal-container">
-                        <div className="result-modal-container-item">
+                        <div className="result-container-item">
                             <h3>Celková průměrná přesnost</h3>
                             <Progress type="circle" percent={roundToTwoDecimal(totalScore / TOTAL_ROUNDS_MAX)} />
                         </div>
                     </div>
                     <div className="result-modal-container">
-                        <div className="result-modal-container-item">
+                        <div className="result-container-item">
                             <h3>Vzdálenost od hádaného místa (km)</h3>
                             <div className="result-rounds-container">
                                 {guessedPoints.map((round, i) => {
@@ -49,7 +49,7 @@ export const SingleResult = ({ renderPlayAgainButton }) => {
                                 })}
                             </div>
                         </div>
-                        <div className="result-modal-container-item" />
+                        <div className="result-container-item" />
                     </div>
                 </div>
                 {renderPlayAgainButton}

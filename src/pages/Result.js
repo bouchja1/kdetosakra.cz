@@ -18,7 +18,7 @@ export const Result = () => {
     }, []);
 
     const playAgainButton = () => (
-        <div className="result-modal-container-item" style={{ marginBottom: '25px' }}>
+        <div className="result-container-item" style={{ marginBottom: '25px' }}>
             <Button type="primary">
                 <Link
                     to={{

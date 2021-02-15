@@ -273,6 +273,15 @@ label {
     line-height: 2em;
 }
 
+.result-container-item {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
+    margin: 5px 0 10px 0;
+    line-height: 2em;
+}
+
 .result-rounds-container {
     display: flex;
     justify-content: flex-start;

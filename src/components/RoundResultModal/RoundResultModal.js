@@ -68,24 +68,22 @@ const RoundResultModal = ({
                 </div>
                 {guessedRandomPlace && roundGuessedDistance ? (
                     <div className="result-modal-container-item">
-                        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
-                            <h3>Bližší informace</h3>
-                            <p>
-                                <b>Obec:</b>
-                                {' '}
-                                {guessedRandomPlace.obec}
-                            </p>
-                            <p>
-                                <b>Okres:</b>
-                                {' '}
-                                {guessedRandomPlace.okres}
-                            </p>
-                            <p>
-                                <b>Kraj:</b>
-                                {' '}
-                                {guessedRandomPlace.kraj}
-                            </p>
-                        </div>
+                        <h3>Bližší informace</h3>
+                        <p>
+                            <b>Obec:</b>
+                            {' '}
+                            {guessedRandomPlace.obec}
+                        </p>
+                        <p>
+                            <b>Okres:</b>
+                            {' '}
+                            {guessedRandomPlace.okres}
+                        </p>
+                        <p>
+                            <b>Kraj:</b>
+                            {' '}
+                            {guessedRandomPlace.kraj}
+                        </p>
                     </div>
                 ) : null}
                 <div className="result-modal-button">
