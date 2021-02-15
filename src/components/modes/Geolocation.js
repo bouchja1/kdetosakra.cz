@@ -86,15 +86,17 @@ export const Geolocation = () => {
                             {' '}
                             km od vaší aktuální polohy.
                         </p>
-                        <Button type="primary" disabled={isSubmitting} onClick={handleSubmit}>
-                            <Link
-                                to={{
-                                    pathname: '/geolokace',
-                                }}
-                            >
-                                Hrát
-                            </Link>
-                        </Button>
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                            <Button type="primary" disabled={isSubmitting} onClick={handleSubmit}>
+                                <Link
+                                    to={{
+                                        pathname: '/geolokace',
+                                    }}
+                                >
+                                    Hrát
+                                </Link>
+                            </Button>
+                        </div>
                     </form>
                 );
             }}

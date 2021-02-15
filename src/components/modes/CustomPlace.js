@@ -98,48 +98,50 @@ export const CustomPlace = ({ multiplayerSupported }) => {
                 {' '}
                 km od vámi vybraného místa.
             </p>
-            <Button
-                disabled={!selectedPlaceData}
-                className="button-play"
-                type="primary"
-                onClick={() => {
-                    ReactGA.event({
-                        category: CATEGORIES.SUGGESTED,
-                        action: 'Play suggested city game',
-                    });
-                    dispatch(
-                        setCurrentGame({
-                            mode: gameModes.custom,
-                            round: 1,
-                            totalScore: 0,
-                            radius: Number(radius),
-                            city: cityData,
-                        }),
-                    );
-                }}
-            >
-                <Link
-                    to={{
-                        pathname: '/vlastni',
+            <div className="game-start-button-group">
+                <Button
+                    disabled={!selectedPlaceData}
+                    className="button-play"
+                    type="primary"
+                    onClick={() => {
+                        ReactGA.event({
+                            category: CATEGORIES.SUGGESTED,
+                            action: 'Play suggested city game',
+                        });
+                        dispatch(
+                            setCurrentGame({
+                                mode: gameModes.custom,
+                                round: 1,
+                                totalScore: 0,
+                                radius: Number(radius),
+                                city: cityData,
+                            }),
+                        );
                     }}
                 >
-                    Hrát
-                </Link>
-            </Button>
-            <Button
-                disabled={!selectedPlaceData}
-                className="button-play"
-                type="primary"
-                onClick={() => {
-                    if (multiplayerSupported) {
-                        setBattleModalVisible(true);
-                    } else {
-                        showMultiplayerWarningModal();
-                    }
-                }}
-            >
-                Hrát s přáteli
-            </Button>
+                    <Link
+                        to={{
+                            pathname: '/vlastni',
+                        }}
+                    >
+                        1 hráč
+                    </Link>
+                </Button>
+                <Button
+                    disabled={!selectedPlaceData}
+                    className="button-play"
+                    type="primary"
+                    onClick={() => {
+                        if (multiplayerSupported) {
+                            setBattleModalVisible(true);
+                        } else {
+                            showMultiplayerWarningModal();
+                        }
+                    }}
+                >
+                    Více hráčů
+                </Button>
+            </div>
             <BattleLinkModal
                 visible={battleModalVisible}
                 handleBattleModalVisibility={handleBattleModalVisibility}

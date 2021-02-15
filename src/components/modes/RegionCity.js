@@ -158,22 +158,24 @@ export const RegionCity = ({ multiplayerSupported }) => {
                             ) : (
                                 <div style={{ marginBottom: '10px ' }} />
                             )}
-                            <Button
-                                className="button-play"
-                                type="primary"
-                                disabled={!citySelected || isSubmitting}
-                                onClick={handleSubmit}
-                            >
-                                Hrát sám
-                            </Button>
-                            <Button
-                                className="button-play"
-                                type="primary"
-                                disabled={!citySelected || isSubmitting}
-                                onClick={() => setBattleModalVisible(true)}
-                            >
-                                Hrát s přáteli
-                            </Button>
+                            <div className="game-start-button-group">
+                                <Button
+                                    className="button-play"
+                                    type="primary"
+                                    disabled={!citySelected || isSubmitting}
+                                    onClick={handleSubmit}
+                                >
+                                    1 hráč
+                                </Button>
+                                <Button
+                                    className="button-play"
+                                    type="primary"
+                                    disabled={!citySelected || isSubmitting}
+                                    onClick={() => setBattleModalVisible(true)}
+                                >
+                                    Více hráčů
+                                </Button>
+                            </div>
                             <BattleLinkModal
                                 visible={battleModalVisible}
                                 handleBattleModalVisibility={handleBattleModalVisibility}

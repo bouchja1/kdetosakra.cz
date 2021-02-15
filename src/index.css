@@ -127,6 +127,12 @@ ul.video-list {
     padding-left: 22px;
 }
 
+.game-start-button-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .menu-game-info {
     display: flex;
     flex: 1;
