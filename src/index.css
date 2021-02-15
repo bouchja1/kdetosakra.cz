@@ -22,6 +22,15 @@
     font-weight: bold;
 }
 
+ul,
+ol {
+    padding-left: 40px;
+}
+
+li {
+    margin: 5px 0 5px 0;
+}
+
 .result-modal-container h3,
 .result-modal-container h2 {
     font-weight: bold;
@@ -31,7 +40,7 @@
     font-size: 15px;
 }
 
-ul {
+ul.video-list {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -42,6 +51,14 @@ ul {
     justify-content: center; /* Add this */
     flex-wrap: wrap;
     justify-content: space-around;
+}
+
+.tutorial-section {
+    margin: 15px 0 30px 0;
+}
+
+.tutorial-section h4 {
+    font-style: italic;
 }
 
 .ant-alert-content {
@@ -559,6 +576,10 @@ label {
 
     .layout {
         padding: 15px 20px 20px 20px;
+    }
+
+    .menu-game-info--battle {
+        display: none;
     }
 }
 

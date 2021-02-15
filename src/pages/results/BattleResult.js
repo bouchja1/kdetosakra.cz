@@ -46,7 +46,7 @@ export const BattleResult = ({ renderPlayAgainButton }) => {
             }
         }
         return sortedPlayers;
-    }, [lastResult]);
+    }, [randomUserToken, players]);
 
     const getMyPlayerOrderToDefaultActiveTab = () => {
         let activeTab = 0;

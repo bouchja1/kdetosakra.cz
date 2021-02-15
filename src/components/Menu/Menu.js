@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { FacebookFilled, HomeOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import {
+    FacebookFilled, HomeOutlined, InfoCircleOutlined, QuestionCircleOutlined
+} from '@ant-design/icons';
 import smilingLogo from '../../assets/images/kdetosakraSmile.svg';
 import routeNames from '../../constants/routes';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
@@ -32,7 +34,7 @@ const Menu = () => {
 
     useEffect(() => {
         setMyPlayer(findUserFromBattleByRandomTokenId(currentBattlePlayers, randomUserToken));
-    }, [currentBattlePlayers]);
+    }, [currentBattlePlayers, randomUserToken]);
 
     const isGameFinished = () => {
         if (currentBattleInfo) {
@@ -58,9 +60,15 @@ const Menu = () => {
                 <div className="menu-item menu-separator">|</div>
                 <Link to="/info">
                     <InfoCircleOutlined style={{ color: 'rgb(97, 95, 95)', marginRight: '10px' }} />
-                    <div className="menu-item">O hře</div>
+                    <div className="menu-item">O projektu</div>
                 </Link>
                 <div className="menu-item menu-separator">|</div>
+                <Link to="/napoveda">
+                    <QuestionCircleOutlined style={{ color: 'rgb(97, 95, 95)', marginRight: '10px' }} />
+                    <div className="menu-item">Nápověda</div>
+                </Link>
+                <div className="menu-item menu-separator">|</div>
+                {/* eslint-disable-next-line react/jsx-no-target-blank */}
                 <a href="https://www.facebook.com/kdetosakra.cz" target="_blank" rel="noreferrer">
                     <FacebookFilled style={{ color: 'rgb(97, 95, 95)' }} />
                 </a>

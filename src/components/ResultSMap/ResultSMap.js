@@ -38,7 +38,7 @@ const ResultSMap = ({
             setLayerWithMarksRef(layerWithMarks);
             setMapInstanceRef(mapInstance);
         }
-    }, [mapyContext.loadedMapApi]);
+    }, [mapyContext, city, mode, radius]);
 
     useEffect(() => {
         if (mapyContext.loadedMapApi && mapInstanceRef && layerWithMarksRef && vectorLayerRef) {
@@ -52,7 +52,7 @@ const ResultSMap = ({
                 guessedPoints,
             );
         }
-    }, [mapyContext.loadedMapApi, guessedPoints, mapInstanceRef, layerWithMarksRef, vectorLayerRef]);
+    }, [mapyContext.loadedMapApi, mapyContext.SMap, guessedPoints, mapInstanceRef, layerWithMarksRef, vectorLayerRef]);
 
     return (
         <div id="smap-container">

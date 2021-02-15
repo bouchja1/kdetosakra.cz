@@ -78,6 +78,7 @@ const SMap = ({
     }, [mapyContext.loadedMapApi, mapLoaded, isMapMetaInfoLoaded, round]);
 
     // special case for battle when the page is reloaded and we want to load previous tip
+    // FIXME: is this even used?
     useEffect(() => {
         if (isBattle && mapyContext.loadedMapApi && mapyContext.SMap && instance) {
             const { SMap: SMapContext } = mapyContext;

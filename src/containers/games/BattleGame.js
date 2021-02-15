@@ -80,7 +80,7 @@ export const Battle = ({ type }) => {
                 })
                 .catch(err => {});
         }
-    }, [battleId, currentBattlePlayers]);
+    }, [battleId, currentBattlePlayers, randomUserToken]);
 
     useEffect(() => {
         if (battleId && currentBattleInfo.battleId && currentBattleInfo.battleId !== battleId) {
@@ -93,7 +93,7 @@ export const Battle = ({ type }) => {
                 dispatch(resetCurrentBattle());
             }
         }
-    }, [currentBattleInfo, currentBattlePlayers, randomUserToken]);
+    }, [currentBattleInfo, currentBattlePlayers, randomUserToken, battleId, dispatch]);
 
     // lets setup a new game or modify existing one
     useEffect(() => {
@@ -135,7 +135,7 @@ export const Battle = ({ type }) => {
             );
             dispatch(setRoundsToCurrentBattle(sortedBattleRounds));
         }
-    }, [battleFromFirestore, battleRoundsFromFirestore]);
+    }, [battleFromFirestore, battleRoundsFromFirestore, battleId, dispatch, currentBattleInfo.countdown]);
 
     // Use an effect hook to subscribe to the battle players detail
     // automatically unsubscribe when the component unmounts.
@@ -165,7 +165,7 @@ export const Battle = ({ type }) => {
             error: err => {},
         });
         return unsubscribe;
-    }, [battleId, setBattlePlayers]);
+    }, [battleId, randomUserToken, dispatch]);
 
     // Use an effect hook to subscribe to the battle rounds
     // automatically unsubscribe when the component unmounts.

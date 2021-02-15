@@ -20,7 +20,7 @@ const BattlePlayersPanel = () => {
     useEffect(() => {
         // find my user
         setMyPlayer(findUserFromBattleByRandomTokenId(currentBattlePlayers, randomUserToken));
-    }, [currentBattlePlayers]);
+    }, [currentBattlePlayers, randomUserToken]);
 
     // all players are ready! lets start the game - multiplayer game is being started!
     useEffect(() => {

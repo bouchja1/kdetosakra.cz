@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 import {
-    Home, Info, Result, NotFound
+    Home, Info, Result, NotFound, Help
 } from '../../pages';
 import {
     CustomPlace, RegionCity, RandomCity, Geolocation, Battle
@@ -29,6 +29,9 @@ const RouterSwitch = () => {
             </Route>
             <Route path={`/${routeNames.vlastni}`}>
                 <CustomPlace />
+            </Route>
+            <Route path={`/${routeNames.napoveda}`}>
+                <Help />
             </Route>
             <Route path={`/${routeNames.info}`}>
                 <Info />

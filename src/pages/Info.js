@@ -10,9 +10,11 @@ export const Info = () => {
     return (
         <Content>
             <div className="about-container">
-                <h2>O hře</h2>
+                <h2>O projektu</h2>
                 <p>
-                    kdetosakra.cz je zeměpisná online hra a česká
+                    <i>Kde to sakra?</i>
+                    {' '}
+                    je zeměpisná online hra a česká
                     {' '}
                     <a href="https://github.com/bouchja1/kdetosakra.cz" target="_blank" rel="noopener noreferrer">
                         open-source
@@ -22,6 +24,7 @@ export const Info = () => {
                     {' '}
                     alternativa k populární zahraniční hře
                     {' '}
+                    {/* eslint-disable-next-line react/jsx-no-target-blank */}
                     <a href="https://geoguessr.com/" target="_blank">
                         GeoGuessr
                     </a>
@@ -30,42 +33,45 @@ export const Info = () => {
                 <p>
                     Hra využívá panoramata a mapové podklady aplikace
                     {' '}
+                    {/* eslint-disable-next-line react/jsx-no-target-blank */}
                     <a href="https://api.mapy.cz/" target="_blank">
                         Mapy.cz od Seznamu
                     </a>
-                    . Hratelnost je takřka neomezená a jedinými limity jsou hranice České republiky 🇨🇿
+                    . Hratelnost je takřka neomezená a jedinou hranicí je hranice České republiky 🇨🇿
                 </p>
                 <h3>Jak hrát?</h3>
+                <p>Hra nabízí čtyři různé herní módy:</p>
+                <ol>
+                    <li>Krajská města ČR</li>
+                    <li>Náhodné místo v Česku</li>
+                    <li>Vlastní místo</li>
+                    <li>Podle mojí geolokace</li>
+                </ol>
                 <p>
-                    Hra nabízí
+                    První tři je možné hrát i v módu
                     {' '}
-                    <b>čtyři herní módy</b>
-                    . Vaším úkolem je vypátrat v několika kolech &quot;vaši&quot;
-                    polohu v různých místech České republiky. Pátrání začínáte v náhodně vygenerovaném panoramatickém
-                    snímku a v přiložené mapě se snažíte s co nejvyšší přesností určit, kde (v panoramatu) se právě
-                    nacházíte.
+                    <i>multiplayer</i>
+                    {' '}
+                    (ve stejný čas hraje více hráčů proti sobě).
                 </p>
-                <p>Čím blíž svůj odhad na mapě umístíte, tím víc bodů v herním kole získáte.</p>
                 <p>
-                    Pokud zvolíte jiný herní mód než
+                    Cílem hry je vypátrat v pěti kolech polohu pěti různých míst v České republice. Pátrání začínáš v
+                    náhodně generovaném panoramatickém snímku a v přiložené mapě se snažíš s co nejvyšší přesností
+                    určit, kde (v panoramatu) se právě nacházíš.
+                </p>
+                <p>
+                    Obsáhlejší informace jsou k nalezení v
                     {' '}
                     <Link
                         to={{
-                            pathname: '/nahodne',
+                            pathname: '/napoveda',
                         }}
                     >
-                        Náhodné místo v Česku
+                        nápovědě
                     </Link>
-                    , hra předpokládá, že vybrané okolí alespoň trochu znáte. Proto je za nepřesný odhad vyšší bodová
-                    penalizace než u náhodně generovaných míst.
+                    .
                 </p>
-                <p>
-                    Hádání není časově omezeno. Pro přesnější odhad a lepší výsledek se tak můžete v panoramatu
-                    libovolně pohybovat a dostat se až na místo, které je vám povědomé. Nebo spatříte název místa na
-                    billboardu. Nebo dojedete až k ceduli označující název obce... nebo si vypracujete vlastní herní
-                    strategii. To už je na vás.
-                </p>
-                <h3>O projektu</h3>
+                <h3>Vznik</h3>
                 <p>
                     Hru jsem naprogramoval koncem roku 2019 za účelem seznámení se s JS knihovnou React.js. Jedná se o
                     hobby projekt, který postupně vylepšuji. V plánu jsou i další rozšíření. Pokud vám hra dělá radost,
@@ -76,7 +82,7 @@ export const Info = () => {
                     ☕ ✌️️
                 </p>
                 <p>
-                    Máte dotaz? Tak mi
+                    Máte dotaz nebo přání? Tak mi
                     {' '}
                     <a href={decryptEmail('amFuLmJvdWNobmVyQGdtYWlsLmNvbQ==')}>napište</a>
                     {' '}

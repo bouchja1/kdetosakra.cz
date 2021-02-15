@@ -57,6 +57,7 @@ function App() {
                             {!pathname.includes('info') && (
                                 <>
                                     {' | '}
+                                    {/* eslint-disable-next-line react/jsx-no-target-blank */}
                                     <a href="https://www.buymeacoffee.com/mmwbwdq" target="_blank">
                                         Kup mi kafe - podpoříš provoz a další rozvoj
                                         {' '}

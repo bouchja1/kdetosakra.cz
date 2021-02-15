@@ -42,7 +42,7 @@ const useScript = src => {
             script.removeEventListener('load', onScriptLoad);
             script.removeEventListener('error', onScriptError);
         };
-    }, []);
+    }, [src]);
 
     return [state.loaded, state.error];
 };

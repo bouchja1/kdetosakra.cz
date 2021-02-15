@@ -55,6 +55,7 @@ export const GameScreen = ({
         if (mapyContext.loadedMapApi && isGameStarted) {
             setPanoramaScene(new mapyContext.SMap.Pano.Scene(refPanoramaView.current, panoramaSceneOptions));
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mapyContext.loadedMapApi, isGameStarted]);
 
     useEffect(() => {
@@ -76,7 +77,8 @@ export const GameScreen = ({
         } else {
             findNewPanorama();
         }
-    }, [mapyContext.loadedMapApi, isGameStarted, rounds, lastGuessedRound, players]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [mapyContext.loadedMapApi, isGameStarted, rounds, lastGuessedRound, players, randomUserToken, isBattle]);
 
     const findNewPanorama = () => {
         if (mode === gameModes.random) {

@@ -58,6 +58,7 @@ const Panorama = ({
             changePanoramaLoadingState(true);
             getBestPanorama();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mapyContext.loadedMapApi, panoramaScene, panoramaPlace, isGameStarted, findPanoramaTriesCounter]);
 
     const isPanoramaLoading = !panoramaPlace || !isGameStarted || panoramaLoading;

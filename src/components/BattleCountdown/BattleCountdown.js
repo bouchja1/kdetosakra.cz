@@ -2,13 +2,12 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Alert } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { differenceInSeconds } from 'date-fns';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import { findUserFromBattleByRandomTokenId, getDateFromUnixTimestamp } from '../../util';
 import useTimeInterval from '../../hooks/useTimeInterval';
 import { setIsRoundActive } from '../../redux/actions/battle';
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
-import routeNames from '../../constants/routes';
 
 const getAlertMessageFastestPlayer = (round, countdownTime) => (
     <>
@@ -55,7 +54,7 @@ const BattleCountDown = ({ currentBattleInfo }) => {
     const { pathname } = useLocation();
 
     const {
-        battleId, isGameStarted, countdown, round, rounds, createdById,
+        isGameStarted, countdown, round, rounds, createdById,
     } = currentBattleInfo;
 
     const handleBattleRoundTick = () => {
@@ -86,7 +85,7 @@ const BattleCountDown = ({ currentBattleInfo }) => {
             stopInterval();
             setCountdownIsRunning(false);
         }
-    }, [countdownIsRunning, countdownTime, currentBattlePlayers, round]);
+    }, [countdownIsRunning, countdownTime, currentBattlePlayers, round, currentBattleRoundId, stopInterval, dispatch]);
 
     // clean countdown after a pathname is changed
     useEffect(() => {
@@ -95,6 +94,7 @@ const BattleCountDown = ({ currentBattleInfo }) => {
             setCountdownTime(0);
             setCountdownIsRunning(false);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pathname]);
 
     const startCountdown = guessedTime => {
@@ -154,7 +154,8 @@ const BattleCountDown = ({ currentBattleInfo }) => {
         }
 
         return null;
-    }, [currentRound, countdownTime]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentRound, countdownTime, countdownIsRunning, createdById, currentBattlePlayers, randomUserToken, round]);
 
     if (!isGameStarted) {
         return (

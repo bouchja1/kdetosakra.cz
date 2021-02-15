@@ -58,15 +58,7 @@ export const GuessingMapContainer = ({
     const refVectorLayerSMapValue = useRef();
 
     const {
-        battleId,
-        myDocumentId,
-        mode: battleMode,
-        radius: battleRadius,
-        myNickname,
-        myTotalScore,
-        round: battleRound,
-        rounds,
-        players,
+        battleId, myDocumentId, myNickname, round: battleRound, rounds, players,
     } = currentBattleInfo;
 
     /*
@@ -102,18 +94,18 @@ export const GuessingMapContainer = ({
         };
 
         if (isBattle && isGameStarted) {
+            const { mode: battleMode, radius: battleRadius, myTotalScore } = currentBattleInfo;
             setCommonVars(battleMode, battleRadius, myTotalScore, battleRound);
         } else {
             const {
                 mode: currentGameMode,
                 radius: currentGameRadius,
-                city,
                 totalScore: currentGameTotalScore,
                 round: currentGameRound,
             } = currentGame;
             setCommonVars(currentGameMode, currentGameRadius, currentGameTotalScore, currentGameRound);
         }
-    }, [isBattle, isGameStarted, currentGame, currentBattleInfo]);
+    }, [isBattle, isGameStarted, currentGame, currentBattleInfo, battleRound]);
 
     const guessingMapButtonVisible = useMemo(() => {
         if (isBattle) {
@@ -130,7 +122,7 @@ export const GuessingMapContainer = ({
             return !myUser[`round${battleRound}`];
         }
         return true;
-    }, [currentRoundBattle]);
+    }, [currentRoundBattle, battleRound, isBattle, players, randomUserToken]);
 
     const guessBattleRound = () => {
         const guessedRoundPoint = calculateCoordsAndDrawGuess();
@@ -208,7 +200,7 @@ export const GuessingMapContainer = ({
             dist = Math.acos(dist);
             dist = (dist * 180) / Math.PI;
             dist = dist * 60 * 1.1515;
-            dist *= 1.609344; // convert to kilometers
+            dist *= 1.609344; // convert from miles to kilometers
             distance = dist;
         }
         const score = calculateScore(distance);
@@ -337,6 +329,7 @@ export const GuessingMapContainer = ({
             <div id="smap-container" className="smap-container" style={getSMapCollapseMax()}>
                 {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions */}
                 <img
+                    alt="Normální velikost mapy"
                     className="smap-collapsible-max"
                     src={minimizeMapShadow}
                     onClick={() => writeStorage('smapVisible', false)}
@@ -370,6 +363,7 @@ export const GuessingMapContainer = ({
                 <div className="smap-container" style={getSMapCollapseMin()}>
                     {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions */}
                     <img
+                        alt="Zmenšená mapa"
                         className="smap-collapsible-min"
                         src={maximizeMapShadow}
                         onClick={() => {

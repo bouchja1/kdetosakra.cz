@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
     Button, Spin, Progress, Tooltip
 } from 'antd';
@@ -156,7 +156,6 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
 
     const getManagedRoundButton = round => {
         if (round >= TOTAL_ROUNDS_MAX) {
-            console.log('currentBattleInfocurrentBattleInfo: ', currentBattleInfo);
             return (
                 <Button
                     type="primary"
@@ -201,7 +200,7 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
                         {currentBattleInfo.round + 1}
                         . kolo
                     </Button>
-                    <p style={{ marginTop: '10px' }}>Odstartujte jako tvůrce hry další kolo.</p>
+                    <p style={{ marginTop: '10px' }}>Odstartuj další kolo.</p>
                 </>
             );
         }
@@ -319,7 +318,7 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
                     )}
                     <p style={{ marginTop: '10px' }}>
                         {isBattleCreator ? (
-                            <>Hru můžete začít, až všichni hráči zvolí, že jsou připraveni.</>
+                            <>Hru můžeš začít, až budou všichni ostatní hráči připraveni.</>
                         ) : (
                             <>
                                 Hra začíná, až všichni hráči zvolí možnost

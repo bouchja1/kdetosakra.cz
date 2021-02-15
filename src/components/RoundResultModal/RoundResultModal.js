@@ -41,7 +41,7 @@ const RoundResultModal = ({
                         </h2>
                         {roundGuessedDistance ? (
                             <p>
-                                Vzdušná vzdálenost místa od tvého odhadu:
+                                Vzdušná vzdálenost hádaného místa od tvého tipu:
                                 {' '}
                                 <b>
                                     {roundToTwoDecimal(roundGuessedDistance)}
