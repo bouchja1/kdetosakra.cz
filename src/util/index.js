@@ -1,4 +1,8 @@
+import { isBefore } from 'date-fns';
 import { crCities } from '../data/cr';
+import randomNicknames from '../constants/nicknames';
+import gameModes from '../enums/modes';
+import { TOTAL_ROUNDS_MAX } from '../constants/game';
 
 const EARTH_RADIUS = 6371000; /* meters  */
 const DEG_TO_RAD = Math.PI / 180.0;
@@ -96,6 +100,14 @@ export const getRandomCzechPlace = () => {
     return randomCity;
 };
 
+/**
+ * https://www.kirupa.com/html5/picking_random_item_from_array.htm
+ * @returns {string}
+ */
+export const getRandomNickname = () => {
+    return randomNicknames[Math.floor(Math.random() * randomNicknames.length)];
+};
+
 export const generatePlaceInRadius = (radius, locationCity) => {
     radius *= 1000; // to meters
     const generatedPlace = pointInCircle(
@@ -108,4 +120,88 @@ export const generatePlaceInRadius = (radius, locationCity) => {
     return generatedPlace;
 };
 
+export const sortBattleRoundsById = roundsArray => {
+    return roundsArray.sort((a, b) => {
+        if (a.roundId < b.roundId) {
+            return -1;
+        }
+        if (a.roundId > b.roundId) {
+            return 1;
+        }
+        return 0;
+    });
+};
+
+export const sortPlayersByHighestScore = playersArray => {
+    return playersArray.sort((a, b) => {
+        if (a.score > b.score) {
+            return -1;
+        }
+        if (a.score < b.score) {
+            return 1;
+        }
+        return 0;
+    });
+};
+
+export const findLastGuessedRound = roundsArray => {
+    const sortedRounds = sortBattleRoundsById(roundsArray);
+    for (let i = 0; i < sortedRounds.length; i++) {
+        const { isGuessed, roundId } = sortedRounds[i];
+        if (isGuessed) {
+            return roundId;
+        }
+    }
+    return 1;
+};
+
+export const findUserFromBattleByRandomTokenId = (battlePlayers, randomUserToken) => {
+    for (let i = 0; i < battlePlayers.length; i++) {
+        if (battlePlayers[i].userId === randomUserToken) {
+            return battlePlayers[i];
+        }
+    }
+    return null;
+};
+
 export const RADIUS_DESCRIPTION = 'Poloměr kružnice, ve které se náhodně vygeneruje panorama (středem je dle zvoleného módu buď centrum obce nebo vaše poloha).';
+
+export const mapGameModeName = mode => {
+    switch (mode) {
+        case gameModes.random:
+            return 'náhodné místo';
+        case gameModes.custom:
+            return 'vlastní místo';
+        case gameModes.geolocation:
+            return 'moje poloha';
+        case gameModes.city:
+            return 'krajské město';
+        default:
+    }
+    return '';
+};
+
+export const getUnixTimestamp = date => {
+    // eslint-disable-next-line no-bitwise
+    return (date.getTime() / 1000) | 0;
+};
+
+export const getDateFromUnixTimestamp = unixTimestamp => {
+    return new Date(unixTimestamp * 1000);
+};
+
+export const countTotalPlayerScoreFromRounds = firebaseUser => {
+    let total = 0;
+    for (let i = 0; i < TOTAL_ROUNDS_MAX; i++) {
+        total += firebaseUser && firebaseUser[`round${i + 1}`] ? firebaseUser[`round${i + 1}`].score : 0;
+    }
+    return Math.round(total);
+};
+
+export const getIsRoundActive = (guessedTime, countdown) => {
+    if (guessedTime && countdown) {
+        const roundExpirationTime = guessedTime + countdown;
+        return isBefore(new Date(), getDateFromUnixTimestamp(roundExpirationTime));
+    }
+    return true;
+};

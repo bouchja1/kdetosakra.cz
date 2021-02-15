@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Spin } from 'antd';
 import useWindowHeight from '../../hooks/useWindowHeight';
-import KdetosakraContext from '../../context/KdetosakraContext';
+import MapyCzContext from '../../context/MapyCzContext';
 import { DEFAULT_PANORAMA_TOLERANCE, MAX_PANORAMA_TRIES } from '../../constants/game';
 
 export const panoramaSceneOptions = {
@@ -11,20 +11,20 @@ export const panoramaSceneOptions = {
 };
 
 const Panorama = ({
-    makeRefreshPanorama,
     panoramaScene,
     refPanoramaView,
     panoramaPlace,
     panoramaLoading,
-    makeSetPanoramaLoading,
+    changePanoramaLoadingState,
+    isGameStarted,
 }) => {
-    const mapyContext = useContext(KdetosakraContext);
+    const mapyContext = useContext(MapyCzContext);
     const windowHeight = useWindowHeight();
     const [findPanoramaTriesCounter, setFindPanoramaTriesCounter] = useState(0);
     const [panoramaFounded, setPanoramaFounded] = useState(true);
 
     useEffect(() => {
-        if (mapyContext.loadedMapApi && panoramaPlace && panoramaScene) {
+        if (mapyContext.loadedMapApi && panoramaPlace && panoramaScene && isGameStarted) {
             const { SMap } = mapyContext;
             // kolem teto pozice chceme nejblizsi panorama
             const position = SMap.Coords.fromWGS84(panoramaPlace.longitude, panoramaPlace.latitude);
@@ -39,14 +39,14 @@ const Panorama = ({
                     .then(
                         place => {
                             panoramaScene.show(place);
-                            makeSetPanoramaLoading(false);
+                            changePanoramaLoadingState(false);
                         },
                         () => {
                             // panorama could not be shown
                             if (findPanoramaTriesCounter < MAX_PANORAMA_TRIES) {
                                 setFindPanoramaTriesCounter(findPanoramaTriesCounter + 1);
-                                makeRefreshPanorama();
                             } else {
+                                changePanoramaLoadingState(false);
                                 throw new Error('Panorama was not found');
                             }
                         },
@@ -55,12 +55,20 @@ const Panorama = ({
                         setPanoramaFounded(false);
                     });
             };
+            changePanoramaLoadingState(true);
             getBestPanorama();
         }
-    }, [mapyContext.loadedMapApi, panoramaScene, panoramaPlace]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [mapyContext.loadedMapApi, panoramaScene, panoramaPlace, isGameStarted, findPanoramaTriesCounter]);
+
+    const isPanoramaLoading = !panoramaPlace || !isGameStarted || panoramaLoading;
 
     return (
-        <Spin tip="Načítám panorama..." spinning={panoramaLoading}>
+        <Spin
+            tip={!isGameStarted ? 'Čekám, až budou všichni hráči připraveni' : 'Načítám panorama, čekej prosím...'}
+            spinning={isPanoramaLoading}
+            size="large"
+        >
             {' '}
             <div className="panorama-container" style={{ height: windowHeight - 130 }}>
                 {!panoramaFounded ? (

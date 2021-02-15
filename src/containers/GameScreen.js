@@ -1,58 +1,86 @@
 import React, {
     useContext, useEffect, useRef, useState
 } from 'react';
-import GuessingMap from '../components/GuessingMap';
-import KdetosakraContext from '../context/KdetosakraContext';
-import useSMapResize from '../hooks/useSMapResize';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocalStorage } from '@rehooks/local-storage';
+import MapyCzContext from '../context/MapyCzContext';
+import { setTotalRoundScore } from '../redux/actions/game';
 import Panorama, { panoramaSceneOptions } from '../components/Panorama';
-import { generatePlaceInRadius, generateRandomRadius, getRandomCzechPlace } from '../util';
+import {
+    findUserFromBattleByRandomTokenId,
+    generatePlaceInRadius,
+    generateRandomRadius,
+    getRandomCzechPlace,
+} from '../util';
 import RoundResultModal from '../components/RoundResultModal';
 import gameModes from '../enums/modes';
+import BattlePlayersPanel from '../components/BattlePlayersPanel';
+import useGetRandomUserToken from '../hooks/useGetRandomUserToken';
+import { GuessingMapContainer } from './GuessingMapContainer';
 
-export const GameScreen = ({ location }) => {
-    const mapyContext = useContext(KdetosakraContext);
-    const { width, height } = useSMapResize();
+export const GameScreen = ({
+    mode, radius, city, isGameStarted = true, isBattle,
+}) => {
+    const dispatch = useDispatch();
+    const randomUserToken = useGetRandomUserToken();
+    const mapyContext = useContext(MapyCzContext);
     const refPanoramaView = useRef();
+    const currentGame = useSelector(state => state.game.currentGame);
+    const currentBattleInfo = useSelector(state => state.battle.currentBattle);
+    const [smapVisibleLocalStorageValue] = useLocalStorage('smapVisible');
 
     const [panoramaScene, setPanoramaScene] = useState(null);
-    const [totalRoundScore, setTotalRoundScore] = useState(0);
-    const [totalRounds, setTotalRounds] = useState(0);
     const [roundScore, setRoundScore] = useState(0);
-    const [guessedDistance, setGuessedDistance] = useState(null);
-    const [guessedPlace, setGuessedPlace] = useState(null);
-    const [guessedPoints, setGuessedPoints] = useState([]);
+    const [roundGuessedDistance, setRoundGuessedDistance] = useState(null);
+    const [guessedRandomPlace, setGuessedRandomPlace] = useState(null);
+    const [allGuessedPoints, setAllGuessedPoints] = useState([]);
+    const [currentRoundGuessedPoint, setCurrentRoundGuessedPoint] = useState();
     const [currentCity, setCurrentCity] = useState(null);
     const [resultModalVisible, setResultModalVisible] = useState(false);
     const [panoramaPlace, setPanoramaPlace] = useState(null);
     const [panoramaLoading, setPanoramaLoading] = useState(false);
+    const [isSMapVisible, setIsSMapVisible] = useState();
+
+    const { totalScore } = currentGame;
+    const {
+        round: lastGuessedRound, rounds, myTotalScore, players,
+    } = currentBattleInfo;
+
+    // FIXME: to load whole map layer when the map is minimized before
+    useEffect(() => {
+        window.dispatchEvent(new Event('resize'));
+    }, []);
 
     useEffect(() => {
-        if (mapyContext.loadedMapApi) {
+        if (mapyContext.loadedMapApi && isGameStarted) {
             setPanoramaScene(new mapyContext.SMap.Pano.Scene(refPanoramaView.current, panoramaSceneOptions));
         }
-    }, [mapyContext.loadedMapApi]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [mapyContext.loadedMapApi, isGameStarted]);
 
     useEffect(() => {
-        if (location?.state) {
-            let { city } = location.state;
-            const { radius, mode } = location.state;
-            if (mode === gameModes.random) {
-                city = getRandomCzechPlace();
+        const localStorageBooleanValue = !!smapVisibleLocalStorageValue;
+        setIsSMapVisible(smapVisibleLocalStorageValue === null ? true : localStorageBooleanValue);
+    }, [smapVisibleLocalStorageValue]);
+
+    useEffect(() => {
+        if (isBattle) {
+            if (rounds.length && isGameStarted) {
+                const roundToGuess = rounds[lastGuessedRound - 1];
+                const { city: cityToGuess, panoramaPlace: panoramaPlaceToGuess } = roundToGuess;
+                setPanoramaPlace(panoramaPlaceToGuess);
+                setCurrentCity(cityToGuess);
+                // load guessed points to be persistent
+                const myUser = findUserFromBattleByRandomTokenId(players, randomUserToken);
+                setCurrentRoundGuessedPoint(myUser[`round${lastGuessedRound}`] ?? null);
             }
-            // init panorama
-            setPanoramaPlace(generatePlaceInRadius(radius, city));
-            setCurrentCity(city);
+        } else {
+            findNewPanorama();
         }
-        // TODO add some cleanup maybe
-    }, [mapyContext.loadedMapApi, location]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [mapyContext.loadedMapApi, isGameStarted, rounds, lastGuessedRound, players, randomUserToken, isBattle]);
 
-    const makeSetPanoramaLoading = loading => {
-        setPanoramaLoading(loading);
-    };
-
-    const makeRefreshPanorama = () => {
-        setPanoramaLoading(true);
-        let { radius, city, mode } = location.state;
+    const findNewPanorama = () => {
         if (mode === gameModes.random) {
             radius = generateRandomRadius();
             city = getRandomCzechPlace();
@@ -62,63 +90,65 @@ export const GameScreen = ({ location }) => {
         setPanoramaPlace(generatedPanoramaPlace);
     };
 
-    const makeRoundResult = (score, distance) => {
+    const changePanoramaLoadingState = loading => {
+        setPanoramaLoading(loading);
+    };
+
+    const saveRoundResult = (score, distance) => {
         setRoundScore(Math.round(score));
-        setTotalRoundScore(prevScore => Math.round(prevScore + score));
-        setTotalRounds(prevRoundCount => prevRoundCount + 1);
-        setGuessedDistance(distance);
+        if (isBattle) {
+            dispatch(setTotalRoundScore(Math.round(myTotalScore + score)));
+        } else {
+            dispatch(setTotalRoundScore(Math.round(totalScore + score)));
+        }
+        setRoundGuessedDistance(distance);
     };
 
-    const closeModal = () => {
-        setResultModalVisible(false);
-    };
-
-    const makeCountScore = guessedPointsInRound => {
-        setGuessedPoints([...guessedPoints, guessedPointsInRound]);
+    const evaluateGuessedRound = guessedPointsInRound => {
+        if (mode === gameModes.random) {
+            const { obec, okres, kraj } = currentCity;
+            setGuessedRandomPlace({ obec, okres, kraj });
+        }
+        setAllGuessedPoints([...allGuessedPoints, guessedPointsInRound]);
+        setCurrentRoundGuessedPoint(guessedPointsInRound);
         setResultModalVisible(true);
-    };
-
-    const makeGuessedPlace = () => {
-        const { obec, okres, kraj } = currentCity;
-        setGuessedPlace({ obec, okres, kraj });
     };
 
     return (
         <>
-            <Panorama
-                panoramaPlace={panoramaPlace}
-                makeRefreshPanorama={makeRefreshPanorama}
-                panoramaScene={panoramaScene}
-                refPanoramaView={refPanoramaView}
-                panoramaLoading={panoramaLoading}
-                makeSetPanoramaLoading={makeSetPanoramaLoading}
-            />
-            <div
-                id="smap-container"
-                className="smap-container"
-                style={width > 960 ? { height: height / 2, width: width / 3 } : null}
-            >
-                <GuessingMap
-                    makeCountScore={makeCountScore}
-                    makeRefreshPanorama={makeRefreshPanorama}
-                    totalRoundScore={totalRoundScore}
-                    totalRounds={totalRounds}
-                    guessedPoints={guessedPoints}
-                    gameMode={location.state.mode}
+            <div className="game-screen-container">
+                {isBattle && <BattlePlayersPanel />}
+                <Panorama
+                    panoramaPlace={panoramaPlace}
                     panoramaScene={panoramaScene}
-                    makeRoundResult={makeRoundResult}
-                    makeGuessedPlace={makeGuessedPlace}
+                    refPanoramaView={refPanoramaView}
                     panoramaLoading={panoramaLoading}
+                    changePanoramaLoadingState={changePanoramaLoadingState}
+                    isGameStarted={isGameStarted}
                 />
             </div>
+            <GuessingMapContainer
+                maximized={isSMapVisible}
+                isBattle={isBattle}
+                visible={isBattle ? isGameStarted && isSMapVisible : isSMapVisible}
+                evaluateGuessedRound={evaluateGuessedRound}
+                currentRoundGuessedPoint={currentRoundGuessedPoint}
+                panoramaLoading={panoramaLoading}
+                findNewPanorama={findNewPanorama}
+                saveRoundResult={saveRoundResult}
+                panoramaScene={panoramaScene}
+                allGuessedPoints={allGuessedPoints}
+                isGameStarted={isGameStarted}
+                currentCity={currentCity}
+            />
             <RoundResultModal
                 visible={resultModalVisible}
-                closeModal={closeModal}
-                totalRounds={totalRounds}
-                guessedDistance={guessedDistance}
+                closeModal={() => setResultModalVisible(false)}
+                roundGuessedDistance={roundGuessedDistance}
                 roundScore={roundScore}
-                totalRoundScore={totalRoundScore}
-                guessedPlace={guessedPlace}
+                totalRoundScore={totalScore}
+                isBattle={isBattle}
+                guessedRandomPlace={guessedRandomPlace}
             />
         </>
     );

@@ -2,11 +2,12 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 import {
-    Home, Info, Result, NotFound
+    Home, Info, Result, NotFound, Help
 } from '../../pages';
 import {
-    CustomPlace, RegionCity, RandomCity, Geolocation
+    CustomPlace, RegionCity, RandomCity, Geolocation, Battle
 } from '../../containers/games';
+import routeNames from '../../constants/routes';
 
 const RouterSwitch = () => {
     return (
@@ -14,23 +15,29 @@ const RouterSwitch = () => {
             <Route exact path="/">
                 <Home />
             </Route>
-            <Route path="/geolokace">
+            <Route path={`/${routeNames.geolokace}`}>
                 <Geolocation />
             </Route>
-            <Route path="/mesto">
+            <Route path={`/${routeNames.mesto}`}>
                 <RegionCity />
             </Route>
-            <Route path="/nahodne">
+            <Route path={`/${routeNames.nahodne}`}>
                 <RandomCity />
             </Route>
-            <Route path="/vysledek">
+            <Route path={`/${routeNames.vysledek}`}>
                 <Result />
             </Route>
-            <Route path="/vlastni">
+            <Route path={`/${routeNames.vlastni}`}>
                 <CustomPlace />
             </Route>
-            <Route path="/info">
+            <Route path={`/${routeNames.napoveda}`}>
+                <Help />
+            </Route>
+            <Route path={`/${routeNames.info}`}>
                 <Info />
+            </Route>
+            <Route path={`/${routeNames.battle}/:battleId`}>
+                <Battle />
             </Route>
             <Route path="*">
                 <NotFound />

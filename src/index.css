@@ -13,16 +13,34 @@
 }
 
 .kdetosakra-logo {
-    max-width: 150px;
-    position: relative;
-    left: 25px;
+    max-width: 135px;
+    position: absolute;
 }
 
-.fb-icon {
-    margin-left: 20px;
+.about-container h2,
+.about-container h3 {
+    font-weight: bold;
 }
 
-ul {
+ul,
+ol {
+    padding-left: 40px;
+}
+
+li {
+    margin: 5px 0 5px 0;
+}
+
+.result-modal-container h3,
+.result-modal-container h2 {
+    font-weight: bold;
+}
+
+.result-modal-container p {
+    font-size: 15px;
+}
+
+ul.video-list {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -33,6 +51,18 @@ ul {
     justify-content: center; /* Add this */
     flex-wrap: wrap;
     justify-content: space-around;
+}
+
+.tutorial-section {
+    margin: 15px 0 30px 0;
+}
+
+.tutorial-section h4 {
+    font-style: italic;
+}
+
+.ant-alert-content {
+    font-size: 15px;
 }
 
 .ant-layout-footer {
@@ -54,7 +84,7 @@ ul {
 
 /* this is flex container */
 .menu-container {
-    color: #fff;
+    color: #828282;
     display: flex;
     justify-content: center;
     height: 180px;
@@ -71,7 +101,7 @@ ul {
 .menu {
     width: 90%;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     font-size: 18px;
 }
@@ -81,11 +111,71 @@ ul {
     justify-content: flex-end;
 }
 
-.home-menu-item,
-.info-menu-item {
-    margin: 0 0 0 10px;
+.main-menu {
+    display: flex;
+    flex: 1;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 70px;
+}
+
+.main-menu--battle {
+    display: flex;
+    flex: 1;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 22px;
+}
+
+.game-start-button-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu-game-info {
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 70px;
+}
+
+.menu-game-info--battle {
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 22px;
+}
+
+.menu-game-info-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 60px;
+    min-width: 100px;
+}
+
+.menu-game-info-box-head {
+    color: rgba(0, 0, 0, 0.45);
+    font-size: 14px;
+}
+
+.menu-game-info-box-item {
+    color: rgba(0, 0, 0, 0.85);
+    font-size: 18px;
+}
+
+.menu-item {
     padding: 0;
     display: inline-block;
+}
+
+.menu-separator {
+    color: #e1e3e8;
+    margin: 0 15px 0 15px;
 }
 
 .ant-card {
@@ -108,6 +198,10 @@ number {
 
 button {
     margin: 10px 0 0 0;
+}
+
+.button-play {
+    margin: 0 5px 0 5px;
 }
 
 label {
@@ -144,16 +238,34 @@ label {
 
 .result-container {
     height: 200px;
-    color: #000;
-    padding: 20px 0;
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
+    align-items: flex-start;
+    flex: 1;
+}
+
+.result-final-order {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 50%;
 }
 
 .result-modal-container {
     display: flex;
-    justify-content: center;
+    flex: 1;
+    justify-content: flex-start;
     flex-direction: column;
+    margin: 0 30px 0 30px;
+}
+
+.result-modal-container-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
 }
 
 .result-modal-container-item {
@@ -162,6 +274,55 @@ label {
     flex-direction: column;
     align-items: center;
     margin: 5px 0 10px 0;
+    line-height: 2em;
+}
+
+.result-rounds-container {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    width: 100%;
+}
+
+.result-round {
+    display: flex;
+    flex-direction: row;
+    margin: 10px 0 10px 0;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+}
+
+.result-round-color {
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    margin-right: 15px;
+    display: flex;
+}
+
+.result-round-no {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+}
+
+.result-round-distance {
+    display: flex;
+    flex: 2;
+    justify-content: center;
+}
+
+.result-round-score {
+    display: flex;
+    flex: 2;
+    justify-content: center;
+}
+
+.result-round-other-info {
+    display: flex;
+    flex: 3;
+    justify-content: center;
 }
 
 .result-modal-button {
@@ -181,15 +342,148 @@ label {
     width: 100% !important;
 }
 
-.panorama-container {
-    width: 100%;
+.game-screen-container {
     display: flex;
+    width: 100%;
+}
+
+.panorama-container {
+    display: flex;
+    width: 100%;
     justify-content: center;
 }
 
-.panorama {
-    width: 100%;
+.battle-users-container {
     display: flex;
+    flex-direction: column;
+    border-right: 1px solid #e1e3e8;
+    padding: 10px 15px 0 15px;
+}
+
+.battle-users-container p {
+    font-size: 14px;
+}
+
+.battle-users-container h5 {
+    margin-top: 0 !important;
+    margin-bottom: 20px !important;
+}
+
+.battle-users-container--toggle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: green;
+    position: absolute;
+}
+
+.battle-players {
+    display: flex;
+    flex-direction: column;
+    margin-top: 5px;
+}
+
+.battle-settings .ant-checkbox-wrapper {
+    font-size: 14px !important;
+    margin-bottom: 15px !important;
+}
+
+.battle-settings-slider-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.battle-settings-slider {
+    display: flex;
+    width: 90%;
+}
+
+.battle-settings-slider-desc {
+    display: flex;
+    width: 10%;
+}
+
+.battle-players-detail {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #e1e3e8;
+}
+
+.battle-players-detail input[type='text'] {
+    padding: 0;
+    margin: 0;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.battle-players-detail-result {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #e1e3e8;
+}
+
+.battle-players-detail-player-result {
+    display: flex;
+    flex: 1;
+    justify-content: flex-start;
+}
+
+.battle-players-detail-player-result--name {
+    display: flex;
+    width: 90%;
+    justify-content: flex-start;
+    font-size: 13px;
+}
+
+.battle-players-detail--name {
+    display: flex;
+    flex: 3;
+    justify-content: flex-start;
+    font-size: 13px;
+}
+
+.battle-link-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.battle-link-container .ant-input {
+    display: flex;
+    width: 90%;
+}
+
+.battle-link-container--clipboard {
+    display: flex;
+    width: 10%;
+    justify-content: center;
+    align-items: center;
+}
+
+.battle-players-detail--status {
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.battle-players-detail--status .ant-spin {
+    margin-right: 6px;
+}
+
+.battle-players-detail--status .anticon-check-circle {
+    margin-right: 5px;
+}
+
+.panorama {
+    display: flex;
+    width: 100%;
     justify-content: center;
 }
 
@@ -216,12 +510,29 @@ label {
 }
 
 .smap {
-    height: 450px;
+    height: 450px !important;
     margin-bottom: 5px;
 }
 
+.smap-collapsible-max {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+.smap-collapsible-min {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
 .smap-style {
-    border-radius: 25px;
     border: 3px solid #fff;
 }
 
@@ -246,20 +557,50 @@ label {
         height: 20px;
     }
 
-    .menu {
-        align-items: center;
+    .smap-container {
+        width: 100%;
+    }
+
+    .smap-collapsible-max,
+    .smap-collapsible-min {
+        display: none;
+    }
+
+    .main-menu {
+        padding-left: 20px;
+    }
+
+    .menu-game-info {
+        padding-right: 20px;
+        font-size: 12px;
+    }
+
+    .menu-game-info-box {
+        min-width: 80px;
+    }
+
+    .menu-game-info-box-head {
+        font-size: 10px;
+    }
+
+    .menu-game-info-box-item {
+        font-size: 8px;
+    }
+
+    .menu-item {
+        display: none;
     }
 
     .kdetosakra-logo {
         max-width: 0px;
     }
 
-    .smap-container {
-        width: 100%;
-    }
-
     .layout {
         padding: 15px 20px 20px 20px;
+    }
+
+    .menu-game-info--battle {
+        display: none;
     }
 }
 
@@ -274,20 +615,51 @@ label {
         height: 20px;
     }
 
+    .smap-collapsible-max,
+    .smap-collapsible-min {
+        display: none;
+    }
+
     .menu {
         align-items: center;
     }
 
-    .kdetosakra-logo {
-        max-width: 50px;
+    .menu-game-info-box-item {
+        font-size: 15px;
+    }
+
+    .menu-item {
+        display: none;
+    }
+
+    .main-menu {
+        padding-left: 30px;
+    }
+
+    .menu-game-info {
+        padding-right: 30px;
+    }
+
+    battle-players-detail-player-result--name,
+    .battle-players-detail--name {
+        font-size: 10px;
     }
 
     .smap-container {
         width: 100%;
     }
 
+    .kdetosakra-logo {
+        max-width: 0px;
+    }
+
     .layout {
         padding: 15px 20px 20px 20px;
+    }
+
+    .battle-users-container button,
+    .battle-users-container p {
+        font-size: 12px;
     }
 }
 
@@ -299,7 +671,7 @@ label {
 
     .smap-container {
         position: fixed;
-        bottom: 5px;
+        bottom: 10px;
         right: 15px;
     }
 }

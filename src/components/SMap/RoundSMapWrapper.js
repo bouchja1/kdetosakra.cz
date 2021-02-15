@@ -2,7 +2,12 @@ import React from 'react';
 import SMap from './SMap';
 
 export const RoundSMapWrapper = ({
-    onMapClick, refLayeredMapValue, refLayerValue, refVectorLayerSMapValue,
+    onMapClick,
+    refLayeredMapValue,
+    refLayerValue,
+    refVectorLayerSMapValue,
+    isBattle,
+    currentRoundGuessedPoint,
 }) => {
     return (
         <SMap
@@ -11,6 +16,8 @@ export const RoundSMapWrapper = ({
             refLayeredMapValue={refLayeredMapValue}
             refLayerValue={refLayerValue}
             refVectorLayerSMapValue={refVectorLayerSMapValue}
+            isBattle={isBattle}
+            currentRoundGuessedPoint={currentRoundGuessedPoint}
         />
     );
 };

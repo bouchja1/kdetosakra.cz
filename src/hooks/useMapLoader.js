@@ -14,6 +14,7 @@ const useMapLoader = function(loaded) {
                 setMapLoader({
                     loadedMapApi: true,
                     SMap: window.SMap,
+                    JAK: window.JAK,
                 });
             });
         }

@@ -1,45 +1,39 @@
-import React, { useState } from 'react';
-import { Redirect, useLocation } from 'react-router-dom';
-import { Button, Progress, Typography } from 'antd';
-import { ResultSMapWrapper } from '../components/SMap/ResultSMapWrapper';
-import { roundToTwoDecimal } from '../util';
-import { TOTAL_ROUNDS_MAX } from '../constants/game';
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { Button } from 'antd';
 
-const { Title } = Typography;
+import useGameMenuResize from '../hooks/useGameMenuResize';
+import { BattleResult, SingleResult } from './results';
 
 export const Result = () => {
-    const location = useLocation();
-    const [playAgainSelected, setPlayAgainSelected] = useState(false);
+    useGameMenuResize();
+    const lastResult = useSelector(state => state.result);
 
-    const closeResultPage = () => {
-        setPlayAgainSelected(true);
-    };
+    const { isBattle } = lastResult;
 
-    if (location?.state?.totalRoundScore && location?.state?.guessedPoints && !playAgainSelected) {
-        return (
-            <>
-                <Typography className="result-modal-container">
-                    <div className="result-modal-container-item">
-                        <Title level={2}>Celková průměrná přesnost</Title>
-                        <Progress
-                            type="circle"
-                            percent={roundToTwoDecimal(location.state.totalRoundScore / TOTAL_ROUNDS_MAX)}
-                        />
-                    </div>
-                    <div className="result-modal-container-item">
-                        <Button
-                            onClick={() => {
-                                closeResultPage();
-                            }}
-                            type="primary"
-                        >
-                            Hrát znovu
-                        </Button>
-                    </div>
-                    <ResultSMapWrapper guessedPoints={location.state.guessedPoints} />
-                </Typography>
-            </>
-        );
-    }
-    return <Redirect to={{ pathname: '/' }} />;
+    // to load whole map layer again when the map is minimized before (otherwise breaks with JAK scrollLeft)
+    useEffect(() => {
+        window.dispatchEvent(new Event('resize'));
+    }, []);
+
+    const playAgainButton = () => (
+        <div className="result-modal-container-item" style={{ marginBottom: '25px' }}>
+            <Button type="primary">
+                <Link
+                    to={{
+                        pathname: '/',
+                    }}
+                >
+                    Zpět na výběr herního módu
+                </Link>
+            </Button>
+        </div>
+    );
+
+    return isBattle ? (
+        <BattleResult renderPlayAgainButton={playAgainButton()} />
+    ) : (
+        <SingleResult renderPlayAgainButton={playAgainButton()} />
+    );
 };
