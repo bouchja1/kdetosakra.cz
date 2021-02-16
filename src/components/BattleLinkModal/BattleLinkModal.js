@@ -54,10 +54,23 @@ const BattleLinkModal = ({
             )}
             <Spin spinning={generateLinkInProgress} size="large">
                 {!battleLink && (
-                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                        <p style={{ color: 'red', fontWeight: 'bold' }}>
+                            Probíhá oprava chyb nalezených v 1. veřejném testování. Multiplayer bude k dispozici během
+                            několika dnů.
+                        </p>
+                        <p>
+                            Pro čerstvé informace doporučuji sledovat
+                            {' '}
+                            <a href="https://www.facebook.com/kdetosakra.cz" target="_blank" rel="noreferrer">
+                                stránku na Facebooku.
+                            </a>
+                        </p>
                         <Button
+                            disabled
                             type="primary"
                             onClick={() => {
+                                /*
                                 setGenerateLinkInProgress(true);
                                 // eslint-disable-next-line implicit-arrow-linebreak
                                 createBattle(randomUserToken, mode, radius, selectedCity)
@@ -68,6 +81,7 @@ const BattleLinkModal = ({
                                     .catch(err => {
                                         setGenerateLinkInProgress(false);
                                     });
+                                 */
                             }}
                         >
                             Vygenerovat pozvánku

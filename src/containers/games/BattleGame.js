@@ -25,8 +25,8 @@ import {
     setBattlePlayers,
     resetCurrentBattle,
     setMyUserInfoToCurrentBattle,
-    setRoundsToCurrentBattle,
 } from '../../redux/actions/battle';
+import { resetLastPanoramaPlace } from '../../redux/actions/pano';
 import { MultiplayerGameScreen } from '../MultiplayerGameScreen';
 import { MAX_ALLOWED_BATTLE_PLAYERS } from '../../constants/game';
 
@@ -63,7 +63,9 @@ export const Battle = ({ type }) => {
                                 },
                                 battleId,
                             )
-                                .then(docRef => {})
+                                .then(docRef => {
+                                    dispatch(resetLastPanoramaPlace());
+                                })
                                 .catch(err => {
                                     if (err.name === errorNames.maxBattleCapacityExhausted) {
                                         setPlayerCapacityExhausted(true);
@@ -120,12 +122,12 @@ export const Battle = ({ type }) => {
                     countdown,
                     isGameStarted,
                     round,
+                    rounds: sortedBattleRounds,
                     currentRoundStart,
                     radius,
                     selectedCity,
                 }),
             );
-            dispatch(setRoundsToCurrentBattle(sortedBattleRounds));
         }
     }, [battleFromFirestore, battleRoundsFromFirestore, battleId, dispatch, currentBattleInfo.countdown]);
 

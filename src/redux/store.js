@@ -10,7 +10,7 @@ const persistConfig = {
     storage,
     stateReconciler: autoMergeLevel2,
     version: 0,
-    whitelist: ['result'], // only those will be persisted
+    whitelist: ['result', 'pano'], // only those will be persisted
 };
 
 const persistedCombinedReducers = persistCombineReducers(persistConfig, reducers);

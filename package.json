@@ -41,7 +41,7 @@
   },
   "scripts": {
     "start": "chmod +x ./env-config.sh && ./env-config.sh && cp env-config.js ./public/ && react-app-rewired start",
-    "build": "react-app-rewired build",
+    "build": "node ./update-build.js && react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "eslint": "eslint .; exit 0"
@@ -83,5 +83,6 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^2.5.1"
-  }
+  },
+  "buildDate": ""
 }

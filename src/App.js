@@ -14,6 +14,7 @@ import useMapLoader from './hooks/useMapLoader';
 import RouterSwitch from './components/RouterSwitch';
 import { MapyCzProvider } from './context/MapyCzContext';
 import Menu from './components/Menu';
+import withClearCache from './ClearCache';
 
 const { Footer } = Layout;
 
@@ -22,7 +23,7 @@ function initializeReactGA() {
     ReactGA.pageview(window.location.pathname);
 }
 
-function App() {
+function MainApp(props) {
     // init google analytics
     initializeReactGA();
     if (window._env_.REACT_APP_SENTRY_DNS) {
@@ -71,6 +72,12 @@ function App() {
             </PersistGate>
         </Provider>
     );
+}
+
+const ClearCacheComponent = withClearCache(MainApp);
+
+function App() {
+    return <ClearCacheComponent />;
 }
 
 export default App;

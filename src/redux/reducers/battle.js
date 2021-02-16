@@ -6,7 +6,6 @@ import {
     setCurrentBattle,
     setBattlePlayers,
     setMyUserInfoToCurrentBattle,
-    setRoundsToCurrentBattle,
     incrementMyTotalScore,
     setIsRoundActive,
     setMyUserInfoNicknameToCurrentBattle,
@@ -75,14 +74,6 @@ const gameReducer = (state = initialState, action) => {
                 currentBattle: {
                     ...state.currentBattle,
                     myTotalScore: state.currentBattle.myTotalScore + action.payload,
-                },
-            };
-        case getType(setRoundsToCurrentBattle):
-            return {
-                ...state,
-                currentBattle: {
-                    ...state.currentBattle,
-                    rounds: action.payload,
                 },
             };
         case getType(setIsRoundActive): {

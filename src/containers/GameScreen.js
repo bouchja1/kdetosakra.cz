@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocalStorage } from '@rehooks/local-storage';
 import MapyCzContext from '../context/MapyCzContext';
 import { setTotalRoundScore } from '../redux/actions/game';
+import { setLastPanoramaPlace } from '../redux/actions/pano';
 import Panorama, { panoramaSceneOptions } from '../components/Panorama';
 import {
     findUserFromBattleByRandomTokenId,
@@ -26,11 +27,13 @@ export const GameScreen = ({
     const mapyContext = useContext(MapyCzContext);
     const refPanoramaView = useRef();
     const currentGame = useSelector(state => state.game.currentGame);
+    const lastPanoramaPlaceShown = useSelector(state => state.pano);
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
     const [smapVisibleLocalStorageValue] = useLocalStorage('smapVisible');
 
     const [panoramaScene, setPanoramaScene] = useState(null);
     const [roundScore, setRoundScore] = useState(0);
+    const [currentRoundISee, setCurrentRoundISee] = useState();
     const [roundGuessedDistance, setRoundGuessedDistance] = useState(null);
     const [guessedRandomPlace, setGuessedRandomPlace] = useState(null);
     const [allGuessedPoints, setAllGuessedPoints] = useState([]);
@@ -43,7 +46,7 @@ export const GameScreen = ({
 
     const { totalScore } = currentGame;
     const {
-        round: lastGuessedRound, rounds, myTotalScore, players,
+        round: currentRoundNumber, rounds, myTotalScore, players,
     } = currentBattleInfo;
 
     // FIXME: to load whole map layer when the map is minimized before
@@ -53,7 +56,23 @@ export const GameScreen = ({
 
     useEffect(() => {
         if (mapyContext.loadedMapApi && isGameStarted) {
-            setPanoramaScene(new mapyContext.SMap.Pano.Scene(refPanoramaView.current, panoramaSceneOptions));
+            const panoScene = new mapyContext.SMap.Pano.Scene(refPanoramaView.current, panoramaSceneOptions);
+            const panoramaSignals = panoScene.getSignals();
+            // observer panorama scene change
+            panoramaSignals.addListener(window, 'pano-change', e => {
+                const scene = e.target;
+                const currentPanoramaPlace = scene.getPlace();
+                // eslint-disable-next-line no-underscore-dangle
+                const panoramaMark = currentPanoramaPlace._data.mark;
+                const { lat, lon } = panoramaMark;
+                dispatch(
+                    setLastPanoramaPlace({
+                        lat,
+                        lon,
+                    }),
+                );
+            });
+            setPanoramaScene(panoScene);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mapyContext.loadedMapApi, isGameStarted]);
@@ -63,22 +82,52 @@ export const GameScreen = ({
         setIsSMapVisible(smapVisibleLocalStorageValue === null ? true : localStorageBooleanValue);
     }, [smapVisibleLocalStorageValue]);
 
+    // Executed when the game is started or a page is re/loaded and rounds are already generated
     useEffect(() => {
         if (isBattle) {
-            if (rounds.length && isGameStarted) {
-                const roundToGuess = rounds[lastGuessedRound - 1];
-                const { city: cityToGuess, panoramaPlace: panoramaPlaceToGuess } = roundToGuess;
-                setPanoramaPlace(panoramaPlaceToGuess);
+            if (isGameStarted && rounds.length) {
+                const currentRound = rounds[currentRoundNumber - 1];
+                const { city: cityToGuess, panoramaPlace: panoramaPlaceToGuess } = currentRound;
+                if (lastPanoramaPlaceShown && lastPanoramaPlaceShown.lat && lastPanoramaPlaceShown.lon) {
+                    setPanoramaPlace({
+                        latitude: lastPanoramaPlaceShown.lat,
+                        longitude: lastPanoramaPlaceShown.lon,
+                    });
+                } else {
+                    setPanoramaPlace(panoramaPlaceToGuess);
+                }
                 setCurrentCity(cityToGuess);
+                // set the current round user can see to prevent panorama rerendering after the first guess is made by somebody
+                setCurrentRoundISee(currentRound.roundId);
                 // load guessed points to be persistent
                 const myUser = findUserFromBattleByRandomTokenId(players, randomUserToken);
-                setCurrentRoundGuessedPoint(myUser[`round${lastGuessedRound}`] ?? null);
+                setCurrentRoundGuessedPoint(myUser[`round${currentRoundNumber}`] ?? null);
             }
         } else {
             findNewPanorama();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [mapyContext.loadedMapApi, isGameStarted, rounds, lastGuessedRound, players, randomUserToken, isBattle]);
+    }, [isGameStarted]);
+
+    useEffect(() => {
+        // run after the currentRoundISee is set before (when the game is started or a page is reloaded)
+        if (rounds.length && isGameStarted && currentRoundISee) {
+            const currentRound = rounds[currentRoundNumber - 1];
+            const { city: cityToGuess, panoramaPlace: panoramaPlaceToGuess } = currentRound;
+
+            // check if a new round was started
+            if (currentRoundISee < currentRound.roundId) {
+                setCurrentRoundISee(currentRound.roundId);
+                setPanoramaPlace(panoramaPlaceToGuess);
+            }
+
+            setCurrentCity(cityToGuess);
+            // load guessed points to be persistent
+            const myUser = findUserFromBattleByRandomTokenId(players, randomUserToken);
+            setCurrentRoundGuessedPoint(myUser[`round${currentRoundNumber}`] ?? null);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isGameStarted, rounds, currentRoundNumber, players]);
 
     const findNewPanorama = () => {
         if (mode === gameModes.random) {
