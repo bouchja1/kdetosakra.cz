@@ -382,6 +382,15 @@ label {
     position: absolute;
 }
 
+.warning-msg {
+    padding: 10px;
+    margin-bottom: 12px;
+    color: #9f6000;
+    font-size: 14px;
+    background-color: #feefb3;
+    border-radius: 3px 3px 3px 3px;
+}
+
 .battle-players {
     display: flex;
     flex-direction: column;
@@ -664,6 +673,10 @@ label {
 
     .battle-users-container button,
     .battle-users-container p {
+        font-size: 12px;
+    }
+
+    .warning-msg {
         font-size: 12px;
     }
 }

@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 
 import useSMapResize from '../../hooks/useSMapResize';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
-import { findUserFromBattleByRandomTokenId } from '../../util';
+import { decryptEmail, findUserFromBattleByRandomTokenId } from '../../util';
 import BattlePlayersList from '../BattlePlayersList';
 import BattleSettings from '../BattleSettings';
 
@@ -43,6 +43,27 @@ const BattlePlayersPanel = () => {
         <>
             <div className="battle-users-container" style={{ width: usersSidebarWidth }}>
                 <BattlePlayersList myPlayer={myPlayer} battleCanBeStarted={battleCanBeStarted} />
+                <div className="warning-msg">
+                    <p>
+                        Toto je
+                        {' '}
+                        <b>beta verze</b>
+                        {' '}
+                        a stále probíhá její testování. V případě že něco nefunguje, často
+                        pomůže refresh stránky.
+                    </p>
+                    <p>
+                        Pokud něco nefunguje
+                        {' '}
+                        <b>hodně</b>
+                        {' '}
+                        nebo vůbec, hlaště mi to prosím do
+                        {' '}
+                        <a href={decryptEmail('amFuLmJvdWNobmVyQGdtYWlsLmNvbQ==')}>mailu</a>
+                        {' '}
+                        :).
+                    </p>
+                </div>
                 <BattleSettings />
             </div>
         </>

@@ -151,7 +151,7 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
                             {name}
                         </div>
                         <div className="battle-players-detail--status">
-                            {currentPlayerRound?.score ? (
+                            {typeof currentPlayerRound?.score !== 'undefined' ? (
                                 <Tooltip title="Hráč umístil tip">
                                     <CheckCircleTwoTone twoToneColor="#52c41a" />
                                 </Tooltip>
