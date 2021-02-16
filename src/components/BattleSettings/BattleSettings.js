@@ -15,10 +15,12 @@ const BattleSettings = () => {
     const isBattleCreator = currentBattleInfo?.createdById === randomUserToken;
     const isGameStarted = currentBattleInfo?.isGameStarted;
 
-    const updateBattleSettings = itemsToUpdate => {
-        updateBattle(battleId, itemsToUpdate)
+    const updateBattleSettings = async itemsToUpdate => {
+        return updateBattle(battleId, itemsToUpdate)
             .then(docRef => {})
-            .catch(err => {});
+            .catch(err => {
+                console.error('updateBattleSettings:', err);
+            });
     };
 
     if (isBattleCreator && !isGameStarted) {
@@ -31,7 +33,7 @@ const BattleSettings = () => {
                         <Slider
                             min={30}
                             max={300}
-                            onAfterChange={value => updateBattleSettings({ countdown: value })}
+                            onAfterChange={async value => updateBattleSettings({ countdown: value })}
                             defaultValue={currentBattleInfo.countdown}
                             step={15}
                         />
@@ -57,24 +59,29 @@ const BattleSettings = () => {
                 </p>
                 <Button
                     type="primary"
-                    onClick={() => {
-                        updateBattlePlayer(battleId, randomUserToken, {
+                    onClick={async () => {
+                        return updateBattlePlayer(battleId, randomUserToken, {
                             name: currentBattleInfo.myNickname,
                             isReady: true,
                         })
                             .then(docRef => {
                                 // if the user is a battle creator, he will generate rounds here
-                                generateRounds(currentBattleInfo);
+                                return generateRounds(currentBattleInfo);
+                            })
+                            .then(docRef => {
                                 return updateBattle(battleId, {
                                     currentRoundStart: getUnixTimestamp(new Date()),
                                     isGameStarted: true,
                                     round: 1,
                                 });
                             })
-                            .then(docRef => {
+                            .then(updatedBattle => {
                                 return deleteNotPreparedBattlePlayers(battleId);
                             })
-                            .catch(err => {});
+                            .then(deleted => {})
+                            .catch(err => {
+                                console.error('deleteNotPreparedBattlePlayers: ', err);
+                            });
                     }}
                 >
                     Začít hru ihned

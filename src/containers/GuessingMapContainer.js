@@ -124,7 +124,7 @@ export const GuessingMapContainer = ({
         return true;
     }, [currentRoundBattle, battleRound, isBattle, players, randomUserToken]);
 
-    const guessBattleRound = () => {
+    const guessBattleRound = async () => {
         const guessedRoundPoint = calculateCoordsAndDrawGuess();
         const { isGuessed } = currentRoundBattle;
 
@@ -153,7 +153,7 @@ export const GuessingMapContainer = ({
         dispatch(incrementMyTotalScore(Math.round(score)));
 
         if (!isGuessed) {
-            addGuessedRoundToPlayer(battleId, myDocumentId, playerRoundGuess)
+            return addGuessedRoundToPlayer(battleId, myDocumentId, playerRoundGuess)
                 .then(res => {
                     return updateBattleRound(battleId, battleRound, {
                         isGuessed: true,
@@ -164,14 +164,19 @@ export const GuessingMapContainer = ({
                         },
                     });
                 })
-                .then(res => {})
-                .catch(err => {});
-        } else {
-            // spocti rozdil mezi guessedtime a timeoutem
-            addGuessedRoundToPlayer(battleId, myDocumentId, playerRoundGuess)
-                .then(res => {})
-                .catch(err => {});
+                .then(res => {
+                    console.info('Battle round updated.');
+                })
+                .catch(err => {
+                    console.error('addGuessedRoundToPlayer and updateBattleRound: ', err);
+                });
         }
+        // spocti rozdil mezi guessedtime a timeoutem
+        return addGuessedRoundToPlayer(battleId, myDocumentId, playerRoundGuess)
+            .then(res => {})
+            .catch(err => {
+                console.error('addGuessedRoundToPlayer: ', err);
+            });
     };
 
     const guessSingleplayerRound = () => {

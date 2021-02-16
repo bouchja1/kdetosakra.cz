@@ -12,7 +12,7 @@ include $(dpl)
 export $(shell sed 's/=.*//' $(dpl))
 
 # grep the version from the mix file
-VERSION=$(shell cd ./ && git log -1 --pretty=format:"%h")
+VERSION=$(shell cd ./ && git describe --tags --abbrev=0)
 
 # HELP
 # This will output the help for each task

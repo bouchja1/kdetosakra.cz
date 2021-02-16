@@ -37,7 +37,7 @@ export const createBattle = (authorId, mode, radius, selectedCity) => {
     });
 };
 
-export const updateBattle = (battleId, itemsToUpdate) => {
+export const updateBattle = async (battleId, itemsToUpdate) => {
     return db
         .collection(COLLECTION_BATTLE)
         .doc(battleId)
@@ -89,7 +89,7 @@ export const getBattlePlayers = battleId => {
  * @param itemsToUpdate
  * @returns {Promise<firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>>}
  */
-export const updateBattlePlayer = (battleId, userId, itemsToUpdate) => {
+export const updateBattlePlayer = async (battleId, userId, itemsToUpdate) => {
     return getBattlePlayers(battleId)
         .then(querySnapshot => querySnapshot.docs)
         .then(battlePlayers => battlePlayers.find(player => player.data().userId === userId))
@@ -158,8 +158,12 @@ export const addRoundBatchToBattleRounds = async (battleId, roundsArray) => {
     // Commit the batch
     return batch
         .commit()
-        .then(res => {})
-        .catch(err => {});
+        .then(res => {
+            console.info('Rounds batch commited successfully.');
+        })
+        .catch(err => {
+            console.error('addRoundBatchToBattleRounds: ', err);
+        });
 };
 
 /**

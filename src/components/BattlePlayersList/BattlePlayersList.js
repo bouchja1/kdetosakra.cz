@@ -5,12 +5,7 @@ import {
 import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { CheckCircleTwoTone } from '@ant-design/icons';
-import {
-    addRoundBatchToBattleRounds,
-    deleteNotPreparedBattlePlayers,
-    updateBattle,
-    updateBattlePlayer,
-} from '../../services/firebase';
+import { addRoundBatchToBattleRounds, updateBattle, updateBattlePlayer } from '../../services/firebase';
 import {
     generatePlaceInRadius,
     generateRandomRadius,
@@ -24,7 +19,7 @@ import gameModes from '../../enums/modes';
 import { setLastResult } from '../../redux/actions/result';
 import { setMyUserInfoNicknameToCurrentBattle } from '../../redux/actions/battle';
 
-export const generateRounds = currentBattleInfo => {
+export const generateRounds = async currentBattleInfo => {
     const generatedRounds = [];
     const {
         mode, battleId, radius, selectedCity,
@@ -72,10 +67,10 @@ export const generateRounds = currentBattleInfo => {
     }
 
     if (generatedRounds.length) {
-        addRoundBatchToBattleRounds(battleId, generatedRounds)
-            .then(docRef => {})
-            .catch(err => {});
+        return addRoundBatchToBattleRounds(battleId, generatedRounds);
     }
+
+    return null;
 };
 
 const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
@@ -97,13 +92,15 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
         }
     }, [inputEl.current]);
 
-    const startNextBattleRound = (updatedBattleId, nextRoundNumber) => {
-        updateBattle(updatedBattleId, {
+    const startNextBattleRound = async (updatedBattleId, nextRoundNumber) => {
+        return updateBattle(updatedBattleId, {
             currentRoundStart: getUnixTimestamp(new Date()),
             round: nextRoundNumber,
         })
             .then(docRef => {})
-            .catch(err => {});
+            .catch(err => {
+                console.error(('startNextBattleRound: ', err));
+            });
     };
 
     const getOngoingPlayersOrder = round => {
@@ -211,15 +208,17 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
                             || currentBattleInfo.myNickname.length < 2
                         }
                         type="primary"
-                        onClick={() => {
+                        onClick={async () => {
                             if (generatedName !== currentBattleInfo.myNickname) {
-                                updateBattlePlayer(battleId, randomUserToken, {
+                                await updateBattlePlayer(battleId, randomUserToken, {
                                     name: currentBattleInfo.myNickname,
                                 })
                                     .then(docRef => {})
-                                    .catch(err => {});
+                                    .catch(err => {
+                                        console.error('Battle creator starts a new round: ', err);
+                                    });
                             }
-                            startNextBattleRound(battleId, round + 1);
+                            await startNextBattleRound(battleId, round + 1);
                         }}
                     >
                         Začít
@@ -324,22 +323,26 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
                         <Button
                             disabled={!battleCanBeStarted}
                             type="primary"
-                            onClick={() => {
+                            onClick={async () => {
                                 // if the user is a battle creator, he will generate rounds here
-                                updateBattlePlayer(battleId, randomUserToken, {
+                                await updateBattlePlayer(battleId, randomUserToken, {
                                     name: currentBattleInfo.myNickname,
                                 })
                                     .then(docRef => {
                                         // if the user is a battle creator, he will generate rounds here
-                                        generateRounds(currentBattleInfo);
+                                        return generateRounds(currentBattleInfo);
+                                    })
+                                    .then(generatedRounds => {
                                         return updateBattle(battleId, {
                                             currentRoundStart: getUnixTimestamp(new Date()),
                                             isGameStarted: true,
                                             round: 1,
                                         });
                                     })
-                                    .then(docRef => {})
-                                    .catch(err => {});
+                                    .then(battle => {})
+                                    .catch(err => {
+                                        console.error('Battle creator started game error: ', err);
+                                    });
                             }}
                         >
                             Začít hru
@@ -352,13 +355,15 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
                                 || currentBattleInfo.myNickname.length < 2
                             }
                             type="primary"
-                            onClick={() => {
-                                updateBattlePlayer(battleId, randomUserToken, {
+                            onClick={async () => {
+                                await updateBattlePlayer(battleId, randomUserToken, {
                                     name: currentBattleInfo.myNickname,
                                     isReady: true,
                                 })
                                     .then(docRef => {})
-                                    .catch(err => {});
+                                    .catch(err => {
+                                        console.error('Player is prepared error: ', err);
+                                    });
                             }}
                         >
                             Připraven

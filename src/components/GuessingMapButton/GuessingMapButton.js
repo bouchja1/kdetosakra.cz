@@ -53,7 +53,13 @@ const GuessingMapButton = ({
                     {!nextRoundButtonVisible ? (
                         <Button
                             disabled={disabled}
-                            onClick={isBattle ? guessBattleRound : guessSingleplayerRound}
+                            onClick={async () => {
+                                if (isBattle) {
+                                    await guessBattleRound();
+                                } else {
+                                    await guessSingleplayerRound();
+                                }
+                            }}
                             type="primary"
                         >
                             Hádej!
