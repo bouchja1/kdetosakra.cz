@@ -44,6 +44,7 @@ export const Battle = ({ type }) => {
     const currentBattlePlayers = useSelector(state => state.battle.currentBattle.players);
     const randomUserToken = useGetRandomUserToken();
 
+    // add player to the game
     useEffect(() => {
         if (battleId) {
             // get and store battle detail from firebase
@@ -74,24 +75,24 @@ export const Battle = ({ type }) => {
                                     }
                                 });
                         }
-                        setBattleFromFirestore(battleData);
                     } else {
                         setNotFound(true);
                     }
                 })
                 .catch(err => {});
         }
-    }, [battleId, currentBattlePlayers, randomUserToken]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [battleId]);
 
     useEffect(() => {
         if (battleId && currentBattleInfo.battleId && currentBattleInfo.battleId !== battleId) {
             dispatch(resetCurrentBattle());
         }
-    }, [currentBattleInfo, battleId, dispatch]);
+    }, [battleId, currentBattleInfo, dispatch]);
 
     // lets setup a new game or modify existing one
     useEffect(() => {
-        if (battleFromFirestore && battleRoundsFromFirestore) {
+        if (battleId && battleFromFirestore && battleRoundsFromFirestore) {
             const {
                 created,
                 createdById,

@@ -67,10 +67,8 @@ const BattleLinkModal = ({
                             </a>
                         </p>
                         <Button
-                            disabled
                             type="primary"
                             onClick={() => {
-                                /*
                                 setGenerateLinkInProgress(true);
                                 // eslint-disable-next-line implicit-arrow-linebreak
                                 createBattle(randomUserToken, mode, radius, selectedCity)
@@ -81,7 +79,6 @@ const BattleLinkModal = ({
                                     .catch(err => {
                                         setGenerateLinkInProgress(false);
                                     });
-                                 */
                             }}
                         >
                             Vygenerovat pozvánku
