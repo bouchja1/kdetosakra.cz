@@ -54,26 +54,37 @@ export const Battle = ({ type }) => {
                         const battleData = battleDetail.data();
                         // don't add an user when the game is started
 
-                        const isPlayerAlreadyInBattle = findUserFromBattleByRandomTokenId(currentBattlePlayers, randomUserToken) !== null;
-                        if (randomUserToken && !battleData.isGameStarted && !isPlayerAlreadyInBattle) {
-                            addPlayerToBattle(
-                                {
-                                    name: getRandomNickname(),
-                                    userId: randomUserToken,
-                                    isReady: battleData.createdById === randomUserToken,
-                                },
-                                battleId,
-                            )
-                                .then(docRef => {
-                                    dispatch(resetLastPanoramaPlace());
-                                })
-                                .catch(err => {
-                                    if (err.name === errorNames.maxBattleCapacityExhausted) {
-                                        setPlayerCapacityExhausted(true);
-                                    } else {
-                                        console.error(err.toJSON());
-                                    }
-                                });
+                        if (currentBattlePlayers) {
+                            const isPlayerAlreadyInBattle = findUserFromBattleByRandomTokenId(currentBattlePlayers, randomUserToken) !== null;
+                            if (randomUserToken && !battleData.isGameStarted && !isPlayerAlreadyInBattle) {
+                                addPlayerToBattle(
+                                    {
+                                        name: getRandomNickname(),
+                                        userId: randomUserToken,
+                                        isReady: battleData.createdById === randomUserToken,
+                                    },
+                                    battleId,
+                                )
+                                    .then(docRef => {
+                                        dispatch(resetLastPanoramaPlace());
+                                    })
+                                    .catch(err => {
+                                        if (err.name === errorNames.maxBattleCapacityExhausted) {
+                                            setPlayerCapacityExhausted(true);
+                                        } else {
+                                            console.error('random user token: ', randomUserToken);
+                                            console.error(
+                                                'random user battleData.isGameStarted: ',
+                                                battleData.isGameStarted,
+                                            );
+                                            console.error(
+                                                'random isPlayerAlreadyInBattle token: ',
+                                                isPlayerAlreadyInBattle,
+                                            );
+                                            console.error(err.toJSON());
+                                        }
+                                    });
+                            }
                         }
                     } else {
                         setNotFound(true);
@@ -82,7 +93,7 @@ export const Battle = ({ type }) => {
                 .catch(err => {});
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [battleId]);
+    }, [battleId, currentBattlePlayers]);
 
     useEffect(() => {
         if (battleId && currentBattleInfo.battleId && currentBattleInfo.battleId !== battleId) {
@@ -150,7 +161,7 @@ export const Battle = ({ type }) => {
                     const { name, documentId } = myUser;
                     dispatch(
                         setMyUserInfoToCurrentBattle({
-                            myNickname: name,
+                            myNickname: currentBattleInfo.myNickname ? currentBattleInfo.myNickname : name, // use the name from redux store if exists
                             myTotalScore: countTotalPlayerScoreFromRounds(myUser),
                             myDocumentId: documentId,
                         }),
@@ -160,7 +171,7 @@ export const Battle = ({ type }) => {
             error: err => {},
         });
         return unsubscribe;
-    }, [battleId, randomUserToken, dispatch]);
+    }, [battleId, randomUserToken, dispatch, currentBattleInfo.myNickname]);
 
     // Use an effect hook to subscribe to the battle rounds
     // automatically unsubscribe when the component unmounts.

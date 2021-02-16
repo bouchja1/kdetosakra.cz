@@ -19,15 +19,23 @@ const BattlePlayersPanel = () => {
 
     useEffect(() => {
         // find my user
-        setMyPlayer(findUserFromBattleByRandomTokenId(currentBattlePlayers, randomUserToken));
+        if (currentBattlePlayers !== null) {
+            setMyPlayer(findUserFromBattleByRandomTokenId(currentBattlePlayers, randomUserToken));
+        }
     }, [currentBattlePlayers, randomUserToken]);
 
     // all players are ready! lets start the game - multiplayer game is being started!
     useEffect(() => {
         const { isGameStarted } = currentBattleInfo;
-        const readyPlayers = currentBattlePlayers.filter(player => player.isReady);
-        if (!isGameStarted && currentBattlePlayers.length > 1 && readyPlayers.length === currentBattlePlayers.length) {
-            setBattleCanBeStarted(true);
+        if (currentBattlePlayers !== null) {
+            const readyPlayers = currentBattlePlayers.filter(player => player.isReady);
+            if (
+                !isGameStarted
+                && currentBattlePlayers.length > 1
+                && readyPlayers.length === currentBattlePlayers.length
+            ) {
+                setBattleCanBeStarted(true);
+            }
         }
     }, [currentBattlePlayers, currentBattleInfo]);
 

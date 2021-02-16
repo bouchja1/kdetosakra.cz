@@ -23,7 +23,7 @@ const initialState = {
         currentRoundStart: null,
         myNickname: null,
         isGameStarted: false,
-        players: [],
+        players: null,
         radius: null,
         withCountdown: true,
         countdown: 60,
@@ -60,6 +60,7 @@ const gameReducer = (state = initialState, action) => {
                 },
             };
         case getType(setMyUserInfoNicknameToCurrentBattle): {
+            // invoked when the name is changing before a game is started
             return {
                 ...state,
                 currentBattle: {

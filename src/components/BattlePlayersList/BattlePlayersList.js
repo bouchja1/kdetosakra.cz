@@ -202,11 +202,6 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
             return (
                 <>
                     <Button
-                        disabled={
-                            !battleCanBeStarted
-                            || !currentBattleInfo.myNickname
-                            || currentBattleInfo.myNickname.length < 2
-                        }
                         type="primary"
                         onClick={async () => {
                             if (generatedName !== currentBattleInfo.myNickname) {
@@ -221,7 +216,7 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
                             await startNextBattleRound(battleId, round + 1);
                         }}
                     >
-                        Začít
+                        Spustit
                         {' '}
                         {currentBattleInfo.round + 1}
                         . kolo
@@ -321,7 +316,11 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
                     <div className="battle-players">{battleId && getPlayersBeforeGameStarted()}</div>
                     {isBattleCreator ? (
                         <Button
-                            disabled={!battleCanBeStarted}
+                            disabled={
+                                !battleCanBeStarted
+                                || !currentBattleInfo.myNickname
+                                || currentBattleInfo.myNickname.length < 2
+                            }
                             type="primary"
                             onClick={async () => {
                                 // if the user is a battle creator, he will generate rounds here

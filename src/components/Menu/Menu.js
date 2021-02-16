@@ -33,7 +33,9 @@ const Menu = () => {
     const isBattle = pathname.includes(routeNames.battle) && currentBattleInfo?.battleId;
 
     useEffect(() => {
-        setMyPlayer(findUserFromBattleByRandomTokenId(currentBattlePlayers, randomUserToken));
+        if (currentBattlePlayers !== null) {
+            setMyPlayer(findUserFromBattleByRandomTokenId(currentBattlePlayers, randomUserToken));
+        }
     }, [currentBattlePlayers, randomUserToken]);
 
     const isGameFinished = () => {

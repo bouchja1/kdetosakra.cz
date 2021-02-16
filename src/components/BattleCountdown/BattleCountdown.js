@@ -64,19 +64,21 @@ const BattleCountDown = () => {
 
     // stop countdown when it finishes or all players make a guess
     useEffect(() => {
-        const playersWithFinishedRoundGuess = currentBattlePlayers.filter(player => player[`round${round}`]);
-        if (
-            countdownIsRunning
-            && (countdownTime < 1 || playersWithFinishedRoundGuess.length === currentBattlePlayers.length)
-        ) {
-            dispatch(
-                setIsRoundActive({
-                    roundId: round,
-                    active: false,
-                }),
-            );
-            stopInterval();
-            setCountdownIsRunning(false);
+        if (currentBattlePlayers !== null) {
+            const playersWithFinishedRoundGuess = currentBattlePlayers.filter(player => player[`round${round}`]);
+            if (
+                countdownIsRunning
+                && (countdownTime < 1 || playersWithFinishedRoundGuess.length === currentBattlePlayers.length)
+            ) {
+                dispatch(
+                    setIsRoundActive({
+                        roundId: round,
+                        active: false,
+                    }),
+                );
+                stopInterval();
+                setCountdownIsRunning(false);
+            }
         }
     }, [countdownIsRunning, countdownTime, currentBattlePlayers, round, stopInterval, dispatch]);
 
@@ -98,54 +100,55 @@ const BattleCountDown = () => {
     };
 
     const battleInfo = useMemo(() => {
-        const currentRound = rounds[round - 1];
+        if (currentBattlePlayers !== null) {
+            const currentRound = rounds[round - 1];
 
-        const {
-            isGuessed, guessedTime, firstGuess, isRoundActive,
-        } = currentRound;
-        const battleUserCreator = findUserFromBattleByRandomTokenId(currentBattlePlayers, createdById);
-        if (firstGuess?.guessedById && isGuessed && !isRoundActive) {
-            if (round >= TOTAL_ROUNDS_MAX) {
-                return <Alert message={<b>Hra skončila.</b>} type="info" />;
+            const {
+                isGuessed, guessedTime, firstGuess, isRoundActive,
+            } = currentRound;
+            const battleUserCreator = findUserFromBattleByRandomTokenId(currentBattlePlayers, createdById);
+            if (firstGuess?.guessedById && isGuessed && !isRoundActive) {
+                if (round >= TOTAL_ROUNDS_MAX) {
+                    return <Alert message={<b>Hra skončila.</b>} type="info" />;
+                }
+
+                return (
+                    <Alert
+                        message={(
+                            <b>
+                                Konec kola.
+                                {' '}
+                                {battleUserCreator.name}
+                                {' '}
+                                odstartuje
+                                {' '}
+                                {round + 1}
+                                . kolo
+                            </b>
+                        )}
+                        type="info"
+                    />
+                );
             }
 
-            return (
-                <Alert
-                    message={(
-                        <b>
-                            Konec kola.
-                            {' '}
-                            {battleUserCreator.name}
-                            {' '}
-                            odstartuje
-                            {' '}
-                            {round + 1}
-                            . kolo
-                        </b>
-                    )}
-                    type="info"
-                />
-            );
-        }
+            if (firstGuess?.guessedById && isGuessed && isRoundActive && !countdownIsRunning) {
+                startCountdown(guessedTime);
+            }
 
-        if (firstGuess?.guessedById && isGuessed && isRoundActive && !countdownIsRunning) {
-            startCountdown(guessedTime);
+            if (firstGuess?.guessedById && isGuessed) {
+                const { name, guessedById } = firstGuess;
+                return (
+                    <Alert
+                        message={
+                            guessedById === randomUserToken
+                                ? getAlertMessageFastestPlayer(round, countdownTime)
+                                : getAlertMessageOtherPlayers(round, name, countdownTime)
+                        }
+                        type="info"
+                    />
+                );
+            }
         }
-
-        if (firstGuess?.guessedById && isGuessed) {
-            const { name, guessedById } = firstGuess;
-            return (
-                <Alert
-                    message={
-                        guessedById === randomUserToken
-                            ? getAlertMessageFastestPlayer(round, countdownTime)
-                            : getAlertMessageOtherPlayers(round, name, countdownTime)
-                    }
-                    type="info"
-                />
-            );
-        }
-
         return null;
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [countdownTime, countdownIsRunning, createdById, currentBattlePlayers, randomUserToken, round, rounds]);
