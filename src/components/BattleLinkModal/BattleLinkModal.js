@@ -57,7 +57,7 @@ const BattleLinkModal = ({
                     <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                         <p style={{ color: 'red', fontWeight: 'bold' }}>
                             Probíhá oprava chyb nalezených v 1. veřejném testování. Multiplayer bude k dispozici během
-                            několika dnů.
+                            několika dnů...
                         </p>
                         <p>
                             Pro čerstvé informace doporučuji sledovat
