@@ -72,27 +72,23 @@ export const RegionCity = ({ multiplayerSupported }) => {
         <Formik
             initialValues={{ radius: 1, city: '' }}
             onSubmit={(values, { setSubmitting }) => {
-                if (multiplayerSupported) {
-                    ReactGA.event({
-                        category: CATEGORIES.CITY,
-                        action: 'Play city game',
-                    });
-                    const selectedCity = cities.filter(city => {
-                        return city.name === values.city;
-                    });
-                    dispatch(
-                        setCurrentGame({
-                            mode: gameModes.city,
-                            round: 1,
-                            totalScore: 0,
-                            radius: Number(radius),
-                            city: selectedCity[0],
-                        }),
-                    );
-                    setPlayGame(true);
-                } else {
-                    showMultiplayerWarningModal();
-                }
+                ReactGA.event({
+                    category: CATEGORIES.CITY,
+                    action: 'Play city game',
+                });
+                const selectedCity = cities.filter(city => {
+                    return city.name === values.city;
+                });
+                dispatch(
+                    setCurrentGame({
+                        mode: gameModes.city,
+                        round: 1,
+                        totalScore: 0,
+                        radius: Number(radius),
+                        city: selectedCity[0],
+                    }),
+                );
+                setPlayGame(true);
             }}
             validationSchema={Yup.object().shape({
                 radius: Yup.number().required('Required'),
@@ -171,7 +167,13 @@ export const RegionCity = ({ multiplayerSupported }) => {
                                     className="button-play"
                                     type="primary"
                                     disabled={!citySelected || isSubmitting}
-                                    onClick={() => setBattleModalVisible(true)}
+                                    onClick={() => {
+                                        if (multiplayerSupported) {
+                                            setBattleModalVisible(true);
+                                        } else {
+                                            showMultiplayerWarningModal();
+                                        }
+                                    }}
                                 >
                                     Více hráčů
                                 </Button>
