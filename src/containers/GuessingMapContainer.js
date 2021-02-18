@@ -367,6 +367,7 @@ export const GuessingMapContainer = ({
                                 setMapDimension('min');
                                 writeStorage('smapDimension', 'min');
                             }
+                            window.dispatchEvent(new Event('resize'));
                         }}
                     />
                     <GuessingMap
