@@ -25,7 +25,7 @@ export const Info = () => {
                     alternativa k populární zahraniční hře
                     {' '}
                     {/* eslint-disable-next-line react/jsx-no-target-blank */}
-                    <a href="https://geoguessr.com/" target="_blank">
+                    <a href="https://geoguessr.com/" target="_blank" rel="noreferrer">
                         GeoGuessr
                     </a>
                     .
@@ -34,7 +34,7 @@ export const Info = () => {
                     Hra využívá panoramata a mapové podklady aplikace
                     {' '}
                     {/* eslint-disable-next-line react/jsx-no-target-blank */}
-                    <a href="https://api.mapy.cz/" target="_blank">
+                    <a href="https://api.mapy.cz/" target="_blank" rel="noreferrer">
                         Mapy.cz od Seznamu
                     </a>
                     . Hratelnost je takřka neomezená a jedinou hranicí je hranice České republiky 🇨🇿

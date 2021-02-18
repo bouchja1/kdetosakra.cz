@@ -85,6 +85,8 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
 
     const isBattleCreator = currentBattleInfo.createdById !== null && currentBattleInfo.createdById === randomUserToken;
 
+    const gameCreatorStartButtonDisabled = !battleCanBeStarted || !currentBattleInfo.myNickname || currentBattleInfo.myNickname.length < 2;
+
     useEffect(() => {
         if (inputEl.current !== null) {
             setGeneratedName(currentBattleInfo.myNickname);
@@ -260,17 +262,19 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
                 <>
                     <div key={`waiting-battle-players-detail-${i}`} className="battle-players-detail">
                         {myPlayer?.userId === userId ? (
-                            <Input
-                                bordered={false}
-                                size="small"
-                                maxLength={20}
-                                defaultValue={name}
-                                disabled={isBattleCreator ? false : isReady}
-                                ref={inputEl}
-                                onChange={e => {
-                                    dispatch(setMyUserInfoNicknameToCurrentBattle(e.target.value));
-                                }}
-                            />
+                            <>
+                                <Input
+                                    bordered={false}
+                                    size="small"
+                                    maxLength={20}
+                                    defaultValue={name}
+                                    disabled={isBattleCreator ? false : isReady}
+                                    ref={inputEl}
+                                    onChange={e => {
+                                        dispatch(setMyUserInfoNicknameToCurrentBattle(e.target.value));
+                                    }}
+                                />
+                            </>
                         ) : (
                             <div className="battle-players-detail--name">{name}</div>
                         )}
@@ -316,11 +320,7 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
                     <div className="battle-players">{battleId && getPlayersBeforeGameStarted()}</div>
                     {isBattleCreator ? (
                         <Button
-                            disabled={
-                                !battleCanBeStarted
-                                || !currentBattleInfo.myNickname
-                                || currentBattleInfo.myNickname.length < 2
-                            }
+                            disabled={gameCreatorStartButtonDisabled}
                             type="primary"
                             onClick={async () => {
                                 // if the user is a battle creator, he will generate rounds here
@@ -370,7 +370,11 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
                     )}
                     <p style={{ marginTop: '10px' }}>
                         {isBattleCreator ? (
-                            <>Hru můžeš začít, až budou všichni ostatní hráči připraveni.</>
+                            <>
+                                {gameCreatorStartButtonDisabled
+                                    ? 'Hru můžeš začít, až budou všichni ostatní hráči připraveni.'
+                                    : ''}
+                            </>
                         ) : (
                             <>
                                 Hra začíná, až všichni hráči zvolí možnost

@@ -59,7 +59,7 @@ function MainApp(props) {
                                 <>
                                     {' | '}
                                     {/* eslint-disable-next-line react/jsx-no-target-blank */}
-                                    <a href="https://www.buymeacoffee.com/mmwbwdq" target="_blank">
+                                    <a href="https://www.buymeacoffee.com/mmwbwdq" target="_blank" rel="noreferrer">
                                         Kup mi kafe - podpoříš provoz a další rozvoj
                                         {' '}
                                         <CoffeeOutlined />
@@ -77,7 +77,7 @@ function MainApp(props) {
 const ClearCacheComponent = withClearCache(MainApp);
 
 function App() {
-    return <ClearCacheComponent />;
+    return <MainApp />;
 }
 
 export default App;

@@ -3,5 +3,5 @@ export const MAX_SCORE_PERCENT = 100;
 export const MAX_PANORAMA_TRIES = 5;
 export const DEFAULT_PANORAMA_TOLERANCE = 50;
 export const TOTAL_ROUNDS_MAX = 5;
-export const MAX_ALLOWED_BATTLE_PLAYERS = 5;
+export const MAX_ALLOWED_BATTLE_PLAYERS = 10;
 export const resultPathColors = ['#00bc57', '#6e45f9', '#29c2ff', '#f99b45', '#f945a9'];

@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Progress, Tabs } from 'antd';
 import { Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { roundToTwoDecimal, sortPlayersByHighestScore } from '../../util';
+import { sortPlayersByHighestScore } from '../../util';
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
 import ResultSMap from '../../components/ResultSMap';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
@@ -69,7 +69,7 @@ export const BattleResult = ({ renderPlayAgainButton }) => {
                             {activePlayerStructure && (
                                 <Progress
                                     type="circle"
-                                    percent={roundToTwoDecimal(activePlayerStructure.score / TOTAL_ROUNDS_MAX)}
+                                    percent={Math.round(activePlayerStructure.score / TOTAL_ROUNDS_MAX)}
                                 />
                             )}
                         </div>

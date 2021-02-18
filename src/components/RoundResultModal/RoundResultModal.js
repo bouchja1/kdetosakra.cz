@@ -28,6 +28,7 @@ const RoundResultModal = ({
             onOk={() => closeModal(false)}
             onCancel={() => closeModal(false)}
             footer={null}
+            centered
         >
             <div className="result-modal-container">
                 {currentRound > 0 ? (
@@ -62,7 +63,7 @@ const RoundResultModal = ({
                     {totalRoundScore >= 0 ? (
                         <div className="result-modal-container-item">
                             <h4>Průběžný počet bodů</h4>
-                            {roundToTwoDecimal(totalRoundScore)}
+                            {Math.round(totalRoundScore)}
                         </div>
                     ) : null}
                 </div>

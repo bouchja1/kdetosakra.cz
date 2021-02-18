@@ -2,7 +2,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { Progress } from 'antd';
-import { roundToTwoDecimal } from '../../util';
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
 import ResultSMap from '../../components/ResultSMap';
 import { RoundsSummary } from './RoundsSummary';
@@ -29,7 +28,7 @@ export const SingleResult = ({ renderPlayAgainButton }) => {
                     <div className="result-modal-container">
                         <div className="result-container-item">
                             <h3>Celková průměrná přesnost</h3>
-                            <Progress type="circle" percent={roundToTwoDecimal(totalScore / TOTAL_ROUNDS_MAX)} />
+                            <Progress type="circle" percent={Math.round(totalScore / TOTAL_ROUNDS_MAX)} />
                         </div>
                     </div>
                     <div className="result-modal-container">

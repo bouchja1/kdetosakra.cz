@@ -1,6 +1,7 @@
 import React from 'react';
 import { Layout, Image } from 'antd';
 import { Link } from 'react-router-dom';
+import { MAX_ALLOWED_BATTLE_PLAYERS } from '../constants/game';
 
 const { Content } = Layout;
 
@@ -50,8 +51,13 @@ export const Help = () => {
                         K vytvoření hry pro více hráčů a jejímu hraní není nutná registrace. Tvůrce hry (ten, co chce
                         pozvat ke hře jiné hráče) vybere jeden z herních módů a jako typ hry zvolí &quot;Hrát s
                         přáteli&quot;. V následujícím dialogu vygeneruje pozvánku a získá unikátní odkaz, který si
-                        zkopíruje a zašle jej dalším hráčům. Může pozvat až 4 další hráče. Hráči si otevřou zaslaný
-                        odkaz v prohlížeči a všichni se octnou ve společné herní místnosti (viz dále).
+                        zkopíruje a zašle jej dalším hráčům. Může pozvat až
+                        {' '}
+                        {MAX_ALLOWED_BATTLE_PLAYERS - 1}
+                        {' '}
+                        dalších
+                        hráčů. Hráči si otevřou zaslaný odkaz v prohlížeči a všichni se octnou ve společné herní
+                        místnosti (viz dále).
                     </p>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <Image
