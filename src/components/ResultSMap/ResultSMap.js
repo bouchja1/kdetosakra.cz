@@ -57,7 +57,7 @@ const ResultSMap = ({
     return (
         <div id="smap-container">
             {width <= 961 ? <Divider /> : null}
-            <div id="smap" className="smap smap-style" ref={resultMap} />
+            <div id="smap" className="smap-result smap-style" ref={resultMap} />
         </div>
     );
 };

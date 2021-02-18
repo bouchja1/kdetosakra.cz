@@ -530,6 +530,12 @@ label {
     background: #ccc;
 }
 
+.smap-result {
+    height: 450px !important;
+    margin-bottom: 5px;
+    background: #ccc;
+}
+
 .smap-collapsible-max-max {
     width: 30px;
     height: 30px;
@@ -592,6 +598,7 @@ label {
         height: 20px;
     }
 
+    .smap-result,
     .smap {
         height: 450px !important;
         margin-bottom: 5px;
@@ -656,6 +663,7 @@ label {
         height: 20px;
     }
 
+    .smap-result,
     .smap {
         height: 450px !important;
         margin-bottom: 5px;
