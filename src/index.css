@@ -527,6 +527,7 @@ label {
 .smap {
     height: 100%;
     margin-bottom: 5px;
+    background: #ccc;
 }
 
 .smap-collapsible-max-max {
