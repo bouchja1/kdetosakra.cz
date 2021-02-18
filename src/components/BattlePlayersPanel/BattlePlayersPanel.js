@@ -15,8 +15,6 @@ const BattlePlayersPanel = () => {
     const [myPlayer, setMyPlayer] = useState();
     const [battleCanBeStarted, setBattleCanBeStarted] = useState(false);
 
-    const usersSidebarWidth = width / 6;
-
     useEffect(() => {
         // find my user
         if (currentBattlePlayers !== null) {

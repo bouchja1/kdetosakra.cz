@@ -74,7 +74,7 @@ export const ModesOverview = () => {
                         <a
                             href="https://www.youtube.com/playlist?list=PLtFesIeBF_meZrA0cGcPhMp_nUl79_AWI"
                             target="_blank"
-                            rel="noreferrer"
+                            rel="noopener noreferrer"
                         >
                             Kdepak jsme?
                         </a>
@@ -84,7 +84,7 @@ export const ModesOverview = () => {
                         <a
                             href="https://www.youtube.com/playlist?list=PLgtWt-mElPivScJgTABHu--vjAB9uOzxe"
                             target="_blank"
-                            rel="noreferrer"
+                            rel="noopener noreferrer"
                         >
                             LakelyDorton
                         </a>

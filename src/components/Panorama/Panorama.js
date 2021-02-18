@@ -20,7 +20,6 @@ const Panorama = ({
     isGameStarted,
 }) => {
     const mapyContext = useContext(MapyCzContext);
-    const windowHeight = useWindowHeight();
     const { width, height } = useSMapResize();
     const [findPanoramaTriesCounter, setFindPanoramaTriesCounter] = useState(0);
     const [panoramaFounded, setPanoramaFounded] = useState(true);
