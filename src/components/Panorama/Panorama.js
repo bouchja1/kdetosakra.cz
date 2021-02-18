@@ -3,6 +3,7 @@ import { Spin } from 'antd';
 import useWindowHeight from '../../hooks/useWindowHeight';
 import MapyCzContext from '../../context/MapyCzContext';
 import { DEFAULT_PANORAMA_TOLERANCE, MAX_PANORAMA_TRIES } from '../../constants/game';
+import useSMapResize from '../../hooks/useSMapResize';
 
 export const panoramaSceneOptions = {
     nav: true,
@@ -20,6 +21,7 @@ const Panorama = ({
 }) => {
     const mapyContext = useContext(MapyCzContext);
     const windowHeight = useWindowHeight();
+    const { width, height } = useSMapResize();
     const [findPanoramaTriesCounter, setFindPanoramaTriesCounter] = useState(0);
     const [panoramaFounded, setPanoramaFounded] = useState(true);
 
@@ -70,7 +72,7 @@ const Panorama = ({
             size="large"
         >
             {' '}
-            <div className="panorama-container" style={{ height: windowHeight - 130 }}>
+            <div className="panorama-container" style={{ height: height - 130, width }}>
                 {!panoramaFounded ? (
                     <p>V okruhu 5 km od vašeho místa nebylo nalezeno žádné panorama.</p>
                 ) : (

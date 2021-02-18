@@ -1,9 +1,10 @@
 import React, {
     useContext, useEffect, useRef, useState, useMemo
 } from 'react';
-import { writeStorage } from '@rehooks/local-storage';
+import { useLocalStorage, writeStorage } from '@rehooks/local-storage';
 import { useDispatch, useSelector } from 'react-redux';
-import minimizeMapShadow from '../assets/images/map/minimizeMapShadow.png';
+import minimizeMapShadow from '../assets/images/map/minimizeMapShadowFull.png';
+import minimizeMapShadowDisabled from '../assets/images/map/minimizeMapShadowFullDisabled.png';
 import maximizeMapShadow from '../assets/images/map/maximizeMapShadow.png';
 import useSMapResize from '../hooks/useSMapResize';
 import GuessingMapButton from '../components/GuessingMapButton';
@@ -19,7 +20,6 @@ import useGetRandomUserToken from '../hooks/useGetRandomUserToken';
 import MapyCzContext from '../context/MapyCzContext';
 
 export const GuessingMapContainer = ({
-    maximized,
     isBattle,
     visible,
     evaluateGuessedRound,
@@ -34,12 +34,15 @@ export const GuessingMapContainer = ({
 }) => {
     const dispatch = useDispatch();
     const mapyContext = useContext(MapyCzContext);
+    const [smapDimensionLocalStorage] = useLocalStorage('smapDimension');
     const randomUserToken = useGetRandomUserToken();
     const { width, height } = useSMapResize();
     const [showGuessLimitModal, setShowGuessLimitModal] = useState(false);
     const [nextRoundButtonVisible, setNextRoundButtonVisible] = useState(false);
     const [guessButtonDisabled, setGuessButtonDisabled] = useState(true);
     const [currentRoundBattle, setCurrentRoundBattle] = useState();
+    const [mapStyle, setMapStyle] = useState();
+    const [mapDimension, setMapDimension] = useState(smapDimensionLocalStorage || 'normal');
     const currentGame = useSelector(state => state.game.currentGame);
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
     const [roundGuessed, setRoundGuessed] = useState(false);
@@ -60,6 +63,21 @@ export const GuessingMapContainer = ({
     const {
         battleId, myDocumentId, myNickname, round: battleRound, rounds, players,
     } = currentBattleInfo;
+
+    useEffect(() => {
+        if (width > 960) {
+            if (!visible) {
+                setMapStyle({ display: 'none' });
+            }
+            if (mapDimension === 'max') {
+                setMapStyle({ height: height / 1.2, width: width / 1.5 });
+            } else {
+                setMapStyle({ height: height / 2, width: width / 3 });
+            }
+        } else {
+            setMapStyle(null);
+        }
+    }, [width, height]);
 
     /*
     When the round is changed
@@ -312,16 +330,6 @@ export const GuessingMapContainer = ({
         window.scrollTo(0, 0);
     };
 
-    const getSMapCollapseMax = () => {
-        if (width > 960) {
-            if (!visible) {
-                return { display: 'none' };
-            }
-            return { height: height / 2, width: width / 3 };
-        }
-        return null;
-    };
-
     const getSMapCollapseMin = () => {
         if (width > 960) {
             return { height: 100, width: 100 };
@@ -331,40 +339,63 @@ export const GuessingMapContainer = ({
 
     return (
         <>
-            <div id="smap-container" className="smap-container" style={getSMapCollapseMax()}>
-                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions */}
-                <img
-                    alt="Normální velikost mapy"
-                    className="smap-collapsible-max"
-                    src={minimizeMapShadow}
-                    onClick={() => writeStorage('smapVisible', false)}
-                />
-                <GuessingMap
-                    currentRoundGuessedPoint={currentRoundGuessedPoint}
-                    isBattle={isBattle}
-                    refLayerValue={refLayerValue}
-                    roundGuessed={roundGuessed}
-                    refVectorLayerSMapValue={refVectorLayerSMapValue}
-                    saveCurrentClickedMapPointCoordinates={saveCurrentClickedMapPointCoordinates}
-                />
-                {guessingMapButtonVisible && (
-                    <GuessingMapButton
-                        refreshMap={refreshMap}
-                        isBattle={isBattle}
-                        guessBattleRound={guessBattleRound}
-                        guessSingleplayerRound={guessSingleplayerRound}
-                        allGuessedPoints={allGuessedPoints}
-                        round={round}
-                        totalScore={totalScore}
-                        roundGuessed={roundGuessed}
-                        disabled={guessButtonDisabled || panoramaLoading || !isGameStarted}
-                        currentRound={isBattle ? currentRoundBattle : currentGame.round}
-                        currentGame={currentGame}
-                        nextRoundButtonVisible={nextRoundButtonVisible}
+            {visible && mapDimension !== 'min' && (
+                <div id="smap-container" className="smap-container" style={mapStyle}>
+                    {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions */}
+                    <img
+                        alt="Maximální velikost mapy"
+                        className={`smap-collapsible-max-max ${mapDimension === 'max' ? 'max-max-disabled' : ''}`}
+                        src={mapDimension === 'max' ? minimizeMapShadowDisabled : minimizeMapShadow}
+                        onClick={() => {
+                            setMapStyle({ height: height / 1.2, width: width / 1.5 });
+                            setMapDimension('max');
+                            writeStorage('smapDimension', 'max');
+                            window.dispatchEvent(new Event('resize'));
+                        }}
                     />
-                )}
-            </div>
-            {!maximized && (
+                    {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions */}
+                    <img
+                        alt="Normální velikost mapy"
+                        className="smap-collapsible-max"
+                        src={minimizeMapShadow}
+                        onClick={() => {
+                            if (mapDimension === 'max') {
+                                setMapStyle({ height: height / 2, width: width / 3 });
+                                setMapDimension('normal');
+                                writeStorage('smapDimension', 'normal');
+                            } else if (mapDimension === 'normal') {
+                                setMapDimension('min');
+                                writeStorage('smapDimension', 'min');
+                            }
+                        }}
+                    />
+                    <GuessingMap
+                        currentRoundGuessedPoint={currentRoundGuessedPoint}
+                        isBattle={isBattle}
+                        refLayerValue={refLayerValue}
+                        roundGuessed={roundGuessed}
+                        refVectorLayerSMapValue={refVectorLayerSMapValue}
+                        saveCurrentClickedMapPointCoordinates={saveCurrentClickedMapPointCoordinates}
+                    />
+                    {guessingMapButtonVisible && (
+                        <GuessingMapButton
+                            refreshMap={refreshMap}
+                            isBattle={isBattle}
+                            guessBattleRound={guessBattleRound}
+                            guessSingleplayerRound={guessSingleplayerRound}
+                            allGuessedPoints={allGuessedPoints}
+                            round={round}
+                            totalScore={totalScore}
+                            roundGuessed={roundGuessed}
+                            disabled={guessButtonDisabled || panoramaLoading || !isGameStarted}
+                            currentRound={isBattle ? currentRoundBattle : currentGame.round}
+                            currentGame={currentGame}
+                            nextRoundButtonVisible={nextRoundButtonVisible}
+                        />
+                    )}
+                </div>
+            )}
+            {mapDimension === 'min' && (
                 <div className="smap-container" style={getSMapCollapseMin()}>
                     {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions */}
                     <img
@@ -372,7 +403,8 @@ export const GuessingMapContainer = ({
                         className="smap-collapsible-min"
                         src={maximizeMapShadow}
                         onClick={() => {
-                            writeStorage('smapVisible', true);
+                            setMapDimension('normal');
+                            writeStorage('smapDimension', 'normal');
                             window.dispatchEvent(new Event('resize'));
                         }}
                     />

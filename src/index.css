@@ -359,6 +359,7 @@ label {
 }
 
 .battle-users-container {
+    min-width: 250px;
     display: flex;
     flex-direction: column;
     border-right: 1px solid #e1e3e8;
@@ -524,17 +525,34 @@ label {
 }
 
 .smap {
-    height: 450px !important;
+    height: 100%;
     margin-bottom: 5px;
 }
 
-.smap-collapsible-max {
-    width: 50px;
-    height: 50px;
+.smap-collapsible-max-max {
+    width: 30px;
+    height: 30px;
     position: absolute;
     top: 0;
     left: 0;
     z-index: 2;
+    transform: rotateZ(180deg);
+    pointer-events: auto;
+    cursor: nw-resize;
+}
+
+.max-max-disabled {
+    cursor: not-allowed;
+}
+
+.smap-collapsible-max {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 0;
+    left: 30px;
+    z-index: 2;
+    cursor: se-resize;
 }
 
 .smap-collapsible-min {
@@ -544,6 +562,8 @@ label {
     top: 0;
     left: 0;
     z-index: 2;
+    pointer-events: auto;
+    cursor: nw-resize;
 }
 
 .smap-style {
@@ -571,10 +591,16 @@ label {
         height: 20px;
     }
 
+    .smap {
+        height: 450px !important;
+        margin-bottom: 5px;
+    }
+
     .smap-container {
         width: 100%;
     }
 
+    .smap-collapsible-max-max,
     .smap-collapsible-max,
     .smap-collapsible-min {
         display: none;
@@ -629,9 +655,19 @@ label {
         height: 20px;
     }
 
+    .smap {
+        height: 450px !important;
+        margin-bottom: 5px;
+    }
+
+    .smap-collapsible-max-max,
     .smap-collapsible-max,
     .smap-collapsible-min {
         display: none;
+    }
+
+    .battle-users-container {
+        min-width: 120px;
     }
 
     .menu {

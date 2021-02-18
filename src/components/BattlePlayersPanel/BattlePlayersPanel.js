@@ -41,7 +41,7 @@ const BattlePlayersPanel = () => {
 
     return (
         <>
-            <div className="battle-users-container" style={{ width: usersSidebarWidth }}>
+            <div className="battle-users-container">
                 <BattlePlayersList myPlayer={myPlayer} battleCanBeStarted={battleCanBeStarted} />
                 <div className="warning-msg">
                     <p>

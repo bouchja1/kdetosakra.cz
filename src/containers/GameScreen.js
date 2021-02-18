@@ -2,7 +2,6 @@ import React, {
     useContext, useEffect, useRef, useState
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocalStorage } from '@rehooks/local-storage';
 import MapyCzContext from '../context/MapyCzContext';
 import { setTotalRoundScore } from '../redux/actions/game';
 import { setLastPanoramaPlace } from '../redux/actions/pano';
@@ -29,7 +28,6 @@ export const GameScreen = ({
     const currentGame = useSelector(state => state.game.currentGame);
     const lastPanoramaPlaceShown = useSelector(state => state.pano);
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
-    const [smapVisibleLocalStorageValue] = useLocalStorage('smapVisible');
 
     const [panoramaScene, setPanoramaScene] = useState(null);
     const [roundScore, setRoundScore] = useState(0);
@@ -42,7 +40,6 @@ export const GameScreen = ({
     const [resultModalVisible, setResultModalVisible] = useState(false);
     const [panoramaPlace, setPanoramaPlace] = useState(null);
     const [panoramaLoading, setPanoramaLoading] = useState(false);
-    const [isSMapVisible, setIsSMapVisible] = useState();
 
     const { totalScore } = currentGame;
     const {
@@ -76,11 +73,6 @@ export const GameScreen = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mapyContext.loadedMapApi, isGameStarted]);
-
-    useEffect(() => {
-        const localStorageBooleanValue = !!smapVisibleLocalStorageValue;
-        setIsSMapVisible(smapVisibleLocalStorageValue === null ? true : localStorageBooleanValue);
-    }, [smapVisibleLocalStorageValue]);
 
     // Executed when the game is started or a page is re/loaded and rounds are already generated
     useEffect(() => {
@@ -177,9 +169,8 @@ export const GameScreen = ({
                 />
             </div>
             <GuessingMapContainer
-                maximized={isSMapVisible}
                 isBattle={isBattle}
-                visible={isBattle ? isGameStarted && isSMapVisible : isSMapVisible}
+                visible={isBattle ? isGameStarted : true}
                 evaluateGuessedRound={evaluateGuessedRound}
                 currentRoundGuessedPoint={currentRoundGuessedPoint}
                 panoramaLoading={panoramaLoading}
