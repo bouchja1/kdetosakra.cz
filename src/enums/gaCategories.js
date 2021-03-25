@@ -1,4 +1,5 @@
 export const CATEGORIES = {
+    RANDOM_PLACE_IN_REGION: 'RandomRegionalPlace',
     RANDOM_CITY: 'RandomCity',
     CITY: 'City',
     GEOLOCATION: 'Geolocation',

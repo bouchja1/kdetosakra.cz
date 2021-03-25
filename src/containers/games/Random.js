@@ -9,7 +9,7 @@ import gameModes from '../../enums/modes';
 
 const { Content } = Layout;
 
-export const RandomCity = () => {
+export const Random = () => {
     const dispatch = useDispatch();
     const currentGame = useSelector(state => state.game.currentGame);
     useGameMenuResize();
@@ -24,6 +24,8 @@ export const RandomCity = () => {
                 round: 1,
                 totalScore: 0,
                 radius: generateRandomRadius(),
+                city: null,
+                regionNutCode: null,
             }),
         );
     }

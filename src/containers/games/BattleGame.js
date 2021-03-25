@@ -115,6 +115,7 @@ export const Battle = ({ type }) => {
                 currentRoundStart,
                 radius,
                 selectedCity,
+                regionNutCode,
             } = battleFromFirestore;
 
             const sortedBattleRounds = sortBattleRoundsById(battleRoundsFromFirestore).map(roundDetail => {
@@ -138,6 +139,7 @@ export const Battle = ({ type }) => {
                     currentRoundStart,
                     radius,
                     selectedCity,
+                    regionNutCode,
                 }),
             );
         }

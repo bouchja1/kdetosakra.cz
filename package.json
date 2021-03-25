@@ -17,6 +17,7 @@
     "firebase": "^8.2.5",
     "firebaseui": "^4.7.3",
     "formik": "^2.2.6",
+    "fs-extra": "^9.1.0",
     "husky": "^4.3.6",
     "less": "^3.11.1",
     "less-loader": "^5.0.0",

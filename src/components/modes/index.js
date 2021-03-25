@@ -1,4 +1,5 @@
 export { CustomPlace } from './CustomPlace';
 export { Geolocation } from './Geolocation';
-export { RandomCity } from './RandomCity';
+export { Random } from './Random';
 export { RegionCity } from './RegionCity';
+export { RandomPlaceInRegion } from './RandomPlaceInRegion';

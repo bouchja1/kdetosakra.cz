@@ -8,6 +8,8 @@ const initialState = {
         round: null,
         totalScore: 0,
         radius: 1,
+        city: null,
+        regionNutCode: null,
     },
 };
 

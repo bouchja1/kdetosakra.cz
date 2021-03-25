@@ -86,6 +86,13 @@ ul.video-list {
     height: 180px;
 }
 
+.randomPlace__modes {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
 .game-menu {
     height: 70px;
 }

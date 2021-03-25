@@ -5,7 +5,7 @@ import {
     Home, Info, Result, NotFound, Help
 } from '../../pages';
 import {
-    CustomPlace, RegionCity, RandomCity, Geolocation, Battle
+    CustomPlace, RegionCity, Random, RandomRegionalPlace, Geolocation, Battle
 } from '../../containers/games';
 import routeNames from '../../constants/routes';
 
@@ -22,7 +22,10 @@ const RouterSwitch = () => {
                 <RegionCity />
             </Route>
             <Route path={`/${routeNames.nahodne}`}>
-                <RandomCity />
+                <Random />
+            </Route>
+            <Route path={`/${routeNames.nahodneKraj}`}>
+                <RandomRegionalPlace />
             </Route>
             <Route path={`/${routeNames.vysledek}`}>
                 <Result />

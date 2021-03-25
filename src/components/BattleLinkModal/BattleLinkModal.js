@@ -10,7 +10,7 @@ import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import { MAX_ALLOWED_BATTLE_PLAYERS } from '../../constants/game';
 
 const BattleLinkModal = ({
-    visible, handleBattleModalVisibility, mode, radius, selectedCity,
+    visible, handleBattleModalVisibility, mode, radius, selectedCity, regionNutCode,
 }) => {
     const randomUserToken = useGetRandomUserToken();
     const [battleLink, setBattleLink] = useState(null);
@@ -73,7 +73,7 @@ const BattleLinkModal = ({
                             onClick={() => {
                                 setGenerateLinkInProgress(true);
                                 // eslint-disable-next-line implicit-arrow-linebreak
-                                createBattle(randomUserToken, mode, radius, selectedCity)
+                                createBattle(randomUserToken, mode, radius, selectedCity, regionNutCode)
                                     .then(docRef => {
                                         setGenerateLinkInProgress(false);
                                         setBattleLink(`${window._env_.REACT_APP_WEB_URL}/battle/${docRef.id}`);

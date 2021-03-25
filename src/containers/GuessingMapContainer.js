@@ -241,7 +241,7 @@ export const GuessingMapContainer = ({
 
     const calculateScore = distance => {
         let minDistanceForPoints;
-        if (mode === gameModes.random) {
+        if (mode === gameModes.random || mode === gameModes.randomRegion) {
             minDistanceForPoints = MIN_DISTANCE_FOR_POINTS_RANDOM;
         } else {
             minDistanceForPoints = radius + 2;

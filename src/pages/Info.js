@@ -40,10 +40,11 @@ export const Info = () => {
                     . Hratelnost je takřka neomezená a jedinou hranicí je hranice České republiky 🇨🇿
                 </p>
                 <h3>Jak hrát?</h3>
-                <p>Hra nabízí čtyři různé herní módy:</p>
+                <p>Hra nabízí pět různých herních módů:</p>
                 <ol>
                     <li>Krajská města ČR</li>
-                    <li>Náhodné místo v Česku</li>
+                    <li>Náhodné místo (celá ČR)</li>
+                    <li>Náhodné místo (v kraji ČR)</li>
                     <li>Vlastní místo</li>
                     <li>Podle mojí geolokace</li>
                 </ol>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Layout, Image } from 'antd';
 import { Link } from 'react-router-dom';
-import { MAX_ALLOWED_BATTLE_PLAYERS } from '../constants/game';
+import { MAX_ALLOWED_BATTLE_PLAYERS, MIN_DISTANCE_FOR_POINTS_RANDOM } from '../constants/game';
 
 const { Content } = Layout;
 
@@ -20,21 +20,20 @@ export const Help = () => {
                 <p>
                     Pokud si vybereš jiný herní mód než
                     {' '}
-                    <Link
-                        to={{
-                            pathname: '/nahodne',
-                        }}
-                    >
-                        Náhodné místo v Česku
-                    </Link>
-                    , hra předpokládá, že vybrané okolí alespoň trochu znáš. Proto je za nepřesný odhad vyšší bodová
-                    penalizace než u náhodně generovaného místa.
+                    <b>Náhodné místo</b>
+                    {' '}
+                    (v celém Česku nebo v kraji), hra
+                    předpokládá, že vybrané okolí alespoň trochu znáš. Proto je za nepřesný odhad vyšší bodová
+                    penalizace než u náhodně generovaného místa v republice.
                 </p>
                 <ul>
                     <li>
-                        Pro zisk alespoň nějakých bodů musí být tvůj tip v okolí maximálně 250 km od hádaného místa (v
-                        případě hádání náhodného místa v Čr), respektive v okolí maximálně 2 km plus na začátku zvolený
-                        kilometrový radius (pro ostatní módy).
+                        Pro zisk alespoň nějakých bodů musí být tvůj tip v okolí ne dál než
+                        {' '}
+                        {MIN_DISTANCE_FOR_POINTS_RANDOM}
+                        {' '}
+                        km od hádaného místa (v případě hádání náhodného místa v Čr),
+                        respektive v okolí maximálně 2 km plus na začátku zvolený kilometrový radius (pro ostatní módy).
                     </li>
                     <li>100 % (= 100 bodů) získáš, když se trefíš ne dál než 20 metrů od hádaného místa.</li>
                 </ul>

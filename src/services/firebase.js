@@ -22,7 +22,7 @@ const COLLECTION_BATTLE_ROUNDS = 'battleRounds';
  * @param mode
  * @returns {Promise<firebase.firestore.DocumentReference<firebase.firestore.DocumentData>>}
  */
-export const createBattle = (authorId, mode, radius, selectedCity) => {
+export const createBattle = (authorId, mode, radius, selectedCity, regionNutCode = null) => {
     return db.collection(COLLECTION_BATTLE).add({
         created: firebase.firestore.FieldValue.serverTimestamp(),
         createdById: authorId,
@@ -34,6 +34,7 @@ export const createBattle = (authorId, mode, radius, selectedCity) => {
         withCountdown: true,
         round: 0, // current round
         currentRoundStart: 0,
+        regionNutCode,
     });
 };
 

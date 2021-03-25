@@ -1,4 +1,4 @@
-export const crCities = [
+export default [
     {
         obec: 'Abertamy',
         kod: 554979,

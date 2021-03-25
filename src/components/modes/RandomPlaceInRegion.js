@@ -10,7 +10,7 @@ import gameModes from '../../enums/modes';
 import BattleLinkModal from '../BattleLinkModal';
 import { showMultiplayerWarningModal } from '../../util/multiplayer';
 
-export const RandomCity = ({ multiplayerSupported }) => {
+export const RandomPlaceInRegion = ({ multiplayerSupported, regionNutCode }) => {
     const dispatch = useDispatch();
     const [battleModalVisible, setBattleModalVisible] = useState(false);
 
@@ -24,24 +24,27 @@ export const RandomCity = ({ multiplayerSupported }) => {
                 <Button
                     type="primary"
                     className="button-play"
+                    disabled={!regionNutCode}
                     onClick={() => {
                         ReactGA.event({
-                            category: CATEGORIES.RANDOM_CITY,
-                            action: 'Play random city game',
+                            category: CATEGORIES.RANDOM_PLACE_IN_REGION,
+                            action: 'Play random place in region',
                         });
                         dispatch(
                             setCurrentGame({
-                                mode: gameModes.random,
+                                mode: gameModes.randomRegion,
                                 round: 1,
                                 totalScore: 0,
                                 radius: generateRandomRadius(),
+                                city: null,
+                                regionNutCode,
                             }),
                         );
                     }}
                 >
                     <Link
                         to={{
-                            pathname: '/nahodne',
+                            pathname: '/nahodne-kraj',
                         }}
                     >
                         1 hráč
@@ -50,6 +53,7 @@ export const RandomCity = ({ multiplayerSupported }) => {
                 <Button
                     type="primary"
                     className="button-play"
+                    disabled={!regionNutCode}
                     onClick={() => {
                         if (multiplayerSupported) {
                             setBattleModalVisible(true);
@@ -64,7 +68,8 @@ export const RandomCity = ({ multiplayerSupported }) => {
             <BattleLinkModal
                 visible={battleModalVisible}
                 handleBattleModalVisibility={handleBattleModalVisibility}
-                mode={gameModes.random}
+                mode={gameModes.randomRegion}
+                regionNutCode={regionNutCode}
             />
         </>
     );

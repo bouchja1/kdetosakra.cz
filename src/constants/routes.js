@@ -5,6 +5,7 @@ const routeNames = {
     napoveda: 'napoveda',
     vysledek: 'vysledek',
     nahodne: 'nahodne',
+    nahodneKraj: 'nahodne-kraj',
     mesto: 'mesto',
     geolokace: 'geolokace',
 };

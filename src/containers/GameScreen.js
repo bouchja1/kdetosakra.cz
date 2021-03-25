@@ -11,6 +11,7 @@ import {
     generatePlaceInRadius,
     generateRandomRadius,
     getRandomCzechPlace,
+    getRandomPlaceInRegion,
 } from '../util';
 import RoundResultModal from '../components/RoundResultModal';
 import gameModes from '../enums/modes';
@@ -126,6 +127,11 @@ export const GameScreen = ({
             radius = generateRandomRadius();
             city = getRandomCzechPlace();
         }
+        if (mode === gameModes.randomRegion) {
+            const { regionNutCode } = currentGame;
+            radius = generateRandomRadius();
+            city = getRandomPlaceInRegion(regionNutCode);
+        }
         setCurrentCity(city);
         const generatedPanoramaPlace = generatePlaceInRadius(radius, city);
         setPanoramaPlace(generatedPanoramaPlace);
@@ -146,7 +152,7 @@ export const GameScreen = ({
     };
 
     const evaluateGuessedRound = guessedPointsInRound => {
-        if (mode === gameModes.random) {
+        if (mode === gameModes.random || mode === gameModes.randomRegion) {
             const { obec, okres, kraj } = currentCity;
             setGuessedRandomPlace({ obec, okres, kraj });
         }

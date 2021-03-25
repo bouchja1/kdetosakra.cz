@@ -1,5 +1,6 @@
 import { isBefore } from 'date-fns';
-import { crCities } from '../data/cr';
+import crCities from '../data/cr';
+import nutsCitiesObjectEntries from '../data/nutsCitiesObjectEntries';
 import randomNicknames from '../constants/nicknames';
 import gameModes from '../enums/modes';
 import { TOTAL_ROUNDS_MAX } from '../constants/game';
@@ -100,6 +101,19 @@ export const getRandomCzechPlace = () => {
     return randomCity;
 };
 
+export const getRandomPlaceInRegion = regionNutCode => {
+    const selectedRegionArray = nutsCitiesObjectEntries[regionNutCode];
+    let randomCity = selectedRegionArray[Math.floor(Math.random() * selectedRegionArray.length)];
+    randomCity = {
+        ...randomCity,
+        coordinates: {
+            latitude: randomCity.latitude,
+            longitude: randomCity.longitude,
+        },
+    };
+    return randomCity;
+};
+
 /**
  * https://www.kirupa.com/html5/picking_random_item_from_array.htm
  * @returns {string}
@@ -169,7 +183,9 @@ export const RADIUS_DESCRIPTION = 'Poloměr kružnice, ve které se náhodně vy
 export const mapGameModeName = mode => {
     switch (mode) {
         case gameModes.random:
-            return 'náhodné místo';
+            return 'náhodně (celá ČR)';
+        case gameModes.randomRegion:
+            return 'náhodně (kraj)';
         case gameModes.custom:
             return 'vlastní místo';
         case gameModes.geolocation:

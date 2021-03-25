@@ -10,6 +10,7 @@ import {
     generatePlaceInRadius,
     generateRandomRadius,
     getRandomCzechPlace,
+    getRandomPlaceInRegion,
     getUnixTimestamp,
     sortPlayersByHighestScore,
 } from '../../util';
@@ -22,13 +23,26 @@ import { setMyUserInfoNicknameToCurrentBattle } from '../../redux/actions/battle
 export const generateRounds = async currentBattleInfo => {
     const generatedRounds = [];
     const {
-        mode, battleId, radius, selectedCity,
+        mode, battleId, radius, selectedCity, regionNutCode,
     } = currentBattleInfo;
 
     for (let i = 0; i < TOTAL_ROUNDS_MAX; i++) {
         switch (mode) {
             case gameModes.random: {
                 const roundCity = getRandomCzechPlace();
+                const roundRadius = generateRandomRadius();
+                const panoramaPlace = generatePlaceInRadius(roundRadius, roundCity);
+                generatedRounds.push({
+                    roundId: i + 1,
+                    panoramaPlace,
+                    isGuessed: false,
+                    guessedTime: 0,
+                    city: roundCity,
+                });
+                break;
+            }
+            case gameModes.randomRegion: {
+                const roundCity = getRandomPlaceInRegion(regionNutCode);
                 const roundRadius = generateRandomRadius();
                 const panoramaPlace = generatePlaceInRadius(roundRadius, roundCity);
                 generatedRounds.push({

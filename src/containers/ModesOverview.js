@@ -1,7 +1,7 @@
-import React from 'react';
-import { Card } from 'antd';
+import React, { useState } from 'react';
+import { Card, Radio, Select } from 'antd';
 import {
-    CustomPlace, RegionCity, RandomCity, Geolocation
+    CustomPlace, RegionCity, Random, Geolocation, RandomPlaceInRegion
 } from '../components/modes';
 import pragueCover from '../assets/images/city/prague.jpg';
 import randomCover from '../assets/images/city/random.jpg';
@@ -9,13 +9,24 @@ import suggestedCover from '../assets/images/city/suggested.jpg';
 import geolocationCover from '../assets/images/city/geolocation.jpg';
 import youtubeCover from '../assets/images/youtube.jpg';
 import useSMapResize from '../hooks/useSMapResize';
+import { nutsCodes } from '../enums/nutsCodes';
 import useGetRandomUserToken from '../hooks/useGetRandomUserToken';
+
+const { Option } = Select;
 
 export const ModesOverview = () => {
     useGetRandomUserToken();
     const { width } = useSMapResize();
+    const [randomMode, setRandomMode] = useState('cr');
+    const [regionNutCode, setRegionNutCode] = useState(null);
 
     const isMultiplayerSupported = width > 599;
+
+    const handleRandomModeChange = e => {
+        setRandomMode(e.target.value);
+    };
+
+    const regionEnumKeys = Object.keys(nutsCodes);
 
     return (
         <>
@@ -28,18 +39,62 @@ export const ModesOverview = () => {
                 </p>
                 <RegionCity multiplayerSupported={isMultiplayerSupported} />
             </Card>
-            <Card cover={<img alt="Herní mód - Náhodné místo v Česku" src={randomCover} />}>
-                <h1>Náhodné místo v Česku</h1>
-                <p>
-                    Známá města a místa pro tebe nejsou dostatečnou výzvou? Můžeš se přenést do některé z
-                    {' '}
-                    <a href="https://github.com/33bcdd/souradnice-mest">6259 obcí ČR</a>
-                    {' '}
-                    a jejího bezprostředního okolí.
-                    V každém kole na tebe čeká jiné náhodné místo v naší republice. Tahle výzva je (nejen) pro experty,
-                    co mají ČR projetou křížem krážem.
-                </p>
-                <RandomCity multiplayerSupported={isMultiplayerSupported} />
+            <Card cover={<img alt="Herní mód - Náhodné místo" src={randomCover} />}>
+                <h1>Náhodné místo</h1>
+                <div className="randomPlace__modes">
+                    <Radio.Group value={randomMode} onChange={handleRandomModeChange}>
+                        <Radio.Button value="cr">celá ČR</Radio.Button>
+                        <Radio.Button value="nut">kraj</Radio.Button>
+                    </Radio.Group>
+                </div>
+                {randomMode === 'cr' ? (
+                    <>
+                        <p>
+                            Známá města a místa pro tebe nejsou dostatečnou výzvou? Můžeš se přenést do některé z
+                            {' '}
+                            <a href="https://github.com/33bcdd/souradnice-mest">6259 obcí ČR</a>
+                            {' '}
+                            a jejího
+                            bezprostředního okolí. V každém kole na tebe čeká jiné náhodné místo v naší republice. Tahle
+                            výzva je (nejen) pro experty, co mají ČR projetou křížem krážem.
+                        </p>
+                        <Random multiplayerSupported={isMultiplayerSupported} />
+                    </>
+                ) : (
+                    <>
+                        <div style={{ marginBottom: '10px' }}>
+                            <p>
+                                Pokud je ti krajské město malé, ale zároveň se nechceš tak úplně ztratit, zvol si jeden
+                                ze
+                                {' '}
+                                <b>14 krajů</b>
+                                {' '}
+                                v Česku a zase máš co objevovat.
+                            </p>
+                            <div className="randomPlace__modes">
+                                <label htmlFor="city">Kraj: </label>
+                                <Select
+                                    showSearch
+                                    name="city"
+                                    style={{ width: 200 }}
+                                    placeholder="zvolit kraj"
+                                    onChange={value => {
+                                        setRegionNutCode(value);
+                                    }}
+                                >
+                                    {regionEnumKeys.map(key => {
+                                        const { code, name } = nutsCodes[key];
+                                        return <Option value={code}>{name}</Option>;
+                                    })}
+                                </Select>
+                            </div>
+                        </div>
+                        <RandomPlaceInRegion
+                            multiplayerSupported={isMultiplayerSupported}
+                            regionNutCode={regionNutCode}
+                        />
+                    </>
+                )}
             </Card>
             <Card cover={<img alt="Herní mód - Vlastní místo" src={suggestedCover} />}>
                 <h1>Vlastní místo</h1>

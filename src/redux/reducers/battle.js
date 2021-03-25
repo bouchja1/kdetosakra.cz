@@ -27,6 +27,7 @@ const initialState = {
         radius: null,
         withCountdown: true,
         countdown: 60,
+        regionNutCode: null,
     },
 };
 

@@ -18,6 +18,7 @@ const isGameInfoShown = (pathname, isBattle) => {
         || pathname.includes(routeNames.geolokace)
         || pathname.includes(routeNames.vlastni)
         || pathname.includes(routeNames.nahodne)
+        || pathname.includes(routeNames.nahodneKraj)
         || pathname.includes(routeNames.mesto)
     );
 };

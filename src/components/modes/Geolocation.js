@@ -44,6 +44,7 @@ export const Geolocation = () => {
                                 latitude: geolocationData.latitude,
                             },
                         },
+                        regionNutCode: null,
                     }),
                 );
             }}

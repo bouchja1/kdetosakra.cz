@@ -31,7 +31,7 @@ const BattleSettings = () => {
                 {currentBattleInfo.withCountdown && (
                     <>
                         <Slider
-                            min={30}
+                            min={15}
                             max={300}
                             onAfterChange={async value => updateBattleSettings({ countdown: value })}
                             defaultValue={currentBattleInfo.countdown}
