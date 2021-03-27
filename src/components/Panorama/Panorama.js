@@ -70,8 +70,8 @@ const Panorama = ({
             spinning={isPanoramaLoading}
             size="large"
         >
-            {' '}
-            <div className="panorama-container" style={{ height: height - 130, width }}>
+            {/* -40 padding of layout */}
+            <div className="panorama-container" style={{ height: height - 130, width: width - 40 }}>
                 {!panoramaFounded ? (
                     <p>V okruhu 5 km od vašeho místa nebylo nalezeno žádné panorama.</p>
                 ) : (
