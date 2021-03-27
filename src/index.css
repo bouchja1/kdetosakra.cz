@@ -280,6 +280,62 @@ label {
     line-height: 2em;
 }
 
+.result-modal-container-more-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.result-modal-container-more-info h3 {
+    text-transform: uppercase;
+    font-size: 1em;
+    font-weight: normal;
+    color: #737373;
+    margin-bottom: 15px;
+}
+
+.result-modal-container-more-info-city {
+    display: flex;
+    flex-direction: row;
+}
+
+.result-modal-container-more-info-city-headline {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 0px;
+}
+
+.result-modal-container-more-info-city-left-summary {
+    text-align: justify;
+    color: #737373;
+    font-size: 0.8em;
+}
+
+.result-modal-container-more-info-city-right {
+    display: flex;
+    justify-content: center;
+    width: 30%;
+}
+
+.result-modal-container-more-info-wiki {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.result-modal-container-more-info-wiki a {
+    text-decoration: underline;
+}
+
+.result-modal-container-more-info-wiki a:hover {
+    text-decoration: none;
+    color: #000;
+}
+
+.result-city-emblem {
+    width: 90px;
+    aspect-ratio: auto 90 / 95;
+    height: 95px;
+}
+
 .result-container-item {
     display: flex;
     justify-content: space-around;

@@ -38,6 +38,7 @@
     "redux-devtools-extension": "^2.13.8",
     "redux-persist": "^6.0.0",
     "typesafe-actions": "^5.1.0",
+    "wikijs": "^6.0.1",
     "yup": "^0.28.3"
   },
   "scripts": {
