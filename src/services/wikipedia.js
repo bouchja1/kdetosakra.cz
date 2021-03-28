@@ -37,13 +37,16 @@ export const findMunicipalityMetadata = async (obec, okres) => {
         .page(`${obec}_(okres_${okres})`)
         .then(async page => {
             const pageInfo = await page.info();
-            const pageContent = await page.content();
+            let history;
             let pickedImage;
             try {
+                const pageContent = await page.content();
+                const historySection = pageContent.filter(section => section.title === 'Historie');
+                history = historySection.length ? historySection[0].content : null;
                 const images = await page.images();
                 pickedImage = findCoa(images, pageInfo?.znak);
             } catch (err) {
-                console.log('Cannot load images: ', err);
+                console.log('Cannot load images or history: ', err);
             }
             const wikipediaUrl = page.raw.fullurl;
             const summary = await page.summary();
@@ -51,6 +54,7 @@ export const findMunicipalityMetadata = async (obec, okres) => {
                 summary,
                 wikipediaUrl,
                 emblem: pickedImage,
+                history,
             };
         })
         .catch(err => {

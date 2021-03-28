@@ -65,6 +65,11 @@ const RoundResultModal = ({
         return null;
     }, [wikipediaMetadata, wikipediaMetadataLoading]);
 
+    const getHistoryIntro = history => {
+        const result = history.match(/\(?[^\.\?\!]+[\.!\?]\)?/g);
+        return result.join(' ');
+    };
+
     const { round } = currentGame;
     const { round: lastGuessedRound } = currentBattleInfo;
 
@@ -144,12 +149,6 @@ const RoundResultModal = ({
                                     {' '}
                                     {guessedRandomPlace.kraj}
                                 </p>
-                                {wikipediaMetadataLoadingStatus}
-                                {wikipediaMetadata?.summary && (
-                                    <div className="result-modal-container-more-info-city-left-summary">
-                                        {wikipediaMetadata.summary}
-                                    </div>
-                                )}
                             </div>
                             {wikipediaMetadata?.emblem && (
                                 <div className="result-modal-container-more-info-city-right">
@@ -161,6 +160,19 @@ const RoundResultModal = ({
                                     />
                                 </div>
                             )}
+                        </div>
+                        <div>
+                            {wikipediaMetadataLoadingStatus}
+                            {wikipediaMetadata?.summary && (
+                                <div className="result-modal-container-more-info-city-left-summary">
+                                    {wikipediaMetadata.summary}
+                                </div>
+                            )}
+                            {/* wikipediaMetadata?.history && (
+                                <div className="result-modal-container-more-info-city-left-summary">
+                                    {getHistoryIntro(wikipediaMetadata.history)}
+                                </div>
+                            ) */}
                         </div>
                         {wikipediaMetadata && (
                             <div className="result-modal-container-more-info-wiki">

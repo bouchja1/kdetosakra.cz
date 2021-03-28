@@ -308,6 +308,7 @@ label {
     text-align: justify;
     color: #737373;
     font-size: 0.8em;
+    margin-bottom: 10px;
 }
 
 .result-modal-container-more-info-city-right {
@@ -317,7 +318,6 @@ label {
 }
 
 .result-modal-container-more-info-wiki {
-    margin-top: 10px;
     margin-bottom: 10px;
 }
 
@@ -334,6 +334,8 @@ label {
     width: 90px;
     aspect-ratio: auto 90 / 95;
     height: 95px;
+    position: relative;
+    bottom: 25px;
 }
 
 .result-container-item {
