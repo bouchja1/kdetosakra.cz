@@ -75,7 +75,7 @@ const Panorama = ({
                 {!panoramaFounded ? (
                     <p>V okruhu 5 km od vašeho místa nebylo nalezeno žádné panorama.</p>
                 ) : (
-                    <div ref={refPanoramaView} />
+                    <div ref={refPanoramaView} style={{ width: '100%' }} />
                 )}
             </div>
         </Spin>

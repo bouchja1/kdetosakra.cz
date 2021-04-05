@@ -1,7 +1,9 @@
 import React, {
     useContext, useEffect, useRef, useState
 } from 'react';
+import { useMediaQuery } from 'react-responsive';
 import { useDispatch, useSelector } from 'react-redux';
+import { Radio } from 'antd';
 import MapyCzContext from '../context/MapyCzContext';
 import { setTotalRoundScore } from '../redux/actions/game';
 import { setLastPanoramaPlace } from '../redux/actions/pano';
@@ -30,6 +32,7 @@ export const GameScreen = ({
     const lastPanoramaPlaceShown = useSelector(state => state.pano);
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
 
+    const [gamescreenView, setGamescreenView] = useState('pano');
     const [panoramaScene, setPanoramaScene] = useState(null);
     const [roundScore, setRoundScore] = useState(0);
     const [currentRoundISee, setCurrentRoundISee] = useState();
@@ -41,6 +44,11 @@ export const GameScreen = ({
     const [resultModalVisible, setResultModalVisible] = useState(false);
     const [panoramaPlace, setPanoramaPlace] = useState(null);
     const [panoramaLoading, setPanoramaLoading] = useState(false);
+    const [mobileMapVisible, setMobileMapVisible] = useState(false);
+
+    const isTabletOrMobileDevice = useMediaQuery({
+        query: '(max-device-width: 1224px)',
+    });
 
     const { totalScore } = currentGame;
     const {
@@ -53,7 +61,7 @@ export const GameScreen = ({
     }, []);
 
     useEffect(() => {
-        if (mapyContext.loadedMapApi && isGameStarted) {
+        if (mapyContext.loadedMapApi && isGameStarted && !mobileMapVisible) {
             const panoScene = new mapyContext.SMap.Pano.Scene(refPanoramaView.current, panoramaSceneOptions);
             const panoramaSignals = panoScene.getSignals();
             // observer panorama scene change
@@ -73,7 +81,7 @@ export const GameScreen = ({
             setPanoramaScene(panoScene);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [mapyContext.loadedMapApi, isGameStarted]);
+    }, [mapyContext.loadedMapApi, isGameStarted, mobileMapVisible]);
 
     // Executed when the game is started or a page is re/loaded and rounds are already generated
     useEffect(() => {
@@ -137,6 +145,19 @@ export const GameScreen = ({
         setPanoramaPlace(generatedPanoramaPlace);
     };
 
+    const handleGamescreenViewChange = e => {
+        setGamescreenView(e.target.value);
+        if (e.target.value === 'pano') {
+            setMobileMapVisible(false);
+            setPanoramaPlace({
+                latitude: lastPanoramaPlaceShown.lat,
+                longitude: lastPanoramaPlaceShown.lon,
+            });
+        } else {
+            setMobileMapVisible(true);
+        }
+    };
+
     const changePanoramaLoadingState = loading => {
         setPanoramaLoading(loading);
     };
@@ -163,30 +184,40 @@ export const GameScreen = ({
 
     return (
         <>
+            {isTabletOrMobileDevice && (
+                <Radio.Group value={gamescreenView} onChange={handleGamescreenViewChange}>
+                    <Radio.Button value="pano">panorama</Radio.Button>
+                    <Radio.Button value="map">mapa</Radio.Button>
+                </Radio.Group>
+            )}
             <div className="game-screen-container">
                 {isBattle && <BattlePlayersPanel />}
-                <Panorama
-                    panoramaPlace={panoramaPlace}
-                    panoramaScene={panoramaScene}
-                    refPanoramaView={refPanoramaView}
-                    panoramaLoading={panoramaLoading}
-                    changePanoramaLoadingState={changePanoramaLoadingState}
-                    isGameStarted={isGameStarted}
-                />
+                {!mobileMapVisible && (
+                    <Panorama
+                        panoramaPlace={panoramaPlace}
+                        panoramaScene={panoramaScene}
+                        refPanoramaView={refPanoramaView}
+                        panoramaLoading={panoramaLoading}
+                        changePanoramaLoadingState={changePanoramaLoadingState}
+                        isGameStarted={isGameStarted}
+                    />
+                )}
             </div>
-            <GuessingMapContainer
-                isBattle={isBattle}
-                visible={isBattle ? isGameStarted : true}
-                evaluateGuessedRound={evaluateGuessedRound}
-                currentRoundGuessedPoint={currentRoundGuessedPoint}
-                panoramaLoading={panoramaLoading}
-                findNewPanorama={findNewPanorama}
-                saveRoundResult={saveRoundResult}
-                panoramaScene={panoramaScene}
-                allGuessedPoints={allGuessedPoints}
-                isGameStarted={isGameStarted}
-                currentCity={currentCity}
-            />
+            {(!isTabletOrMobileDevice || mobileMapVisible) && (
+                <GuessingMapContainer
+                    isBattle={isBattle}
+                    visible={isBattle ? isGameStarted : true}
+                    evaluateGuessedRound={evaluateGuessedRound}
+                    currentRoundGuessedPoint={currentRoundGuessedPoint}
+                    panoramaLoading={panoramaLoading}
+                    findNewPanorama={findNewPanorama}
+                    saveRoundResult={saveRoundResult}
+                    panoramaScene={panoramaScene}
+                    allGuessedPoints={allGuessedPoints}
+                    isGameStarted={isGameStarted}
+                    currentCity={currentCity}
+                />
+            )}
             <RoundResultModal
                 visible={resultModalVisible}
                 closeModal={() => setResultModalVisible(false)}
