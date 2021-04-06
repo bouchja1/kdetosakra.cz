@@ -1,10 +1,8 @@
 import React, {
     useContext, useEffect, useRef, useState
 } from 'react';
-import { Divider } from 'antd';
 import { useSelector } from 'react-redux';
 import MapyCzContext from '../../context/MapyCzContext';
-import useSMapResize from '../../hooks/useSMapResize';
 import {
     getMapInstanceByGameMode,
     setupMapInstance,
@@ -21,7 +19,6 @@ const SMap = ({
     refVectorLayerSMapValue,
     isBattle,
 }) => {
-    const { width } = useSMapResize();
     const map = useRef();
     const mapyContext = useContext(MapyCzContext);
     const [mapLoaded, setMapLoaded] = useState(false);
@@ -96,7 +93,6 @@ const SMap = ({
 
     return (
         <>
-            {width <= 961 ? <Divider /> : null}
             <div id="smap" className="smap smap-style" ref={map} />
         </>
     );
