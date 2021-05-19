@@ -76,11 +76,16 @@ export const Info = () => {
                 <p>
                     Hru jsem naprogramoval koncem roku 2019 za účelem seznámení se s JS knihovnou React.js. Jedná se o
                     hobby projekt, který postupně vylepšuji. V plánu jsou i další rozšíření. Pokud vám hra dělá radost,
-                    můžete
-                    {' '}
-                    <a href="https://www.buymeacoffee.com/mmwbwdq">podpořit její provoz nebo mi koupit kafe </a>
-                    {' '}
-                    ☕ ✌️️
+                    můžete podpořit její provoz
+                    <ul>
+                        <li>
+                            třeba tak, že mi koupíte kafe na webu
+                            {' '}
+                            <a href="https://www.buymeacoffee.com/mmwbwdq">Buy me a coffee</a>
+                            {' '}
+                            ☕ ✌️️
+                        </li>
+                    </ul>
                 </p>
                 <p>
                     Máte dotaz nebo přání? Tak mi

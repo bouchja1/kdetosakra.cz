@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { useDispatch, useSelector } from 'react-redux';
-import { Radio } from 'antd';
+import { Tabs } from 'antd';
 import MapyCzContext from '../context/MapyCzContext';
 import { setTotalRoundScore } from '../redux/actions/game';
 import { setLastPanoramaPlace } from '../redux/actions/pano';
@@ -21,6 +21,8 @@ import BattlePlayersPanel from '../components/BattlePlayersPanel';
 import useGetRandomUserToken from '../hooks/useGetRandomUserToken';
 import { GuessingMapContainer } from './GuessingMapContainer';
 
+const { TabPane } = Tabs;
+
 export const GameScreen = ({
     mode, radius, city, isGameStarted = true, isBattle,
 }) => {
@@ -32,9 +34,9 @@ export const GameScreen = ({
     const lastPanoramaPlaceShown = useSelector(state => state.pano);
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
 
-    const [gamescreenView, setGamescreenView] = useState('pano');
     const [panoramaScene, setPanoramaScene] = useState(null);
     const [roundScore, setRoundScore] = useState(0);
+    const [activeTabKey, setActiveTabKey] = useState('1');
     const [currentRoundISee, setCurrentRoundISee] = useState();
     const [roundGuessedDistance, setRoundGuessedDistance] = useState(null);
     const [guessedRandomPlace, setGuessedRandomPlace] = useState(null);
@@ -44,7 +46,7 @@ export const GameScreen = ({
     const [resultModalVisible, setResultModalVisible] = useState(false);
     const [panoramaPlace, setPanoramaPlace] = useState(null);
     const [panoramaLoading, setPanoramaLoading] = useState(false);
-    const [mobileMapVisible, setMobileMapVisible] = useState(false);
+    const [nextRoundButtonVisible, setNextRoundButtonVisible] = useState(false);
 
     const isTabletOrMobileDevice = useMediaQuery({
         query: '(max-device-width: 1224px)',
@@ -58,10 +60,10 @@ export const GameScreen = ({
     // FIXME: to load whole map layer when the map is minimized before
     useEffect(() => {
         window.dispatchEvent(new Event('resize'));
-    }, []);
+    }, [activeTabKey]);
 
     useEffect(() => {
-        if (mapyContext.loadedMapApi && isGameStarted && !mobileMapVisible) {
+        if (mapyContext.loadedMapApi && isGameStarted) {
             const panoScene = new mapyContext.SMap.Pano.Scene(refPanoramaView.current, panoramaSceneOptions);
             const panoramaSignals = panoScene.getSignals();
             // observer panorama scene change
@@ -81,7 +83,7 @@ export const GameScreen = ({
             setPanoramaScene(panoScene);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [mapyContext.loadedMapApi, isGameStarted, mobileMapVisible]);
+    }, [mapyContext.loadedMapApi, isGameStarted]);
 
     // Executed when the game is started or a page is re/loaded and rounds are already generated
     useEffect(() => {
@@ -130,6 +132,10 @@ export const GameScreen = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isGameStarted, rounds, currentRoundNumber, players]);
 
+    const changeNextRoundButtonVisibility = isVisible => {
+        setNextRoundButtonVisible(isVisible);
+    };
+
     const findNewPanorama = () => {
         if (mode === gameModes.random) {
             radius = generateRandomRadius();
@@ -143,19 +149,8 @@ export const GameScreen = ({
         setCurrentCity(city);
         const generatedPanoramaPlace = generatePlaceInRadius(radius, city);
         setPanoramaPlace(generatedPanoramaPlace);
-    };
-
-    const handleGamescreenViewChange = e => {
-        setGamescreenView(e.target.value);
-        if (e.target.value === 'pano') {
-            setMobileMapVisible(false);
-            setPanoramaPlace({
-                latitude: lastPanoramaPlaceShown.lat,
-                longitude: lastPanoramaPlaceShown.lon,
-            });
-        } else {
-            setMobileMapVisible(true);
-        }
+        // mobile
+        setActiveTabKey('1');
     };
 
     const changePanoramaLoadingState = loading => {
@@ -184,39 +179,70 @@ export const GameScreen = ({
 
     return (
         <>
-            {isTabletOrMobileDevice && (
-                <Radio.Group value={gamescreenView} onChange={handleGamescreenViewChange}>
-                    <Radio.Button value="pano">panorama</Radio.Button>
-                    <Radio.Button value="map">mapa</Radio.Button>
-                </Radio.Group>
-            )}
-            <div className="game-screen-container">
-                {isBattle && <BattlePlayersPanel />}
-                {!mobileMapVisible && (
-                    <Panorama
-                        panoramaPlace={panoramaPlace}
-                        panoramaScene={panoramaScene}
-                        refPanoramaView={refPanoramaView}
+            {isTabletOrMobileDevice ? (
+                <Tabs
+                    defaultActiveKey="1"
+                    centered
+                    activeKey={activeTabKey}
+                    onChange={activeKey => setActiveTabKey(activeKey)}
+                >
+                    <TabPane tab="panorama" key="1">
+                        <Panorama
+                            panoramaPlace={panoramaPlace}
+                            panoramaScene={panoramaScene}
+                            refPanoramaView={refPanoramaView}
+                            panoramaLoading={panoramaLoading}
+                            changePanoramaLoadingState={changePanoramaLoadingState}
+                            isGameStarted={isGameStarted}
+                        />
+                    </TabPane>
+                    <TabPane tab="mapa" key="2">
+                        <GuessingMapContainer
+                            isBattle={isBattle}
+                            visible={isBattle ? isGameStarted : true}
+                            evaluateGuessedRound={evaluateGuessedRound}
+                            currentRoundGuessedPoint={currentRoundGuessedPoint}
+                            panoramaLoading={panoramaLoading}
+                            findNewPanorama={findNewPanorama}
+                            saveRoundResult={saveRoundResult}
+                            panoramaScene={panoramaScene}
+                            allGuessedPoints={allGuessedPoints}
+                            isGameStarted={isGameStarted}
+                            currentCity={currentCity}
+                            nextRoundButtonVisible={nextRoundButtonVisible}
+                            changeNextRoundButtonVisibility={changeNextRoundButtonVisibility}
+                        />
+                    </TabPane>
+                </Tabs>
+            ) : (
+                <>
+                    <div className="game-screen-container">
+                        {isBattle && <BattlePlayersPanel />}
+                        <Panorama
+                            panoramaPlace={panoramaPlace}
+                            panoramaScene={panoramaScene}
+                            refPanoramaView={refPanoramaView}
+                            panoramaLoading={panoramaLoading}
+                            changePanoramaLoadingState={changePanoramaLoadingState}
+                            isGameStarted={isGameStarted}
+                        />
+                    </div>
+                    <GuessingMapContainer
+                        isBattle={isBattle}
+                        visible={isBattle ? isGameStarted : true}
+                        evaluateGuessedRound={evaluateGuessedRound}
+                        currentRoundGuessedPoint={currentRoundGuessedPoint}
                         panoramaLoading={panoramaLoading}
-                        changePanoramaLoadingState={changePanoramaLoadingState}
+                        findNewPanorama={findNewPanorama}
+                        saveRoundResult={saveRoundResult}
+                        panoramaScene={panoramaScene}
+                        allGuessedPoints={allGuessedPoints}
                         isGameStarted={isGameStarted}
+                        currentCity={currentCity}
+                        nextRoundButtonVisible={nextRoundButtonVisible}
+                        changeNextRoundButtonVisibility={changeNextRoundButtonVisibility}
                     />
-                )}
-            </div>
-            {(!isTabletOrMobileDevice || mobileMapVisible) && (
-                <GuessingMapContainer
-                    isBattle={isBattle}
-                    visible={isBattle ? isGameStarted : true}
-                    evaluateGuessedRound={evaluateGuessedRound}
-                    currentRoundGuessedPoint={currentRoundGuessedPoint}
-                    panoramaLoading={panoramaLoading}
-                    findNewPanorama={findNewPanorama}
-                    saveRoundResult={saveRoundResult}
-                    panoramaScene={panoramaScene}
-                    allGuessedPoints={allGuessedPoints}
-                    isGameStarted={isGameStarted}
-                    currentCity={currentCity}
-                />
+                </>
             )}
             <RoundResultModal
                 visible={resultModalVisible}

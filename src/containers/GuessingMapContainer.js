@@ -31,6 +31,8 @@ export const GuessingMapContainer = ({
     allGuessedPoints,
     isGameStarted,
     currentCity,
+    nextRoundButtonVisible,
+    changeNextRoundButtonVisibility,
 }) => {
     const dispatch = useDispatch();
     const mapyContext = useContext(MapyCzContext);
@@ -38,7 +40,6 @@ export const GuessingMapContainer = ({
     const randomUserToken = useGetRandomUserToken();
     const { width, height } = useSMapResize();
     const [showGuessLimitModal, setShowGuessLimitModal] = useState(false);
-    const [nextRoundButtonVisible, setNextRoundButtonVisible] = useState(false);
     const [guessButtonDisabled, setGuessButtonDisabled] = useState(true);
     const [currentRoundBattle, setCurrentRoundBattle] = useState();
     const [mapStyle, setMapStyle] = useState();
@@ -96,7 +97,7 @@ export const GuessingMapContainer = ({
                     refVectorLayerSMapValue.current.removeAll();
                 }
                 setGuessButtonDisabled(true);
-                setNextRoundButtonVisible(false);
+                changeNextRoundButtonVisibility(false);
                 setRoundGuessed(false);
                 window.scrollTo(0, 0);
             }
@@ -293,7 +294,7 @@ export const GuessingMapContainer = ({
 
     const calculateCoordsAndDrawGuess = () => {
         setGuessButtonDisabled(true);
-        setNextRoundButtonVisible(true);
+        changeNextRoundButtonVisibility(true);
         setRoundGuessed(true);
 
         const { panoramaCoordinates, distance, score } = calculateDistance();
@@ -324,7 +325,7 @@ export const GuessingMapContainer = ({
         findNewPanorama();
         refLayerValue.current.removeAll();
         refVectorLayerSMapValue.current.removeAll();
-        setNextRoundButtonVisible(false);
+        changeNextRoundButtonVisibility(false);
         setGuessButtonDisabled(true);
         setRoundGuessed(false);
         window.scrollTo(0, 0);
