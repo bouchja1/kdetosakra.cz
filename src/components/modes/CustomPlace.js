@@ -14,7 +14,6 @@ import { RADIUS_DESCRIPTION } from '../../util';
 import { setCurrentGame } from '../../redux/actions/game';
 import BattleLinkModal from '../BattleLinkModal';
 import { showMultiplayerWarningModal } from '../../util/multiplayer';
-import { setCurrentBattle } from '../../redux/actions/battle';
 
 export const CustomPlace = ({ multiplayerSupported }) => {
     const dispatch = useDispatch();

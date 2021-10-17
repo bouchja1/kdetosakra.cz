@@ -63,12 +63,7 @@ const RoundResultModal = ({
             );
         }
         return null;
-    }, [wikipediaMetadata, wikipediaMetadataLoading]);
-
-    const getHistoryIntro = history => {
-        const result = history.match(/\(?[^\.\?\!]+[\.!\?]\)?/g);
-        return result.join(' ');
-    };
+    }, [wikipediaMetadataLoading]);
 
     const { round } = currentGame;
     const { round: lastGuessedRound } = currentBattleInfo;

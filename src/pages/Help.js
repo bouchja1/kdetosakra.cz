@@ -1,6 +1,5 @@
 import React from 'react';
 import { Layout, Image } from 'antd';
-import { Link } from 'react-router-dom';
 import { MAX_ALLOWED_BATTLE_PLAYERS, MIN_DISTANCE_FOR_POINTS_RANDOM } from '../constants/game';
 
 const { Content } = Layout;
@@ -12,7 +11,7 @@ export const Help = () => {
                 <h2>Nápověda</h2>
                 <h3>Princip hry a bodování</h3>
                 <p>
-                    Hra nabízí čtyři herní módy. Cílem hry je vypátrat v pěti kolech polohu pěti různých míst v České
+                    Hra nabízí pět herních módů. Cílem hry je vypátrat v pěti kolech polohu pěti různých míst v České
                     republice. Pátrání začínáš v náhodně generovaném panoramatickém snímku a v přiložené mapě se snažíš
                     s co nejvyšší přesností určit, kde (v panoramatu) se právě nacházíš.
                 </p>
