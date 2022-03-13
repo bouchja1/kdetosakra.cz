@@ -14,7 +14,6 @@ import useMapLoader from './hooks/useMapLoader';
 import RouterSwitch from './components/RouterSwitch';
 import { MapyCzProvider } from './context/MapyCzContext';
 import Menu from './components/Menu';
-import withClearCache from './ClearCache';
 
 const { Footer } = Layout;
 
@@ -73,8 +72,6 @@ function MainApp(props) {
         </Provider>
     );
 }
-
-const ClearCacheComponent = withClearCache(MainApp);
 
 function App() {
     return <MainApp />;

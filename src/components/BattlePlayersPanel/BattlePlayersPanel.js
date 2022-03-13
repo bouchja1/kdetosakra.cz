@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import useSMapResize from '../../hooks/useSMapResize';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import { decryptEmail, findUserFromBattleByRandomTokenId } from '../../util';
 import BattlePlayersList from '../BattlePlayersList';
@@ -9,7 +8,6 @@ import BattleSettings from '../BattleSettings';
 
 const BattlePlayersPanel = () => {
     const randomUserToken = useGetRandomUserToken();
-    const { width } = useSMapResize();
     const currentBattlePlayers = useSelector(state => state.battle.currentBattle.players);
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
     const [myPlayer, setMyPlayer] = useState();

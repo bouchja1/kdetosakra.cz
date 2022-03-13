@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Spin } from 'antd';
-import useWindowHeight from '../../hooks/useWindowHeight';
 import MapyCzContext from '../../context/MapyCzContext';
 import { DEFAULT_PANORAMA_TOLERANCE, MAX_PANORAMA_TRIES } from '../../constants/game';
 import useSMapResize from '../../hooks/useSMapResize';
