@@ -5,16 +5,16 @@ MAINTAINER Jan Bouchner <jan.bouchner@gmail.com>
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY package*.json yarn.lock ./
 
 # Install all the dependencies, this will be cached until we change the package.json file
-RUN npm install
+RUN yarn install
 
 # copy our source code
 COPY . .
 
 # build the react app
-RUN npm run build
+RUN yarn build
 
 # DEVSERVER SETUP =
 # https://create-react-app.dev/docs/deployment
