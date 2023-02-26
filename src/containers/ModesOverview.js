@@ -175,7 +175,7 @@ export const ModesOverview = () => {
             {modesArray.map(mode => {
                 const { coverImgAlt, coverImgSrc, title, content } = mode;
                 return (
-                    <Card cover={<img alt={coverImgAlt} src={coverImgSrc} style={{ opacity: 0.7 }} />} key={title}>
+                    <Card cover={<img alt={coverImgAlt} src={coverImgSrc} style={{ opacity: 0.9 }} />} key={title}>
                         <h2>{title}</h2>
                         <Meta description={content} />
                     </Card>
