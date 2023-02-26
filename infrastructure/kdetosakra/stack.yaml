@@ -1,29 +1,23 @@
 version: '3.8'
 services:
   frontend:
-    image: registry.gitlab.com/fyooga/fyooga-react/${FRONTEND_DOCKER_IMAGE_NAME}:latest
+    image: bouchja1/kdetosakra.cz:latest
     environment:
-      NODE_ENV: ${COMMON_NODE_ENV} # this is basically only for /app/server.js, React has its own 'production' value
-      REACT_APP_FRONTEND_HOST: ${COMMON_FRONTEND_APP_DOMAIN} # has to be here - it is for /app/server.js (og:url etc.)
-      APP_NAME: fyooga-react
+      NODE_ENV: production # this is basically only for /app/server.js, React has its own 'production' value
+      APP_NAME: kdetosakracz_web
       PORT: 3000
       DOCKER: 1
-      SECRET_MYSQL_DATABASE: ${COMMON_MYSQL_DATABASE}
-      SECRET_MYSQL_USER: ${COMMON_MYSQL_USER}
-      SECRET_MYSQL_PASSWORD: ${COMMON_MYSQL_PASSWORD}
-      SECRET_MYSQL_HOST: ${COMMON_MYSQL_HOST}
-      SECRET_MYSQL_PORT: ${COMMON_MYSQL_PORT}
     networks:
       - traefik
-      - fyooga
+      - kdetosakra
     deploy:
       replicas: 1
       labels:
         traefik.enable: 'true'
-        traefik.http.routers.kdetosakra-frontend.rule: Host(`${COMMON_HOST}`)
+        traefik.http.routers.kdetosakra-frontend.rule: Host('kdetosakra.cz')
         traefik.http.routers.kdetosakra-frontend.entrypoints: 'websecure'
         traefik.http.routers.kdetosakra-frontend.middlewares: "redirect-www-to-non-www@file"
-        traefik.http.services.kdetosakra-frontend-svc.loadbalancer.server.port: ${FRONTEND_PORT}
+        traefik.http.services.kdetosakra-frontend-svc.loadbalancer.server.port: 3000
         swarmpit.service.deployment.autoredeploy: "true"
       update_config:
         order: start-first

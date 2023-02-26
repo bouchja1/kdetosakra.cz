@@ -50,6 +50,9 @@
   },
   "scripts": {
     "build": "craco build",
+    "install-server": "chmod +x ./install-server.sh && ./install-server.sh",
+    "start-server": "yarn install-server && env NODE_ENV=localhost node ./server/server.js",
+    "server": "yarn build && yarn start-server",
     "start": "nodemon -w craco.config.js --exec \"craco start --verbose\"",
     "test": "craco test",
     "eject": "react-scripts eject",

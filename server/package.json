@@ -1,0 +1,13 @@
+{
+    "name": "@fyooga/react-server",
+    "version": "0.0.1",
+    "private": true,
+    "license": "UNLICENSED",
+    "dependencies": {
+        "dotenv": "^10.0.0",
+        "body-parser": "^1.19.0",
+        "cookie-parser": "^1.4.6",
+        "cors": "^2.8.5",
+        "express": "^4.17.1"
+    }
+}

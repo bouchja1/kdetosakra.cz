@@ -1,42 +1,60 @@
-# building the image
-FROM mhart/alpine-node:10.19.0 AS build-stage
-
-MAINTAINER Jan Bouchner <jan.bouchner@gmail.com>
-
-WORKDIR /usr/src/app
+FROM bitnami/node:16.18.0 AS build-stage
+WORKDIR /app
 
 COPY package*.json yarn.lock ./
 
-# Install all the dependencies, this will be cached until we change the package.json file
+# Protoze jsem si predtim zkopiroval do app lokalni package.json, tak mohu pustit RUN yarn install - RUN se pousti uz tam kde jsem
 RUN yarn install
-
-# copy our source code
+# to zkopiruje zbytek z lokalu do WORKDIR
 COPY . .
+# Make our shell scripts executable
+RUN chmod +x ./install-server.sh
+RUN ./install-server.sh
 
-# build the react app
+# Get build argument and set environment variable
+ARG API_KEY
+ARG FIREBASE_MEASUREMENT_ID
+ARG FIREBASE_APP_ID
+ARG FIREBASE_MESSAGING_SENDER_ID
+ARG FIREBASE_STORAGE_BUCKET
+ARG FIREBASE_PROJECT_ID
+ARG FIREBASE_AUTH_DOMAIN
+ARG FIREBASE_API_KEY
+ARG SENTRY_DNS
+ARG WEB_URL
+
+ENV REACT_APP_API_KEY=$API_KEY
+ENV REACT_APP_FIREBASE_MEASUREMENT_ID=$FIREBASE_MEASUREMENT_ID
+ENV REACT_APP_FIREBASE_APP_ID=$FIREBASE_APP_ID
+ENV REACT_APP_FIREBASE_MESSAGING_SENDER_ID=$FIREBASE_MESSAGING_SENDER_ID
+ENV REACT_APP_FIREBASE_STORAGE_BUCKET=$FIREBASE_STORAGE_BUCKET
+ENV REACT_APP_FIREBASE_PROJECT_ID=$FIREBASE_PROJECT_ID
+ENV REACT_APP_FIREBASE_AUTH_DOMAIN=$FIREBASE_AUTH_DOMAIN
+ENV REACT_APP_FIREBASE_API_KEY=$FIREBASE_API_KEY
+ENV REACT_APP_SENTRY_DNS=$SENTRY_DNS
+ENV REACT_APP_WEB_URL=$WEB_URL
+
 RUN yarn build
 
-# DEVSERVER SETUP =
-# https://create-react-app.dev/docs/deployment
-# https://dev.to/zivka51084113/dockerize-create-react-app-in-3-minutes-3om3
+################ Second stage
 
-FROM nginx:1.16.1-alpine
-WORKDIR /var/www
-COPY --from=build-stage /usr/src/app/build .
-# Copy the default nginx.conf
-COPY --from=build-stage /usr/src/app/nginx.conf /etc/nginx/nginx.conf
-# Copy .env file and shell script to container
-COPY --from=build-stage /usr/src/app/env-config.sh .
-COPY --from=build-stage /usr/src/app/.env .
+FROM bitnami/node:16.18.0
 
-# Add bash
-RUN apk add --no-cache bash
+WORKDIR /app
 
-# Make our shell script executable
-RUN chmod +x env-config.sh
+# Static build
+COPY --from=build-stage /app/build .
+# Express files
+COPY --from=build-stage /app/server/package.json .
+COPY --from=build-stage /app/server/server.js .
+COPY --from=build-stage /app/server/node_modules ./node_modules
 
-EXPOSE 80
+# Create a non-root user
+RUN useradd -r -u 1001 -g root nonroot && \
+    chown -R nonroot /app
+USER nonroot
 
-# Start Nginx server
-CMD ["/bin/bash", "-c", "/var/www/env-config.sh && nginx -g \"daemon off;\""]
+# Default port exposure
+EXPOSE 3000
 
+CMD node server.js
