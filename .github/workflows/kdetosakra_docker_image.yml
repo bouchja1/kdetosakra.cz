@@ -39,7 +39,7 @@ jobs:
         SENTRY_DNS: ${{secrets.SENTRY_DNS}}
         WEB_URL: ${{secrets.WEB_URL}}
       run: |
-        docker build
+        docker build .
         --file Dockerfile
         --build-arg API_KEY=$API_KEY
         --build-arg FIREBASE_MEASUREMENT_ID=$FIREBASE_MEASUREMENT_ID
@@ -53,7 +53,6 @@ jobs:
         --build-arg WEB_URL=$WEB_URL
         --tag bouchja1/kdetosakra:${{ steps.vars.outputs.sha_short }}
         --tag bouchja1/kdetosakra:latest
-        .
 
     - name: Docker push
       run: |
