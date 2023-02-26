@@ -19,12 +19,12 @@ import store, { persistor } from './redux/store';
 
 const { Footer } = Layout;
 
-function initializeReactGA() {
+const initializeReactGA = () => {
     ReactGA.initialize('UA-151784741-1');
     ReactGA.send({ hitType: 'pageview', page: window.location.pathname });
-}
+};
 
-function MainApp(props) {
+export const App = () => {
     // init google analytics
     if (process.env.NODE_ENV === 'production') {
         initializeReactGA();
@@ -73,10 +73,4 @@ function MainApp(props) {
             </PersistGate>
         </Provider>
     );
-}
-
-function App() {
-    return <MainApp />;
-}
-
-export default App;
+};

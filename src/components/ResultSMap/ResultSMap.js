@@ -1,19 +1,17 @@
 import { Divider } from 'antd';
-import React, {
-    useContext, useRef, useEffect, useState
-} from 'react';
-import useSMapResize from '../../hooks/useSMapResize';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+
 import MapyCzContext from '../../context/MapyCzContext';
+import useSMapResize from '../../hooks/useSMapResize';
+import { mapLayers } from '../../redux/reducers/game';
 import {
-    getMapInstanceByGameMode,
-    setupMapInstance,
     drawAllResultsLayerToMap,
+    getMapInstanceByGameMode,
     setupLayerWithMarksAndDataProvider,
+    setupMapInstance,
 } from '../../util/map';
 
-const ResultSMap = ({
-    guessedPoints, mode, city, radius,
-}) => {
+const ResultSMap = ({ guessedPoints, mode, city, radius }) => {
     const { width } = useSMapResize();
     const resultMap = useRef();
     const mapyContext = useContext(MapyCzContext);
@@ -25,7 +23,7 @@ const ResultSMap = ({
         if (mapyContext.loadedMapApi) {
             const { SMap: SMapContext } = mapyContext;
             const mapInstance = getMapInstanceByGameMode(SMapContext, mode, city, radius, resultMap.current);
-            setupMapInstance(SMapContext, mapInstance);
+            setupMapInstance(SMapContext, mapInstance, mapLayers.default);
 
             // vrstva se značkami
             const layerWithMarks = setupLayerWithMarksAndDataProvider(SMapContext, mapInstance);

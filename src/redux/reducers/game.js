@@ -1,6 +1,11 @@
 import { getType } from 'typesafe-actions';
 
-import { setCurrentGame, setTotalRoundScore, setTotalRoundCounter } from '../actions/game';
+import { setCurrentGame, setTotalRoundScore, setTotalRoundCounter, setCurrentMapLayer } from '../actions/game';
+
+export const mapLayers = {
+    default: 'default',
+    tourist: 'tourist'
+}
 
 const initialState = {
     currentGame: {
@@ -10,6 +15,7 @@ const initialState = {
         radius: 1,
         city: null,
         regionNutCode: null,
+        currentMapLayer: mapLayers.default
     },
 };
 
@@ -37,6 +43,14 @@ const gameReducer = (state = initialState, action) => {
                 currentGame: {
                     ...state.currentGame,
                     round: action.payload,
+                },
+            };
+        case getType(setCurrentMapLayer):
+            return {
+                ...state,
+                currentGame: {
+                    ...state.currentGame,
+                    currentMapLayer: action.payload,
                 },
             };
         default:

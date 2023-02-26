@@ -1,6 +1,7 @@
-import { DEFAUL_MARKER_ICON, MARKER_PLACE_ICON_KDETOSAKRA } from '../constants/icons';
 import { resultPathColors } from '../constants/game';
+import { DEFAUL_MARKER_ICON, MARKER_PLACE_ICON_KDETOSAKRA } from '../constants/icons';
 import gameModes from '../enums/modes';
+import { mapLayers } from '../redux/reducers/game';
 
 export const DEFAULT_MODE_ZOOM = 14;
 
@@ -101,10 +102,18 @@ export const getMapInstanceByGameMode = (SMap, mode, city, radius, mapRefValue) 
     return new SMap(mapRefValue, center, 7);
 };
 
-export const setupMapInstance = (SMap, mapInstance) => {
+export const setupMapInstance = (SMap, mapInstance, mapLayer) => {
     mapInstance.addDefaultControls(); // Vyrobí defaultní ovládácí prvky (kompas, zoom, ovládání myší a klávesnicí.)
     mapInstance.addControl(new SMap.Control.Sync()); // - aby mapa reagovala na změnu velikosti průhledu
-    mapInstance.addDefaultLayer(SMap.DEF_BASE).enable();
+
+    if (mapLayer === mapLayers.tourist) {
+        mapInstance.addDefaultLayer(SMap.DEF_TURIST).enable();
+        mapInstance.addDefaultLayer(SMap.DEF_BASE);
+    } else {
+        mapInstance.addDefaultLayer(SMap.DEF_TURIST);
+        mapInstance.addDefaultLayer(SMap.DEF_BASE).enable();
+    }
+
     mapInstance.setZoomRange(7, 19);
 
     // Bitová maska určující, co všechno myš/prst ovládá - konstanty SMapContext.MOUSE_*
@@ -114,6 +123,16 @@ export const setupMapInstance = (SMap, mapInstance) => {
         mouseControlOptions,
     ); /* Ovládání myší */
     mapInstance.addControl(mouse);
+
+    // switch between layers
+    const layerSwitch = new SMap.Control.Layer({
+        width: 65,
+        items: 2,
+        page: 2,
+    });
+    layerSwitch.addDefaultLayer(SMap.DEF_BASE);
+    layerSwitch.addDefaultLayer(SMap.DEF_TURIST);
+    mapInstance.addControl(layerSwitch, { left: '8px', top: '20px' });
 };
 
 export const setupLayerWithMarksAndDataProvider = (SMap, mapInstance) => {
