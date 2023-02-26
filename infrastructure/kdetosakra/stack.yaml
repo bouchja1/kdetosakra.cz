@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   frontend:
-    image: bouchja1/kdetosakra.cz:latest
+    image: bouchja1/kdetosakra:latest
     environment:
       NODE_ENV: production # this is basically only for /app/server.js, React has its own 'production' value
       APP_NAME: kdetosakracz_web
@@ -14,7 +14,7 @@ services:
       replicas: 1
       labels:
         traefik.enable: 'true'
-        traefik.http.routers.kdetosakra-frontend.rule: Host('kdetosakra.cz')
+        traefik.http.routers.kdetosakra-frontend.rule: Host(`kdetosakra.cz`, `www.kdetosakra.cz`)
         traefik.http.routers.kdetosakra-frontend.entrypoints: 'websecure'
         traefik.http.routers.kdetosakra-frontend.middlewares: "redirect-www-to-non-www@file"
         traefik.http.services.kdetosakra-frontend-svc.loadbalancer.server.port: 3000

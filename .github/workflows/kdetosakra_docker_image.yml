@@ -3,6 +3,11 @@ name: Deploy kdetosakra CI
 on:
   push:
     branches: [ "master" ]
+    paths:
+      - "src/**"
+      - "public/**"
+      - "server/**"
+      - "*.{js,json,sh}"
   workflow_dispatch:
 
 jobs:
@@ -39,20 +44,21 @@ jobs:
         SENTRY_DNS: ${{secrets.SENTRY_DNS}}
         WEB_URL: ${{secrets.WEB_URL}}
       run: |
-        docker build .
-        --file Dockerfile
-        --build-arg API_KEY=$API_KEY
-        --build-arg FIREBASE_MEASUREMENT_ID=$FIREBASE_MEASUREMENT_ID
-        --build-arg FIREBASE_APP_ID=$FIREBASE_APP_ID
-        --build-arg FIREBASE_MESSAGING_SENDER_ID=$FIREBASE_MESSAGING_SENDER_ID
-        --build-arg FIREBASE_STORAGE_BUCKET=$FIREBASE_STORAGE_BUCKET
-        --build-arg FIREBASE_PROJECT_ID=$FIREBASE_PROJECT_ID
-        --build-arg FIREBASE_AUTH_DOMAIN=$FIREBASE_AUTH_DOMAIN
-        --build-arg FIREBASE_API_KEY=$FIREBASE_API_KEY
-        --build-arg SENTRY_DNS=$SENTRY_DNS
-        --build-arg WEB_URL=$WEB_URL
-        --tag bouchja1/kdetosakra:${{ steps.vars.outputs.sha_short }}
-        --tag bouchja1/kdetosakra:latest
+        docker build \
+        --file Dockerfile \
+        --build-arg API_KEY=$API_KEY \
+        --build-arg FIREBASE_MEASUREMENT_ID=$FIREBASE_MEASUREMENT_ID \
+        --build-arg FIREBASE_APP_ID=$FIREBASE_APP_ID \
+        --build-arg FIREBASE_MESSAGING_SENDER_ID=$FIREBASE_MESSAGING_SENDER_ID \
+        --build-arg FIREBASE_STORAGE_BUCKET=$FIREBASE_STORAGE_BUCKET \
+        --build-arg FIREBASE_PROJECT_ID=$FIREBASE_PROJECT_ID \
+        --build-arg FIREBASE_AUTH_DOMAIN=$FIREBASE_AUTH_DOMAIN \
+        --build-arg FIREBASE_API_KEY=$FIREBASE_API_KEY \
+        --build-arg SENTRY_DNS=$SENTRY_DNS \
+        --build-arg WEB_URL=$WEB_URL \
+        --tag bouchja1/kdetosakra:${{ steps.vars.outputs.sha_short }} \
+        --tag bouchja1/kdetosakra:latest \
+        .
 
     - name: Docker push
       run: |
