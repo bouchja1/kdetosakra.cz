@@ -1,0 +1,8 @@
+*.*
+!src/*.js
+!src/*.json
+!src/*.jsx
+!src/*.ts
+!src/*.tsx
+!src/*.cjs
+!src/*.mjs

@@ -1,0 +1,46 @@
+version: '3.4'
+services:
+  traefik:
+    image: traefik:2.9.6
+    ports:
+     - 80:80
+     - 443:443
+     - 9999:8080
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock:ro
+     - traefik_letsencrypt:/letsencrypt
+    networks:
+      - traefik
+    configs:
+      - source: traefik.yml
+        target: /etc/traefik/traefik.yml
+      - source: traefik_dynamic.yml
+        target: /etc/traefik/dynamic-conf.yml
+    deploy:
+      labels:
+        - "traefik.enable=false"
+      placement:
+        constraints:
+          - node.role==manager
+      update_config:
+        order: start-first
+      resources:
+        reservations:
+          cpus: "0.05"
+          memory: "10M"
+        limits:
+          cpus: "0.5"
+          memory: "300M"
+
+volumes:
+  traefik_letsencrypt:
+
+networks:
+  traefik:
+    external: true
+
+configs:
+  traefik.yml:
+    file: ./traefik.yml
+  traefik_dynamic.yml:
+    file: ./traefik-dynamic.yml

@@ -60,7 +60,7 @@ export const Help = () => {
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <Image
                             alt="Multiplayer - získání odkazu"
-                            src={`${window._env_.REACT_APP_WEB_URL}/multiplayer/multiplayer-00-admin.png`}
+                            src={`${process.env.REACT_APP_WEB_URL}/multiplayer/multiplayer-00-admin.png`}
                         />
                     </div>
                 </div>
@@ -79,7 +79,7 @@ export const Help = () => {
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <Image
                             alt="Multiplayer před zahájením hry - pohled admina"
-                            src={`${window._env_.REACT_APP_WEB_URL}/multiplayer/multiplayer-01-admin.png`}
+                            src={`${process.env.REACT_APP_WEB_URL}/multiplayer/multiplayer-01-admin.png`}
                         />
                     </div>
                 </div>
@@ -92,7 +92,7 @@ export const Help = () => {
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <Image
                             alt="Multiplayer před zahájením hry - pohled hráče, který musí zvolit, že je připraven"
-                            src={`${window._env_.REACT_APP_WEB_URL}/multiplayer/multiplayer-02-player-not-ready.png`}
+                            src={`${process.env.REACT_APP_WEB_URL}/multiplayer/multiplayer-02-player-not-ready.png`}
                         />
                     </div>
                 </div>
@@ -110,7 +110,7 @@ export const Help = () => {
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <Image
                             alt="Multiplayer před zahájením hry - pohled hráče, který umístil tip jako první"
-                            src={`${window._env_.REACT_APP_WEB_URL}/multiplayer/multiplayer-03-player-guessed.png`}
+                            src={`${process.env.REACT_APP_WEB_URL}/multiplayer/multiplayer-03-player-guessed.png`}
                         />
                     </div>
                 </div>
@@ -119,7 +119,7 @@ export const Help = () => {
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <Image
                             alt="Multiplayer před zahájením hry - pohled hráče, který čeká na další kolo"
-                            src={`${window._env_.REACT_APP_WEB_URL}/multiplayer/multiplayer-04-player-waiting.png`}
+                            src={`${process.env.REACT_APP_WEB_URL}/multiplayer/multiplayer-04-player-waiting.png`}
                         />
                     </div>
                 </div>
@@ -133,7 +133,7 @@ export const Help = () => {
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <Image
                             alt="Multiplayer před zahájením hry - pohled admina, který musí zahájit další kolo"
-                            src={`${window._env_.REACT_APP_WEB_URL}/multiplayer/multiplayer-05-admin-waiting.png`}
+                            src={`${process.env.REACT_APP_WEB_URL}/multiplayer/multiplayer-05-admin-waiting.png`}
                         />
                     </div>
                 </div>
@@ -142,7 +142,7 @@ export const Help = () => {
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <Image
                             alt="Multiplayer před zahájením hry - pohled hráče na konci hry před zobrazením výsledků"
-                            src={`${window._env_.REACT_APP_WEB_URL}/multiplayer/multiplayer-06-player-show-results.png`}
+                            src={`${process.env.REACT_APP_WEB_URL}/multiplayer/multiplayer-06-player-show-results.png`}
                         />
                     </div>
                 </div>

@@ -1,0 +1,48 @@
+log:
+  level: WARN
+  format: json
+  filePath: /dev/stdout
+
+accessLog:
+  filePath: /dev/stdout
+  format: json
+
+global:
+  sendAnonymousUsage: true
+
+api:
+  insecure: true
+  dashboard: true
+  debug: true
+
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+
+  websecure:
+    address: ":443"
+    http:
+      tls:
+        certResolver: myresolver
+
+certificatesResolvers:
+  myresolver:
+    acme:
+      #tlschallenge: true
+      email: jan.bouchner@gmail.com
+      storage: /letsencrypt/acme.json
+      httpChallenge:
+        entrypoint: web
+
+providers:
+  docker:
+    swarmMode: true
+    exposedByDefault: false
+    network: "traefik"
+  file:
+    filename: /etc/traefik/dynamic-conf.yml

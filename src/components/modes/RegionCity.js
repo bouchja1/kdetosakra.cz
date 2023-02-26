@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 import {
     Button, Col, InputNumber, Row, Select, Slider, Tooltip
 } from 'antd';

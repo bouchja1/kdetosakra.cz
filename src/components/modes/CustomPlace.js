@@ -2,7 +2,7 @@ import React, {
     useContext, useEffect, useRef, useState, useMemo
 } from 'react';
 import { Link } from 'react-router-dom';
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 import {
     Button, Row, Col, Slider, InputNumber, Tooltip
 } from 'antd';

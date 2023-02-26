@@ -10,11 +10,11 @@ export const firebaseUiConfig = {
 };
 
 export const firebaseConfig = {
-    apiKey: window._env_.REACT_APP_FIREBASE_API_KEY,
-    authDomain: window._env_.REACT_APP_FIREBASE_AUTH_DOMAIN,
-    projectId: window._env_.REACT_APP_FIREBASE_PROJECT_ID,
-    storageBucket: window._env_.REACT_APP_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: window._env_.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-    appId: window._env_.REACT_APP_FIREBASE_APP_ID,
-    measurementId: window._env_.REACT_APP_FIREBASE_MEASUREMENT_ID,
+    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.REACT_APP_FIREBASE_APP_ID,
+    measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };

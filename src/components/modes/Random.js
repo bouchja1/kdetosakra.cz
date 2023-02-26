@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Button } from 'antd';

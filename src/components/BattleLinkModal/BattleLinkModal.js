@@ -76,7 +76,7 @@ const BattleLinkModal = ({
                                 createBattle(randomUserToken, mode, radius, selectedCity, regionNutCode)
                                     .then(docRef => {
                                         setGenerateLinkInProgress(false);
-                                        setBattleLink(`${window._env_.REACT_APP_WEB_URL}/battle/${docRef.id}`);
+                                        setBattleLink(`${process.env.REACT_APP_WEB_URL}/battle/${docRef.id}`);
                                     })
                                     .catch(err => {
                                         setGenerateLinkInProgress(false);

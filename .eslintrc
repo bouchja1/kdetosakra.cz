@@ -1,167 +1,140 @@
 {
     "env": {
-        "es6": true
+        "browser": true
     },
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 2018,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true
+        }
+    },
+    "plugins": [
+        "import",
+        "@typescript-eslint",
+        "react-hooks",
+        "prettier"
+    ],
     "extends": [
         "airbnb",
-        "react-app",
-        "plugin:json/recommended"
+        "plugin:@typescript-eslint/recommended",
+        "plugin:import/typescript",
+        "prettier",
+        "plugin:json/recommended",
+        "plugin:prettier/recommended"
     ],
-    "plugins": [
-        // ...
-        "react-hooks"
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
+    "ignorePatterns": ["**/coverage/*", "**/build/*", "**/node_modules/*"],
+    "overrides": [
+        {
+            "files": ["**/*.js"],
+            "rules": {
+                // JS files are usually configs or scripts where require is OK
+                "@typescript-eslint/no-var-requires": "off",
+                "import/no-extraneous-dependencies": "off"
+            }
+        }
     ],
     "rules": {
-        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-        "react-hooks/rules-of-hooks": "error",
-        "react-hooks/exhaustive-deps": "warn",
-
-        // https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md
-        "import/no-extraneous-dependencies": "off",
-        "no-underscore-dangle": ["error", { "allow": ["_env_"] }],
-
-        /**
-         * Deprecated in jsx-a11y@6, see https://github.com/evcohen/eslint-plugin-jsx-a11y/blob/master/CHANGELOG.md
-         * and replace it with anchor-is-valid when upgrade jsx-a11y
-         */
-        "jsx-a11y/href-no-hash": "off",
-        "react/prop-types": "off", // TODO maybe fix it everywhere later
-        "jsx-a11y/label-has-associated-control": "off", // TODO maybe fix it later
-
-        // https://eslint.org/docs/rules/indent
-        "indent": [
+        // I believe type is enforced by callers.
+        "@typescript-eslint/explicit-function-return-type": "off",
+        // Enforce arrow functions only is afaik not possible. But this helps.
+        "func-style": [
             "error",
-            4,
+            "declaration",
             {
-                "SwitchCase": 1
+                "allowArrowFunctions": true
             }
         ],
-
-        // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-indent.md
-        "react/jsx-indent": ["error", 4],
-
-        // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-indent-props.md
-        "react/jsx-indent-props": ["error", 4],
-
-        // https://eslint.org/docs/rules/no-var
-        "no-var": "warn",
-
-        // https://eslint.org/docs/rules/max-len
-        "max-len": [
-            "warn",
-            165,
-            4,
+        // Fix for TypeScript.
+        "react/jsx-filename-extension": ["error", { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
+        "react/jsx-indent": [2, 4],
+        // I believe shadowing is a nice language feature.
+        "no-shadow": "off",
+        "import/order": "off",
+        // Does not work with TypeScript export type.
+        "import/prefer-default-export": "off",
+        // Does not work with Babel react-native to react-native-web
+        "import/no-unresolved": "off",
+        "import/extensions": [
+            "error",
+            "never",
             {
-                "ignoreComments": true,
-                "ignoreUrls": true,
-                "ignorePattern": "^\\s*var\\s.+=\\s*require\\s*\\("
+                "ignorePackages": true,
+                "pattern": {
+                    // it"s nice to explicitly know we are dealing with JSON
+                    "json": "always"
+                }
             }
         ],
-
-        // https://eslint.org/docs/rules/new-cap
-        "new-cap": "warn",
-
-        /**
-         * REASON: possible changes. When someone reduce number of arguments from 2 to 1, we
-         * donn"t want to force him remove parens.
-         */
-        // https://eslint.org/docs/rules/arrow-parens
-        "arrow-parens": "off",
-
-        /**
-         * REASON: Similar to "arrow-parens" reason.
-         */
-        // https://eslint.org/docs/rules/arrow-body-style
-        "arrow-body-style": "off",
-
-        // https://eslint.org/docs/rules/no-unused-vars
-        "no-unused-vars": "warn",
-
-        // https://eslint.org/docs/rules/camelcase
-        "camelcase": "warn",
-
-        // https://eslint.org/docs/rules/prefer-const
-        "prefer-const": "warn",
-
-        // https://eslint.org/docs/rules/func-names
-        "func-names": "off",
-
-        // https://eslint.org/docs/rules/space-before-function-paren
-        "space-before-function-paren": [
+        "import/no-extraneous-dependencies": [
             "error",
             {
-                "anonymous": "never",
-                "named": "never",
-                "asyncArrow": "always"
+                // add scripts/ folder
+                "devDependencies": ["**/*.test.{tsx,ts,js}"]
             }
         ],
-
-        // https://eslint.org/docs/rules/no-console
-        // "no-console": "error",
-        "no-console": "off",
-
-        // https://eslint.org/docs/rules/no-warning-comments
-        "no-warning-comments": "warn",
-
-        // https://eslint.org/docs/rules/param-reassign
+        "import/no-cycle": "error",
+        "import/no-anonymous-default-export": [
+            "error",
+            {
+                "allowArray": true,
+                "allowLiteral": true,
+                "allowObject": true
+            }
+        ],
+        // We have types.
+        "react/prop-types": "off",
+        // It"s fine.
+        "react/no-multi-comp": "off",
+        "react/no-unescaped-entities": "off",
+        // This is fine.
+        "class-methods-use-this": "off",
+        "lines-between-class-members": "off",
+        // We use it for immer. It should be checked by readonly anyway.
         "no-param-reassign": "off",
-
-        // https://eslint.org/docs/rules/spaced-comment
-        "spaced-comment": ["error", "always"],
-
-        // https://eslint.org/docs/rules/no-use-before-define
-        "no-use-before-define": "warn",
-
-        // https://github.com/evcohen/eslint-plugin-jsx-a11y/blob/v5.1.1/docs/rules/alt-text.md
-        "jsx-a11y/img-has-alt": "off",
-
-        // https://eslint.org/docs/rules/comma-dangle
-        "comma-dangle": [
-            "error",
-            {
-                "arrays": "always-multiline",
-                "objects": "always-multiline",
-                "imports": "ignore",
-                "exports": "ignore",
-                "functions": "ignore"
-            }
-        ],
-
-        // https://eslint.org/docs/rules/no-return-assign
-        "no-return-assign": ["error", "except-parens"],
-
-        // https://eslint.org/docs/rules/no-plusplus
+        // Irrelevant.
         "no-plusplus": "off",
-
-        /**
-         * REASON: We don"t want to use some specific constructs, eg. for...of
-         */
-        // https://eslint.org/docs/rules/no-restricted-syntax
-        "no-restricted-syntax": "off",
-
-        /**
-         * REASON: For static arrays that don"t change in time it"s safe to use array indexes
-         *  as a keys and we don"t want failed build because of that
-         */
-        "react/no-array-index-key": "warn",
-
-        "no-unused-expressions": [
-            "warn",
-            {
-                "allowShortCircuit": true,
-                "allowTernary": true,
-                "allowTaggedTemplates": false
-            }
-        ],
-
-        "object-curly-spacing": ["warn", "always"],
-
-        // https://eslint.org/docs/rules/curly
-        "curly": ["warn", "all"],
-
-        /**
-         * REASON: https://ackee.slack.com/archives/C07BZ9K32/p1536067640000100
-         */
-        "import/prefer-default-export": "off"
+        "no-return-assign": "off",
+        "consistent-return": "off",
+        "no-console": "off",
+        // TSC checks it.
+        "@typescript-eslint/no-unused-vars": "off",
+        "no-undef": "off",
+        "react/jsx-no-undef": "off",
+        // React Hooks.
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "error",
+        // Reconsider, maybe enable later:
+        "@typescript-eslint/explicit-member-accessibility": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "react/destructuring-assignment": "off",
+        "prettier/prettier": "warn",
+        "func-names": "off",
+        "react/require-default-props": "off",
+        "@typescript-eslint/no-non-null-assertion": "off",
+        // We use this syntax
+        "@typescript-eslint/triple-slash-reference": "off",
+        // new rules (eslint 6) temporary disabled until components-v2 and ts-ignore resolve
+        "react/jsx-props-no-spreading": "off",
+        "@typescript-eslint/ban-ts-ignore": "off",
+        // We need empty functions for mocking modules for react-native
+        "@typescript-eslint/no-empty-function": "off",
+        "no-useless-constructor": "off",
+        "@typescript-eslint/no-useless-constructor": "error",
+        // valid case of class method overloads in typescript
+        "no-dupe-class-members": "off",
+        "@typescript-eslint/ban-ts-comment": "off",
+        //  Missing return type on function
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        // note you must disable the base rule as it can report incorrect errors
+        "no-use-before-define": "off",
+        "@typescript-eslint/no-use-before-define": ["error"],
+        "require-await": ["error"]
     }
 }
