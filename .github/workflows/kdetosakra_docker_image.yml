@@ -1,0 +1,60 @@
+name: Deploy kdetosakra CI
+
+on:
+  push:
+    branches: [ "master" ]
+  workflow_dispatch:  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Docker login
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      run: |
+        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+      
+    - name: Declare some variables
+      id: vars
+      shell: bash
+      run: |
+        echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+      
+    - name: Build the Docker image
+      env:
+        API_KEY: ${{secrets.API_KEY}} 
+        FIREBASE_MEASUREMENT_ID: ${{secrets.FIREBASE_MEASUREMENT_ID}} 
+        FIREBASE_APP_ID: ${{secrets.FIREBASE_APP_ID}} 
+        FIREBASE_MESSAGING_SENDER_ID: ${{secrets.FIREBASE_MESSAGING_SENDER_ID}} 
+        FIREBASE_STORAGE_BUCKET: ${{secrets.FIREBASE_STORAGE_BUCKET}} 
+        FIREBASE_PROJECT_ID: ${{secrets.FIREBASE_PROJECT_ID}} 
+        FIREBASE_AUTH_DOMAIN: ${{secrets.FIREBASE_AUTH_DOMAIN}} 
+        FIREBASE_API_KEY: ${{secrets.FIREBASE_API_KEY}} 
+        SENTRY_DNS: ${{secrets.SENTRY_DNS}} 
+        WEB_URL: ${{secrets.WEB_URL}}
+      run: |
+        docker build
+        --file Dockerfile
+        --build-arg API_KEY=$API_KEY
+        --build-arg FIREBASE_MEASUREMENT_ID=$FIREBASE_MEASUREMENT_ID
+        --build-arg FIREBASE_APP_ID=$FIREBASE_APP_ID
+        --build-arg FIREBASE_MESSAGING_SENDER_ID=$FIREBASE_MESSAGING_SENDER_ID
+        --build-arg FIREBASE_STORAGE_BUCKET=$FIREBASE_STORAGE_BUCKET
+        --build-arg FIREBASE_PROJECT_ID=$FIREBASE_PROJECT_ID
+        --build-arg FIREBASE_AUTH_DOMAIN=$FIREBASE_AUTH_DOMAIN
+        --build-arg FIREBASE_API_KEY=$FIREBASE_API_KEY
+        --build-arg SENTRY_DNS=$SENTRY_DNS
+        --build-arg WEB_URL=$WEB_URL
+        --tag bouchja1/kdetosakra:${{ steps.vars.outputs.sha_short }}
+        --tag bouchja1/kdetosakra:latest
+        .
+
+    - name: Docker push
+      run: |
+        docker push bouchja1/kdetosakra:${{ steps.vars.outputs.sha_short }}
+        docker push bouchja1/kdetosakra:latest
