@@ -15,8 +15,7 @@
 }
 
 .kdetosakra-logo {
-    max-width: 135px;
-    position: absolute;
+    max-width: 100px;
 }
 
 .about-container h2,
@@ -50,7 +49,6 @@ ul.video-list {
 
 .ant-layout-content {
     display: flex;
-    justify-content: center; /* Add this */
     flex-wrap: wrap;
     justify-content: space-around;
 }
@@ -84,12 +82,30 @@ ul.video-list {
     align-items: center;
 }
 
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+
+    h2 {
+        line-height: 0;
+        padding: 0;
+        margin: 0;
+        color: #c80707;
+    }
+
+    h2:hover {
+        color: #000;
+    }
+}
+
 /* this is flex container */
 .menu-container {
     color: #828282;
     display: flex;
     justify-content: center;
-    height: 180px;
+    height: 100px;
+    padding: 0 80px 0 80px;
 }
 
 .randomPlace__modes {
@@ -105,6 +121,11 @@ ul.video-list {
 
 .logo-not-displayed {
     display: none;
+}
+
+.menu-without-padding {
+    padding: 0 10px 0 20px;
+    height: 70px;
 }
 
 .menu {
@@ -123,9 +144,8 @@ ul.video-list {
 .main-menu {
     display: flex;
     flex: 1;
-    justify-content: flex-start;
+    justify-content: flex-end;
     align-items: center;
-    padding-left: 70px;
 }
 
 .main-menu--battle {
@@ -147,7 +167,7 @@ ul.video-list {
     flex: 1;
     justify-content: flex-end;
     align-items: center;
-    padding-right: 70px;
+    padding-right: 20px;
 }
 
 .menu-game-info--battle {
@@ -188,7 +208,7 @@ ul.video-list {
 }
 
 .ant-card {
-    width: 375px !important;
+    width: 300px !important;
     margin: 0 1px 0 1px !important;
 }
 
@@ -685,10 +705,6 @@ label {
         display: none;
     }
 
-    .main-menu {
-        padding-left: 20px;
-    }
-
     .menu-game-info {
         padding-right: 20px;
         font-size: 12px;
@@ -763,7 +779,7 @@ label {
     }
 
     .main-menu {
-        padding-left: 30px;
+        padding-right: 30px;
     }
 
     .menu-game-info {

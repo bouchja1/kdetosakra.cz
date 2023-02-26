@@ -1,29 +1,29 @@
+import { FacebookFilled, InfoCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import {
-    FacebookFilled, HomeOutlined, InfoCircleOutlined, QuestionCircleOutlined
-} from '@ant-design/icons';
+import { Link, useLocation } from 'react-router-dom';
+
 import smilingLogo from '../../assets/images/kdetosakraSmile.svg';
+import { TOTAL_ROUNDS_MAX } from '../../constants/game';
 import routeNames from '../../constants/routes';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import { findUserFromBattleByRandomTokenId } from '../../util';
-import GameInfo from '../GameInfo';
 import BattleCountDown from '../BattleCountdown';
-import { TOTAL_ROUNDS_MAX } from '../../constants/game';
+import GameInfo from '../GameInfo';
 
 const isGameInfoShown = (pathname, isBattle) => {
     return (
-        isBattle
-        || pathname.includes(routeNames.geolokace)
-        || pathname.includes(routeNames.vlastni)
-        || pathname.includes(routeNames.nahodne)
-        || pathname.includes(routeNames.nahodneKraj)
-        || pathname.includes(routeNames.mesto)
+        isBattle ||
+        pathname.includes(routeNames.geolokace) ||
+        pathname.includes(routeNames.vlastni) ||
+        pathname.includes(routeNames.nahodne) ||
+        pathname.includes(routeNames.nahodneKraj) ||
+        pathname.includes(routeNames.mesto)
     );
 };
 
-const Menu = () => {
+const Menu = ({ isInGame = false }) => {
     const randomUserToken = useGetRandomUserToken();
     const { pathname } = useLocation();
     const currentGame = useSelector(state => state.game.currentGame);
@@ -54,13 +54,21 @@ const Menu = () => {
     };
 
     return (
-        <div id="menu-container" className="section menu-container">
-            <div className={isBattle ? 'main-menu--battle' : 'main-menu'}>
-                <Link to="/">
-                    <HomeOutlined style={{ color: 'rgb(97, 95, 95)', marginRight: '10px' }} />
-                    <div className="menu-item">Herní módy</div>
-                </Link>
-                <div className="menu-item menu-separator">|</div>
+        <div id="menu-container" className={classNames('section menu-container', isInGame && 'menu-without-padding')}>
+            <Link to="/">
+                <div className="logo">
+                    <img
+                        id="kdetosakra-logo"
+                        src={smilingLogo}
+                        alt="logo"
+                        className="kdetosakra-logo"
+                        width="50px"
+                        height="auto"
+                    />
+                    <h2>Kde to sakra?</h2>
+                </div>
+            </Link>
+            <div className={isBattle || isInGame ? 'main-menu--battle' : 'main-menu'}>
                 <Link to="/info">
                     <InfoCircleOutlined style={{ color: 'rgb(97, 95, 95)', marginRight: '10px' }} />
                     <div className="menu-item">O projektu</div>
@@ -76,7 +84,6 @@ const Menu = () => {
                     <FacebookFilled style={{ color: 'rgb(97, 95, 95)' }} />
                 </a>
             </div>
-            <img id="kdetosakra-logo" src={smilingLogo} alt="logo" className="kdetosakra-logo" width="85%" />
             {!isGameFinished() && isBattle && myPlayer?.userId && currentBattleInfo.round > 0 && <BattleCountDown />}
             {isGameInfoShown(pathname, isBattle) && (
                 <GameInfo

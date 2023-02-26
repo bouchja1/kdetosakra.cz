@@ -28,15 +28,15 @@ export const App = () => {
     // init google analytics
     if (process.env.NODE_ENV === 'production') {
         initializeReactGA();
-    }
-    if (process.env.REACT_APP_SENTRY_DNS) {
-        Sentry.init({
-            dsn: process.env.REACT_APP_SENTRY_DNS,
-            integrations: [new BrowserTracing()],
-            environment: process.env.NODE_ENV,
-            // We recommend adjusting this value in production, or using tracesSampler for finer control
-            tracesSampleRate: 0.3,
-        });
+        if (process.env.REACT_APP_SENTRY_DNS) {
+            Sentry.init({
+                dsn: process.env.REACT_APP_SENTRY_DNS,
+                integrations: [new BrowserTracing()],
+                environment: process.env.NODE_ENV,
+                // We recommend adjusting this value in production, or using tracesSampler for finer control
+                tracesSampleRate: 0.3,
+            });
+        }
     }
     const [loaded, error] = useScript('https://api.mapy.cz/loader.js');
     const [mapLoader] = useMapLoader(loaded);
@@ -44,10 +44,12 @@ export const App = () => {
 
     const { pathname } = location;
 
+    console.log('pathname: ', pathname);
+
     return (
         <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
-                <Menu />
+                <Menu isInGame={pathname !== '/' && pathname !== '/info' && pathname !== '/napoveda'} />
                 <Layout className="layout">
                     {loaded && !error && (
                         <MapyCzProvider value={mapLoader}>
@@ -63,7 +65,7 @@ export const App = () => {
                                     {' | '}
                                     {/* eslint-disable-next-line react/jsx-no-target-blank */}
                                     <a href="https://www.buymeacoffee.com/mmwbwdq" target="_blank" rel="noreferrer">
-                                        Kup mi kafe - podpoříš provoz a další rozvoj <CoffeeOutlined />
+                                        Podpořte provoz a další rozvoj <CoffeeOutlined />
                                     </a>
                                 </>
                             )}

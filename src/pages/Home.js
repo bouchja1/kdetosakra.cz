@@ -1,5 +1,6 @@
-import React from 'react';
 import { Layout } from 'antd';
+import React from 'react';
+
 import { ModesOverview } from '../containers/ModesOverview';
 
 const { Content } = Layout;
