@@ -3,7 +3,7 @@ name: Deploy kdetosakra CI
 on:
   push:
     branches: [ "master" ]
-  workflow_dispatch:  
+  workflow_dispatch:
 
 jobs:
   build:
@@ -11,31 +11,32 @@ jobs:
     timeout-minutes: 30
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Docker login
-      env:
-        DOCKER_USER: ${{ secrets.DOCKER_USER }}
-        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      run: |
-        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-      
+    - name: Check out the repo
+      uses: actions/checkout@v3
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
     - name: Declare some variables
       id: vars
       shell: bash
       run: |
         echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-      
+
     - name: Build the Docker image
       env:
-        API_KEY: ${{secrets.API_KEY}} 
-        FIREBASE_MEASUREMENT_ID: ${{secrets.FIREBASE_MEASUREMENT_ID}} 
-        FIREBASE_APP_ID: ${{secrets.FIREBASE_APP_ID}} 
-        FIREBASE_MESSAGING_SENDER_ID: ${{secrets.FIREBASE_MESSAGING_SENDER_ID}} 
-        FIREBASE_STORAGE_BUCKET: ${{secrets.FIREBASE_STORAGE_BUCKET}} 
-        FIREBASE_PROJECT_ID: ${{secrets.FIREBASE_PROJECT_ID}} 
-        FIREBASE_AUTH_DOMAIN: ${{secrets.FIREBASE_AUTH_DOMAIN}} 
-        FIREBASE_API_KEY: ${{secrets.FIREBASE_API_KEY}} 
-        SENTRY_DNS: ${{secrets.SENTRY_DNS}} 
+        API_KEY: ${{secrets.API_KEY}}
+        FIREBASE_MEASUREMENT_ID: ${{secrets.FIREBASE_MEASUREMENT_ID}}
+        FIREBASE_APP_ID: ${{secrets.FIREBASE_APP_ID}}
+        FIREBASE_MESSAGING_SENDER_ID: ${{secrets.FIREBASE_MESSAGING_SENDER_ID}}
+        FIREBASE_STORAGE_BUCKET: ${{secrets.FIREBASE_STORAGE_BUCKET}}
+        FIREBASE_PROJECT_ID: ${{secrets.FIREBASE_PROJECT_ID}}
+        FIREBASE_AUTH_DOMAIN: ${{secrets.FIREBASE_AUTH_DOMAIN}}
+        FIREBASE_API_KEY: ${{secrets.FIREBASE_API_KEY}}
+        SENTRY_DNS: ${{secrets.SENTRY_DNS}}
         WEB_URL: ${{secrets.WEB_URL}}
       run: |
         docker build
