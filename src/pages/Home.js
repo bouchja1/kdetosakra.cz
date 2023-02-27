@@ -10,7 +10,7 @@ export const Home = () => {
         <div className="home-overview">
             <div className="home-overview-hero">
                 <h1>Objev Českou republiku!</h1>
-                <p>Toulej se v panorámatech od Seznamu a hádej, kde se právě nacházíš.</p>
+                <p>Toulej se v panorámatech a hádej, kde se právě nacházíš.</p>
 
                 <p className="subtitle">
                     Žádná věda... prostě taková česká obdoba kultovního <b>GeoGuessr</b>
