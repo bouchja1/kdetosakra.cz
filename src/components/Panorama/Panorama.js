@@ -104,7 +104,6 @@ const Panorama = ({
 
     const handleGoBackToTheBeginning = () => {
         panoramaScene.show(bestPanoramaPlace);
-        setIsAtTheBeginning(true);
     };
 
     return (
