@@ -1,7 +1,8 @@
-import React from 'react';
 import { Button } from 'antd';
+import React from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
 import { setTotalRoundCounter } from '../../redux/actions/game';
 import { setLastResult } from '../../redux/actions/result';
@@ -10,8 +11,8 @@ const GuessingMapButton = ({
     refreshMap,
     isBattle,
     guessSingleplayerRound,
-    allGuessedPoints,
     guessBattleRound,
+    allGuessedPoints,
     round,
     totalScore,
     roundGuessed,

@@ -1,19 +1,17 @@
-import React, {
-    useContext, useEffect, useRef, useState, useMemo
-} from 'react';
-import { Link } from 'react-router-dom';
+import { Col, InputNumber, Row, Slider, Tooltip } from 'antd';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import ReactGA from 'react-ga4';
-import {
-    Button, Row, Col, Slider, InputNumber, Tooltip
-} from 'antd';
 import { useDispatch } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+
 import MapyCzContext from '../../context/MapyCzContext';
 import { CATEGORIES } from '../../enums/gaCategories';
 import gameModes from '../../enums/modes';
-import { RADIUS_DESCRIPTION } from '../../util';
 import { setCurrentGame } from '../../redux/actions/game';
+import { RADIUS_DESCRIPTION } from '../../util';
 import BattleLinkModal from '../BattleLinkModal';
-import { showMultiplayerWarningModal } from '../../util/multiplayer';
+import { GameStartButtons } from '../GameStartButtons';
+import { SinglePlayerModal } from '../SinglePlayerModal';
 
 export const CustomPlace = ({ multiplayerSupported }) => {
     const dispatch = useDispatch();
@@ -22,9 +20,34 @@ export const CustomPlace = ({ multiplayerSupported }) => {
     const [selectedPlaceData, setSelectedPlaceData] = useState(null);
     const [radius, setRadius] = useState(1);
     const [battleModalVisible, setBattleModalVisible] = useState(false);
+    const [playGame, setPlayGame] = useState(false);
+    const [singlePlayerModalVisible, setSinglePlayerModalVisible] = useState(false);
+
+    const handleSinglePlayerModalVisibility = isVisible => {
+        setSinglePlayerModalVisible(isVisible);
+    };
 
     const handleBattleModalVisibility = isVisible => {
         setBattleModalVisible(isVisible);
+    };
+
+    const handleClickStartGame = resultMode => {
+        ReactGA.event({
+            category: CATEGORIES.SUGGESTED,
+            action: 'Play suggested city game',
+        });
+        dispatch(
+            setCurrentGame({
+                mode: gameModes.custom,
+                round: 1,
+                totalScore: 0,
+                radius: Number(radius),
+                city: cityData,
+                guessResultMode: resultMode,
+                regionNutCode: null,
+            }),
+        );
+        setPlayGame(true);
     };
 
     useEffect(() => {
@@ -56,6 +79,16 @@ export const CustomPlace = ({ multiplayerSupported }) => {
             info: selectedPlaceData?.data?.secondRow,
         };
     }, [selectedPlaceData]);
+
+    if (playGame) {
+        return (
+            <Redirect
+                to={{
+                    pathname: '/vlastni',
+                }}
+            />
+        );
+    }
 
     return (
         <form>
@@ -92,57 +125,20 @@ export const CustomPlace = ({ multiplayerSupported }) => {
                 </Col>
             </Row>
             <p style={{ marginTop: '10px' }}>
-                Panoramata budou náhodně generována v okolí
-                {' '}
-                {radius}
-                {' '}
-                km od vámi vybraného místa.
+                Panoramata budou náhodně generována v okolí {radius} km od vámi vybraného místa.
             </p>
-            <div className="game-start-button-group">
-                <Button
-                    disabled={!selectedPlaceData}
-                    className="button-play"
-                    type="primary"
-                    onClick={() => {
-                        ReactGA.event({
-                            category: CATEGORIES.SUGGESTED,
-                            action: 'Play suggested city game',
-                        });
-                        dispatch(
-                            setCurrentGame({
-                                mode: gameModes.custom,
-                                round: 1,
-                                totalScore: 0,
-                                radius: Number(radius),
-                                city: cityData,
-                                regionNutCode: null,
-                            }),
-                        );
-                    }}
-                >
-                    <Link
-                        to={{
-                            pathname: '/vlastni',
-                        }}
-                    >
-                        1 hráč
-                    </Link>
-                </Button>
-                <Button
-                    disabled={!selectedPlaceData}
-                    className="button-play"
-                    type="primary"
-                    onClick={() => {
-                        if (multiplayerSupported) {
-                            setBattleModalVisible(true);
-                        } else {
-                            showMultiplayerWarningModal();
-                        }
-                    }}
-                >
-                    Více hráčů
-                </Button>
-            </div>
+            {selectedPlaceData && (
+                <GameStartButtons
+                    isMultiplayerSupported={multiplayerSupported}
+                    onSinglePlayerModalVisible={handleSinglePlayerModalVisibility}
+                    onBattleModalVisible={handleBattleModalVisibility}
+                />
+            )}
+            <SinglePlayerModal
+                visible={singlePlayerModalVisible}
+                onModalVisibility={handleSinglePlayerModalVisibility}
+                onClickStartGame={handleClickStartGame}
+            />
             <BattleLinkModal
                 visible={battleModalVisible}
                 handleBattleModalVisibility={handleBattleModalVisibility}
