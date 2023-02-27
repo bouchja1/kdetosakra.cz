@@ -71,8 +71,8 @@ const RoundResultModal = ({
         <Modal
             open={visible}
             style={{ top: 20 }}
-            onOk={() => closeModal(false)}
-            onCancel={() => closeModal(false)}
+            onOk={closeModal}
+            onCancel={closeModal}
             footer={null}
             centered
             destroyOnClose
@@ -166,7 +166,7 @@ const RoundResultModal = ({
                         key="submit"
                         type="primary"
                         onClick={() => {
-                            closeModal(false);
+                            closeModal();
                             setWikipediaMetadata(null);
                             setWikipediaMetadataLoading(true);
                         }}

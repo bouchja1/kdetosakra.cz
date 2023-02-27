@@ -103,6 +103,14 @@ export const getRandomCzechPlace = () => {
     return randomCity;
 };
 
+export const getRandomCzechPlaceWithCoatOfArms = () => {
+    let randomCity = crCities[Math.floor(Math.random() * crCities.length)];
+    while (typeof randomCity?.coatOfArms === 'undefined') {
+        randomCity = crCities[Math.floor(Math.random() * crCities.length)];
+    }
+    return randomCity;
+};
+
 export const getRandomPlaceInRegion = regionNutCode => {
     const selectedRegionArray = nutsCitiesObjectEntries[regionNutCode];
     let randomCity = selectedRegionArray[Math.floor(Math.random() * selectedRegionArray.length)];

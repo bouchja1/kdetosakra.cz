@@ -1,4 +1,4 @@
-import { Card, Radio, Select } from 'antd';
+import { Card, Radio, RadioChangeEvent, Select } from 'antd';
 import React, { useMemo, useState } from 'react';
 
 import geolocationCover from '../assets/images/city/geolocation.jpg';
@@ -7,6 +7,7 @@ import randomCover from '../assets/images/city/random.jpg';
 import suggestedCover from '../assets/images/city/suggested.jpg';
 import youtubeCover from '../assets/images/youtube.jpg';
 import { CustomPlace, Geolocation, Random, RandomPlaceInRegion, RegionCity } from '../components/modes';
+import { Heraldry } from '../components/modes/Heraldry';
 import { nutsCodes } from '../enums/nutsCodes';
 import useGetRandomUserToken from '../hooks/useGetRandomUserToken';
 import useSMapResize from '../hooks/useSMapResize';
@@ -22,7 +23,7 @@ export const ModesOverview = () => {
 
     const isMultiplayerSupported = width > 599;
 
-    const handleRandomModeChange = e => {
+    const handleRandomModeChange = (e: RadioChangeEvent) => {
         setRandomMode(e.target.value);
     };
 
@@ -78,7 +79,6 @@ export const ModesOverview = () => {
                                         <label htmlFor="city">Kraj: </label>
                                         <Select
                                             showSearch
-                                            name="city"
                                             style={{ width: 200 }}
                                             placeholder="zvolit kraj"
                                             onChange={value => {
@@ -86,6 +86,7 @@ export const ModesOverview = () => {
                                             }}
                                         >
                                             {regionEnumKeys.map(key => {
+                                                // @ts-ignore
                                                 const { code, name } = nutsCodes[key];
                                                 return <Option value={code}>{name}</Option>;
                                             })}
@@ -164,6 +165,17 @@ export const ModesOverview = () => {
                                 </a>
                             </li>
                         </ul>
+                    </>
+                ),
+            },
+            {
+                coverImgAlt: 'Herní mód - Heraldika',
+                coverImgSrc: youtubeCover,
+                title: 'Heraldika',
+                content: (
+                    <>
+                        <p>TODO.</p>
+                        <Heraldry />
                     </>
                 ),
             },

@@ -4,6 +4,7 @@ const gameModes = {
     geolocation: 'geolocation',
     city: 'city',
     custom: 'custom',
+    heraldry: 'heraldry',
 };
 
 export default gameModes;

@@ -1,4 +1,4 @@
-const routeNames = {
+export const routeNames = {
     battle: 'battle',
     info: 'info',
     vlastni: 'vlastni',
@@ -7,7 +7,6 @@ const routeNames = {
     nahodne: 'nahodne',
     nahodneKraj: 'nahodne-kraj',
     mesto: 'mesto',
+    heraldika: 'heraldika',
     geolokace: 'geolokace',
 };
-
-export default routeNames;
