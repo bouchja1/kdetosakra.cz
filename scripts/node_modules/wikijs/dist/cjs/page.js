@@ -1,0 +1,457 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const infobox_parser_1 = __importDefault(require("infobox-parser"));
+const hyntax_1 = require("hyntax");
+const util_js_1 = require("./util.js");
+const coordinates_js_1 = require("./coordinates.js");
+const chain_js_1 = __importDefault(require("./chain.js"));
+const get = (obj, first, ...rest) => {
+    if (obj === undefined || first === undefined)
+        return obj;
+    if (typeof first === 'function') {
+        return get(first(obj), ...rest);
+    }
+    return get(obj[first], ...rest);
+};
+const firstValue = obj => {
+    if (typeof obj === 'object')
+        return obj[Object.keys(obj)[0]];
+    return obj[0];
+};
+const getFileName = text => {
+    if (Array.isArray(text))
+        text = text[0];
+    if (!text)
+        return undefined;
+    if (text.indexOf(':') !== -1) {
+        const [, name] = text.split(':');
+        return name;
+    }
+    return text;
+};
+/**
+ * WikiPage
+ * @namespace WikiPage
+ */
+function wikiPage(rawPageInfo, apiOptions) {
+    const raw = rawPageInfo;
+    /**
+     * HTML from page
+     * @example
+     * wiki.page('batman').then(page => page.html()).then(console.log);
+     * @method WikiPage#html
+     * @return {Promise}
+     */
+    function html() {
+        return (0, util_js_1.api)(apiOptions, {
+            prop: 'revisions',
+            rvprop: 'content',
+            rvlimit: 1,
+            rvparse: '',
+            titles: raw.title
+        }).then(res => res.query.pages[raw.pageid].revisions[0]['*']);
+    }
+    /**
+     * @summary Useful for extracting structured section content from the page
+     * @alias sections
+     * @example
+     * wiki.page('batman').then(page => page.content()).then(console.log);
+     * @method WikiPage#content
+     * @return {Promise}
+     */
+    function content() {
+        return rawContent().then(util_js_1.parseContent);
+    }
+    /**
+     * Raw content from page
+     * @example
+     * wiki.page('batman').then(page => page.rawContent()).then(console.log);
+     * @method WikiPage#rawContent
+     * @return {Promise}
+     */
+    function rawContent() {
+        return chain()
+            .content()
+            .request()
+            .then(res => res.extract);
+    }
+    /**
+     * Text summary from page
+     * @example
+     * wiki.page('batman').then(page => page.summary()).then(console.log);
+     * @method WikiPage#summary
+     * @return {Promise}
+     */
+    function summary() {
+        return chain()
+            .summary()
+            .request()
+            .then(res => res.extract);
+    }
+    /**
+     * Main page image directly from API
+     * @method WikiPage#pageImage
+     * @returns URL
+     */
+    function pageImage() {
+        return chain()
+            .image({ original: true, name: true })
+            .request()
+            .then(res => get(res, 'image', 'original', 'source'));
+    }
+    /**
+     * Raw data from images from page
+     * @example
+     * wiki.page('batman').then(page => page.rawImages()).then(console.log);
+     * @method WikiPage#rawImages
+     * @return {Promise}
+     */
+    function rawImages() {
+        return (0, util_js_1.api)(apiOptions, {
+            generator: 'images',
+            gimlimit: 'max',
+            prop: 'imageinfo',
+            iiprop: 'url',
+            titles: raw.title
+        }).then(res => {
+            if (res.query) {
+                return Object.keys(res.query.pages).map(id => res.query.pages[id]);
+            }
+            return [];
+        });
+    }
+    /**
+     * Main image URL from infobox on page
+     * @example
+     * wiki.page('batman').then(page => page.mainImage()).then(console.log);
+     * @method WikiPage#mainImage
+     * @return {Promise}
+     */
+    function mainImage() {
+        return Promise.all([rawImages(), info()]).then(([images, info]) => {
+            // Handle different translations of "image" here
+            const mainImageName = getFileName(info.image ||
+                info.bildname ||
+                info.imagen ||
+                info.Immagine ||
+                info.badge ||
+                info.logo);
+            // Handle case where no info box exists
+            if (!mainImageName) {
+                return rawInfo().then(text => {
+                    if (!images.length)
+                        return undefined;
+                    // Sort images by what is seen first in page's info text
+                    images.sort((a, b) => text.indexOf(b.title) - text.indexOf(a.title));
+                    const image = images[0];
+                    const fallback = image && image.imageinfo.length > 0
+                        ? image.imageinfo[0].url
+                        : undefined;
+                    // If no image could be found, fallback to page image api result
+                    return pageImage().then(url => url || fallback);
+                });
+            }
+            const image = images.find(({ title }) => {
+                const filename = getFileName(title);
+                // Some wikis use underscores for spaces, some don't
+                return (filename.toUpperCase() === mainImageName.toUpperCase() ||
+                    filename.replace(/\s/g, '_') === mainImageName);
+            });
+            const fallback = image && image.imageinfo.length > 0
+                ? image.imageinfo[0].url
+                : undefined;
+            // If no image could be found, fallback to page image api result
+            return pageImage().then(url => url || fallback);
+        });
+    }
+    /**
+     * Image URL's from page
+     * @example
+     * wiki.page('batman').then(page => page.image()).then(console.log);
+     * @method WikiPage#images
+     * @return {Promise}
+     */
+    function images() {
+        return rawImages().then(images => {
+            return images
+                .map(image => image.imageinfo)
+                .reduce((imageInfos, list) => [...imageInfos, ...list], [])
+                .map(info => info.url);
+        });
+    }
+    /**
+     * External links from page
+     * @example
+     * wiki().page('batman').then(page => page.externalLinks()).then(console.log);
+     * // or
+     * wiki().chain().search('batman').extlinks().request()
+     * @method WikiPage#externalLinks
+     * @return {Promise}
+     */
+    function externalLinks() {
+        return chain().direct('extlinks');
+    }
+    function hasClass(node, className) {
+        return (node.content.attributes &&
+            node.content.attributes.some(attr => attr.key.content === 'class' &&
+                attr.value.content.indexOf(className) !== -1));
+    }
+    function isTag(node) {
+        return node.nodeType === 'tag';
+    }
+    function hasName(node, name) {
+        return node.content.name === name;
+    }
+    function findNode(node, predicate) {
+        if (predicate(node))
+            return node;
+        // search through children as well
+        if (node.content.children) {
+            for (let child of node.content.children) {
+                const found = findNode(child, predicate);
+                if (found) {
+                    return found;
+                }
+            }
+        }
+        return null;
+    }
+    function findNodes(node, predicate, nodes) {
+        if (predicate(node)) {
+            nodes.push(node);
+        }
+        if (node.content.children) {
+            for (let child of node.content.children) {
+                findNodes(child, predicate, nodes);
+            }
+        }
+    }
+    /**
+     * References from page
+     * @example
+     * wiki().page('batman').then(page => page.references()).then(console.log);
+     * @method WikiPage#references
+     * @return {Promise}
+     */
+    function references() {
+        return html()
+            .then(inputHTML => {
+            const { tokens } = (0, hyntax_1.tokenize)(inputHTML);
+            const { ast } = (0, hyntax_1.constructTree)(tokens);
+            return ast;
+        })
+            .then(ast => {
+            const links = [];
+            const refs = [];
+            // There can be mulitple reference sections
+            findNodes(ast, node => isTag(node) && hasName(node, 'ol') && hasClass(node, 'references'), refs);
+            for (let ref of refs) {
+                const items = ref.content.children.filter(el => isTag(el) && hasName(el, 'li') && el.content.children);
+                for (let item of items) {
+                    // The reference was moved under a span under li
+                    const span = item.content.children[2];
+                    const cite = findNode(span, node => isTag(node) && hasName(node, 'cite'));
+                    if (cite) {
+                        for (let el of cite.content.children) {
+                            if (isTag(el) && hasName(el, 'a') && hasClass(el, 'external')) {
+                                const linkAttr = el.content.attributes.find(attr => attr.key.content === 'href');
+                                links.push(linkAttr.value.content);
+                            }
+                        }
+                    }
+                }
+            }
+            return links;
+        });
+    }
+    /**
+     * Paginated links from page
+     * @example
+     * wiki().page('batman').then(page => page.links()).then(console.log);
+     * @method WikiPage#links
+     * @param  {Boolean} [aggregated] - return all links (default is true)
+     * @param  {Number} [limit] - number of links per page
+     * @return {Promise} - returns results if aggregated [and next function for more results if not aggregated]
+     */
+    function links(aggregated = true, limit = 100) {
+        const _pagination = (0, util_js_1.pagination)(apiOptions, {
+            prop: 'links',
+            plnamespace: 0,
+            pllimit: limit,
+            titles: raw.title
+        }, res => (res.query.pages[raw.pageid].links || []).map(link => link.title));
+        if (aggregated) {
+            return (0, util_js_1.aggregatePagination)(_pagination);
+        }
+        return _pagination;
+    }
+    /**
+     * Paginated categories from page
+     * @example
+     * wiki().page('batman').then(page => page.categories()).then(console.log);
+     * @method WikiPage#categories
+     * @param  {Boolean} [aggregated] - return all categories (default is true)
+     * @param  {Number} [limit] - number of categories per page
+     * @return {Promise} - returns results if aggregated [and next function for more results if not aggregated]
+     */
+    function categories(aggregated = true, limit = 100) {
+        const _pagination = (0, util_js_1.pagination)(apiOptions, chain()
+            .categories(limit)
+            .params(), res => (res.query.pages[raw.pageid].categories || []).map(category => category.title));
+        if (aggregated) {
+            return (0, util_js_1.aggregatePagination)(_pagination);
+        }
+        return _pagination;
+    }
+    /**
+     * Geographical coordinates from page
+     * @example
+     * wiki().page('Texas').then(texas => texas.coordinates())
+     * @method WikiPage#coordinates
+     * @return {Promise}
+     */
+    function coordinates() {
+        return chain()
+            .direct('coordinates')
+            .then(coords => {
+            if (coords)
+                return coords;
+            // No coordinates for this page, check infobox for deprecated version
+            return info().then(data => (0, coordinates_js_1.parseCoordinates)(data));
+        });
+    }
+    function rawInfo(title) {
+        return (0, util_js_1.api)(apiOptions, {
+            prop: 'revisions',
+            rvprop: 'content',
+            rvsection: 0,
+            titles: title || raw.title
+        }).then(res => get(res, 'query', 'pages', firstValue, 'revisions', 0, '*'));
+    }
+    /**
+     * Fetch and parse tables within page
+     * @method WikiPage#tables
+     * @return {Promise} Resolves to a collection of tables
+     */
+    function tables() {
+        return (0, util_js_1.api)(apiOptions, {
+            prop: 'revisions',
+            rvprop: 'content',
+            titles: raw.title
+        })
+            .then(res => get(res, 'query', 'pages', firstValue, 'revisions', 0, '*'))
+            .then(wikitext => (0, infobox_parser_1.default)(wikitext, apiOptions.parser).tables);
+    }
+    /**
+     * Get general information from page, with optional specifc property
+     * @deprecated This method will be dropped and replaced with the `fullInfo` implementation in v5
+     * @example
+     * wiki().page('Batman').then(page => page.info('alter_ego'));
+     * @method WikiPage#info
+     * @param  {String} [key] - Information key. Falsy keys are ignored
+     * @return {Promise} - info Object contains key/value pairs of infobox data, or specific value if key given
+     */
+    function info(key) {
+        return rawInfo()
+            .then(wikitext => {
+            // Use general data for now...
+            const info = (0, infobox_parser_1.default)(wikitext, apiOptions.parser).general;
+            if (Object.keys(info).length === 0) {
+                // If empty, check to see if this page has a templated infobox
+                return rawInfo(`Template:Infobox ${raw.title.toLowerCase()}`).then(_wikitext => (0, infobox_parser_1.default)(_wikitext || '', apiOptions.parser).general);
+            }
+            return info;
+        })
+            .then(metadata => {
+            if (!key) {
+                return metadata;
+            }
+            if (metadata.hasOwnProperty(key)) {
+                return metadata[key];
+            }
+        });
+    }
+    /**
+     * Get the full infobox data, parsed in a easy to use manner
+     * @example
+     * new Wiki().page('Batman').then(page => page.fullInfo()).then(info => info.general.aliases);
+     * @method WikiPage#fullInfo
+     * @return {Promise} - Parsed object of all infobox data
+     */
+    function fullInfo() {
+        return rawInfo().then(wikitext => (0, infobox_parser_1.default)(wikitext, apiOptions.parser));
+    }
+    /**
+     * Paginated backlinks from page
+     * @method WikiPage#backlinks
+     * @param  {Boolean} [aggregated] - return all backlinks (default is true)
+     * @param  {Number} [limit] - number of backlinks per page
+     * @return {Promise} - includes results [and next function for more results if not aggregated]
+     */
+    function backlinks(aggregated = true, limit = 100) {
+        const _pagination = (0, util_js_1.pagination)(apiOptions, {
+            list: 'backlinks',
+            bllimit: limit,
+            bltitle: raw.title
+        }, res => (res.query.backlinks || []).map(link => link.title));
+        if (aggregated) {
+            return (0, util_js_1.aggregatePagination)(_pagination);
+        }
+        return _pagination;
+    }
+    /**
+     * Get list of links to different translations
+     * @method WikiPage#langlinks
+     * @return {Promise} - includes link objects { lang, title, url }
+     */
+    function langlinks() {
+        return chain().direct('langlinks');
+    }
+    /**
+     * Get URL for wiki page
+     * @method WikiPage#url
+     * @return {String}
+     */
+    function url() {
+        return raw.canonicalurl;
+    }
+    const page = Object.assign({}, raw);
+    /**
+     * Returns a QueryChain for the page
+     * @method WikiPage#chain
+     * @returns {QueryChain}
+     */
+    function chain() {
+        return new chain_js_1.default(apiOptions, raw.pageid);
+    }
+    Object.assign(page, {
+        raw,
+        html,
+        rawContent,
+        content,
+        sections: content,
+        summary,
+        images,
+        references,
+        links,
+        externalLinks,
+        categories,
+        coordinates,
+        info,
+        backlinks,
+        rawImages,
+        mainImage,
+        langlinks,
+        rawInfo,
+        fullInfo,
+        pageImage,
+        tables,
+        url,
+        chain
+    });
+    return page;
+}
+exports.default = wikiPage;

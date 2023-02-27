@@ -2,7 +2,7 @@ import wiki from 'wikijs';
 
 const WIKIPEDIA_API_URL = 'https://cs.wikipedia.org/w/api.php';
 
-const findCoaByText = imagesArray => {
+export const findCoaByText = imagesArray => {
     const foundedImages = imagesArray.filter(image => {
         if (image.includes('CoA')) {
             return true;
@@ -15,7 +15,7 @@ const findCoaByText = imagesArray => {
     return foundedImages.length ? foundedImages[0] : null;
 };
 
-const findCoa = (imagesArray, coaName) => {
+export const findCoa = (imagesArray, coaName) => {
     if (imagesArray && imagesArray.length) {
         if (coaName) {
             coaName = coaName.replace(/ /g, '_');

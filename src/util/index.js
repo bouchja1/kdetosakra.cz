@@ -1,9 +1,10 @@
 import { isBefore } from 'date-fns';
-import crCities from '../data/cr';
-import nutsCitiesObjectEntries from '../data/nutsCitiesObjectEntries';
-import randomNicknames from '../constants/nicknames';
-import gameModes from '../enums/modes';
+
 import { TOTAL_ROUNDS_MAX } from '../constants/game';
+import randomNicknames from '../constants/nicknames';
+import crCities from '../data/cr.mjs';
+import nutsCitiesObjectEntries from '../data/nutsCitiesObjectEntries';
+import gameModes from '../enums/modes';
 
 const EARTH_RADIUS = 6371000; /* meters  */
 const DEG_TO_RAD = Math.PI / 180.0;
@@ -61,7 +62,8 @@ const pointAtDistance = (inputCoords, distance) => {
     const cosTheta = Math.cos(theta);
 
     result.latitude = Math.asin(sinLat * cosTheta + cosLat * sinTheta * cosBearing);
-    result.longitude = coords.longitude + Math.atan2(sinBearing * sinTheta * cosLat, cosTheta - sinLat * Math.sin(result.latitude));
+    result.longitude =
+        coords.longitude + Math.atan2(sinBearing * sinTheta * cosLat, cosTheta - sinLat * Math.sin(result.latitude));
     /* normalize -PI -> +PI radians */
     result.longitude = ((result.longitude + THREE_PI) % TWO_PI) - Math.PI;
 
@@ -178,7 +180,8 @@ export const findUserFromBattleByRandomTokenId = (battlePlayers, randomUserToken
     return null;
 };
 
-export const RADIUS_DESCRIPTION = 'Poloměr kružnice, ve které se náhodně vygeneruje panorama (středem je dle zvoleného módu buď centrum obce nebo vaše poloha).';
+export const RADIUS_DESCRIPTION =
+    'Poloměr kružnice, ve které se náhodně vygeneruje panorama (středem je dle zvoleného módu buď centrum obce nebo vaše poloha).';
 
 export const mapGameModeName = mode => {
     switch (mode) {

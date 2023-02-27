@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
-import { findMunicipalityMetadata } from '../../services/wikipedia';
+import { findMunicipalityMetadata } from '../../services/wikipedia.mjs';
 import { roundToTwoDecimal } from '../../util';
 
 const RoundResultModal = ({
