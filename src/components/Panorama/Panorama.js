@@ -7,10 +7,12 @@ import { DEFAULT_PANORAMA_TOLERANCE, MAX_PANORAMA_TRIES, guessResultMode } from 
 import MapyCzContext from '../../context/MapyCzContext';
 import useSMapResize from '../../hooks/useSMapResize';
 
-export const panoramaSceneOptions = {
-    nav: true,
-    blend: 300,
-    pitchRange: [0, 0], // zakazeme vertikalni rozhled
+export const getPanoramaSceneOptions = (noMove = false) => {
+    return {
+        nav: noMove ? false : true,
+        blend: 300,
+        pitchRange: [0, 0], // zakazeme vertikalni rozhled
+    };
 };
 
 const GoBackToTheBeginning = styled.div`

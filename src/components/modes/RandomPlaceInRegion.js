@@ -25,7 +25,7 @@ export const RandomPlaceInRegion = ({ multiplayerSupported, regionNutCode }) => 
         setBattleModalVisible(isVisible);
     };
 
-    const handleClickStartGame = resultMode => {
+    const handleClickStartGame = (resultMode, noMove = false) => {
         ReactGA.event({
             category: CATEGORIES.RANDOM_PLACE_IN_REGION,
             action: 'Play random place in region',
@@ -39,6 +39,7 @@ export const RandomPlaceInRegion = ({ multiplayerSupported, regionNutCode }) => 
                 city: null,
                 guessResultMode: resultMode,
                 regionNutCode,
+                noMove,
             }),
         );
         setPlayGame(true);

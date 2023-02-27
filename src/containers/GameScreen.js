@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useMediaQuery } from 'react-responsive';
 
 import BattlePlayersPanel from '../components/BattlePlayersPanel';
-import Panorama, { panoramaSceneOptions } from '../components/Panorama';
+import Panorama, { getPanoramaSceneOptions } from '../components/Panorama';
 import RoundResultModal from '../components/RoundResultModal';
 import MapyCzContext from '../context/MapyCzContext';
 import gameModes from '../enums/modes';
@@ -22,7 +22,7 @@ import { GuessingMapContainer } from './GuessingMapContainer';
 
 const { TabPane } = Tabs;
 
-export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle }) => {
+export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle, noMove = false }) => {
     const dispatch = useDispatch();
     const randomUserToken = useGetRandomUserToken();
     const mapyContext = useContext(MapyCzContext);
@@ -59,6 +59,7 @@ export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle 
 
     useEffect(() => {
         if (mapyContext.loadedMapApi && isGameStarted) {
+            const panoramaSceneOptions = getPanoramaSceneOptions(noMove);
             const panoScene = new mapyContext.SMap.Pano.Scene(refPanoramaView.current, panoramaSceneOptions);
             const panoramaSignals = panoScene.getSignals();
             // observer panorama scene change
@@ -78,7 +79,7 @@ export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle 
             setPanoramaScene(panoScene);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [mapyContext.loadedMapApi, isGameStarted]);
+    }, [mapyContext.loadedMapApi, isGameStarted, noMove]);
 
     // Executed when the game is started or a page is re/loaded and rounds are already generated
     useEffect(() => {

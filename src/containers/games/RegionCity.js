@@ -13,12 +13,12 @@ export const RegionCity = () => {
     const currentGame = useSelector(state => state.game.currentGame);
     useGameMenuResize();
 
-    const { mode, radius, city } = currentGame;
+    const { mode, radius, city, noMove } = currentGame;
 
     if (radius && mode === gameModes.city && city) {
         return (
             <Content>
-                <GameScreen mode={mode} radius={radius} city={city} />
+                <GameScreen mode={mode} radius={radius} city={city} noMove={noMove} />
             </Content>
         );
     }

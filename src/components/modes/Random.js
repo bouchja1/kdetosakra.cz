@@ -25,7 +25,7 @@ export const Random = ({ multiplayerSupported }) => {
         setSinglePlayerModalVisible(isVisible);
     };
 
-    const handleClickStartGame = resultMode => {
+    const handleClickStartGame = (resultMode, noMove = false) => {
         ReactGA.event({
             category: CATEGORIES.RANDOM_CITY,
             action: 'Play random city game',
@@ -39,6 +39,7 @@ export const Random = ({ multiplayerSupported }) => {
                 city: null,
                 guessResultMode: resultMode,
                 regionNutCode: null,
+                noMove,
             }),
         );
         setPlayGame(true);

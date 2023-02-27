@@ -31,7 +31,7 @@ export const CustomPlace = ({ multiplayerSupported }) => {
         setBattleModalVisible(isVisible);
     };
 
-    const handleClickStartGame = resultMode => {
+    const handleClickStartGame = (resultMode, noMove = false) => {
         ReactGA.event({
             category: CATEGORIES.SUGGESTED,
             action: 'Play suggested city game',
@@ -45,6 +45,7 @@ export const CustomPlace = ({ multiplayerSupported }) => {
                 city: cityData,
                 guessResultMode: resultMode,
                 regionNutCode: null,
+                noMove,
             }),
         );
         setPlayGame(true);
