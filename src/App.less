@@ -15,7 +15,7 @@
 }
 
 .kdetosakra-logo {
-    max-width: 100px;
+    max-width: 50px;
 }
 
 .about-container h2,
@@ -74,6 +74,35 @@ ul.video-list {
     width: 100%;
 }
 
+.home-overview {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .home-overview-hero {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 30px;
+        text-align: center;
+
+        h1 {
+            font-size: xxx-large;
+            color: #c80707;
+            margin-bottom: 7px;
+        }
+
+        p {
+            font-size: large;
+        }
+
+        p.subtitle {
+            font-size: small;
+        }
+    }
+}
+
 .section {
     width: 100%;
     height: 300px;
@@ -104,7 +133,7 @@ ul.video-list {
     color: #828282;
     display: flex;
     justify-content: center;
-    height: 100px;
+    height: 75px;
     padding: 0 80px 0 80px;
 }
 
@@ -115,17 +144,12 @@ ul.video-list {
     margin-bottom: 15px;
 }
 
-.game-menu {
-    height: 70px;
-}
-
 .logo-not-displayed {
     display: none;
 }
 
 .menu-without-padding {
-    padding: 0 10px 0 20px;
-    height: 70px;
+    padding: 0 20px 0 20px;
 }
 
 .menu {
@@ -167,7 +191,6 @@ ul.video-list {
     flex: 1;
     justify-content: flex-end;
     align-items: center;
-    padding-right: 20px;
 }
 
 .menu-game-info--battle {
@@ -685,7 +708,7 @@ label {
     }
 
     .menu-container {
-        padding: 30px 0 15px 0;
+        padding: 30px 20px 15px 20px;
         height: 20px;
     }
 
@@ -706,7 +729,6 @@ label {
     }
 
     .menu-game-info {
-        padding-right: 20px;
         font-size: 12px;
     }
 
@@ -727,7 +749,11 @@ label {
     }
 
     .kdetosakra-logo {
-        max-width: 0px;
+        max-width: 40px;
+    }
+
+    .kdetosakra-logo-text {
+        display: none;
     }
 
     .layout {
@@ -746,7 +772,7 @@ label {
     }
 
     .menu-container {
-        padding: 30px 0 15px 0;
+        padding: 30px 20px 15px 20px;
         height: 20px;
     }
 
@@ -778,14 +804,6 @@ label {
         display: none;
     }
 
-    .main-menu {
-        padding-right: 30px;
-    }
-
-    .menu-game-info {
-        padding-right: 30px;
-    }
-
     battle-players-detail-player-result--name,
     .battle-players-detail--name {
         font-size: 10px;
@@ -796,7 +814,11 @@ label {
     }
 
     .kdetosakra-logo {
-        max-width: 0px;
+        max-width: 40px;
+    }
+
+    .kdetosakra-logo-text {
+        display: none;
     }
 
     .layout {

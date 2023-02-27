@@ -65,7 +65,7 @@ const Menu = ({ isInGame = false }) => {
                         width="50px"
                         height="auto"
                     />
-                    <h2>Kde to sakra?</h2>
+                    <h2 className="kdetosakra-logo-text">Kde to sakra?</h2>
                 </div>
             </Link>
             <div className={isBattle || isInGame ? 'main-menu--battle' : 'main-menu'}>

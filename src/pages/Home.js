@@ -7,8 +7,18 @@ const { Content } = Layout;
 
 export const Home = () => {
     return (
-        <Content>
-            <ModesOverview />
-        </Content>
+        <div className="home-overview">
+            <div className="home-overview-hero">
+                <h1>Objev Českou republiku!</h1>
+                <p>Toulej se v panorámatech od Seznamu a hádej, kde se právě nacházíš.</p>
+
+                <p className="subtitle">
+                    Žádná věda... prostě taková česká obdoba kultovního <b>GeoGuessr</b>
+                </p>
+            </div>
+            <Content>
+                <ModesOverview />
+            </Content>
+        </div>
     );
 };

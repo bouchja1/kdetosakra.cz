@@ -44,8 +44,6 @@ export const App = () => {
 
     const { pathname } = location;
 
-    console.log('pathname: ', pathname);
-
     return (
         <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
