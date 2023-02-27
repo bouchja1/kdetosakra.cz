@@ -1,68 +1,71 @@
 import React, { useState } from 'react';
 import ReactGA from 'react-ga4';
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { Button } from 'antd';
+import { Redirect } from 'react-router-dom';
+
 import { CATEGORIES } from '../../enums/gaCategories';
-import { generateRandomRadius } from '../../util';
-import { setCurrentGame } from '../../redux/actions/game';
 import gameModes from '../../enums/modes';
+import { setCurrentGame } from '../../redux/actions/game';
+import { generateRandomRadius } from '../../util';
 import BattleLinkModal from '../BattleLinkModal';
-import { showMultiplayerWarningModal } from '../../util/multiplayer';
+import { GameStartButtons } from '../GameStartButtons';
+import { SinglePlayerModal } from '../SinglePlayerModal';
 
 export const Random = ({ multiplayerSupported }) => {
     const dispatch = useDispatch();
     const [battleModalVisible, setBattleModalVisible] = useState(false);
+    const [playGame, setPlayGame] = useState(false);
+    const [singlePlayerModalVisible, setSinglePlayerModalVisible] = useState(false);
 
     const handleBattleModalVisibility = isVisible => {
         setBattleModalVisible(isVisible);
     };
 
+    const handleSinglePlayerModalVisibility = isVisible => {
+        setSinglePlayerModalVisible(isVisible);
+    };
+
+    const handleClickStartGame = resultMode => {
+        ReactGA.event({
+            category: CATEGORIES.RANDOM_CITY,
+            action: 'Play random city game',
+        });
+        dispatch(
+            setCurrentGame({
+                mode: gameModes.random,
+                round: 1,
+                totalScore: 0,
+                radius: generateRandomRadius(),
+                city: null,
+                guessResultMode: resultMode,
+                regionNutCode: null,
+            }),
+        );
+        setPlayGame(true);
+    };
+
+    if (playGame) {
+        return (
+            <Redirect
+                to={{
+                    pathname: '/nahodne',
+                }}
+            />
+        );
+    }
+
     return (
         <>
-            <div className="game-start-button-group">
-                <Button
-                    type="primary"
-                    className="button-play"
-                    onClick={() => {
-                        ReactGA.event({
-                            category: CATEGORIES.RANDOM_CITY,
-                            action: 'Play random city game',
-                        });
-                        dispatch(
-                            setCurrentGame({
-                                mode: gameModes.random,
-                                round: 1,
-                                totalScore: 0,
-                                radius: generateRandomRadius(),
-                                city: null,
-                                regionNutCode: null,
-                            }),
-                        );
-                    }}
-                >
-                    <Link
-                        to={{
-                            pathname: '/nahodne',
-                        }}
-                    >
-                        1 hráč
-                    </Link>
-                </Button>
-                <Button
-                    type="primary"
-                    className="button-play"
-                    onClick={() => {
-                        if (multiplayerSupported) {
-                            setBattleModalVisible(true);
-                        } else {
-                            showMultiplayerWarningModal();
-                        }
-                    }}
-                >
-                    Více hráčů
-                </Button>
-            </div>
+            <GameStartButtons
+                isMultiplayerSupported={multiplayerSupported}
+                onSinglePlayerModalVisible={handleSinglePlayerModalVisibility}
+                onBattleModalVisible={handleBattleModalVisibility}
+            />
+            <SinglePlayerModal
+                visible={singlePlayerModalVisible}
+                onModalVisibility={handleSinglePlayerModalVisibility}
+                onClickStartGame={handleClickStartGame}
+            />
             <BattleLinkModal
                 visible={battleModalVisible}
                 handleBattleModalVisibility={handleBattleModalVisibility}

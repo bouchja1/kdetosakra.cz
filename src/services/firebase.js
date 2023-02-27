@@ -1,11 +1,12 @@
-import firebase from 'firebase/app';
 import 'firebase/analytics';
 import 'firebase/auth';
 import 'firebase/firestore';
 
+import firebase from 'firebase/app';
+
 import { firebaseConfig } from '../constants/firebase';
 import { MAX_ALLOWED_BATTLE_PLAYERS } from '../constants/game';
-import { DuplicatedBattlePlayerError, NotFoundBattlePlayerError, MaxBattleCapacityExhaustedError } from '../errors';
+import { DuplicatedBattlePlayerError, MaxBattleCapacityExhaustedError, NotFoundBattlePlayerError } from '../errors';
 import { generateRandomRadius, getRandomNickname } from '../util';
 
 firebase.initializeApp(firebaseConfig);
@@ -22,7 +23,7 @@ const COLLECTION_BATTLE_ROUNDS = 'battleRounds';
  * @param mode
  * @returns {Promise<firebase.firestore.DocumentReference<firebase.firestore.DocumentData>>}
  */
-export const createBattle = (authorId, mode, radius, selectedCity, regionNutCode = null) => {
+export const createBattle = (authorId, mode, radius, selectedCity, guessResultMode, regionNutCode = null) => {
     return db.collection(COLLECTION_BATTLE).add({
         created: firebase.firestore.FieldValue.serverTimestamp(),
         createdById: authorId,
@@ -35,52 +36,32 @@ export const createBattle = (authorId, mode, radius, selectedCity, regionNutCode
         round: 0, // current round
         currentRoundStart: 0,
         regionNutCode,
+        guessResultMode,
     });
 };
 
 export const updateBattle = async (battleId, itemsToUpdate) => {
-    return db
-        .collection(COLLECTION_BATTLE)
-        .doc(battleId)
-        .update(itemsToUpdate);
+    return db.collection(COLLECTION_BATTLE).doc(battleId).update(itemsToUpdate);
 };
 
 export const streamBattlePlayersDetail = (battleId, observer) => {
-    return db
-        .collection(COLLECTION_BATTLE)
-        .doc(battleId)
-        .collection(COLLECTION_BATTLE_PLAYERS)
-        .onSnapshot(observer);
+    return db.collection(COLLECTION_BATTLE).doc(battleId).collection(COLLECTION_BATTLE_PLAYERS).onSnapshot(observer);
 };
 
 export const streamBattleRoundsDetail = (battleId, observer) => {
-    return db
-        .collection(COLLECTION_BATTLE)
-        .doc(battleId)
-        .collection(COLLECTION_BATTLE_ROUNDS)
-        .onSnapshot(observer);
+    return db.collection(COLLECTION_BATTLE).doc(battleId).collection(COLLECTION_BATTLE_ROUNDS).onSnapshot(observer);
 };
 
 export const streamBattleDetail = (battleId, observer) => {
-    return db
-        .collection(COLLECTION_BATTLE)
-        .doc(battleId)
-        .onSnapshot(observer);
+    return db.collection(COLLECTION_BATTLE).doc(battleId).onSnapshot(observer);
 };
 
 export const getBattleDetail = battleId => {
-    return db
-        .collection(COLLECTION_BATTLE)
-        .doc(battleId)
-        .get();
+    return db.collection(COLLECTION_BATTLE).doc(battleId).get();
 };
 
 export const getBattlePlayers = battleId => {
-    return db
-        .collection(COLLECTION_BATTLE)
-        .doc(battleId)
-        .collection(COLLECTION_BATTLE_PLAYERS)
-        .get();
+    return db.collection(COLLECTION_BATTLE).doc(battleId).collection(COLLECTION_BATTLE_PLAYERS).get();
 };
 
 /**
@@ -149,11 +130,7 @@ export const addPlayerToBattle = (newPlayer, battleId) => {
 export const addRoundBatchToBattleRounds = async (battleId, roundsArray) => {
     const batch = db.batch();
     roundsArray.forEach(doc => {
-        const docRef = db
-            .collection(COLLECTION_BATTLE)
-            .doc(battleId)
-            .collection(COLLECTION_BATTLE_ROUNDS)
-            .doc(); // automatically generate unique id
+        const docRef = db.collection(COLLECTION_BATTLE).doc(battleId).collection(COLLECTION_BATTLE_ROUNDS).doc(); // automatically generate unique id
         batch.set(docRef, doc);
     });
     // Commit the batch

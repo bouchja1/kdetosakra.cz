@@ -1,14 +1,14 @@
 import { getType } from 'typesafe-actions';
 
 import {
+    incrementMyTotalScore,
     removePlayerFromBattle,
     resetCurrentBattle,
-    setCurrentBattle,
     setBattlePlayers,
-    setMyUserInfoToCurrentBattle,
-    incrementMyTotalScore,
+    setCurrentBattle,
     setIsRoundActive,
     setMyUserInfoNicknameToCurrentBattle,
+    setMyUserInfoToCurrentBattle,
 } from '../actions/battle';
 
 const initialState = {
@@ -28,10 +28,11 @@ const initialState = {
         withCountdown: true,
         countdown: 60,
         regionNutCode: null,
+        guessResultMode: null,
     },
 };
 
-const gameReducer = (state = initialState, action) => {
+const battleReducer = (state = initialState, action) => {
     switch (action.type) {
         case getType(setCurrentBattle):
             return {
@@ -114,4 +115,4 @@ const gameReducer = (state = initialState, action) => {
     }
 };
 
-export default gameReducer;
+export default battleReducer;

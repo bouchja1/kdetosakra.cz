@@ -7,7 +7,7 @@ const initialState = {
     totalScore: 0,
 };
 
-const gameReducer = (state = initialState, action) => {
+const resultReducer = (state = initialState, action) => {
     switch (action.type) {
         case getType(setLastResult): {
             return {
@@ -20,4 +20,4 @@ const gameReducer = (state = initialState, action) => {
     }
 };
 
-export default gameReducer;
+export default resultReducer;

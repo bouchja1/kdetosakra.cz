@@ -1,7 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
 import { Spin } from 'antd';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
+import styled from 'styled-components';
+
+import { DEFAULT_PANORAMA_TOLERANCE, MAX_PANORAMA_TRIES, guessResultMode } from '../../constants/game';
 import MapyCzContext from '../../context/MapyCzContext';
-import { DEFAULT_PANORAMA_TOLERANCE, MAX_PANORAMA_TRIES } from '../../constants/game';
 import useSMapResize from '../../hooks/useSMapResize';
 
 export const panoramaSceneOptions = {
@@ -10,6 +13,18 @@ export const panoramaSceneOptions = {
     pitchRange: [0, 0], // zakazeme vertikalni rozhled
 };
 
+const GoBackToTheBeginning = styled.div`
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    background: #c80707;
+    color: #fff;
+    padding: 5px;
+    font-size: 12px;
+    border-radius: 4px;
+`;
+
 const Panorama = ({
     panoramaScene,
     refPanoramaView,
@@ -17,11 +32,29 @@ const Panorama = ({
     panoramaLoading,
     changePanoramaLoadingState,
     isGameStarted,
+    isBattle,
 }) => {
     const mapyContext = useContext(MapyCzContext);
     const { width, height } = useSMapResize();
+    const currentGame = useSelector(state => state.game.currentGame);
+    const currentBattleInfo = useSelector(state => state.battle.currentBattle);
     const [findPanoramaTriesCounter, setFindPanoramaTriesCounter] = useState(0);
     const [panoramaFounded, setPanoramaFounded] = useState(true);
+    const [bestPanoramaPlace, setBestPanoramaPlace] = useState();
+
+    const { guessResultMode: guessResultModeSinglePlayer } = currentGame;
+    const { guessResultMode: guessResultModeBattle } = currentBattleInfo;
+
+    const showGoBackToTheBeginning = useMemo(() => {
+        if (isBattle) {
+            if (guessResultModeBattle === guessResultMode.end) {
+                return true;
+            }
+        } else if (guessResultModeSinglePlayer === guessResultMode.end) {
+            return true;
+        }
+        return false;
+    }, [isBattle, guessResultModeSinglePlayer, guessResultModeBattle]);
 
     useEffect(() => {
         if (mapyContext.loadedMapApi && panoramaPlace && panoramaScene && isGameStarted) {
@@ -38,6 +71,7 @@ const Panorama = ({
                 await SMap.Pano.getBest(position, tolerance)
                     .then(
                         place => {
+                            setBestPanoramaPlace(place);
                             panoramaScene.show(place);
                             changePanoramaLoadingState(false);
                         },
@@ -63,6 +97,11 @@ const Panorama = ({
 
     const isPanoramaLoading = !panoramaPlace || !isGameStarted || panoramaLoading;
 
+    const handleGoBackToTheBeginning = () => {
+        panoramaScene.show(bestPanoramaPlace);
+        setIsAtTheBeginning(true);
+    };
+
     return (
         <Spin
             tip={!isGameStarted ? 'Čekám, až budou všichni hráči připraveni' : 'Načítám panorama, čekej prosím...'}
@@ -74,7 +113,14 @@ const Panorama = ({
                 {!panoramaFounded ? (
                     <p>V okruhu 5 km od vašeho místa nebylo nalezeno žádné panorama.</p>
                 ) : (
-                    <div ref={refPanoramaView} style={{ width: '100%' }} />
+                    <>
+                        {showGoBackToTheBeginning && (
+                            <GoBackToTheBeginning onClick={handleGoBackToTheBeginning}>
+                                Zpět na výchozí místo
+                            </GoBackToTheBeginning>
+                        )}
+                        <div ref={refPanoramaView} style={{ width: '100%' }} />
+                    </>
                 )}
             </div>
         </Spin>
