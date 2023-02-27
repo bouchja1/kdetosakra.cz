@@ -1,10 +1,11 @@
-import React from 'react';
-import { Redirect } from 'react-router-dom';
 import { Layout } from 'antd';
+import React from 'react';
 import { useSelector } from 'react-redux';
-import { GameScreen } from '../GameScreen';
-import useGameMenuResize from '../../hooks/useGameMenuResize';
+import { Redirect } from 'react-router-dom';
+
 import gameModes from '../../enums/modes';
+import useGameMenuResize from '../../hooks/useGameMenuResize';
+import { GameScreen } from '../GameScreen';
 
 const { Content } = Layout;
 
@@ -21,6 +22,7 @@ export const RegionCity = () => {
             </Content>
         );
     }
+
     return (
         <Redirect
             to={{

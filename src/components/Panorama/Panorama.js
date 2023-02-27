@@ -23,6 +23,11 @@ const GoBackToTheBeginning = styled.div`
     padding: 5px;
     font-size: 12px;
     border-radius: 4px;
+
+    &:hover {
+        background: #c43939;
+        cursor: pointer;
+    }
 `;
 
 const Panorama = ({
