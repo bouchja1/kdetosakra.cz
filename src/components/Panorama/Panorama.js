@@ -51,15 +51,17 @@ const Panorama = ({
     const { guessResultMode: guessResultModeBattle } = currentBattleInfo;
 
     const showGoBackToTheBeginning = useMemo(() => {
+        const isPanoramaLoaded = panoramaScene && bestPanoramaPlace;
+
         if (isBattle) {
-            if (guessResultModeBattle === guessResultMode.end) {
+            if (guessResultModeBattle === guessResultMode.end && isPanoramaLoaded) {
                 return true;
             }
-        } else if (guessResultModeSinglePlayer === guessResultMode.end) {
+        } else if (guessResultModeSinglePlayer === guessResultMode.end && isPanoramaLoaded) {
             return true;
         }
         return false;
-    }, [isBattle, guessResultModeSinglePlayer, guessResultModeBattle]);
+    }, [isBattle, guessResultModeSinglePlayer, guessResultModeBattle, panoramaScene, bestPanoramaPlace]);
 
     useEffect(() => {
         if (mapyContext.loadedMapApi && panoramaPlace && panoramaScene && isGameStarted) {
