@@ -1,8 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { Redirect, useParams } from 'react-router-dom';
+import { Layout, Spin } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Spin, Layout } from 'antd';
+import { Redirect, useParams } from 'react-router-dom';
 
+import { MAX_ALLOWED_BATTLE_PLAYERS } from '../../constants/game';
+import { errorNames } from '../../errors';
+import useGameMenuResize from '../../hooks/useGameMenuResize';
+import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
+import {
+    resetCurrentBattle,
+    setBattlePlayers,
+    setCurrentBattle,
+    setMyUserInfoToCurrentBattle,
+} from '../../redux/actions/battle';
+import { resetLastPanoramaPlace } from '../../redux/actions/pano';
 import {
     addPlayerToBattle,
     getBattleDetail,
@@ -10,25 +21,14 @@ import {
     streamBattlePlayersDetail,
     streamBattleRoundsDetail,
 } from '../../services/firebase';
-import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import {
-    getRandomNickname,
-    findUserFromBattleByRandomTokenId,
-    sortBattleRoundsById,
     countTotalPlayerScoreFromRounds,
+    findUserFromBattleByRandomTokenId,
     getIsRoundActive,
+    getRandomNickname,
+    sortBattleRoundsById,
 } from '../../util';
-import useGameMenuResize from '../../hooks/useGameMenuResize';
-import { errorNames } from '../../errors';
-import {
-    setCurrentBattle,
-    setBattlePlayers,
-    resetCurrentBattle,
-    setMyUserInfoToCurrentBattle,
-} from '../../redux/actions/battle';
-import { resetLastPanoramaPlace } from '../../redux/actions/pano';
 import { MultiplayerGameScreen } from '../MultiplayerGameScreen';
-import { MAX_ALLOWED_BATTLE_PLAYERS } from '../../constants/game';
 
 const { Content } = Layout;
 
@@ -55,7 +55,8 @@ export const Battle = ({ type }) => {
                         // don't add an user when the game is started
 
                         if (currentBattlePlayers) {
-                            const isPlayerAlreadyInBattle = findUserFromBattleByRandomTokenId(currentBattlePlayers, randomUserToken) !== null;
+                            const isPlayerAlreadyInBattle =
+                                findUserFromBattleByRandomTokenId(currentBattlePlayers, randomUserToken) !== null;
                             if (randomUserToken && !battleData.isGameStarted && !isPlayerAlreadyInBattle) {
                                 addPlayerToBattle(
                                     {
@@ -116,6 +117,7 @@ export const Battle = ({ type }) => {
                 radius,
                 selectedCity,
                 regionNutCode,
+                guessResultMode,
             } = battleFromFirestore;
 
             const sortedBattleRounds = sortBattleRoundsById(battleRoundsFromFirestore).map(roundDetail => {
@@ -140,6 +142,7 @@ export const Battle = ({ type }) => {
                     radius,
                     selectedCity,
                     regionNutCode,
+                    guessResultMode,
                 }),
             );
         }
@@ -227,10 +230,8 @@ export const Battle = ({ type }) => {
     if (playerCapacityExhausted) {
         return (
             <Content>
-                Sem už se bohužel nevejdeš. Maximální počet hráčů, kteří mohou proti sobě hrát, je
-                {' '}
-                {MAX_ALLOWED_BATTLE_PLAYERS}
-                .
+                Sem už se bohužel nevejdeš. Maximální počet hráčů, kteří mohou proti sobě hrát, je{' '}
+                {MAX_ALLOWED_BATTLE_PLAYERS}.
             </Content>
         );
     }

@@ -1,15 +1,17 @@
 import { CopyTwoTone } from '@ant-design/icons';
-import { Button, Input, Modal, Spin, Tooltip } from 'antd';
+import { Button, Input, Modal, RadioChangeEvent, Spin, Tooltip } from 'antd';
 import React, { useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Link } from 'react-router-dom';
 
-import { MAX_ALLOWED_BATTLE_PLAYERS } from '../../constants/game';
+import { MAX_ALLOWED_BATTLE_PLAYERS, guessResultMode } from '../../constants/game';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import { createBattle } from '../../services/firebase';
+import { GuessResultMode } from '../GuessResultMode';
 
 const BattleLinkModal = ({ visible, handleBattleModalVisibility, mode, radius, selectedCity, regionNutCode }) => {
     const randomUserToken = useGetRandomUserToken();
+    const [resultModeValue, setResultModeValue] = useState(guessResultMode.end);
     const [battleLink, setBattleLink] = useState(null);
     const [isCopied, setIsCopied] = useState(false);
     const [generateLinkInProgress, setGenerateLinkInProgress] = useState(false);
@@ -24,10 +26,15 @@ const BattleLinkModal = ({ visible, handleBattleModalVisibility, mode, radius, s
         setIsCopied(true);
     };
 
+    const handleOnChange = e => {
+        setResultModeValue(e.target.value);
+    };
+
     return (
         <Modal open={visible} footer={null} onCancel={handleCancel}>
             <h2>Multiplayer - hra více hráčů</h2>
             <p>Hádej ta samá místa se svými přáteli v reálném čase a soupeřte o to, kdo bude rychlejší a přesnější.</p>
+            <GuessResultMode value={resultModeValue} onChange={handleOnChange} />
             {battleLink && (
                 <>
                     <p>
@@ -63,7 +70,14 @@ const BattleLinkModal = ({ visible, handleBattleModalVisibility, mode, radius, s
                             onClick={() => {
                                 setGenerateLinkInProgress(true);
                                 // eslint-disable-next-line implicit-arrow-linebreak
-                                createBattle(randomUserToken, mode, radius, selectedCity, regionNutCode)
+                                createBattle(
+                                    randomUserToken,
+                                    mode,
+                                    radius,
+                                    selectedCity,
+                                    resultModeValue,
+                                    regionNutCode,
+                                )
                                     .then(docRef => {
                                         setGenerateLinkInProgress(false);
                                         setBattleLink(`${process.env.REACT_APP_WEB_URL}/battle/${docRef.id}`);
