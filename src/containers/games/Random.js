@@ -14,12 +14,12 @@ export const Random = () => {
     const currentGame = useSelector(state => state.game.currentGame);
     useGameMenuResize();
 
-    const { mode, radius, guessResultMode } = currentGame;
+    const { mode, radius, guessResultMode, noMove } = currentGame;
 
     if (radius && mode === gameModes.random && guessResultMode) {
         return (
             <Content>
-                <GameScreen mode={gameModes.random} radius={radius ?? generateRandomRadius()} />
+                <GameScreen mode={gameModes.random} radius={radius ?? generateRandomRadius()} noMove={noMove} />
             </Content>
         );
     }

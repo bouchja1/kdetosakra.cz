@@ -26,7 +26,7 @@ export const Geolocation = () => {
         setSinglePlayerModalVisible(isVisible);
     };
 
-    const handleClickStartGame = resultMode => {
+    const handleClickStartGame = (resultMode, noMove = false) => {
         ReactGA.event({
             category: CATEGORIES.GEOLOCATION,
             action: 'Play geolocation city game',
@@ -45,6 +45,7 @@ export const Geolocation = () => {
                 },
                 guessResultMode: resultMode,
                 regionNutCode: null,
+                noMove,
             }),
         );
         setPlayGame(true);

@@ -61,7 +61,7 @@ export const RegionCity = ({ multiplayerSupported }) => {
         }
     };
 
-    const handleClickStartGame = resultMode => {
+    const handleClickStartGame = (resultMode, noMove = false) => {
         ReactGA.event({
             category: CATEGORIES.CITY,
             action: 'Play city game',
@@ -78,6 +78,7 @@ export const RegionCity = ({ multiplayerSupported }) => {
                 city: selectedCity[0],
                 guessResultMode: resultMode,
                 regionNutCode: null,
+                noMove,
             }),
         );
         setPlayGame(true);

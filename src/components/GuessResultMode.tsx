@@ -1,14 +1,24 @@
-import { Radio, RadioChangeEvent, Space } from 'antd';
+import { Checkbox, Radio, RadioChangeEvent, Space } from 'antd';
+import { CheckboxChangeEvent } from 'antd/es/checkbox';
 import React from 'react';
 
 import { guessResultMode } from '../constants/game';
 
 interface GuessResultModeProps {
     value: string;
+    noMoveValue?: boolean;
     onChange: (e: RadioChangeEvent) => void;
+    onNoMoveChange?: (e: CheckboxChangeEvent) => void;
+    withAdvancedOptions?: boolean;
 }
 
-export const GuessResultMode = ({ value, onChange }: GuessResultModeProps) => {
+export const GuessResultMode = ({
+    value,
+    noMoveValue = false,
+    onChange,
+    onNoMoveChange,
+    withAdvancedOptions = false,
+}: GuessResultModeProps) => {
     return (
         <>
             <p>Jakou polohu v mapě chceš hádat jako výsledek?</p>
@@ -25,6 +35,11 @@ export const GuessResultMode = ({ value, onChange }: GuessResultModeProps) => {
                         : 'Dojedeš někam, kde už to bezpečně poznáváš. A pak se snažíš tuto polohu označit v mapě s přesností na metr.'}
                 </p>
             </div>
+            {withAdvancedOptions && onNoMoveChange && (
+                <Checkbox defaultChecked={noMoveValue} checked={noMoveValue} onChange={onNoMoveChange}>
+                    Zakázat pohyb v panorama (pro profíky)
+                </Checkbox>
+            )}
         </>
     );
 };

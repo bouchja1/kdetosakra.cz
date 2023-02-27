@@ -16,6 +16,7 @@ const initialState = {
         city: null,
         regionNutCode: null,
         guessResultMode: null,
+        noMove: false,
         currentMapLayer: mapLayers.default,
     },
 };

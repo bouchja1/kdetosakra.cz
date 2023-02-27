@@ -1,4 +1,4 @@
 import Panorama from './Panorama';
 
-export { panoramaSceneOptions } from './Panorama';
+export { getPanoramaSceneOptions } from './Panorama';
 export default Panorama;
