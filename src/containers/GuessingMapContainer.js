@@ -1,23 +1,22 @@
-import React, {
-    useContext, useEffect, useRef, useState, useMemo
-} from 'react';
 import { useLocalStorage, writeStorage } from '@rehooks/local-storage';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
+import maximizeMapShadow from '../assets/images/map/maximizeMapShadow.png';
 import minimizeMapShadow from '../assets/images/map/minimizeMapShadowFull.png';
 import minimizeMapShadowDisabled from '../assets/images/map/minimizeMapShadowFullDisabled.png';
-import maximizeMapShadow from '../assets/images/map/maximizeMapShadow.png';
-import useSMapResize from '../hooks/useSMapResize';
+import GuessingMap from '../components/GuessingMap';
 import GuessingMapButton from '../components/GuessingMapButton';
 import GuessLimitModal from '../components/GuessLimitModal';
+import { MAX_SCORE_PERCENT, MIN_DISTANCE_FOR_POINTS_RANDOM, guessResultMode } from '../constants/game';
+import { MARKER_PLACE_ICON_KDETOSAKRA } from '../constants/icons';
+import MapyCzContext from '../context/MapyCzContext';
+import gameModes from '../enums/modes';
+import useGetRandomUserToken from '../hooks/useGetRandomUserToken';
+import useSMapResize from '../hooks/useSMapResize';
 import { incrementMyTotalScore } from '../redux/actions/battle';
-import GuessingMap from '../components/GuessingMap';
 import { addGuessedRoundToPlayer, updateBattleRound } from '../services/firebase';
 import { findUserFromBattleByRandomTokenId, getUnixTimestamp } from '../util';
-import gameModes from '../enums/modes';
-import { MAX_SCORE_PERCENT, MIN_DISTANCE_FOR_POINTS_RANDOM } from '../constants/game';
-import { MARKER_PLACE_ICON_KDETOSAKRA } from '../constants/icons';
-import useGetRandomUserToken from '../hooks/useGetRandomUserToken';
-import MapyCzContext from '../context/MapyCzContext';
 
 export const GuessingMapContainer = ({
     isBattle,
@@ -28,6 +27,7 @@ export const GuessingMapContainer = ({
     findNewPanorama,
     saveRoundResult,
     panoramaScene,
+    panoramaPlace,
     allGuessedPoints,
     isGameStarted,
     currentCity,
@@ -61,9 +61,7 @@ export const GuessingMapContainer = ({
     const refLayerValue = useRef();
     const refVectorLayerSMapValue = useRef();
 
-    const {
-        battleId, myDocumentId, myNickname, round: battleRound, rounds, players,
-    } = currentBattleInfo;
+    const { battleId, myDocumentId, myNickname, round: battleRound, rounds, players } = currentBattleInfo;
 
     useEffect(() => {
         if (width > 960) {
@@ -143,6 +141,11 @@ export const GuessingMapContainer = ({
         return true;
     }, [currentRoundBattle, battleRound, isBattle, players, randomUserToken]);
 
+    const guessSingleplayerRound = () => {
+        const guessedRoundPoint = calculateCoordsAndDrawGuess();
+        evaluateGuessedRound(guessedRoundPoint);
+    };
+
     const guessBattleRound = async () => {
         const guessedRoundPoint = calculateCoordsAndDrawGuess();
         const { isGuessed } = currentRoundBattle;
@@ -150,9 +153,7 @@ export const GuessingMapContainer = ({
         // FIXME: check if I am not making a guess after time expiration
 
         evaluateGuessedRound(guessedRoundPoint);
-        const {
-            pointMap, pointPanorama, distance, score,
-        } = guessedRoundPoint;
+        const { pointMap, pointPanorama, distance, score } = guessedRoundPoint;
         const playerRoundGuess = {
             [`round${battleRound}`]: {
                 roundId: battleRound,
@@ -198,18 +199,32 @@ export const GuessingMapContainer = ({
             });
     };
 
-    const guessSingleplayerRound = () => {
-        const guessedRoundPoint = calculateCoordsAndDrawGuess();
-        evaluateGuessedRound(guessedRoundPoint);
-    };
-
     const calculateDistance = () => {
         // eslint-disable-next-line no-underscore-dangle
-        const panoramaCoordinates = panoramaScene._place._data.mark;
+        let panoramaCoordinates = panoramaScene._place._data.mark;
+
+        if (isBattle) {
+            const { guessResultMode: guessResultModeBattle } = currentBattleInfo;
+            if (guessResultModeBattle === guessResultMode.start) {
+                panoramaCoordinates = {
+                    lat: panoramaPlace.latitude,
+                    lon: panoramaPlace.longitude,
+                };
+            }
+        } else {
+            const { guessResultMode: guessResultModeSinglePlayer } = currentGame;
+            if (guessResultModeSinglePlayer === guessResultMode.start) {
+                panoramaCoordinates = {
+                    lat: panoramaPlace.latitude,
+                    lon: panoramaPlace.longitude,
+                };
+            }
+        }
+
         let distance;
         if (
-            panoramaCoordinates.lat === currentMapPointCoordinates.mapLat
-            && panoramaCoordinates.lon === currentMapPointCoordinates.mapLon
+            panoramaCoordinates.lat === currentMapPointCoordinates.mapLat &&
+            panoramaCoordinates.lon === currentMapPointCoordinates.mapLon
         ) {
             distance = 0;
         } else {
@@ -217,7 +232,8 @@ export const GuessingMapContainer = ({
             const radlat2 = (Math.PI * currentMapPointCoordinates.mapLat) / 180;
             const theta = panoramaCoordinates.lon - currentMapPointCoordinates.mapLon;
             const radtheta = (Math.PI * theta) / 180;
-            let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+            let dist =
+                Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
             if (dist > 1) {
                 dist = 1;
             }
@@ -299,7 +315,7 @@ export const GuessingMapContainer = ({
 
         const { panoramaCoordinates, distance, score } = calculateDistance();
 
-        const currentPanoramaPositionPoint = mapyContext.SMap.Coords.fromWGS84(
+        const guessedPanoramaPositionPoint = mapyContext.SMap.Coords.fromWGS84(
             panoramaCoordinates.lon,
             panoramaCoordinates.lat,
         );
@@ -307,9 +323,9 @@ export const GuessingMapContainer = ({
             currentMapPointCoordinates.mapLon,
             currentMapPointCoordinates.mapLat,
         );
-        drawGuessedDistance(currentPanoramaPositionPoint, selectedPointOnMap, panoramaCoordinates);
+        drawGuessedDistance(guessedPanoramaPositionPoint, selectedPointOnMap, panoramaCoordinates);
         const guessedRoundPoint = {
-            pointPanorama: currentPanoramaPositionPoint,
+            pointPanorama: guessedPanoramaPositionPoint,
             pointMap: selectedPointOnMap,
             currentCity,
             distance,

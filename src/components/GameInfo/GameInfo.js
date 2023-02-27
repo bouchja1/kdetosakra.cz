@@ -1,10 +1,9 @@
 import React, { useMemo } from 'react';
+
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
 import { mapGameModeName } from '../../util';
 
-const GameInfo = ({
-    round, totalScore, mode, isBattle, myPlayer, myNickname,
-}) => {
+const GameInfo = ({ round, totalScore, mode, isBattle, myPlayer, myNickname }) => {
     const roundInfo = useMemo(() => {
         return `${round ?? 0} / ${TOTAL_ROUNDS_MAX}`;
     }, [round]);
@@ -18,7 +17,7 @@ const GameInfo = ({
     }
 
     return (
-        <div className={isBattle ? 'menu-game-info--battle' : 'menu-game-info'}>
+        <div className="menu-game-info">
             {isBattle && (
                 <div className="menu-game-info-box">
                     <div className="menu-game-info-box-head">přezdívka</div>

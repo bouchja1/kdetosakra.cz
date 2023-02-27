@@ -7,7 +7,7 @@ const initialState = {
     lon: null,
 };
 
-const gameReducer = (state = initialState, action) => {
+const panoramaReducer = (state = initialState, action) => {
     switch (action.type) {
         case getType(setLastPanoramaPlace): {
             const { lat, lon } = action.payload;
@@ -25,4 +25,4 @@ const gameReducer = (state = initialState, action) => {
     }
 };
 
-export default gameReducer;
+export default panoramaReducer;

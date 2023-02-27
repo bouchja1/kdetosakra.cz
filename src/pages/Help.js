@@ -1,5 +1,6 @@
+import { Image, Layout } from 'antd';
 import React from 'react';
-import { Layout, Image } from 'antd';
+
 import { MAX_ALLOWED_BATTLE_PLAYERS, MIN_DISTANCE_FOR_POINTS_RANDOM } from '../constants/game';
 
 const { Content } = Layout;
@@ -13,25 +14,33 @@ export const Help = () => {
                 <p>
                     Hra nabízí pět herních módů. Cílem hry je vypátrat v pěti kolech polohu pěti různých míst v České
                     republice. Pátrání začínáš v náhodně generovaném panoramatickém snímku a v přiložené mapě se snažíš
-                    s co nejvyšší přesností určit, kde (v panoramatu) se právě nacházíš.
+                    s co nejvyšší přesností určit polohu místa.
                 </p>
+                <p>
+                    Před začátkem hry si můžeš zvolit, jakou polohu v mapě chceš hádat. Na základě tvých tipů se pak
+                    sčítá finální výsledek:
+                </p>
+                <ul>
+                    <li>
+                        <b>hádat aktuální polohu v panorama</b> - dojedeš někam, kde už to bezpečně poznáváš. A pak se
+                        trefíš s přesností na metr. Výsledek se počítá podle této poslední polohy v panorama.
+                    </li>
+                    <li>
+                        <b>hádat polohu výchozího místa</b> - aneb jak jsi zvyklý např. ze hry GeoGuessr. Zjisti kde to
+                        sakra jsi a pak se v mapě dopátrej místa odkud jsi vyrazil. Výsledek se počítá podle pozice na
+                        začátku hry.
+                    </li>
+                </ul>
                 <p>Čím blíž svůj odhad na mapě umístíš, tím víc bodů v herním kole získáváš.</p>
                 <p>
-                    Pokud si vybereš jiný herní mód než
-                    {' '}
-                    <b>Náhodné místo</b>
-                    {' '}
-                    (v celém Česku nebo v kraji), hra
+                    Pokud si vybereš jiný herní mód než <b>Náhodné místo</b> (v celém Česku nebo v kraji), hra
                     předpokládá, že vybrané okolí alespoň trochu znáš. Proto je za nepřesný odhad vyšší bodová
                     penalizace než u náhodně generovaného místa v republice.
                 </p>
                 <ul>
                     <li>
-                        Pro zisk alespoň nějakých bodů musí být tvůj tip v okolí ne dál než
-                        {' '}
-                        {MIN_DISTANCE_FOR_POINTS_RANDOM}
-                        {' '}
-                        km od hádaného místa (v případě hádání náhodného místa v Čr),
+                        Pro zisk alespoň nějakých bodů musí být tvůj tip v okolí ne dál než{' '}
+                        {MIN_DISTANCE_FOR_POINTS_RANDOM} km od hádaného místa (v případě hádání náhodného místa v Čr),
                         respektive v okolí maximálně 2 km plus na začátku zvolený kilometrový radius (pro ostatní módy).
                     </li>
                     <li>100 % (= 100 bodů) získáš, když se trefíš ne dál než 20 metrů od hádaného místa.</li>
@@ -49,11 +58,7 @@ export const Help = () => {
                         K vytvoření hry pro více hráčů a jejímu hraní není nutná registrace. Tvůrce hry (ten, co chce
                         pozvat ke hře jiné hráče) vybere jeden z herních módů a jako typ hry zvolí &quot;Hrát s
                         přáteli&quot;. V následujícím dialogu vygeneruje pozvánku a získá unikátní odkaz, který si
-                        zkopíruje a zašle jej dalším hráčům. Může pozvat až
-                        {' '}
-                        {MAX_ALLOWED_BATTLE_PLAYERS - 1}
-                        {' '}
-                        dalších
+                        zkopíruje a zašle jej dalším hráčům. Může pozvat až {MAX_ALLOWED_BATTLE_PLAYERS - 1} dalších
                         hráčů. Hráči si otevřou zaslaný odkaz v prohlížeči a všichni se octnou ve společné herní
                         místnosti (viz dále).
                     </p>
@@ -101,11 +106,7 @@ export const Help = () => {
                     <p>
                         Po umístění tipu nejrychlejšího hráče začíná odpočet zbývajících sekund do konce kola. Ostatní
                         hráči si musí pospíšit a umístit své tipy dřív než čas vyprší, jinak v tomto kole získávají 0
-                        bodů. Počet získaných bodů
-                        {' '}
-                        <b>nezáleží</b>
-                        {' '}
-                        na rychlosti umístění tipu ani pořadí umístění tipu.
+                        bodů. Počet získaných bodů <b>nezáleží</b> na rychlosti umístění tipu ani pořadí umístění tipu.
                     </p>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <Image

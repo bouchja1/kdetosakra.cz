@@ -1,11 +1,11 @@
 import { getType } from 'typesafe-actions';
 
-import { setCurrentGame, setTotalRoundScore, setTotalRoundCounter, setCurrentMapLayer } from '../actions/game';
+import { setCurrentGame, setCurrentMapLayer, setTotalRoundCounter, setTotalRoundScore } from '../actions/game';
 
 export const mapLayers = {
     default: 'default',
-    tourist: 'tourist'
-}
+    tourist: 'tourist',
+};
 
 const initialState = {
     currentGame: {
@@ -15,7 +15,8 @@ const initialState = {
         radius: 1,
         city: null,
         regionNutCode: null,
-        currentMapLayer: mapLayers.default
+        guessResultMode: null,
+        currentMapLayer: mapLayers.default,
     },
 };
 

@@ -1,10 +1,7 @@
-import React, {
-    useEffect, useMemo, useState, useRef
-} from 'react';
-import {
-    Button, Modal, Progress, Spin
-} from 'antd';
+import { Button, Modal, Progress, Spin } from 'antd';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
 import { findMunicipalityMetadata } from '../../services/wikipedia';
 import { roundToTwoDecimal } from '../../util';
@@ -72,7 +69,7 @@ const RoundResultModal = ({
 
     return (
         <Modal
-            visible={visible}
+            open={visible}
             style={{ top: 20 }}
             onOk={() => closeModal(false)}
             onCancel={() => closeModal(false)}
@@ -84,21 +81,12 @@ const RoundResultModal = ({
                 {currentRound > 0 ? (
                     <div className="result-modal-container-item">
                         <h2>
-                            Kolo:
-                            {' '}
-                            {currentRound}
-                            /
-                            {TOTAL_ROUNDS_MAX}
+                            Kolo: {currentRound}/{TOTAL_ROUNDS_MAX}
                         </h2>
                         {roundGuessedDistance ? (
                             <p>
-                                Vzdušná vzdálenost hádaného místa od tvého tipu:
-                                {' '}
-                                <b>
-                                    {roundToTwoDecimal(roundGuessedDistance)}
-                                    {' '}
-                                    km
-                                </b>
+                                Vzdušná vzdálenost hádaného místa od tvého tipu:{' '}
+                                <b>{roundToTwoDecimal(roundGuessedDistance)} km</b>
                             </p>
                         ) : null}
                     </div>
@@ -125,24 +113,19 @@ const RoundResultModal = ({
                                 style={
                                     wikipediaMetadata?.emblem
                                         ? {
-                                            width: '70%',
-                                            paddingRight: '10px',
-                                        }
+                                              width: '70%',
+                                              paddingRight: '10px',
+                                          }
                                         : {
-                                            width: '100%',
-                                        }
+                                              width: '100%',
+                                          }
                                 }
                             >
                                 <h4 className="result-modal-container-more-info-city-headline">
                                     {guessedRandomPlace.obec}
                                 </h4>
                                 <p>
-                                    okres
-                                    {' '}
-                                    {guessedRandomPlace.okres}
-                                    ,
-                                    {' '}
-                                    {guessedRandomPlace.kraj}
+                                    okres {guessedRandomPlace.okres}, {guessedRandomPlace.kraj}
                                 </p>
                             </div>
                             {wikipediaMetadata?.emblem && (

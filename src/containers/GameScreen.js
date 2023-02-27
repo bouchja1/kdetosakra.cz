@@ -1,13 +1,16 @@
-import React, {
-    useContext, useEffect, useRef, useState
-} from 'react';
-import { useMediaQuery } from 'react-responsive';
-import { useDispatch, useSelector } from 'react-redux';
 import { Tabs } from 'antd';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useMediaQuery } from 'react-responsive';
+
+import BattlePlayersPanel from '../components/BattlePlayersPanel';
+import Panorama, { panoramaSceneOptions } from '../components/Panorama';
+import RoundResultModal from '../components/RoundResultModal';
 import MapyCzContext from '../context/MapyCzContext';
+import gameModes from '../enums/modes';
+import useGetRandomUserToken from '../hooks/useGetRandomUserToken';
 import { setTotalRoundScore } from '../redux/actions/game';
 import { setLastPanoramaPlace } from '../redux/actions/pano';
-import Panorama, { panoramaSceneOptions } from '../components/Panorama';
 import {
     findUserFromBattleByRandomTokenId,
     generatePlaceInRadius,
@@ -15,17 +18,11 @@ import {
     getRandomCzechPlace,
     getRandomPlaceInRegion,
 } from '../util';
-import RoundResultModal from '../components/RoundResultModal';
-import gameModes from '../enums/modes';
-import BattlePlayersPanel from '../components/BattlePlayersPanel';
-import useGetRandomUserToken from '../hooks/useGetRandomUserToken';
 import { GuessingMapContainer } from './GuessingMapContainer';
 
 const { TabPane } = Tabs;
 
-export const GameScreen = ({
-    mode, radius, city, isGameStarted = true, isBattle,
-}) => {
+export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle }) => {
     const dispatch = useDispatch();
     const randomUserToken = useGetRandomUserToken();
     const mapyContext = useContext(MapyCzContext);
@@ -34,7 +31,6 @@ export const GameScreen = ({
     const lastPanoramaPlaceShown = useSelector(state => state.pano);
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
 
-    const [panoramaScene, setPanoramaScene] = useState(null);
     const [roundScore, setRoundScore] = useState(0);
     const [activeTabKey, setActiveTabKey] = useState('1');
     const [currentRoundISee, setCurrentRoundISee] = useState();
@@ -44,6 +40,7 @@ export const GameScreen = ({
     const [currentRoundGuessedPoint, setCurrentRoundGuessedPoint] = useState();
     const [currentCity, setCurrentCity] = useState(null);
     const [resultModalVisible, setResultModalVisible] = useState(false);
+    const [panoramaScene, setPanoramaScene] = useState(null);
     const [panoramaPlace, setPanoramaPlace] = useState(null);
     const [panoramaLoading, setPanoramaLoading] = useState(false);
     const [nextRoundButtonVisible, setNextRoundButtonVisible] = useState(false);
@@ -53,9 +50,7 @@ export const GameScreen = ({
     });
 
     const { totalScore } = currentGame;
-    const {
-        round: currentRoundNumber, rounds, myTotalScore, players,
-    } = currentBattleInfo;
+    const { round: currentRoundNumber, rounds, myTotalScore, players } = currentBattleInfo;
 
     // FIXME: to load whole map layer when the map is minimized before
     useEffect(() => {
@@ -194,6 +189,7 @@ export const GameScreen = ({
                             panoramaLoading={panoramaLoading}
                             changePanoramaLoadingState={changePanoramaLoadingState}
                             isGameStarted={isGameStarted}
+                            isBattle={isBattle}
                         />
                     </TabPane>
                     <TabPane tab="mapa" key="2">
@@ -205,6 +201,7 @@ export const GameScreen = ({
                             panoramaLoading={panoramaLoading}
                             findNewPanorama={findNewPanorama}
                             saveRoundResult={saveRoundResult}
+                            panoramaPlace={panoramaPlace}
                             panoramaScene={panoramaScene}
                             allGuessedPoints={allGuessedPoints}
                             isGameStarted={isGameStarted}
@@ -225,6 +222,7 @@ export const GameScreen = ({
                             panoramaLoading={panoramaLoading}
                             changePanoramaLoadingState={changePanoramaLoadingState}
                             isGameStarted={isGameStarted}
+                            isBattle={isBattle}
                         />
                     </div>
                     <GuessingMapContainer
@@ -235,6 +233,7 @@ export const GameScreen = ({
                         panoramaLoading={panoramaLoading}
                         findNewPanorama={findNewPanorama}
                         saveRoundResult={saveRoundResult}
+                        panoramaPlace={panoramaPlace}
                         panoramaScene={panoramaScene}
                         allGuessedPoints={allGuessedPoints}
                         isGameStarted={isGameStarted}
