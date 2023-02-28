@@ -5,6 +5,7 @@ import { Link, Redirect } from 'react-router-dom';
 
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
 import { HeraldryResultT } from '../../types/heraldry';
+import { getHeraldryDescriptionForCity } from '../../util/heraldry';
 
 const { Meta } = Card;
 
@@ -41,11 +42,16 @@ export const HeraldryResult = () => {
                                         kraj: krajGuess,
                                         coatOfArms: coatOfArmsGuess,
                                     } = cityWhichWasGuessed;
+
+                                    const cityHeraldryDescription = getHeraldryDescriptionForCity(city);
+                                    const guessedCityHeraldryDescription =
+                                        getHeraldryDescriptionForCity(cityWhichWasGuessed);
+
                                     return (
                                         <>
                                             <h3>{i + 1}. kolo</h3>
-                                            <Row wrap align="middle" justify="center">
-                                                <Col span={12}>
+                                            <Row gutter={16} wrap align="middle" justify="center">
+                                                <Col>
                                                     <Card
                                                         title="Hádaný erb"
                                                         headStyle={{
@@ -67,10 +73,19 @@ export const HeraldryResult = () => {
                                                                 alt={`Znak obce ${obec}`}
                                                                 width={100}
                                                             />
+                                                            {cityHeraldryDescription && (
+                                                                <p
+                                                                    style={{
+                                                                        marginTop: '20px',
+                                                                    }}
+                                                                >
+                                                                    {cityHeraldryDescription}
+                                                                </p>
+                                                            )}
                                                         </div>
                                                     </Card>
                                                 </Col>
-                                                <Col span={12}>
+                                                <Col>
                                                     <Card
                                                         title="Tvůj tip"
                                                         headStyle={{
@@ -98,6 +113,15 @@ export const HeraldryResult = () => {
                                                                 alt={`Znak obce ${obecGuess}`}
                                                                 width={100}
                                                             />
+                                                            {guessedCityHeraldryDescription && (
+                                                                <p
+                                                                    style={{
+                                                                        marginTop: '20px',
+                                                                    }}
+                                                                >
+                                                                    {guessedCityHeraldryDescription}
+                                                                </p>
+                                                            )}
                                                         </div>
                                                     </Card>
                                                 </Col>

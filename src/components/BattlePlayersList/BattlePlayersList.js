@@ -1,10 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react';
-import {
-    Button, Spin, Progress, Tooltip, Input
-} from 'antd';
-import { Link, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import { CheckCircleTwoTone } from '@ant-design/icons';
+import { Button, Input, Progress, Spin, Tooltip } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useParams } from 'react-router-dom';
+
+import { TOTAL_ROUNDS_MAX } from '../../constants/game';
+import { routeNames } from '../../constants/routes';
+import gameModes from '../../enums/modes';
+import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
+import { setMyUserInfoNicknameToCurrentBattle } from '../../redux/actions/battle';
+import { setLastResult } from '../../redux/actions/result';
 import { addRoundBatchToBattleRounds, updateBattle, updateBattlePlayer } from '../../services/firebase';
 import {
     generatePlaceInRadius,
@@ -14,17 +19,10 @@ import {
     getUnixTimestamp,
     sortPlayersByHighestScore,
 } from '../../util';
-import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
-import { TOTAL_ROUNDS_MAX } from '../../constants/game';
-import gameModes from '../../enums/modes';
-import { setLastResult } from '../../redux/actions/result';
-import { setMyUserInfoNicknameToCurrentBattle } from '../../redux/actions/battle';
 
 export const generateRounds = async currentBattleInfo => {
     const generatedRounds = [];
-    const {
-        mode, battleId, radius, selectedCity, regionNutCode,
-    } = currentBattleInfo;
+    const { mode, battleId, radius, selectedCity, regionNutCode } = currentBattleInfo;
 
     for (let i = 0; i < TOTAL_ROUNDS_MAX; i++) {
         switch (mode) {
@@ -99,7 +97,8 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
 
     const isBattleCreator = currentBattleInfo.createdById !== null && currentBattleInfo.createdById === randomUserToken;
 
-    const gameCreatorStartButtonDisabled = !battleCanBeStarted || !currentBattleInfo.myNickname || currentBattleInfo.myNickname.length < 2;
+    const gameCreatorStartButtonDisabled =
+        !battleCanBeStarted || !currentBattleInfo.myNickname || currentBattleInfo.myNickname.length < 2;
 
     useEffect(() => {
         if (inputEl.current !== null) {
@@ -205,7 +204,7 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
                 >
                     <Link
                         to={{
-                            pathname: '/vysledek',
+                            pathname: `/${routeNames.vysledek}`,
                         }}
                     >
                         Zobrazit výsledky hry
@@ -232,10 +231,7 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
                             await startNextBattleRound(battleId, round + 1);
                         }}
                     >
-                        Spustit
-                        {' '}
-                        {currentBattleInfo.round + 1}
-                        . kolo
+                        Spustit {currentBattleInfo.round + 1}. kolo
                     </Button>
                     <p style={{ marginTop: '10px' }}>Odstartuj další kolo.</p>
                 </>
@@ -363,9 +359,9 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
                     ) : (
                         <Button
                             disabled={
-                                myPlayer?.isReady
-                                || !currentBattleInfo.myNickname
-                                || currentBattleInfo.myNickname.length < 2
+                                myPlayer?.isReady ||
+                                !currentBattleInfo.myNickname ||
+                                currentBattleInfo.myNickname.length < 2
                             }
                             type="primary"
                             onClick={async () => {
@@ -391,10 +387,7 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
                             </>
                         ) : (
                             <>
-                                Hra začíná, až všichni hráči zvolí možnost
-                                {' '}
-                                <b>Připraven</b>
-                                .
+                                Hra začíná, až všichni hráči zvolí možnost <b>Připraven</b>.
                             </>
                         )}
                     </p>

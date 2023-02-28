@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
+import { routeNames } from '../../constants/routes';
 import { setTotalRoundCounter } from '../../redux/actions/game';
 import { setLastResult } from '../../redux/actions/result';
 
@@ -43,7 +44,7 @@ const GuessingMapButton = ({
                 >
                     <Link
                         to={{
-                            pathname: '/vysledek',
+                            pathname: `/${routeNames.vysledek}`,
                         }}
                     >
                         Vyhodnotit hru
