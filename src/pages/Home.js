@@ -9,7 +9,7 @@ export const Home = () => {
     return (
         <div className="home-overview">
             <div className="home-overview-hero">
-                <h1>Objev Českou republiku!</h1>
+                <h1>Poznávej Česko!</h1>
                 <p>Toulej se v panorámatech a hádej, kde se právě nacházíš.</p>
 
                 <p className="subtitle">
