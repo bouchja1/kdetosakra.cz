@@ -27,7 +27,7 @@ export const GuessingMapContainer = ({
     findNewPanorama,
     saveRoundResult,
     panoramaScene,
-    panoramaPlace,
+    bestPanoramaPlace,
     allGuessedPoints,
     isGameStarted,
     currentCity,
@@ -191,6 +191,7 @@ export const GuessingMapContainer = ({
                     console.error('addGuessedRoundToPlayer and updateBattleRound: ', err);
                 });
         }
+
         // spocti rozdil mezi guessedtime a timeoutem
         return addGuessedRoundToPlayer(battleId, myDocumentId, playerRoundGuess)
             .then(res => {})
@@ -202,21 +203,22 @@ export const GuessingMapContainer = ({
     const calculateDistance = () => {
         // eslint-disable-next-line no-underscore-dangle
         let panoramaCoordinates = panoramaScene._place._data.mark;
+        const { lat, lon } = bestPanoramaPlace._data.mark;
 
         if (isBattle) {
             const { guessResultMode: guessResultModeBattle } = currentBattleInfo;
             if (guessResultModeBattle === guessResultMode.start) {
                 panoramaCoordinates = {
-                    lat: panoramaPlace.latitude,
-                    lon: panoramaPlace.longitude,
+                    lat,
+                    lon,
                 };
             }
         } else {
             const { guessResultMode: guessResultModeSinglePlayer } = currentGame;
             if (guessResultModeSinglePlayer === guessResultMode.start) {
                 panoramaCoordinates = {
-                    lat: panoramaPlace.latitude,
-                    lon: panoramaPlace.longitude,
+                    lat,
+                    lon,
                 };
             }
         }
@@ -277,6 +279,7 @@ export const GuessingMapContainer = ({
                 score = Math.min(MAX_SCORE_PERCENT, score);
             }
         }
+
         saveRoundResult(score, distance);
         return score;
     };

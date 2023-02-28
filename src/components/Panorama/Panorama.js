@@ -1,5 +1,5 @@
 import { Spin } from 'antd';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
@@ -35,11 +35,13 @@ const GoBackToTheBeginning = styled.div`
 const Panorama = ({
     panoramaScene,
     refPanoramaView,
-    panoramaPlace,
+    originalPanoramaPlace,
+    bestPanoramaPlace,
     panoramaLoading,
     changePanoramaLoadingState,
     isGameStarted,
     isBattle,
+    onSetBestPanoramaPlace,
 }) => {
     const mapyContext = useContext(MapyCzContext);
     const { width, height } = useSMapResize();
@@ -47,7 +49,6 @@ const Panorama = ({
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
     const [findPanoramaTriesCounter, setFindPanoramaTriesCounter] = useState(0);
     const [panoramaFounded, setPanoramaFounded] = useState(true);
-    const [bestPanoramaPlace, setBestPanoramaPlace] = useState();
 
     const { guessResultMode: guessResultModeSinglePlayer } = currentGame;
     const { guessResultMode: guessResultModeBattle } = currentBattleInfo;
@@ -66,10 +67,10 @@ const Panorama = ({
     }, [isBattle, guessResultModeSinglePlayer, guessResultModeBattle, panoramaScene, bestPanoramaPlace]);
 
     useEffect(() => {
-        if (mapyContext.loadedMapApi && panoramaPlace && panoramaScene && isGameStarted) {
+        if (mapyContext.loadedMapApi && originalPanoramaPlace && panoramaScene && isGameStarted) {
             const { SMap } = mapyContext;
             // kolem teto pozice chceme nejblizsi panorama
-            const position = SMap.Coords.fromWGS84(panoramaPlace.longitude, panoramaPlace.latitude);
+            const position = SMap.Coords.fromWGS84(originalPanoramaPlace.longitude, originalPanoramaPlace.latitude);
             // hledame s toleranci 50m
             let tolerance = DEFAULT_PANORAMA_TOLERANCE;
             if (findPanoramaTriesCounter > 0) {
@@ -80,8 +81,8 @@ const Panorama = ({
                 await SMap.Pano.getBest(position, tolerance)
                     .then(
                         place => {
-                            setBestPanoramaPlace(place);
-                            panoramaScene.show(place);
+                            onSetBestPanoramaPlace(place);
+                            panoramaScene.show(place, {});
                             changePanoramaLoadingState(false);
                         },
                         () => {
@@ -98,16 +99,28 @@ const Panorama = ({
                         setPanoramaFounded(false);
                     });
             };
-            changePanoramaLoadingState(true);
-            getBestPanorama();
+
+            if (!bestPanoramaPlace) {
+                getBestPanorama();
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [mapyContext.loadedMapApi, panoramaScene, panoramaPlace, isGameStarted, findPanoramaTriesCounter]);
+    }, [
+        mapyContext.loadedMapApi,
+        panoramaScene,
+        originalPanoramaPlace,
+        isGameStarted,
+        findPanoramaTriesCounter,
+        onSetBestPanoramaPlace,
+        bestPanoramaPlace,
+    ]);
 
-    const isPanoramaLoading = !panoramaPlace || !isGameStarted || panoramaLoading;
+    const isPanoramaLoading = !originalPanoramaPlace || !isGameStarted || panoramaLoading || !bestPanoramaPlace;
 
     const handleGoBackToTheBeginning = () => {
-        panoramaScene.show(bestPanoramaPlace);
+        if (bestPanoramaPlace) {
+            panoramaScene.show(bestPanoramaPlace, {});
+        }
     };
 
     return (

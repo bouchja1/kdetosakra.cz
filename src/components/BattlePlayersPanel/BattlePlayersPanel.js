@@ -26,9 +26,9 @@ const BattlePlayersPanel = () => {
         if (currentBattlePlayers !== null) {
             const readyPlayers = currentBattlePlayers.filter(player => player.isReady);
             if (
-                !isGameStarted
-                && currentBattlePlayers.length > 1
-                && readyPlayers.length === currentBattlePlayers.length
+                !isGameStarted &&
+                currentBattlePlayers.length > 1 &&
+                readyPlayers.length === currentBattlePlayers.length
             ) {
                 setBattleCanBeStarted(true);
             }
@@ -41,23 +41,12 @@ const BattlePlayersPanel = () => {
                 <BattlePlayersList myPlayer={myPlayer} battleCanBeStarted={battleCanBeStarted} />
                 <div className="warning-msg">
                     <p>
-                        Toto je
-                        {' '}
-                        <b>beta verze</b>
-                        {' '}
-                        a stále probíhá její testování. V případě že něco nefunguje, často
+                        Toto je <b>beta verze</b> a stále probíhá její testování. V případě že něco nefunguje, často
                         pomůže refresh stránky.
                     </p>
                     <p>
-                        Pokud něco nefunguje
-                        {' '}
-                        <b>hodně</b>
-                        {' '}
-                        nebo vůbec, hlaště mi to prosím do
-                        {' '}
-                        <a href={decryptEmail('amFuLmJvdWNobmVyQGdtYWlsLmNvbQ==')}>mailu</a>
-                        {' '}
-                        :).
+                        Pokud něco nefunguje <b>hodně</b> nebo vůbec, hlaště mi to prosím do{' '}
+                        <a href={decryptEmail('amFuLmJvdWNobmVyQGdtYWlsLmNvbQ==')}>mailu</a> :).
                     </p>
                 </div>
                 <BattleSettings />
