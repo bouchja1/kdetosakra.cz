@@ -1,4 +1,4 @@
-import { FacebookFilled, InfoCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { CoffeeOutlined, FacebookFilled, InfoCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -79,6 +79,11 @@ const Menu = ({ isInGame = false }) => {
                     <QuestionCircleOutlined style={{ color: 'rgb(97, 95, 95)', marginRight: '10px' }} />
                     <div className="menu-item">Nápověda</div>
                 </Link>
+                <div className="menu-item menu-separator">|</div>
+                <CoffeeOutlined style={{ color: 'rgb(97, 95, 95)', marginRight: '10px' }} />
+                <a href="https://www.buymeacoffee.com/mmwbwdq" target="_blank" rel="noreferrer">
+                    <div className="menu-item">Podpořte provoz a další rozvoj</div>
+                </a>
                 <div className="menu-item menu-separator">|</div>
                 {/* eslint-disable-next-line react/jsx-no-target-blank */}
                 <a href="https://www.facebook.com/kdetosakra.cz" target="_blank" rel="noreferrer">
