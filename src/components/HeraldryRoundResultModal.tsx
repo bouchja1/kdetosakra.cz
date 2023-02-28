@@ -1,23 +1,26 @@
-import { Button, Modal, Spin } from 'antd';
+import { Button, Modal, Result, Spin } from 'antd';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { TOTAL_ROUNDS_MAX } from '../constants/game';
 import { findMunicipalityMetadata } from '../services/wikipedia.mjs';
 import { CzechCity } from '../types/places';
+import { HeraldryNextRoundButton } from './HeraldryNextRoundButton';
 
 interface HeraldryRoundResultModalProps {
     visible: boolean;
-    closeModal: () => void;
-    totalRoundScore: number;
+    onGuessNextRound: () => void;
+    onShowResult: () => void;
     city: CzechCity;
+    guessedCity: CzechCity;
 }
 
 export const HeraldryRoundResultModal = ({
-    closeModal,
+    onShowResult,
+    onGuessNextRound,
     visible,
-    totalRoundScore,
     city,
+    guessedCity,
 }: HeraldryRoundResultModalProps) => {
     // @ts-ignore
     const currentGame = useSelector(state => state.game.currentGame);
@@ -25,6 +28,8 @@ export const HeraldryRoundResultModal = ({
     const [wikipediaMetadataLoading, setWikipediaMetadataLoading] = useState(true);
     const [wikipediaMetadata, setWikipediaMetadata] = useState<any>(null);
     const componentIsMounted = useRef(true);
+
+    const guessSuccessful = city.kod === guessedCity.kod;
 
     useEffect(() => {
         // cleanup function
@@ -70,11 +75,15 @@ export const HeraldryRoundResultModal = ({
         <Modal
             open={visible}
             style={{ top: 20 }}
-            onOk={closeModal}
-            onCancel={closeModal}
             footer={null}
             centered
             destroyOnClose
+            bodyStyle={{
+                ...(!guessSuccessful && {
+                    backgroundColor: '#fff2f0',
+                }),
+            }}
+            closable={false}
         >
             <div className="result-modal-container">
                 {currentRound > 0 ? (
@@ -82,47 +91,36 @@ export const HeraldryRoundResultModal = ({
                         <h2>
                             Kolo: {currentRound}/{TOTAL_ROUNDS_MAX}
                         </h2>
-                        <p>TODO více info</p>
+                        <Result
+                            status={guessSuccessful ? 'success' : 'error'}
+                            title={guessSuccessful ? 'Správně!' : `Ajaj... správná možnost je ${city.obec} 🤦`}
+                            style={{
+                                padding: '10px 0 10px 0',
+                            }}
+                        />
                     </div>
                 ) : null}
-                <div className="result-modal-container-row">
-                    {totalRoundScore >= 0 ? (
-                        <div className="result-modal-container-item">
-                            <h4>Průběžný počet bodů</h4>
-                            {Math.round(totalRoundScore)}
-                        </div>
-                    ) : null}
-                </div>
                 <div className="result-modal-container-more-info">
                     <h3>Bližší informace</h3>
                     <div className="result-modal-container-more-info-city">
                         <div
-                            style={
-                                wikipediaMetadata?.emblem
-                                    ? {
-                                          width: '70%',
-                                          paddingRight: '10px',
-                                      }
-                                    : {
-                                          width: '100%',
-                                      }
-                            }
+                            style={{
+                                width: '100%',
+                            }}
                         >
                             <h4 className="result-modal-container-more-info-city-headline">{city.obec}</h4>
                             <p>
                                 okres {city.okres}, {city.kraj}
                             </p>
                         </div>
-                        {wikipediaMetadata?.emblem && (
-                            <div className="result-modal-container-more-info-city-right">
-                                <img
-                                    id="result-city-emblem"
-                                    src={wikipediaMetadata.emblem}
-                                    alt={`Znak obce ${city.obec}`}
-                                    className="result-city-emblem"
-                                />
-                            </div>
-                        )}
+                        <div className="result-modal-container-more-info-city-right">
+                            <img
+                                id="result-city-emblem"
+                                src={city.coatOfArms}
+                                alt={`Znak obce ${city.obec}`}
+                                className="result-city-emblem"
+                            />
+                        </div>
                     </div>
                     <div>
                         {wikipediaMetadataLoadingStatus}
@@ -146,17 +144,7 @@ export const HeraldryRoundResultModal = ({
                     )}
                 </div>
                 <div className="result-modal-button">
-                    <Button
-                        key="submit"
-                        type="primary"
-                        onClick={() => {
-                            closeModal();
-                            setWikipediaMetadata(null);
-                            setWikipediaMetadataLoading(true);
-                        }}
-                    >
-                        Zavřít
-                    </Button>
+                    <HeraldryNextRoundButton onGuessNextRound={onGuessNextRound} onShowResult={onShowResult} />
                 </div>
             </div>
         </Modal>

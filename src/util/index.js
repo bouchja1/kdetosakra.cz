@@ -103,9 +103,14 @@ export const getRandomCzechPlace = () => {
     return randomCity;
 };
 
-export const getRandomCzechPlaceWithCoatOfArms = () => {
+export const getRandomCzechPlaceWithCoatOfArms = (alreadyGeneratedCities = []) => {
     let randomCity = crCities[Math.floor(Math.random() * crCities.length)];
-    while (typeof randomCity?.coatOfArms === 'undefined') {
+    const alreadyGeneratedCitiesCodes = alreadyGeneratedCities.map(city => city.kod);
+
+    while (
+        typeof randomCity?.coatOfArms === 'undefined' ||
+        (alreadyGeneratedCitiesCodes.length && alreadyGeneratedCitiesCodes.includes(randomCity.kod))
+    ) {
         randomCity = crCities[Math.floor(Math.random() * crCities.length)];
     }
     return randomCity;
@@ -203,6 +208,8 @@ export const mapGameModeName = mode => {
             return 'moje poloha';
         case gameModes.city:
             return 'krajské město';
+        case gameModes.heraldry:
+            return 'heraldika';
         default:
     }
     return '';
