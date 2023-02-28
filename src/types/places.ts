@@ -9,4 +9,6 @@ export interface CzechCity {
     latitude: number;
     longitude: number;
     coatOfArms?: string;
+    coatOfArmsFlagDescription?: string;
+    coatOfArmsDescription?: string;
 }

@@ -61,7 +61,8 @@
     "prettier": "prettier --config ./prettier.config.js --write 'src/**/*.{js,md,scss,css,jsx}'",
     "circulars": "madge --circular ./src/**",
     "run-script": "node --experimental-modules --es-module-specifier-resolution=node --",
-    "get-coa": "yarn run-script scripts/getCoaForCities.js"
+    "get-coa": "yarn run-script scripts/getCoaForCities.js",
+    "get-coa-description": "yarn run-script scripts/getCoaDescriptionsForCities.js"
   },
   "eslintConfig": {
     "extends": "react-app"

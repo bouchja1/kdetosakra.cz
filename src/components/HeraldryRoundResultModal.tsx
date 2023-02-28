@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { TOTAL_ROUNDS_MAX } from '../constants/game';
 import { findMunicipalityMetadata } from '../services/wikipedia.mjs';
 import { CzechCity } from '../types/places';
+import { getHeraldryDescriptionForCity } from '../util/heraldry';
 import { HeraldryNextRoundButton } from './HeraldryNextRoundButton';
 
 interface HeraldryRoundResultModalProps {
@@ -69,12 +70,23 @@ export const HeraldryRoundResultModal = ({
         return null;
     }, [wikipediaMetadataLoading]);
 
+    const getHeraldryDescription = () => {
+        const description = getHeraldryDescriptionForCity(city);
+        if (description) {
+            return (
+                <p>
+                    <b>{description}</b>
+                </p>
+            );
+        }
+        return null;
+    };
+
     const { round: currentRound } = currentGame;
 
     return (
         <Modal
             open={visible}
-            style={{ top: 20 }}
             footer={null}
             centered
             destroyOnClose
@@ -93,7 +105,7 @@ export const HeraldryRoundResultModal = ({
                         </h2>
                         <Result
                             status={guessSuccessful ? 'success' : 'error'}
-                            title={guessSuccessful ? 'Správně!' : `Ajaj... správná možnost je ${city.obec}.`}
+                            title={guessSuccessful ? 'Správně!' : `${guessedCity.obec} není správná odpověď :(`}
                             style={{
                                 padding: '10px 0 10px 0',
                             }}
@@ -101,7 +113,7 @@ export const HeraldryRoundResultModal = ({
                     </div>
                 ) : null}
                 <div className="result-modal-container-more-info">
-                    <h3>Bližší informace</h3>
+                    <h3>Správná odpověď</h3>
                     <div className="result-modal-container-more-info-city">
                         <div
                             style={{
@@ -123,6 +135,7 @@ export const HeraldryRoundResultModal = ({
                         </div>
                     </div>
                     <div>
+                        {getHeraldryDescription()}
                         {wikipediaMetadataLoadingStatus}
                         {wikipediaMetadata?.summary && (
                             <div className="result-modal-container-more-info-city-left-summary">

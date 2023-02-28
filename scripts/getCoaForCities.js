@@ -8,6 +8,7 @@ import czechCities from '../src/data/cr.mjs';
 import { findCoa } from '../src/services/wikipedia.mjs';
 
 const WIKIPEDIA_API_URL = 'https://cs.wikipedia.org/w/api.php';
+const TIMEOUT = 250;
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -34,7 +35,7 @@ const findCoatOfArms = async (obec, okres) => {
 
 (async () => {
     try {
-        let timeout = 250;
+        let timeout = TIMEOUT;
         for await (let city of czechCities) {
             const { obec, okres } = city;
             setTimeout(async () => {
@@ -54,7 +55,7 @@ const findCoatOfArms = async (obec, okres) => {
                 }
                 console.log('waiting & result: ', coatOfArmsImage);
             }, timeout);
-            timeout += 250;
+            timeout += TIMEOUT;
         }
     } catch (err) {
         console.error('Error while running coat of arms enhancement. ', err);

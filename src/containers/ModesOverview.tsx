@@ -1,5 +1,6 @@
 import { Card, Radio, RadioChangeEvent, Select } from 'antd';
 import React, { useMemo, useState } from 'react';
+import styled from 'styled-components';
 
 import geolocationCover from '../assets/images/city/geolocation.jpg';
 import heraldryCover from '../assets/images/city/heraldry.png';
@@ -13,9 +14,39 @@ import { Heraldry } from '../components/modes/Heraldry';
 import { nutsCodes } from '../enums/nutsCodes';
 import useGetRandomUserToken from '../hooks/useGetRandomUserToken';
 import useSMapResize from '../hooks/useSMapResize';
+import { borderRadiusBase, componentBackground } from '../util/theme';
 
 const { Meta } = Card;
 const { Option } = Select;
+
+const ModesContainer = styled.div`
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 25px;
+    margin-bottom: 50px;
+    flex: 0 0 100%; /* Let it fill the entire space horizontally */
+`;
+
+const SectionModesContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    background: ${componentBackground};
+    box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+    border-radius: ${borderRadiusBase};
+    padding: 20px 0 15px 0;
+`;
+
+const SectionModeCards = styled.div`
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 15px;
+    gap: 50px;
+`;
 
 export const ModesOverview = () => {
     useGetRandomUserToken();
@@ -31,7 +62,7 @@ export const ModesOverview = () => {
 
     const regionEnumKeys = Object.keys(nutsCodes);
 
-    const modesArray = useMemo(() => {
+    const panoramaModesArray = useMemo(() => {
         return [
             {
                 coverImgAlt: 'Herní mód - Náhodné místo',
@@ -120,20 +151,6 @@ export const ModesOverview = () => {
                 ),
             },
             {
-                coverImgAlt: 'Herní mód - Heraldika',
-                coverImgSrc: heraldryCover,
-                title: 'Erby měst a obcí v Česku',
-                content: (
-                    <>
-                        <p>
-                            Ověř si své znalosti heraldiky a uhádni, který erb patří kterému městu nebo obci v Česku.
-                            Zábavná výzva pro všechny, kteří se zajímají o historii a symboliku českých měst.
-                        </p>
-                        <Heraldry />
-                    </>
-                ),
-            },
-            {
                 coverImgAlt: 'Herní mód - Podle mojí geolokace',
                 coverImgSrc: geolocationCover,
                 title: 'Podle mojí geolokace',
@@ -144,6 +161,25 @@ export const ModesOverview = () => {
                             okolí!
                         </p>
                         <Geolocation />
+                    </>
+                ),
+            },
+        ];
+    }, [randomMode, regionNutCode, isMultiplayerSupported]);
+
+    const otherModesArray = useMemo(() => {
+        return [
+            {
+                coverImgAlt: 'Herní mód - Heraldika',
+                coverImgSrc: heraldryCover,
+                title: 'Erby měst a obcí v Česku',
+                content: (
+                    <>
+                        <p>
+                            Ověř si své znalosti heraldiky a uhádni, který erb patří kterému městu nebo obci v Česku.
+                            Zábavná výzva pro všechny, kteří se zajímají o historii a symboliku českých měst.
+                        </p>
+                        <Heraldry />
                     </>
                 ),
             },
@@ -189,17 +225,50 @@ export const ModesOverview = () => {
 
     return (
         <>
-            {modesArray.map(mode => {
-                const { coverImgAlt, coverImgSrc, title, content } = mode;
-                return (
-                    <GameModeRibbonWrapper condition={title === 'Erby měst a obcí v Česku'} message="Novinka!">
-                        <Card cover={<img alt={coverImgAlt} src={coverImgSrc} style={{ opacity: 0.9 }} />} key={title}>
-                            <h2>{title}</h2>
-                            <Meta description={content} />
-                        </Card>
-                    </GameModeRibbonWrapper>
-                );
-            })}
+            <ModesContainer>
+                <SectionModesContainer>
+                    <h1>Herní módy s panorámaty</h1>
+                    <SectionModeCards>
+                        {panoramaModesArray.map(mode => {
+                            const { coverImgAlt, coverImgSrc, title, content } = mode;
+                            return (
+                                <GameModeRibbonWrapper
+                                    condition={title === 'Erby měst a obcí v Česku'}
+                                    message="Novinka!"
+                                >
+                                    <Card
+                                        cover={<img alt={coverImgAlt} src={coverImgSrc} style={{ opacity: 0.9 }} />}
+                                        key={title}
+                                    >
+                                        <Meta title={title} description={content} />
+                                    </Card>
+                                </GameModeRibbonWrapper>
+                            );
+                        })}
+                    </SectionModeCards>
+                </SectionModesContainer>
+                <SectionModesContainer>
+                    <h1>Ostatní</h1>
+                    <SectionModeCards>
+                        {otherModesArray.map(mode => {
+                            const { coverImgAlt, coverImgSrc, title, content } = mode;
+                            return (
+                                <GameModeRibbonWrapper
+                                    condition={title === 'Erby měst a obcí v Česku'}
+                                    message="Novinka!"
+                                >
+                                    <Card
+                                        cover={<img alt={coverImgAlt} src={coverImgSrc} style={{ opacity: 0.9 }} />}
+                                        key={title}
+                                    >
+                                        <Meta title={title} description={content} />
+                                    </Card>
+                                </GameModeRibbonWrapper>
+                            );
+                        })}
+                    </SectionModeCards>
+                </SectionModesContainer>
+            </ModesContainer>
         </>
     );
 };

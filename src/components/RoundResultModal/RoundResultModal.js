@@ -68,15 +68,7 @@ const RoundResultModal = ({
     const currentRound = isBattle ? lastGuessedRound : round;
 
     return (
-        <Modal
-            open={visible}
-            style={{ top: 20 }}
-            onOk={closeModal}
-            onCancel={closeModal}
-            footer={null}
-            centered
-            destroyOnClose
-        >
+        <Modal open={visible} onOk={closeModal} onCancel={closeModal} footer={null} centered destroyOnClose>
             <div className="result-modal-container">
                 {currentRound > 0 ? (
                     <div className="result-modal-container-item">
