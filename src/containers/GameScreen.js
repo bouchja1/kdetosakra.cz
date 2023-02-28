@@ -1,5 +1,5 @@
 import { Tabs } from 'antd';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMediaQuery } from 'react-responsive';
 
@@ -41,8 +41,9 @@ export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle,
     const [currentCity, setCurrentCity] = useState(null);
     const [resultModalVisible, setResultModalVisible] = useState(false);
     const [panoramaScene, setPanoramaScene] = useState(null);
-    const [panoramaPlace, setPanoramaPlace] = useState(null);
-    const [panoramaLoading, setPanoramaLoading] = useState(false);
+    const [originalPanoramaPlace, setOriginalPanoramaPlace] = useState(null);
+    const [bestPanoramaPlace, setBestPanoramaPlace] = useState(null); // best panorama chosen by mapy.cz API (according to original panorama place)
+    const [panoramaLoading, setPanoramaLoading] = useState(true);
     const [nextRoundButtonVisible, setNextRoundButtonVisible] = useState(false);
 
     const isTabletOrMobileDevice = useMediaQuery({
@@ -88,12 +89,12 @@ export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle,
                 const currentRound = rounds[currentRoundNumber - 1];
                 const { city: cityToGuess, panoramaPlace: panoramaPlaceToGuess } = currentRound;
                 if (lastPanoramaPlaceShown && lastPanoramaPlaceShown.lat && lastPanoramaPlaceShown.lon) {
-                    setPanoramaPlace({
+                    setOriginalPanoramaPlace({
                         latitude: lastPanoramaPlaceShown.lat,
                         longitude: lastPanoramaPlaceShown.lon,
                     });
                 } else {
-                    setPanoramaPlace(panoramaPlaceToGuess);
+                    setOriginalPanoramaPlace(panoramaPlaceToGuess);
                 }
                 setCurrentCity(cityToGuess);
                 // set the current round user can see to prevent panorama rerendering after the first guess is made by somebody
@@ -116,8 +117,9 @@ export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle,
 
             // check if a new round was started
             if (currentRoundISee < currentRound.roundId) {
+                handleClearBestPanoramaPlace();
                 setCurrentRoundISee(currentRound.roundId);
-                setPanoramaPlace(panoramaPlaceToGuess);
+                setOriginalPanoramaPlace(panoramaPlaceToGuess);
             }
 
             setCurrentCity(cityToGuess);
@@ -133,6 +135,7 @@ export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle,
     };
 
     const findNewPanorama = () => {
+        handleClearBestPanoramaPlace();
         if (mode === gameModes.random) {
             radius = generateRandomRadius();
             city = getRandomCzechPlace();
@@ -144,9 +147,23 @@ export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle,
         }
         setCurrentCity(city);
         const generatedPanoramaPlace = generatePlaceInRadius(radius, city);
-        setPanoramaPlace(generatedPanoramaPlace);
+        setOriginalPanoramaPlace(generatedPanoramaPlace);
         // mobile
         setActiveTabKey('1');
+    };
+
+    const handleClearBestPanoramaPlace = () => {
+        setBestPanoramaPlace(null);
+    };
+
+    const handleSetBestPanoramaPlace = bestPanoramaPlace => {
+        const data = bestPanoramaPlace._data.mark;
+        const { lat, lon } = data;
+        setOriginalPanoramaPlace({
+            latitude: lat,
+            longitude: lon,
+        });
+        setBestPanoramaPlace(bestPanoramaPlace);
     };
 
     const changePanoramaLoadingState = loading => {
@@ -184,13 +201,15 @@ export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle,
                 >
                     <TabPane tab="panorama" key="1">
                         <Panorama
-                            panoramaPlace={panoramaPlace}
+                            originalPanoramaPlace={originalPanoramaPlace}
                             panoramaScene={panoramaScene}
+                            bestPanoramaPlace={bestPanoramaPlace}
                             refPanoramaView={refPanoramaView}
                             panoramaLoading={panoramaLoading}
                             changePanoramaLoadingState={changePanoramaLoadingState}
                             isGameStarted={isGameStarted}
                             isBattle={isBattle}
+                            onSetBestPanoramaPlace={handleSetBestPanoramaPlace}
                         />
                     </TabPane>
                     <TabPane tab="mapa" key="2">
@@ -202,7 +221,7 @@ export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle,
                             panoramaLoading={panoramaLoading}
                             findNewPanorama={findNewPanorama}
                             saveRoundResult={saveRoundResult}
-                            panoramaPlace={panoramaPlace}
+                            bestPanoramaPlace={bestPanoramaPlace}
                             panoramaScene={panoramaScene}
                             allGuessedPoints={allGuessedPoints}
                             isGameStarted={isGameStarted}
@@ -217,13 +236,15 @@ export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle,
                     <div className="game-screen-container">
                         {isBattle && <BattlePlayersPanel />}
                         <Panorama
-                            panoramaPlace={panoramaPlace}
+                            originalPanoramaPlace={originalPanoramaPlace}
+                            bestPanoramaPlace={bestPanoramaPlace}
                             panoramaScene={panoramaScene}
                             refPanoramaView={refPanoramaView}
                             panoramaLoading={panoramaLoading}
                             changePanoramaLoadingState={changePanoramaLoadingState}
                             isGameStarted={isGameStarted}
                             isBattle={isBattle}
+                            onSetBestPanoramaPlace={handleSetBestPanoramaPlace}
                         />
                     </div>
                     <GuessingMapContainer
@@ -234,7 +255,7 @@ export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle,
                         panoramaLoading={panoramaLoading}
                         findNewPanorama={findNewPanorama}
                         saveRoundResult={saveRoundResult}
-                        panoramaPlace={panoramaPlace}
+                        bestPanoramaPlace={bestPanoramaPlace}
                         panoramaScene={panoramaScene}
                         allGuessedPoints={allGuessedPoints}
                         isGameStarted={isGameStarted}
