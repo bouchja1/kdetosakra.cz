@@ -1,0 +1,10 @@
+{
+    "name": "@kdetosakra/scripts",
+    "version": "0.0.1",
+    "private": true,
+    "license": "UNLICENSED",
+    "type": "module",
+    "dependencies": {
+        "wikijs": "^6.4.1"
+    }
+}

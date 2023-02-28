@@ -1,0 +1,62 @@
+{
+  "name": "hyntax",
+  "version": "1.1.9",
+  "description": "Straightforward HTML parser for Node.js and browser",
+  "keywords": [
+    "html",
+    "parser",
+    "html5",
+    "html5 parser",
+    "htmlparser",
+    "html parser",
+    "html tree-constructor",
+    "html to JSON",
+    "html to AST",
+    "html tokenizer",
+    "tokenize",
+    "tokenizer",
+    "stream parsing",
+    "stream parser",
+    "typescript",
+    "types",
+    "node.js",
+    "node.js html parser"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:mykolaharmash/hyntax.git"
+  },
+  "homepage": "https://github.com/mykolaharmash/hyntax",
+  "bugs": "https://github.com/mykolaharmash/hyntax/issues",
+  "main": "./index.js",
+  "scripts": {
+    "test": "tape ${TEST:-'./tests/**/*.test.js'} | tap-spec",
+    "coverage": "nyc -x 'tests/**/*' npm test",
+    "generate-readme-toc": "./generate-toc.js",
+    "prepublishOnly": "babel index.js --out-file index.es5.js && babel lib --out-dir lib-es5"
+  },
+  "author": {
+    "name": "Mykola Harmash",
+    "email": "mykola.harmash@gmail.com",
+    "url": "https://stse.io"
+  },
+  "license": "MIT",
+  "private": false,
+  "engines": {
+    "node": ">=6.11.1",
+    "npm": ">=5.3.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.11.6",
+    "@babel/core": "^7.11.6",
+    "@babel/preset-env": "^7.11.5",
+    "coveralls": "^3.0.5",
+    "deep-diff": "^0.3.8",
+    "eslint": "^7.8.1",
+    "nyc": "^15.1.0",
+    "remark": "^10.0.1",
+    "remark-toc": "^5.1.1",
+    "tap-spec": "^5.0.0",
+    "tape": "^4.11.0"
+  }
+}

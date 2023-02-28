@@ -1,12 +1,14 @@
-import { Card, Radio, Select } from 'antd';
+import { Card, Radio, RadioChangeEvent, Select } from 'antd';
 import React, { useMemo, useState } from 'react';
 
 import geolocationCover from '../assets/images/city/geolocation.jpg';
+import heraldryCover from '../assets/images/city/heraldry.png';
 import pragueCover from '../assets/images/city/prague.jpg';
 import randomCover from '../assets/images/city/random.jpg';
 import suggestedCover from '../assets/images/city/suggested.jpg';
 import youtubeCover from '../assets/images/youtube.jpg';
 import { CustomPlace, Geolocation, Random, RandomPlaceInRegion, RegionCity } from '../components/modes';
+import { Heraldry } from '../components/modes/Heraldry';
 import { nutsCodes } from '../enums/nutsCodes';
 import useGetRandomUserToken from '../hooks/useGetRandomUserToken';
 import useSMapResize from '../hooks/useSMapResize';
@@ -22,7 +24,7 @@ export const ModesOverview = () => {
 
     const isMultiplayerSupported = width > 599;
 
-    const handleRandomModeChange = e => {
+    const handleRandomModeChange = (e: RadioChangeEvent) => {
         setRandomMode(e.target.value);
     };
 
@@ -78,7 +80,6 @@ export const ModesOverview = () => {
                                         <label htmlFor="city">Kraj: </label>
                                         <Select
                                             showSearch
-                                            name="city"
                                             style={{ width: 200 }}
                                             placeholder="zvolit kraj"
                                             onChange={value => {
@@ -86,6 +87,7 @@ export const ModesOverview = () => {
                                             }}
                                         >
                                             {regionEnumKeys.map(key => {
+                                                // @ts-ignore
                                                 const { code, name } = nutsCodes[key];
                                                 return <Option value={code}>{name}</Option>;
                                             })}
@@ -164,6 +166,20 @@ export const ModesOverview = () => {
                                 </a>
                             </li>
                         </ul>
+                    </>
+                ),
+            },
+            {
+                coverImgAlt: 'Herní mód - Heraldika',
+                coverImgSrc: heraldryCover,
+                title: 'Erby měst a obcí v Česku',
+                content: (
+                    <>
+                        <p>
+                            Ověř si své znalosti heraldiky a uhádni, který erb patří kterému městu nebo obci v Česku.
+                            Zábavná výzva pro všechny, kteří se zajímají o historii a symboliku českých měst.
+                        </p>
+                        <Heraldry />
                     </>
                 ),
             },

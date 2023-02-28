@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
-import { findMunicipalityMetadata } from '../../services/wikipedia';
+import { findMunicipalityMetadata } from '../../services/wikipedia.mjs';
 import { roundToTwoDecimal } from '../../util';
 
 const RoundResultModal = ({
@@ -71,8 +71,8 @@ const RoundResultModal = ({
         <Modal
             open={visible}
             style={{ top: 20 }}
-            onOk={() => closeModal(false)}
-            onCancel={() => closeModal(false)}
+            onOk={closeModal}
+            onCancel={closeModal}
             footer={null}
             centered
             destroyOnClose
@@ -166,7 +166,7 @@ const RoundResultModal = ({
                         key="submit"
                         type="primary"
                         onClick={() => {
-                            closeModal(false);
+                            closeModal();
                             setWikipediaMetadata(null);
                             setWikipediaMetadataLoading(true);
                         }}

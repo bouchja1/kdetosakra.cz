@@ -5,4 +5,5 @@ export const CATEGORIES = {
     GEOLOCATION: 'Geolocation',
     SUGGESTED: 'SuggestedCity',
     BATTLE: 'Battle',
+    HERALDRY: 'Heraldry',
 };

@@ -6,7 +6,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 import smilingLogo from '../../assets/images/kdetosakraSmile.svg';
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
-import routeNames from '../../constants/routes';
+import { routeNames } from '../../constants/routes';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import { findUserFromBattleByRandomTokenId } from '../../util';
 import BattleCountDown from '../BattleCountdown';
@@ -19,7 +19,8 @@ const isGameInfoShown = (pathname, isBattle) => {
         pathname.includes(routeNames.vlastni) ||
         pathname.includes(routeNames.nahodne) ||
         pathname.includes(routeNames.nahodneKraj) ||
-        pathname.includes(routeNames.mesto)
+        pathname.includes(routeNames.mesto) ||
+        pathname.includes(routeNames.heraldika)
     );
 };
 

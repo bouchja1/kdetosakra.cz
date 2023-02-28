@@ -1,13 +1,10 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import {
-    Home, Info, Result, NotFound, Help
-} from '../../pages';
-import {
-    CustomPlace, RegionCity, Random, RandomRegionalPlace, Geolocation, Battle
-} from '../../containers/games';
-import routeNames from '../../constants/routes';
+import { routeNames } from '../../constants/routes';
+import { Battle, CustomPlace, Geolocation, Random, RandomRegionalPlace, RegionCity } from '../../containers/games';
+import { HeraldryGame } from '../../containers/games/HeraldryGame';
+import { Help, Home, Info, NotFound, Result } from '../../pages';
 
 const RouterSwitch = () => {
     return (
@@ -23,6 +20,9 @@ const RouterSwitch = () => {
             </Route>
             <Route path={`/${routeNames.nahodne}`}>
                 <Random />
+            </Route>
+            <Route path={`/${routeNames.heraldika}`}>
+                <HeraldryGame />
             </Route>
             <Route path={`/${routeNames.nahodneKraj}`}>
                 <RandomRegionalPlace />

@@ -1,17 +1,16 @@
+import { Button, Progress } from 'antd';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
-import { Progress } from 'antd';
-import { TOTAL_ROUNDS_MAX } from '../../constants/game';
+import { Link, Redirect } from 'react-router-dom';
+
 import ResultSMap from '../../components/ResultSMap';
+import { TOTAL_ROUNDS_MAX } from '../../constants/game';
 import { RoundsSummary } from './RoundsSummary';
 
-export const SingleResult = ({ renderPlayAgainButton }) => {
+export const SingleResult = () => {
     const lastResult = useSelector(state => state.result);
 
-    const {
-        totalScore, guessedPoints, mode, city, radius,
-    } = lastResult;
+    const { totalScore, guessedPoints, mode, city, radius } = lastResult;
 
     if (guessedPoints && guessedPoints.length) {
         return (
@@ -20,9 +19,7 @@ export const SingleResult = ({ renderPlayAgainButton }) => {
                     <div className="result-modal-container">
                         <div className="result-container-item">
                             <h3>Celkové skóre</h3>
-                            {totalScore}
-                            {' '}
-                            bodů
+                            {totalScore} bodů
                         </div>
                     </div>
                     <div className="result-modal-container">
@@ -51,7 +48,17 @@ export const SingleResult = ({ renderPlayAgainButton }) => {
                         <div className="result-container-item" />
                     </div>
                 </div>
-                {renderPlayAgainButton}
+                <div className="result-container-item" style={{ marginBottom: '25px' }}>
+                    <Button type="primary">
+                        <Link
+                            to={{
+                                pathname: '/',
+                            }}
+                        >
+                            Zpět na výběr herního módu
+                        </Link>
+                    </Button>
+                </div>
                 <ResultSMap guessedPoints={guessedPoints} mode={mode} city={city} radius={radius} />
             </>
         );
