@@ -43,7 +43,7 @@ export const Help = () => {
                         {MIN_DISTANCE_FOR_POINTS_RANDOM} km od hádaného místa (v případě hádání náhodného místa v Čr),
                         respektive v okolí maximálně 2 km plus na začátku zvolený kilometrový radius (pro ostatní módy).
                     </li>
-                    <li>100 % (= 100 bodů) získáš, když se trefíš ne dál než 20 metrů od hádaného místa.</li>
+                    <li>100 % (= 100 bodů) získáš, když se trefíš ne dál než 30 metrů od hádaného místa.</li>
                 </ul>
                 <p>
                     Hádání není časově omezeno. Pro přesnější odhad a lepší výsledek se můžeš v panoramatu libovolně
