@@ -65,6 +65,21 @@ export const ModesOverview = () => {
     const panoramaModesArray = useMemo(() => {
         return [
             {
+                coverImgAlt: 'Herní mód - Vlastní místo',
+                coverImgSrc: suggestedCover,
+                title: 'Vlastní místo',
+                content: (
+                    <>
+                        <p>
+                            Krajská města už máš prochozená a náhodné toulky po ČR tě nebaví? Tak přesně tohle je výzva
+                            pro tebe. Své město, obec či jiné zajímavé místo, které chceš více prozkoumat, si najdi
+                            níže. Šťastnou cestu!
+                        </p>
+                        <CustomPlace multiplayerSupported={isMultiplayerSupported} />
+                    </>
+                ),
+            },
+            {
                 coverImgAlt: 'Herní mód - Náhodné místo',
                 coverImgSrc: randomCover,
                 title: 'Náhodné místo',
@@ -132,21 +147,6 @@ export const ModesOverview = () => {
                             chtít podívat i naživo.
                         </p>
                         <RegionCity multiplayerSupported={isMultiplayerSupported} />
-                    </>
-                ),
-            },
-            {
-                coverImgAlt: 'Herní mód - Vlastní místo',
-                coverImgSrc: suggestedCover,
-                title: 'Vlastní místo',
-                content: (
-                    <>
-                        <p>
-                            Krajská města už máš prochozená a náhodné toulky po ČR tě nebaví? Tak přesně tohle je výzva
-                            pro tebe. Své město, obec či jiné zajímavé místo, které chceš více prozkoumat, si najdi
-                            níže. Šťastnou cestu!
-                        </p>
-                        <CustomPlace multiplayerSupported={isMultiplayerSupported} />
                     </>
                 ),
             },
