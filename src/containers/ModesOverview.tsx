@@ -7,6 +7,7 @@ import pragueCover from '../assets/images/city/prague.jpg';
 import randomCover from '../assets/images/city/random.jpg';
 import suggestedCover from '../assets/images/city/suggested.jpg';
 import youtubeCover from '../assets/images/youtube.jpg';
+import { GameModeRibbonWrapper } from '../components/GameModeRibbonWrapper';
 import { CustomPlace, Geolocation, Random, RandomPlaceInRegion, RegionCity } from '../components/modes';
 import { Heraldry } from '../components/modes/Heraldry';
 import { nutsCodes } from '../enums/nutsCodes';
@@ -32,21 +33,6 @@ export const ModesOverview = () => {
 
     const modesArray = useMemo(() => {
         return [
-            {
-                coverImgAlt: 'Herní mód - Krajská města ČR',
-                coverImgSrc: pragueCover,
-                title: 'Krajská města ČR',
-                content: (
-                    <>
-                        <p>
-                            Bydlíš v některém z krajských sídel a znáš ho jako své boty? Tak se ukaž. Nebo se prostě jen
-                            tak projdi po místech, která zase až tak dobře neznáš. Třeba objevíš zákoutí, kam se budeš
-                            chtít podívat i naživo.
-                        </p>
-                        <RegionCity multiplayerSupported={isMultiplayerSupported} />
-                    </>
-                ),
-            },
             {
                 coverImgAlt: 'Herní mód - Náhodné místo',
                 coverImgSrc: randomCover,
@@ -104,6 +90,21 @@ export const ModesOverview = () => {
                 ),
             },
             {
+                coverImgAlt: 'Herní mód - Krajská města ČR',
+                coverImgSrc: pragueCover,
+                title: 'Krajská města ČR',
+                content: (
+                    <>
+                        <p>
+                            Bydlíš v některém z krajských sídel a znáš ho jako své boty? Tak se ukaž. Nebo se prostě jen
+                            tak projdi po místech, která zase až tak dobře neznáš. Třeba objevíš zákoutí, kam se budeš
+                            chtít podívat i naživo.
+                        </p>
+                        <RegionCity multiplayerSupported={isMultiplayerSupported} />
+                    </>
+                ),
+            },
+            {
                 coverImgAlt: 'Herní mód - Vlastní místo',
                 coverImgSrc: suggestedCover,
                 title: 'Vlastní místo',
@@ -115,6 +116,20 @@ export const ModesOverview = () => {
                             níže. Šťastnou cestu!
                         </p>
                         <CustomPlace multiplayerSupported={isMultiplayerSupported} />
+                    </>
+                ),
+            },
+            {
+                coverImgAlt: 'Herní mód - Heraldika',
+                coverImgSrc: heraldryCover,
+                title: 'Erby měst a obcí v Česku',
+                content: (
+                    <>
+                        <p>
+                            Ověř si své znalosti heraldiky a uhádni, který erb patří kterému městu nebo obci v Česku.
+                            Zábavná výzva pro všechny, kteří se zajímají o historii a symboliku českých měst.
+                        </p>
+                        <Heraldry />
                     </>
                 ),
             },
@@ -169,20 +184,6 @@ export const ModesOverview = () => {
                     </>
                 ),
             },
-            {
-                coverImgAlt: 'Herní mód - Heraldika',
-                coverImgSrc: heraldryCover,
-                title: 'Erby měst a obcí v Česku',
-                content: (
-                    <>
-                        <p>
-                            Ověř si své znalosti heraldiky a uhádni, který erb patří kterému městu nebo obci v Česku.
-                            Zábavná výzva pro všechny, kteří se zajímají o historii a symboliku českých měst.
-                        </p>
-                        <Heraldry />
-                    </>
-                ),
-            },
         ];
     }, [randomMode, regionNutCode, isMultiplayerSupported]);
 
@@ -191,10 +192,12 @@ export const ModesOverview = () => {
             {modesArray.map(mode => {
                 const { coverImgAlt, coverImgSrc, title, content } = mode;
                 return (
-                    <Card cover={<img alt={coverImgAlt} src={coverImgSrc} style={{ opacity: 0.9 }} />} key={title}>
-                        <h2>{title}</h2>
-                        <Meta description={content} />
-                    </Card>
+                    <GameModeRibbonWrapper condition={title === 'Erby měst a obcí v Česku'} message="Novinka!">
+                        <Card cover={<img alt={coverImgAlt} src={coverImgSrc} style={{ opacity: 0.9 }} />} key={title}>
+                            <h2>{title}</h2>
+                            <Meta description={content} />
+                        </Card>
+                    </GameModeRibbonWrapper>
                 );
             })}
         </>
