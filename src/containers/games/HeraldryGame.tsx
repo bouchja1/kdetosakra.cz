@@ -1,5 +1,5 @@
 import { Card, Col, Layout, Row } from 'antd';
-import React, { ReactNode, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import styled from 'styled-components';
@@ -7,8 +7,9 @@ import styled from 'styled-components';
 import { HeraldryRoundResultModal } from '../../components/HeraldryRoundResultModal';
 import gameModes from '../../enums/modes';
 import useGameMenuResize from '../../hooks/useGameMenuResize';
-import useSMapResize from '../../hooks/useSMapResize';
 import { setCurrentGame, setTotalRoundCounter, setTotalRoundScore } from '../../redux/actions/game';
+import { setLastResult } from '../../redux/actions/result';
+import { HeraldryResultT } from '../../types/heraldry';
 import { CzechCity } from '../../types/places';
 import { getRandomCzechPlaceWithCoatOfArms } from '../../util';
 import { shuffleArray } from '../../util/array';
@@ -30,6 +31,7 @@ export const HeraldryGame = () => {
     const currentGame = useSelector(state => state.game.currentGame);
     const [resultModalVisible, setResultModalVisible] = useState(false);
     const [guessedCity, setGuessedCity] = useState<CzechCity | null>(null);
+    const [allGuessedCities, setAllGuessedCities] = useState<HeraldryResultT[]>([]);
     useGameMenuResize();
 
     const { mode, round, city, totalScore } = currentGame;
@@ -49,6 +51,14 @@ export const HeraldryGame = () => {
         setGuessedCity(cityWhichWasGuessed);
         // @ts-ignore
         dispatch(setTotalRoundScore(totalScore + roundResultScore));
+        setAllGuessedCities([
+            ...allGuessedCities,
+            {
+                guessed: !!roundResultScore,
+                city,
+                cityWhichWasGuessed,
+            },
+        ]);
         setResultModalVisible(true);
     };
 
@@ -68,18 +78,14 @@ export const HeraldryGame = () => {
 
     const handleShowResult = () => {
         setResultModalVisible(false);
-        /*
-                                dispatch(
-                            setLastResult({
-                                guessedPoints: allGuessedPoints,
-                                totalScore,
-                                mode: currentGame?.mode,
-                                city: currentGame?.city,
-                                radius: currentGame?.radius,
-                                isBattle,
-                            }),
-                        );
-         */
+        dispatch(
+            // @ts-ignore
+            setLastResult({
+                totalScore,
+                mode: gameModes.heraldry,
+                guessedCoatOfArms: allGuessedCities,
+            }),
+        );
     };
 
     if (mode === gameModes.heraldry && city && shuffledCitiesToGuessArray) {

@@ -1,4 +1,4 @@
-import { Button, Modal, Result, Spin } from 'antd';
+import { Modal, Result, Spin } from 'antd';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
@@ -93,7 +93,7 @@ export const HeraldryRoundResultModal = ({
                         </h2>
                         <Result
                             status={guessSuccessful ? 'success' : 'error'}
-                            title={guessSuccessful ? 'Správně!' : `Ajaj... správná možnost je ${city.obec} 🤦`}
+                            title={guessSuccessful ? 'Správně!' : `Ajaj... správná možnost je ${city.obec}.`}
                             style={{
                                 padding: '10px 0 10px 0',
                             }}

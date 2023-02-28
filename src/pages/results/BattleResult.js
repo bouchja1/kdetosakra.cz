@@ -1,24 +1,23 @@
+import { Button, Progress, Tabs } from 'antd';
 import React, { useMemo, useState } from 'react';
-import { Progress, Tabs } from 'antd';
-import { Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { sortPlayersByHighestScore } from '../../util';
-import { TOTAL_ROUNDS_MAX } from '../../constants/game';
+import { Link, Redirect } from 'react-router-dom';
+
 import ResultSMap from '../../components/ResultSMap';
+import { TOTAL_ROUNDS_MAX } from '../../constants/game';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
+import { sortPlayersByHighestScore } from '../../util';
 import { RoundsSummary } from './RoundsSummary';
 
 const { TabPane } = Tabs;
 
-export const BattleResult = ({ renderPlayAgainButton }) => {
+export const BattleResult = () => {
     const randomUserToken = useGetRandomUserToken();
     const lastResult = useSelector(state => state.result);
 
     const [activePlayerStructure, setActivePlayerStructure] = useState();
 
-    const {
-        mode, city, radius, players,
-    } = lastResult;
+    const { mode, city, radius, players } = lastResult;
 
     const finalPlayerOrderStructure = useMemo(() => {
         const playersResults = [];
@@ -118,7 +117,17 @@ export const BattleResult = ({ renderPlayAgainButton }) => {
                         <div className="result-container-item" />
                     </div>
                 </div>
-                {renderPlayAgainButton}
+                <div className="result-container-item" style={{ marginBottom: '25px' }}>
+                    <Button type="primary">
+                        <Link
+                            to={{
+                                pathname: '/',
+                            }}
+                        >
+                            Zpět na výběr herního módu
+                        </Link>
+                    </Button>
+                </div>
                 {activePlayerStructure && (
                     <ResultSMap
                         guessedPoints={activePlayerStructure.guessedPoints}

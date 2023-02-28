@@ -15,13 +15,12 @@ export const HeraldryNextRoundButton = ({ onGuessNextRound, onShowResult }: Hera
     // @ts-ignore
     const currentGame = useSelector(state => state.game.currentGame);
 
-    const { round: currentRound } = currentGame;
+    const { round } = currentGame;
 
     return (
         <>
-            {currentRound >= TOTAL_ROUNDS_MAX ? (
+            {round >= TOTAL_ROUNDS_MAX ? (
                 <Button type="primary" onClick={onShowResult}>
-                    {/*
                     <Link
                         to={{
                             pathname: `/${routeNames.vysledek}`,
@@ -29,8 +28,6 @@ export const HeraldryNextRoundButton = ({ onGuessNextRound, onShowResult }: Hera
                     >
                         Vyhodnotit hru
                     </Link>
-                    */}
-                    vyhodnotit
                 </Button>
             ) : (
                 <Button onClick={onGuessNextRound} type="primary">

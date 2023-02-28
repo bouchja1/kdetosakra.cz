@@ -2,6 +2,7 @@ import { Card, Radio, RadioChangeEvent, Select } from 'antd';
 import React, { useMemo, useState } from 'react';
 
 import geolocationCover from '../assets/images/city/geolocation.jpg';
+import heraldryCover from '../assets/images/city/heraldry.png';
 import pragueCover from '../assets/images/city/prague.jpg';
 import randomCover from '../assets/images/city/random.jpg';
 import suggestedCover from '../assets/images/city/suggested.jpg';
@@ -170,11 +171,14 @@ export const ModesOverview = () => {
             },
             {
                 coverImgAlt: 'Herní mód - Heraldika',
-                coverImgSrc: youtubeCover,
-                title: 'Heraldika',
+                coverImgSrc: heraldryCover,
+                title: 'Erby měst a obcí v Česku',
                 content: (
                     <>
-                        <p>TODO.</p>
+                        <p>
+                            Ověř si své znalosti heraldiky a uhádni, který erb patří kterému městu nebo obci v Česku.
+                            Zábavná výzva pro všechny, kteří se zajímají o historii a symboliku českých měst.
+                        </p>
                         <Heraldry />
                     </>
                 ),

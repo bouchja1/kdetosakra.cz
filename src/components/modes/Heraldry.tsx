@@ -45,7 +45,6 @@ export const Heraldry = () => {
     // browser is allowed to access user's LAT and LONG
     return (
         <>
-            <p style={{ marginTop: '10px' }}>Blalalala</p>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <Button type="primary" onClick={handlePlayHeraldry}>
                     Hrát
