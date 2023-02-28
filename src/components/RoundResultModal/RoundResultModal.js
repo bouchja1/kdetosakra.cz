@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
 import { findMunicipalityMetadata } from '../../services/wikipedia.mjs';
 import { roundToTwoDecimal } from '../../util';
+import { getHeraldryDescriptionForCity } from '../../util/heraldry';
 
 const RoundResultModal = ({
     closeModal,
@@ -65,6 +66,7 @@ const RoundResultModal = ({
     const { round } = currentGame;
     const { round: lastGuessedRound } = currentBattleInfo;
 
+    const heraldryDescription = guessedRandomPlace ? getHeraldryDescriptionForCity(guessedRandomPlace) : null;
     const currentRound = isBattle ? lastGuessedRound : round;
 
     return (
@@ -132,6 +134,11 @@ const RoundResultModal = ({
                             )}
                         </div>
                         <div>
+                            {heraldryDescription ? (
+                                <p>
+                                    <b>{heraldryDescription}</b>
+                                </p>
+                            ) : null}
                             {wikipediaMetadataLoadingStatus}
                             {wikipediaMetadata?.summary && (
                                 <div className="result-modal-container-more-info-city-left-summary">

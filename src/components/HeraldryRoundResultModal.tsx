@@ -70,18 +70,7 @@ export const HeraldryRoundResultModal = ({
         return null;
     }, [wikipediaMetadataLoading]);
 
-    const getHeraldryDescription = () => {
-        const description = getHeraldryDescriptionForCity(city);
-        if (description) {
-            return (
-                <p>
-                    <b>{description}</b>
-                </p>
-            );
-        }
-        return null;
-    };
-
+    const heraldryDescription = getHeraldryDescriptionForCity(city);
     const { round: currentRound } = currentGame;
 
     return (
@@ -135,7 +124,11 @@ export const HeraldryRoundResultModal = ({
                         </div>
                     </div>
                     <div>
-                        {getHeraldryDescription()}
+                        {heraldryDescription ? (
+                            <p>
+                                <b>{heraldryDescription}</b>
+                            </p>
+                        ) : null}
                         {wikipediaMetadataLoadingStatus}
                         {wikipediaMetadata?.summary && (
                             <div className="result-modal-container-more-info-city-left-summary">

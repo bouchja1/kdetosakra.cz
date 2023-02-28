@@ -8,7 +8,12 @@ import minimizeMapShadowDisabled from '../assets/images/map/minimizeMapShadowFul
 import GuessingMap from '../components/GuessingMap';
 import GuessingMapButton from '../components/GuessingMapButton';
 import GuessLimitModal from '../components/GuessLimitModal';
-import { MAX_SCORE_PERCENT, MIN_DISTANCE_FOR_POINTS_RANDOM, guessResultMode } from '../constants/game';
+import {
+    MAX_DISTANCE_TO_GAIN_100_PERCENT_KM,
+    MAX_SCORE_PERCENT,
+    MIN_DISTANCE_FOR_POINTS_RANDOM,
+    guessResultMode,
+} from '../constants/game';
 import { MARKER_PLACE_ICON_KDETOSAKRA } from '../constants/icons';
 import MapyCzContext from '../context/MapyCzContext';
 import gameModes from '../enums/modes';
@@ -266,8 +271,8 @@ export const GuessingMapContainer = ({
             minDistanceForPoints = radius + 2;
         }
         let score;
-        // distance less than 20 meters
-        if (distance < 0.2) {
+        // distance less than 30 meters
+        if (distance < MAX_DISTANCE_TO_GAIN_100_PERCENT_KM) {
             score = 100;
         } else {
             score = (minDistanceForPoints - distance) / (minDistanceForPoints / MAX_SCORE_PERCENT);

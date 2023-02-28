@@ -182,8 +182,8 @@ export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle,
 
     const evaluateGuessedRound = guessedPointsInRound => {
         if (mode === gameModes.random || mode === gameModes.randomRegion) {
-            const { obec, okres, kraj } = currentCity;
-            setGuessedRandomPlace({ obec, okres, kraj });
+            const { obec, okres, kraj, coatOfArmsDescription, coatOfArmsFlagDescription } = currentCity;
+            setGuessedRandomPlace({ obec, okres, kraj, coatOfArmsDescription, coatOfArmsFlagDescription });
         }
         setAllGuessedPoints([...allGuessedPoints, guessedPointsInRound]);
         setCurrentRoundGuessedPoint(guessedPointsInRound);
