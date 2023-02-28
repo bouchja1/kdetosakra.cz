@@ -3,6 +3,7 @@ import ReactGA from 'react-ga4';
 import { useDispatch } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
+import { routeNames } from '../../constants/routes';
 import { CATEGORIES } from '../../enums/gaCategories';
 import gameModes from '../../enums/modes';
 import { setCurrentGame } from '../../redux/actions/game';
@@ -49,7 +50,7 @@ export const RandomPlaceInRegion = ({ multiplayerSupported, regionNutCode }) => 
         return (
             <Redirect
                 to={{
-                    pathname: '/nahodne-kraj',
+                    pathname: `/${routeNames.nahodneKraj}`,
                 }}
             />
         );

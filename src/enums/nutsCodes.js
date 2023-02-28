@@ -1,4 +1,8 @@
 export const nutsCodes = {
+    PRAHA: {
+        code: 'CZ010',
+        name: 'Hlavní město Praha',
+    },
     JIHOCESKY_KRAJ: {
         code: 'CZ031',
         name: 'Jihočeský',
@@ -50,9 +54,5 @@ export const nutsCodes = {
     ZLINSKY_KRAJ: {
         code: 'CZ072',
         name: 'Zlínský',
-    },
-    PRAHA: {
-        code: 'CZ010',
-        name: 'Hlavní město Praha',
     },
 };
