@@ -71,18 +71,18 @@ const Menu = ({ isInGame = false }) => {
             </Link>
             <div className={isBattle || isInGame ? 'main-menu--battle' : 'main-menu'}>
                 <Link to={`/${routeNames.info}`}>
-                    <InfoCircleOutlined style={{ color: 'rgb(97, 95, 95)', marginRight: '10px' }} />
+                    <InfoCircleOutlined className="menu-item-icon" />
                     <div className="menu-item">O projektu</div>
                 </Link>
                 <div className="menu-item menu-separator">|</div>
                 <Link to={`/${routeNames.napoveda}`}>
-                    <QuestionCircleOutlined style={{ color: 'rgb(97, 95, 95)', marginRight: '10px' }} />
+                    <QuestionCircleOutlined className="menu-item-icon" />
                     <div className="menu-item">Nápověda</div>
                 </Link>
                 {!isBattle && (
                     <>
                         <div className="menu-item menu-separator">|</div>
-                        <CoffeeOutlined style={{ color: 'rgb(97, 95, 95)', marginRight: '10px' }} />
+                        <CoffeeOutlined className="menu-item-icon" />
                         <Link to={`/${routeNames.podpora}`}>
                             <div className="menu-item">Podpořte provoz a další rozvoj</div>
                         </Link>
@@ -91,7 +91,7 @@ const Menu = ({ isInGame = false }) => {
                 <div className="menu-item menu-separator">|</div>
                 {/* eslint-disable-next-line react/jsx-no-target-blank */}
                 <a href="https://www.facebook.com/kdetosakra.cz" target="_blank" rel="noreferrer">
-                    <FacebookFilled style={{ color: 'rgb(97, 95, 95)' }} />
+                    <FacebookFilled style={{ color: 'rgb(66, 103, 178)', fontSize: '25px' }} />
                 </a>
             </div>
             {!isGameFinished() && isBattle && myPlayer?.userId && currentBattleInfo.round > 0 && <BattleCountDown />}
