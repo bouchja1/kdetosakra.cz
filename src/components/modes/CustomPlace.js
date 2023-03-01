@@ -117,6 +117,7 @@ export const CustomPlace = ({ multiplayerSupported }) => {
                 </Col>
                 <Col span={4}>
                     <InputNumber
+                        size="large"
                         min={1}
                         max={10}
                         style={{ marginLeft: 16 }}

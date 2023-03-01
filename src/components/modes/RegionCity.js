@@ -99,6 +99,7 @@ export const RegionCity = ({ multiplayerSupported }) => {
             <form>
                 <label htmlFor="city">Město: </label>
                 <Select
+                    size="large"
                     showSearch
                     name="city"
                     placeholder="zvolit město"
@@ -127,6 +128,7 @@ export const RegionCity = ({ multiplayerSupported }) => {
                                 </Col>
                                 <Col span={4}>
                                     <InputNumber
+                                        size="large"
                                         min={1}
                                         max={maxCityRadius}
                                         style={{ marginLeft: 16 }}

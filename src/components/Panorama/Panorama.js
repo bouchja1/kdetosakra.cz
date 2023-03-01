@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { DEFAULT_PANORAMA_TOLERANCE, MAX_PANORAMA_TRIES, guessResultMode } from '../../constants/game';
 import MapyCzContext from '../../context/MapyCzContext';
 import useSMapResize from '../../hooks/useSMapResize';
+import { wasLatLonPanoramaUsedInCurrentGame } from '../../util/game';
 
 export const getPanoramaSceneOptions = (noMove = false) => {
     return {
@@ -50,7 +51,7 @@ const Panorama = ({
     const [findPanoramaTriesCounter, setFindPanoramaTriesCounter] = useState(0);
     const [panoramaFounded, setPanoramaFounded] = useState(true);
 
-    const { guessResultMode: guessResultModeSinglePlayer } = currentGame;
+    const { guessResultMode: guessResultModeSinglePlayer, rounds } = currentGame;
     const { guessResultMode: guessResultModeBattle } = currentBattleInfo;
 
     const showGoBackToTheBeginning = useMemo(() => {
@@ -71,10 +72,13 @@ const Panorama = ({
             const { SMap } = mapyContext;
             // kolem teto pozice chceme nejblizsi panorama
             const position = SMap.Coords.fromWGS84(originalPanoramaPlace.longitude, originalPanoramaPlace.latitude);
-            // hledame s toleranci 50m
+            // we are looking for panorama with the default tolerance as 50 meters, then increasing about 300 meters every try
             let tolerance = DEFAULT_PANORAMA_TOLERANCE;
             if (findPanoramaTriesCounter > 0) {
-                tolerance = 5000;
+                tolerance = findPanoramaTriesCounter * 300;
+                if (findPanoramaTriesCounter === MAX_PANORAMA_TRIES) {
+                    tolerance = 5000;
+                }
             }
 
             const getBestPanorama = async () => {
@@ -82,9 +86,16 @@ const Panorama = ({
                 await SMap.Pano.getBest(position, tolerance)
                     .then(
                         place => {
-                            onSetBestPanoramaPlace(place);
-                            panoramaScene.show(place, {});
-                            changePanoramaLoadingState(false);
+                            const { lat, lon } = place._data.mark;
+                            const alreadyFoundPanorama = wasLatLonPanoramaUsedInCurrentGame(lat, lon, rounds);
+                            if (alreadyFoundPanorama) {
+                                setFindPanoramaTriesCounter(findPanoramaTriesCounter + 1);
+                            } else {
+                                onSetBestPanoramaPlace(place);
+                                panoramaScene.show(place, {});
+                                changePanoramaLoadingState(false);
+                                setFindPanoramaTriesCounter(0);
+                            }
                         },
                         () => {
                             // panorama could not be shown
@@ -114,6 +125,7 @@ const Panorama = ({
         findPanoramaTriesCounter,
         onSetBestPanoramaPlace,
         bestPanoramaPlace,
+        rounds,
     ]);
 
     const isPanoramaLoading = !originalPanoramaPlace || !isGameStarted || panoramaLoading || !bestPanoramaPlace;
