@@ -162,6 +162,7 @@ const RoundResultModal = ({
                 ) : null}
                 <div className="result-modal-button">
                     <Button
+                        size="large"
                         key="submit"
                         type="primary"
                         onClick={() => {

@@ -39,7 +39,7 @@ export const SinglePlayerModal = ({ visible, onModalVisibility, onClickStartGame
             />
             <>
                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
-                    <Button type="primary" onClick={() => onClickStartGame(resultModeValue, noMoveValue)}>
+                    <Button size="large" type="primary" onClick={() => onClickStartGame(resultModeValue, noMoveValue)}>
                         Hrát
                     </Button>
                 </div>

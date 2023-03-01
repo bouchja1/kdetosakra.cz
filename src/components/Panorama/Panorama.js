@@ -78,6 +78,7 @@ const Panorama = ({
             }
 
             const getBestPanorama = async () => {
+                // hledame s toleranci 50m, zobrazujeme panoramy do roku 2019, jinak je potreba placeneho api
                 await SMap.Pano.getBest(position, tolerance)
                     .then(
                         place => {

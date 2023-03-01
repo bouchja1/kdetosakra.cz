@@ -46,7 +46,7 @@ export const Heraldry = () => {
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Button type="primary" onClick={handlePlayHeraldry}>
+                <Button size="large" type="primary" onClick={handlePlayHeraldry}>
                     Hrát
                 </Button>
             </div>

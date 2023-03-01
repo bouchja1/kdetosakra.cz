@@ -1,11 +1,12 @@
 import { Button, Slider } from 'antd';
 import React from 'react';
-import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
-import { generateRounds } from '../BattlePlayersList/BattlePlayersList';
 import { deleteNotPreparedBattlePlayers, updateBattle, updateBattlePlayer } from '../../services/firebase';
 import { getUnixTimestamp } from '../../util';
+import { generateRounds } from '../BattlePlayersList/BattlePlayersList';
 
 const BattleSettings = () => {
     const { battleId } = useParams();
@@ -38,27 +39,19 @@ const BattleSettings = () => {
                             step={15}
                         />
                         <p>
-                            Odpočet do konce hracího kola po tipu nejrychlejšího hráče:
-                            {' '}
-                            <b>
-                                {currentBattleInfo.countdown}
-                                {' '}
-                                sekund
-                            </b>
-                            .
+                            Odpočet do konce hracího kola po tipu nejrychlejšího hráče:{' '}
+                            <b>{currentBattleInfo.countdown} sekund</b>.
                         </p>
                     </>
                 )}
                 <h4>Pokročilé</h4>
                 <p>
-                    Lze začít bez čekání na potvrzení všech hráčů. Ti, co nezvolili možnost
-                    {' '}
-                    <b>Připraven</b>
-                    , budou ale
+                    Lze začít bez čekání na potvrzení všech hráčů. Ti, co nezvolili možnost <b>Připraven</b>, budou ale
                     ze hry vyhozeni.
                 </p>
                 <Button
                     type="primary"
+                    size="large"
                     onClick={async () => {
                         return updateBattlePlayer(battleId, randomUserToken, {
                             name: currentBattleInfo.myNickname,

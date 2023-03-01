@@ -49,7 +49,7 @@ export const SingleResult = () => {
                     </div>
                 </div>
                 <div className="result-container-item" style={{ marginBottom: '25px' }}>
-                    <Button type="primary">
+                    <Button size="large" type="primary">
                         <Link
                             to={{
                                 pathname: '/',

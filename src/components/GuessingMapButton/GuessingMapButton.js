@@ -28,6 +28,7 @@ const GuessingMapButton = ({
         <>
             {currentRound >= TOTAL_ROUNDS_MAX && roundGuessed ? (
                 <Button
+                    size="large"
                     type="primary"
                     onClick={() => {
                         dispatch(
@@ -63,6 +64,7 @@ const GuessingMapButton = ({
                                 }
                             }}
                             type="primary"
+                            size="large"
                         >
                             Hádej!
                         </Button>
@@ -76,6 +78,7 @@ const GuessingMapButton = ({
                                 }
                             }}
                             type="primary"
+                            size="large"
                         >
                             Další kolo
                         </Button>
