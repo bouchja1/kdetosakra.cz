@@ -103,17 +103,11 @@ export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle,
                 const myUser = findUserFromBattleByRandomTokenId(players, randomUserToken);
                 setCurrentRoundGuessedPoint(myUser[`round${currentRoundNumber}`] ?? null);
             }
-        } else if (isGameStarted && rounds.length) {
-            console.log('LALALALAL');
-            // FIXME!!! This does not work (even when 'game' reducer is persisted...
-            const currentGameRound = rounds.filter(currentGameRound => currentGameRound.round === round);
-            const { bestPanoramaPlace } = currentGameRound;
-            setBestPanoramaPlace(bestPanoramaPlace);
         } else {
             findNewPanorama();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isGameStarted, rounds]);
+    }, [isGameStarted]);
 
     useEffect(() => {
         // run after the currentRoundISee is set before (when the game is started or a page is reloaded)
