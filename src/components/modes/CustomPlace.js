@@ -93,12 +93,11 @@ export const CustomPlace = ({ multiplayerSupported }) => {
 
     return (
         <form>
-            <label htmlFor="place">Místo, které chceš zkoumat: </label>
             <input
                 name="place"
                 type="text"
                 className="ant-input text-input"
-                placeholder="hledaná fráze"
+                placeholder="Místo, které chceš zkoumat"
                 ref={suggestInput}
             />
             <label htmlFor="radius">
