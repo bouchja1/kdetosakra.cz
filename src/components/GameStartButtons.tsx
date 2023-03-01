@@ -17,6 +17,7 @@ export const GameStartButtons = ({
     return (
         <div className="game-start-button-group">
             <Button
+                size="large"
                 type="primary"
                 className="button-play"
                 onClick={() => {
@@ -26,6 +27,7 @@ export const GameStartButtons = ({
                 1 hráč
             </Button>
             <Button
+                size="large"
                 type="primary"
                 className="button-play"
                 onClick={() => {

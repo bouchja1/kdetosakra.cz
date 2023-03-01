@@ -93,7 +93,7 @@ export const Geolocation = () => {
                     Panoramata budou náhodně generována v okolí {radius} km od vaší aktuální polohy.
                 </p>
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <Button type="primary" onClick={() => handleSinglePlayerModalVisibility(true)}>
+                    <Button size="large" type="primary" onClick={() => handleSinglePlayerModalVisibility(true)}>
                         Hrát
                     </Button>
                 </div>

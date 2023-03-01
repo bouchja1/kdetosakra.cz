@@ -187,6 +187,7 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
             return (
                 <Button
                     type="primary"
+                    size="large"
                     onClick={() => {
                         dispatch(
                             setLastResult({
@@ -218,6 +219,7 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
                 <>
                     <Button
                         type="primary"
+                        size="large"
                         onClick={async () => {
                             if (generatedName !== currentBattleInfo.myNickname) {
                                 await updateBattlePlayer(battleId, randomUserToken, {
@@ -332,6 +334,7 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
                         <Button
                             disabled={gameCreatorStartButtonDisabled}
                             type="primary"
+                            size="large"
                             onClick={async () => {
                                 // if the user is a battle creator, he will generate rounds here
                                 await updateBattlePlayer(battleId, randomUserToken, {
@@ -364,6 +367,7 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
                                 currentBattleInfo.myNickname.length < 2
                             }
                             type="primary"
+                            size="large"
                             onClick={async () => {
                                 await updateBattlePlayer(battleId, randomUserToken, {
                                     name: currentBattleInfo.myNickname,

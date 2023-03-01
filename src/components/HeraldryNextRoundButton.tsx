@@ -20,7 +20,7 @@ export const HeraldryNextRoundButton = ({ onGuessNextRound, onShowResult }: Hera
     return (
         <>
             {round >= TOTAL_ROUNDS_MAX ? (
-                <Button type="primary" onClick={onShowResult}>
+                <Button size="large" type="primary" onClick={onShowResult}>
                     <Link
                         to={{
                             pathname: `/${routeNames.vysledek}`,
@@ -30,7 +30,7 @@ export const HeraldryNextRoundButton = ({ onGuessNextRound, onShowResult }: Hera
                     </Link>
                 </Button>
             ) : (
-                <Button onClick={onGuessNextRound} type="primary">
+                <Button size="large" onClick={onGuessNextRound} type="primary">
                     Další kolo
                 </Button>
             )}

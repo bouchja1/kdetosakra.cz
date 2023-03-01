@@ -53,7 +53,7 @@ const BattleLinkModal = ({ visible, handleBattleModalVisibility, mode, radius, s
                     </div>
                     {isCopied ? <span style={{ color: 'red' }}>Zkopírováno do schránky</span> : null}
                     <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
-                        <Button type="primary">
+                        <Button type="primary" size="large">
                             {/* eslint-disable-next-line react/jsx-no-target-blank */}
                             <a href={battleLink} target="_blank" rel="noreferrer">
                                 Vstoupit do hry
@@ -67,6 +67,7 @@ const BattleLinkModal = ({ visible, handleBattleModalVisibility, mode, radius, s
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <Button
                             type="primary"
+                            size="large"
                             onClick={() => {
                                 setGenerateLinkInProgress(true);
                                 // eslint-disable-next-line implicit-arrow-linebreak
