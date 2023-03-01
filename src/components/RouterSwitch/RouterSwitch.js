@@ -5,6 +5,7 @@ import { routeNames } from '../../constants/routes';
 import { Battle, CustomPlace, Geolocation, Random, RandomRegionalPlace, RegionCity } from '../../containers/games';
 import { HeraldryGame } from '../../containers/games/HeraldryGame';
 import { Help, Home, Info, NotFound, Result } from '../../pages';
+import { DonationPage } from '../../pages/DonationPage';
 
 const RouterSwitch = () => {
     return (
@@ -38,6 +39,9 @@ const RouterSwitch = () => {
             </Route>
             <Route path={`/${routeNames.info}`}>
                 <Info />
+            </Route>
+            <Route path={`/${routeNames.podpora}`}>
+                <DonationPage />
             </Route>
             <Route path={`/${routeNames.battle}/:battleId`}>
                 <Battle />

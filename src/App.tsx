@@ -7,11 +7,12 @@ import { Layout } from 'antd';
 import React from 'react';
 import ReactGA from 'react-ga4';
 import { Provider } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import Menu from './components/Menu';
 import RouterSwitch from './components/RouterSwitch';
+import { routeNames } from './constants/routes';
 import { MapyCzProvider } from './context/MapyCzContext';
 import useMapLoader from './hooks/useMapLoader';
 import useScript from './hooks/useScript';
@@ -47,7 +48,14 @@ export const App = () => {
     return (
         <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
-                <Menu isInGame={pathname !== '/' && pathname !== '/info' && pathname !== '/napoveda'} />
+                <Menu
+                    isInGame={
+                        pathname !== '/' &&
+                        pathname !== `/${routeNames.info}` &&
+                        pathname !== `/${routeNames.napoveda}` &&
+                        pathname !== `/${routeNames.podpora}`
+                    }
+                />
                 <Layout className="layout">
                     {loaded && !error && (
                         <MapyCzProvider value={mapLoader}>
@@ -58,13 +66,13 @@ export const App = () => {
                         <p>
                             Postaveno s <HeartTwoTone twoToneColor="#eb2f96" /> na{' '}
                             <a href="https://api.mapy.cz/">Mapy.cz API</a>{' '}
-                            {!pathname.includes('info') && (
+                            {!pathname.includes(routeNames.info) && !pathname.includes(routeNames.podpora) && (
                                 <>
                                     {' | '}
                                     {/* eslint-disable-next-line react/jsx-no-target-blank */}
-                                    <a href="https://www.buymeacoffee.com/mmwbwdq" target="_blank" rel="noreferrer">
+                                    <Link to={`/${routeNames.podpora}`}>
                                         Podpořte provoz a další rozvoj <CoffeeOutlined />
-                                    </a>
+                                    </Link>
                                 </>
                             )}
                         </p>
