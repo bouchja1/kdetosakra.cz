@@ -1,11 +1,25 @@
 import { getType } from 'typesafe-actions';
 
-import { setCurrentGame, setCurrentMapLayer, setTotalRoundCounter, setTotalRoundScore } from '../actions/game';
+import {
+    addPanoramaPlaceToCurrentGameRounds,
+    setCurrentGame,
+    setCurrentMapLayer,
+    setTotalRoundCounter,
+    setTotalRoundScore,
+} from '../actions/game';
 
 export const mapLayers = {
     default: 'default',
     tourist: 'tourist',
 };
+
+// rounds type
+/*
+roundId: null,
+lat:
+lon:
+bestPanoramaPlace: null,
+ */
 
 const initialState = {
     currentGame: {
@@ -18,12 +32,13 @@ const initialState = {
         guessResultMode: null,
         noMove: false,
         currentMapLayer: mapLayers.default,
+        rounds: [],
     },
 };
 
 const gameReducer = (state = initialState, action) => {
     switch (action.type) {
-        case getType(setCurrentGame):
+        case getType(setCurrentGame): {
             return {
                 ...state,
                 currentGame: {
@@ -31,6 +46,7 @@ const gameReducer = (state = initialState, action) => {
                     ...action.payload,
                 },
             };
+        }
         case getType(setTotalRoundScore):
             return {
                 ...state,
@@ -39,6 +55,17 @@ const gameReducer = (state = initialState, action) => {
                     totalScore: action.payload,
                 },
             };
+        case getType(addPanoramaPlaceToCurrentGameRounds): {
+            const currentGameRounds = state.currentGame.rounds;
+            currentGameRounds.push(action.payload);
+            return {
+                ...state,
+                currentGame: {
+                    ...state.currentGame,
+                    rounds: currentGameRounds,
+                },
+            };
+        }
         case getType(setTotalRoundCounter):
             return {
                 ...state,

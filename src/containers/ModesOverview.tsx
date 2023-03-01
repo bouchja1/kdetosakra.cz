@@ -111,6 +111,7 @@ export const ModesOverview = () => {
                                     <div className="randomPlace__modes">
                                         <label htmlFor="city">Kraj: </label>
                                         <Select
+                                            size="large"
                                             showSearch
                                             style={{ width: 200 }}
                                             placeholder="zvolit kraj"

@@ -1,7 +1,7 @@
 export const MIN_DISTANCE_FOR_POINTS_RANDOM = 250;
 export const MAX_DISTANCE_TO_GAIN_100_PERCENT_KM = 0.03;
 export const MAX_SCORE_PERCENT = 100;
-export const MAX_PANORAMA_TRIES = 5;
+export const MAX_PANORAMA_TRIES = 10;
 export const DEFAULT_PANORAMA_TOLERANCE = 50;
 export const TOTAL_ROUNDS_MAX = 5;
 export const MAX_ALLOWED_BATTLE_PLAYERS = 10;

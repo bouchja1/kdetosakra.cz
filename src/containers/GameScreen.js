@@ -1,5 +1,5 @@
 import { Tabs } from 'antd';
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMediaQuery } from 'react-responsive';
 
@@ -9,7 +9,7 @@ import RoundResultModal from '../components/RoundResultModal';
 import MapyCzContext from '../context/MapyCzContext';
 import gameModes from '../enums/modes';
 import useGetRandomUserToken from '../hooks/useGetRandomUserToken';
-import { setTotalRoundScore } from '../redux/actions/game';
+import { addPanoramaPlaceToCurrentGameRounds, setTotalRoundScore } from '../redux/actions/game';
 import { setLastPanoramaPlace } from '../redux/actions/pano';
 import {
     findUserFromBattleByRandomTokenId,
@@ -50,8 +50,8 @@ export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle,
         query: '(max-device-width: 1224px)',
     });
 
-    const { totalScore } = currentGame;
-    const { round: currentRoundNumber, rounds, myTotalScore, players } = currentBattleInfo;
+    const { totalScore, round, rounds } = currentGame;
+    const { round: currentRoundNumber, rounds: currentBattleRounds, myTotalScore, players } = currentBattleInfo;
 
     // FIXME: to load whole map layer when the map is minimized before
     useEffect(() => {
@@ -85,8 +85,8 @@ export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle,
     // Executed when the game is started or a page is re/loaded and rounds are already generated
     useEffect(() => {
         if (isBattle) {
-            if (isGameStarted && rounds.length) {
-                const currentRound = rounds[currentRoundNumber - 1];
+            if (isGameStarted && currentBattleRounds.length) {
+                const currentRound = currentBattleRounds[currentRoundNumber - 1];
                 const { city: cityToGuess, panoramaPlace: panoramaPlaceToGuess } = currentRound;
                 if (lastPanoramaPlaceShown && lastPanoramaPlaceShown.lat && lastPanoramaPlaceShown.lon) {
                     setOriginalPanoramaPlace({
@@ -103,16 +103,22 @@ export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle,
                 const myUser = findUserFromBattleByRandomTokenId(players, randomUserToken);
                 setCurrentRoundGuessedPoint(myUser[`round${currentRoundNumber}`] ?? null);
             }
+        } else if (isGameStarted && rounds.length) {
+            console.log('LALALALAL');
+            // FIXME!!! This does not work (even when 'game' reducer is persisted...
+            const currentGameRound = rounds.filter(currentGameRound => currentGameRound.round === round);
+            const { bestPanoramaPlace } = currentGameRound;
+            setBestPanoramaPlace(bestPanoramaPlace);
         } else {
             findNewPanorama();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isGameStarted]);
+    }, [isGameStarted, rounds]);
 
     useEffect(() => {
         // run after the currentRoundISee is set before (when the game is started or a page is reloaded)
-        if (rounds.length && isGameStarted && currentRoundISee) {
-            const currentRound = rounds[currentRoundNumber - 1];
+        if (currentBattleRounds.length && isGameStarted && currentRoundISee) {
+            const currentRound = currentBattleRounds[currentRoundNumber - 1];
             const { city: cityToGuess, panoramaPlace: panoramaPlaceToGuess } = currentRound;
 
             // check if a new round was started
@@ -128,7 +134,7 @@ export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle,
             setCurrentRoundGuessedPoint(myUser[`round${currentRoundNumber}`] ?? null);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isGameStarted, rounds, currentRoundNumber, players]);
+    }, [isGameStarted, currentBattleRounds, currentRoundNumber, players]);
 
     const changeNextRoundButtonVisibility = isVisible => {
         setNextRoundButtonVisible(isVisible);
@@ -159,6 +165,14 @@ export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle,
     const handleSetBestPanoramaPlace = bestPanoramaPlace => {
         const data = bestPanoramaPlace._data.mark;
         const { lat, lon } = data;
+        dispatch(
+            addPanoramaPlaceToCurrentGameRounds({
+                roundId: round,
+                lat,
+                lon,
+                bestPanoramaPlace,
+            }),
+        );
         setOriginalPanoramaPlace({
             latitude: lat,
             longitude: lon,
