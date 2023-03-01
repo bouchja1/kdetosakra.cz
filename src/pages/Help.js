@@ -26,8 +26,8 @@ export const Help = () => {
                         trefíš s přesností na metr. Výsledek se počítá podle této poslední polohy v panorama.
                     </li>
                     <li>
-                        <b>hádat polohu výchozího místa</b> - aneb jak jsi zvyklý např. ze hry GeoGuessr. Zjisti kde to
-                        sakra jsi a pak se v mapě dopátrej místa odkud jsi vyrazil. Výsledek se počítá podle pozice na
+                        <b>hádat polohu výchozího místa</b> - aneb jak jste zvyklí např. ze hry GeoGuessr. Zjisti kde to
+                        sakra jsi a pak se v mapě dopátrej místa odkud se vyráželo. Výsledek se počítá podle pozice na
                         začátku hry.
                     </li>
                 </ul>
