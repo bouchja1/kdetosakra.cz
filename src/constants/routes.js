@@ -3,6 +3,7 @@ export const routeNames = {
     info: 'info',
     vlastni: 'vlastni',
     napoveda: 'napoveda',
+    podpora: 'podpora',
     vysledek: 'vysledek',
     nahodne: 'nahodne',
     nahodneKraj: 'nahodne-kraj',

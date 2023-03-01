@@ -3,6 +3,7 @@ import { Layout } from 'antd';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import { Donate } from '../components/Donate';
 import { decryptEmail } from '../util';
 
 const { Content } = Layout;
@@ -24,6 +25,7 @@ export const Info = () => {
                     </a>
                     .
                 </p>
+                <Donate marginBottom={25} />
                 <p>
                     Hra využívá panoramata a mapové podklady aplikace{' '}
                     {/* eslint-disable-next-line react/jsx-no-target-blank */}
@@ -77,15 +79,8 @@ export const Info = () => {
                 </p>
                 <h3>Vznik</h3>
                 <p>
-                    Hru jsem naprogramoval koncem roku 2019 za účelem seznámení se s JS knihovnou React.js. Jedná se o
-                    hobby projekt, který postupně vylepšuji. V plánu jsou i další rozšíření. Pokud vám hra dělá radost,
-                    můžete podpořit její provoz
-                    <ul>
-                        <li>
-                            třeba tak, že mi koupíte kafe na webu{' '}
-                            <a href="https://www.buymeacoffee.com/mmwbwdq">Buy me a coffee</a> ☕ ✌️️
-                        </li>
-                    </ul>
+                    Hru jsem naprogramoval koncem roku 2019, když jsem se chtěl blíž seznámit s JavaScript knihovnou
+                    React.
                 </p>
                 <p>
                     Máte dotaz nebo přání? Tak mi <a href={decryptEmail('amFuLmJvdWNobmVyQGdtYWlsLmNvbQ==')}>napište</a>{' '}

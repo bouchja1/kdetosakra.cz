@@ -70,12 +70,12 @@ const Menu = ({ isInGame = false }) => {
                 </div>
             </Link>
             <div className={isBattle || isInGame ? 'main-menu--battle' : 'main-menu'}>
-                <Link to="/info">
+                <Link to={`/${routeNames.info}`}>
                     <InfoCircleOutlined style={{ color: 'rgb(97, 95, 95)', marginRight: '10px' }} />
                     <div className="menu-item">O projektu</div>
                 </Link>
                 <div className="menu-item menu-separator">|</div>
-                <Link to="/napoveda">
+                <Link to={`/${routeNames.napoveda}`}>
                     <QuestionCircleOutlined style={{ color: 'rgb(97, 95, 95)', marginRight: '10px' }} />
                     <div className="menu-item">Nápověda</div>
                 </Link>
@@ -83,9 +83,9 @@ const Menu = ({ isInGame = false }) => {
                     <>
                         <div className="menu-item menu-separator">|</div>
                         <CoffeeOutlined style={{ color: 'rgb(97, 95, 95)', marginRight: '10px' }} />
-                        <a href="https://www.buymeacoffee.com/mmwbwdq" target="_blank" rel="noreferrer">
+                        <Link to={`/${routeNames.podpora}`}>
                             <div className="menu-item">Podpořte provoz a další rozvoj</div>
-                        </a>
+                        </Link>
                     </>
                 )}
                 <div className="menu-item menu-separator">|</div>
