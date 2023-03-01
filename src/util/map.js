@@ -21,7 +21,7 @@ export const markerPanoramaOptions = {
     anchor: { left: 10, bottom: 15 },
 };
 
-export const initCityMapInstance = (SMap, mapRefValue, latCenter, lonCenter, radius, city) => {
+export const initCityMapInstance = (SMap, mapRefValue, latCenter, lonCenter, radius, city, mode) => {
     // not random mode
     let defaultModeZoom = DEFAULT_MODE_ZOOM - 1;
     const center = SMap.Coords.fromWGS84(lonCenter, latCenter);
@@ -35,6 +35,11 @@ export const initCityMapInstance = (SMap, mapRefValue, latCenter, lonCenter, rad
             defaultModeZoom -= city.cityRange;
         }
     }
+
+    if (mode === gameModes.randomRegion) {
+        defaultModeZoom = 8;
+    }
+
     mapInstance.setCenterZoom(
         SMap.Coords.fromWGS84(city.coordinates.longitude, city.coordinates.latitude),
         defaultModeZoom,
@@ -88,7 +93,13 @@ export const drawSingleRoundResultLayerToMap = (SMap, mapInstance, layerWithMark
 };
 
 export const getMapInstanceByGameMode = (SMap, mode, city, radius, mapRefValue) => {
-    if ((mode === gameModes.geolocation || mode === gameModes.city || mode === gameModes.custom) && city) {
+    if (
+        (mode === gameModes.geolocation ||
+            mode === gameModes.city ||
+            mode === gameModes.custom ||
+            mode === gameModes.randomRegion) &&
+        city
+    ) {
         return initCityMapInstance(
             SMap,
             mapRefValue,
@@ -96,6 +107,7 @@ export const getMapInstanceByGameMode = (SMap, mode, city, radius, mapRefValue) 
             city.coordinates.longitude,
             radius,
             city,
+            mode,
         );
     }
     const center = SMap.Coords.fromWGS84(15.202828, 50.027429);
