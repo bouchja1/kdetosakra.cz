@@ -86,7 +86,7 @@ export const ModesOverview = () => {
                 content: (
                     <>
                         <div className="randomPlace__modes">
-                            <Radio.Group value={randomMode} onChange={handleRandomModeChange}>
+                            <Radio.Group value={randomMode} onChange={handleRandomModeChange} buttonStyle="solid">
                                 <Radio.Button value="cr">celá ČR</Radio.Button>
                                 <Radio.Button value="nut">kraj</Radio.Button>
                             </Radio.Group>
