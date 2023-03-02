@@ -66,7 +66,7 @@ const GuessingMapButton = ({
                             type="primary"
                             size="large"
                         >
-                            Umísti svůj tip na mapu!
+                            <>{disabled ? 'Umísti svůj tip na mapu!' : 'Hádat!'}</>
                         </Button>
                     ) : null}
                     {!isBattle && nextRoundButtonVisible ? (
