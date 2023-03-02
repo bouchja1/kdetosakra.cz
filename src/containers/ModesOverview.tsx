@@ -37,7 +37,7 @@ const SectionModesContainer = styled.div`
     background: ${componentBackground};
     box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.1);
     border-radius: ${borderRadiusBase};
-    padding: 20px 0 15px 0;
+    padding: 15px 0 15px 0;
 `;
 
 const SectionModeCards = styled.div`

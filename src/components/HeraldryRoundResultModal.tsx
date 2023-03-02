@@ -6,6 +6,7 @@ import { TOTAL_ROUNDS_MAX } from '../constants/game';
 import { findMunicipalityMetadata } from '../services/wikipedia.mjs';
 import { CzechCity } from '../types/places';
 import { getHeraldryDescriptionForCity } from '../util/heraldry';
+import { ConfettiAnimation } from './ConfettiAnimation';
 import { HeraldryNextRoundButton } from './HeraldryNextRoundButton';
 
 interface HeraldryRoundResultModalProps {
@@ -86,6 +87,7 @@ export const HeraldryRoundResultModal = ({
             }}
             closable={false}
         >
+            {guessSuccessful && <ConfettiAnimation />}
             <div className="result-modal-container">
                 {currentRound > 0 ? (
                     <div className="result-modal-container-item">
