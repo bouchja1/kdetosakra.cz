@@ -1,3 +1,4 @@
+import { useLocalStorage, writeStorage } from '@rehooks/local-storage';
 import { Tabs } from 'antd';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,6 +25,7 @@ const { TabPane } = Tabs;
 
 export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle, noMove = false }) => {
     const dispatch = useDispatch();
+    const [smapDimensionLocalStorage] = useLocalStorage('smapDimension');
     const randomUserToken = useGetRandomUserToken();
     const mapyContext = useContext(MapyCzContext);
     const refPanoramaView = useRef();
@@ -31,6 +33,7 @@ export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle,
     const lastPanoramaPlaceShown = useSelector(state => state.pano);
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
 
+    const [mapDimension, setMapDimension] = useState(smapDimensionLocalStorage || 'normal');
     const [roundScore, setRoundScore] = useState(0);
     const [activeTabKey, setActiveTabKey] = useState('1');
     const [currentRoundISee, setCurrentRoundISee] = useState();
@@ -50,13 +53,27 @@ export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle,
         query: '(max-device-width: 1224px)',
     });
 
-    const { totalScore, round, rounds } = currentGame;
+    const { totalScore, round } = currentGame;
     const { round: currentRoundNumber, rounds: currentBattleRounds, myTotalScore, players } = currentBattleInfo;
 
     // FIXME: to load whole map layer when the map is minimized before
     useEffect(() => {
         window.dispatchEvent(new Event('resize'));
     }, [activeTabKey]);
+
+    useEffect(() => {
+        let roundNumber;
+        if (isBattle) {
+            roundNumber = currentRoundNumber;
+        } else {
+            roundNumber = round;
+        }
+        if (!roundNumber || roundNumber === 1) {
+            setMapDimension('normal');
+        } else {
+            setMapDimension('min');
+        }
+    }, [isBattle, currentRoundNumber, round]);
 
     useEffect(() => {
         if (mapyContext.loadedMapApi && isGameStarted) {
@@ -152,6 +169,9 @@ export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle,
         setActiveTabKey('1');
     };
 
+    /**
+     * Triggers re-render to find a new panorama
+     */
     const handleClearBestPanoramaPlace = () => {
         setBestPanoramaPlace(null);
     };
@@ -236,6 +256,7 @@ export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle,
                             currentCity={currentCity}
                             nextRoundButtonVisible={nextRoundButtonVisible}
                             changeNextRoundButtonVisibility={changeNextRoundButtonVisibility}
+                            mapDimension={mapDimension}
                         />
                     </TabPane>
                 </Tabs>
@@ -270,6 +291,8 @@ export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle,
                         currentCity={currentCity}
                         nextRoundButtonVisible={nextRoundButtonVisible}
                         changeNextRoundButtonVisibility={changeNextRoundButtonVisibility}
+                        mapDimension={mapDimension}
+                        onSetMapDimension={dimension => setMapDimension(dimension)}
                     />
                 </>
             )}

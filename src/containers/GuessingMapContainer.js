@@ -1,4 +1,4 @@
-import { useLocalStorage, writeStorage } from '@rehooks/local-storage';
+import { writeStorage } from '@rehooks/local-storage';
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -38,17 +38,17 @@ export const GuessingMapContainer = ({
     currentCity,
     nextRoundButtonVisible,
     changeNextRoundButtonVisibility,
+    mapDimension,
+    onSetMapDimension,
 }) => {
     const dispatch = useDispatch();
     const mapyContext = useContext(MapyCzContext);
-    const [smapDimensionLocalStorage] = useLocalStorage('smapDimension');
     const randomUserToken = useGetRandomUserToken();
     const { width, height } = useSMapResize();
     const [showGuessLimitModal, setShowGuessLimitModal] = useState(false);
     const [guessButtonDisabled, setGuessButtonDisabled] = useState(true);
     const [currentRoundBattle, setCurrentRoundBattle] = useState();
     const [mapStyle, setMapStyle] = useState();
-    const [mapDimension, setMapDimension] = useState(smapDimensionLocalStorage || 'normal');
     const currentGame = useSelector(state => state.game.currentGame);
     const currentBattleInfo = useSelector(state => state.battle.currentBattle);
     const [roundGuessed, setRoundGuessed] = useState(false);
@@ -81,7 +81,7 @@ export const GuessingMapContainer = ({
         } else {
             setMapStyle(null);
         }
-    }, [width, height]);
+    }, [width, height, mapDimension]);
 
     /*
     When the round is changed
@@ -373,7 +373,7 @@ export const GuessingMapContainer = ({
                         src={mapDimension === 'max' ? minimizeMapShadowDisabled : minimizeMapShadow}
                         onClick={() => {
                             setMapStyle({ height: height / 1.2, width: width / 1.5 });
-                            setMapDimension('max');
+                            onSetMapDimension('max');
                             writeStorage('smapDimension', 'max');
                             window.dispatchEvent(new Event('resize'));
                         }}
@@ -386,10 +386,10 @@ export const GuessingMapContainer = ({
                         onClick={() => {
                             if (mapDimension === 'max') {
                                 setMapStyle({ height: height / 2, width: width / 3 });
-                                setMapDimension('normal');
+                                onSetMapDimension('normal');
                                 writeStorage('smapDimension', 'normal');
                             } else if (mapDimension === 'normal') {
-                                setMapDimension('min');
+                                onSetMapDimension('min');
                                 writeStorage('smapDimension', 'min');
                             }
                             window.dispatchEvent(new Event('resize'));
@@ -429,7 +429,7 @@ export const GuessingMapContainer = ({
                         className="smap-collapsible-min"
                         src={maximizeMapShadow}
                         onClick={() => {
-                            setMapDimension('normal');
+                            onSetMapDimension('normal');
                             writeStorage('smapDimension', 'normal');
                             window.dispatchEvent(new Event('resize'));
                         }}
