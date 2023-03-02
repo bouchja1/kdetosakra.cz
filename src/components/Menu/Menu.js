@@ -91,7 +91,7 @@ const Menu = ({ isInGame = false }) => {
                 )}
                 <div className="menu-item menu-separator">|</div>
                 {/* eslint-disable-next-line react/jsx-no-target-blank */}
-                <a title="Discord" href="https://discord.com/invite/hV9FuruP" target="_blank" rel="noreferrer">
+                <a title="Discord" href="https://discord.gg/b9h3xdP6gG" target="_blank" rel="noreferrer">
                     <img alt="Discord" src={discordIcon} height={30} />
                 </a>
                 <div className="menu-item menu-separator">|</div>
