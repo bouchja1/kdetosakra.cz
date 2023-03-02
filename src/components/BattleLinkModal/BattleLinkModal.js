@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Link } from 'react-router-dom';
 
+import discordIcon from '../../assets/images/discord.png';
 import { MAX_ALLOWED_BATTLE_PLAYERS, guessResultMode } from '../../constants/game';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
 import { createBattle } from '../../services/firebase';
@@ -104,6 +105,12 @@ const BattleLinkModal = ({ visible, handleBattleModalVisibility, mode, radius, s
                         nápovědě
                     </Link>
                     .
+                </p>
+                <p>
+                    Žádný spoluhráč po ruce? Domluv se{' '}
+                    <a title="Discord" href="https://discord.gg/b9h3xdP6gG" target="_blank" rel="noreferrer">
+                        na Discordu! <img alt="Discord" src={discordIcon} height={30} />
+                    </a>
                 </p>
             </div>
         </Modal>
