@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 
+import discordIcon from '../../assets/images/discord.png';
 import smilingLogo from '../../assets/images/kdetosakraSmile.svg';
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
 import { routeNames } from '../../constants/routes';
@@ -90,7 +91,17 @@ const Menu = ({ isInGame = false }) => {
                 )}
                 <div className="menu-item menu-separator">|</div>
                 {/* eslint-disable-next-line react/jsx-no-target-blank */}
-                <a href="https://www.facebook.com/kdetosakra.cz" target="_blank" rel="noreferrer">
+                <a title="Discord" href="https://discord.com/invite/hV9FuruP" target="_blank" rel="noreferrer">
+                    <img alt="Discord" src={discordIcon} height={30} />
+                </a>
+                <div className="menu-item menu-separator">|</div>
+                {/* eslint-disable-next-line react/jsx-no-target-blank */}
+                <a
+                    title="Facebook stránka"
+                    href="https://www.facebook.com/kdetosakra.cz"
+                    target="_blank"
+                    rel="noreferrer"
+                >
                     <FacebookFilled style={{ color: 'rgb(66, 103, 178)', fontSize: '25px' }} />
                 </a>
             </div>
