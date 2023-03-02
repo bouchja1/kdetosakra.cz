@@ -6,6 +6,7 @@ import { TOTAL_ROUNDS_MAX } from '../../constants/game';
 import { findMunicipalityMetadata } from '../../services/wikipedia.mjs';
 import { roundToTwoDecimal } from '../../util';
 import { getHeraldryDescriptionForCity } from '../../util/heraldry';
+import { ConfettiAnimation } from '../ConfettiAnimation';
 
 const RoundResultModal = ({
     closeModal,
@@ -71,6 +72,7 @@ const RoundResultModal = ({
 
     return (
         <Modal open={visible} onOk={closeModal} onCancel={closeModal} footer={null} centered destroyOnClose>
+            {roundScore === 100 && <ConfettiAnimation />}
             <div className="result-modal-container">
                 {currentRound > 0 ? (
                     <div className="result-modal-container-item">
