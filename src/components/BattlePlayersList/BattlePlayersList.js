@@ -357,7 +357,7 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
                                     });
                             }}
                         >
-                            Začít hru
+                            Start!
                         </Button>
                     ) : (
                         <Button
@@ -385,9 +385,11 @@ const BattlePlayersList = ({ myPlayer, battleCanBeStarted }) => {
                     <p style={{ marginTop: '10px' }}>
                         {isBattleCreator ? (
                             <>
-                                {gameCreatorStartButtonDisabled
-                                    ? 'Hru můžeš začít, až budou všichni ostatní hráči připraveni.'
-                                    : ''}
+                                {gameCreatorStartButtonDisabled ? (
+                                    <b>⚠️ Hru lze odstartovat, až budou všichni ostatní hráči připraveni.</b>
+                                ) : (
+                                    ''
+                                )}
                             </>
                         ) : (
                             <>

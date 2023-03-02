@@ -44,7 +44,6 @@ const BattleSettings = () => {
                         </p>
                     </>
                 )}
-                <h4>Pokročilé</h4>
                 <p>
                     Lze začít bez čekání na potvrzení všech hráčů. Ti, co nezvolili možnost <b>Připraven</b>, budou ale
                     ze hry vyhozeni.
