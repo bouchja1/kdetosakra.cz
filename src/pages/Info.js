@@ -35,7 +35,7 @@ export const Info = () => {
                     . Hratelnost je takřka neomezená a jedinou hranicí je hranice České republiky 🇨🇿
                 </p>
                 <h3>Jak hrát?</h3>
-                <p>Hra nabízí pět různých herních módů:</p>
+                <p>Hra nabízí pět různých herních módů s panorámaty:</p>
                 <ol>
                     <li>Krajská města ČR</li>
                     <li>Náhodné místo (celá ČR)</li>
@@ -44,7 +44,7 @@ export const Info = () => {
                     <li>Podle mojí geolokace</li>
                 </ol>
                 <p>
-                    První tři je možné hrát i v módu <i>multiplayer</i> (ve stejný čas hraje více hráčů proti sobě).
+                    První čtyři je možné hrát i v módu <i>multiplayer</i> (ve stejný čas hraje více hráčů proti sobě).
                 </p>
                 <p>
                     Cílem hry je vypátrat v pěti kolech polohu pěti různých míst v České republice. Pátrání začínáš v

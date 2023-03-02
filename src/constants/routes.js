@@ -11,3 +11,12 @@ export const routeNames = {
     heraldika: 'heraldika',
     geolokace: 'geolokace',
 };
+
+export const isInGameRoute = pathname => {
+    return (
+        pathname !== '/' &&
+        pathname !== `/${routeNames.info}` &&
+        pathname !== `/${routeNames.napoveda}` &&
+        pathname !== `/${routeNames.podpora}`
+    );
+};

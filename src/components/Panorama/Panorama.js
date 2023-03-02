@@ -143,7 +143,7 @@ const Panorama = ({
             size="large"
         >
             {/* -40 padding of layout */}
-            <div className="panorama-container" style={{ height: height - 130, width: width - 40 }}>
+            <div className="panorama-container" style={{ height: height - 75, width }}>
                 {!panoramaFounded ? (
                     <p>V okruhu 5 km od vašeho místa nebylo nalezeno žádné panorama.</p>
                 ) : (
