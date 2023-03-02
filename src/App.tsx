@@ -4,6 +4,7 @@ import { CoffeeOutlined, HeartTwoTone } from '@ant-design/icons';
 import * as Sentry from '@sentry/react';
 import { BrowserTracing } from '@sentry/tracing';
 import { Layout } from 'antd';
+import classNames from 'classnames';
 import React from 'react';
 import ReactGA from 'react-ga4';
 import { Provider } from 'react-redux';
@@ -12,7 +13,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 import Menu from './components/Menu';
 import RouterSwitch from './components/RouterSwitch';
-import { routeNames } from './constants/routes';
+import { isInGameRoute, routeNames } from './constants/routes';
 import { MapyCzProvider } from './context/MapyCzContext';
 import useMapLoader from './hooks/useMapLoader';
 import useScript from './hooks/useScript';
@@ -42,21 +43,15 @@ export const App = () => {
     const [loaded, error] = useScript('https://api.mapy.cz/loader.js');
     const [mapLoader] = useMapLoader(loaded);
     const location = useLocation();
-
     const { pathname } = location;
+
+    const isInGame = isInGameRoute(pathname);
 
     return (
         <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
-                <Menu
-                    isInGame={
-                        pathname !== '/' &&
-                        pathname !== `/${routeNames.info}` &&
-                        pathname !== `/${routeNames.napoveda}` &&
-                        pathname !== `/${routeNames.podpora}`
-                    }
-                />
-                <Layout className="layout">
+                <Menu isInGame={isInGame} />
+                <Layout className={classNames(!isInGame && 'layout')}>
                     {loaded && !error && (
                         <MapyCzProvider value={mapLoader}>
                             <RouterSwitch />

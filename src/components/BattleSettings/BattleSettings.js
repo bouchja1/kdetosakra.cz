@@ -77,7 +77,7 @@ const BattleSettings = () => {
                             });
                     }}
                 >
-                    Začít hru ihned
+                    Začít a nečekat na ostatní
                 </Button>
             </div>
         );
