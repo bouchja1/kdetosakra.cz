@@ -86,6 +86,11 @@ export const Info = () => {
                     Máte dotaz nebo přání? Tak mi <a href={decryptEmail('amFuLmJvdWNobmVyQGdtYWlsLmNvbQ==')}>napište</a>{' '}
                     ✉️.
                 </p>
+                <p>
+                    <a href="https://www.linkedin.com/in/janbouchner/" target="_blank">
+                        Jan Bouchner
+                    </a>
+                </p>
             </div>
         </Content>
     );
