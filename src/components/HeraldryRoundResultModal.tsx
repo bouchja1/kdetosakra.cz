@@ -1,4 +1,4 @@
-import { Modal, Result, Spin } from 'antd';
+import { Modal, Spin } from 'antd';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
@@ -94,13 +94,7 @@ export const HeraldryRoundResultModal = ({
                         <h2>
                             Kolo: {currentRound}/{TOTAL_ROUNDS_MAX}
                         </h2>
-                        <Result
-                            status={guessSuccessful ? 'success' : 'error'}
-                            title={guessSuccessful ? 'Správně!' : `${guessedCity.obec} není správná odpověď :(`}
-                            style={{
-                                padding: '10px 0 10px 0',
-                            }}
-                        />
+                        <h3>{guessSuccessful ? 'Správně!' : `${guessedCity.obec} není správná odpověď :(`}</h3>
                     </div>
                 ) : null}
                 <div className="result-modal-container-more-info">
