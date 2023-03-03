@@ -71,9 +71,8 @@ export const ModesOverview = () => {
                 content: (
                     <>
                         <p>
-                            Krajská města už máš prochozená a náhodné toulky po ČR tě nebaví? Tak přesně tohle je výzva
-                            pro tebe. Své město, obec či jiné zajímavé místo, které chceš více prozkoumat, si najdi
-                            níže. Šťastnou cestu!
+                            Zahraj si tam, kde to dobře znáš. Vyhledej své město, obec či jiné zajímavé místo, jehož
+                            okolí chceš blíže prozkoumat, a vyraž na cestu!
                         </p>
                         <CustomPlace multiplayerSupported={isMultiplayerSupported} />
                     </>
@@ -94,10 +93,9 @@ export const ModesOverview = () => {
                         {randomMode === 'cr' ? (
                             <>
                                 <p>
-                                    Známá města a místa pro tebe nejsou dostatečnou výzvou? Můžeš se přenést do některé
-                                    z <a href="https://github.com/33bcdd/souradnice-mest">6259 obcí ČR</a> a jejího
-                                    bezprostředního okolí. V každém kole na tebe čeká jiné náhodné místo v naší
-                                    republice. Tahle výzva je (nejen) pro experty, co mají ČR projetou křížem krážem.
+                                    Nech se přenést do jedné z 6259 obcí ČR a jejího blízkého okolí. V každém kole na
+                                    tebe čeká jiné náhodné místo. Tahle hra je pro experty, co mají ČR projetou křížem
+                                    krážem.
                                 </p>
                                 <Random multiplayerSupported={isMultiplayerSupported} />
                             </>
@@ -105,8 +103,8 @@ export const ModesOverview = () => {
                             <>
                                 <div style={{ marginBottom: '10px' }}>
                                     <p>
-                                        Pokud je ti krajské město malé, ale zároveň se nechceš tak úplně ztratit, zvol
-                                        si jeden ze <b>14 krajů</b> v Česku a zase máš co objevovat.
+                                        Krajské město už je ti malé, ale zároveň nechceš tak úplně bloudit? Vyber si
+                                        jeden ze <b>14 krajů</b> v Česku a zase máš co objevovat.
                                     </p>
                                     <div className="randomPlace__modes">
                                         <label htmlFor="city">Kraj: </label>
@@ -143,9 +141,8 @@ export const ModesOverview = () => {
                 content: (
                     <>
                         <p>
-                            Bydlíš v některém z krajských sídel a znáš ho jako své boty? Tak se ukaž. Nebo se prostě jen
-                            tak projdi po místech, která zase až tak dobře neznáš. Třeba objevíš zákoutí, kam se budeš
-                            chtít podívat i naživo.
+                            Virtuální procházka po jednom z krajských sídel. Vydej se na poznávačku krajských měst.
+                            Třeba objevíš zákoutí, kam se budeš chtít podívat i naživo.
                         </p>
                         <RegionCity multiplayerSupported={isMultiplayerSupported} />
                     </>
@@ -158,8 +155,8 @@ export const ModesOverview = () => {
                 content: (
                     <>
                         <p>
-                            Nech zaměřit polohu svého zařízení a ukaž, kdo je tady pánem a znalcem svého bezprostředního
-                            okolí!
+                            Zaměřit polohu svého zařízení a ukázat, kdo je pánem a znalcem svého bezprostředního okolí.
+                            To zní jako plán!
                         </p>
                         <Geolocation />
                     </>
@@ -177,7 +174,7 @@ export const ModesOverview = () => {
                 content: (
                     <>
                         <p>
-                            Ověř si své znalosti heraldiky a uhádni, který erb patří kterému městu nebo obci v Česku.
+                            Prověř své znalosti heraldiky a uhádni, který erb patří kterému městu nebo obci v Česku.
                             Zábavná výzva pro všechny, kteří se zajímají o historii a symboliku českých měst.
                         </p>
                         <Heraldry />
@@ -191,8 +188,8 @@ export const ModesOverview = () => {
                 content: (
                     <>
                         <p>
-                            Dneska se ti nechce nikam klikat? Tak se můžeš jen koukat... a hraní nechat na druhých.
-                            Komunita skvělých fanoušků natáčí, komentuje a sdílí svá videa z toulání se po mapě na{' '}
+                            Dneska se ti nechce nikam klikat? Tak nech hraní na druhých a jen se koukej! Komunita
+                            skvělých fanoušků natáčí, vtipně komentuje a sdílí svá videa z toulání se po mapě na{' '}
                             <b>YouTube</b>.
                         </p>
                         <h3>YouTube kanály</h3>
