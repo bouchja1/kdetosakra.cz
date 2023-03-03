@@ -3,11 +3,13 @@ import React, { useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
+import appleAndroid from '../assets/images/apple-android.png';
 import geolocationCover from '../assets/images/city/geolocation.jpg';
 import heraldryCover from '../assets/images/city/heraldry.png';
 import pragueCover from '../assets/images/city/prague.jpg';
 import randomCover from '../assets/images/city/random.jpg';
 import suggestedCover from '../assets/images/city/suggested.jpg';
+import uzasnaMista from '../assets/images/uzasna-mista.png';
 import youtubeCover from '../assets/images/youtube.jpg';
 import { GameModeRibbonWrapper } from '../components/GameModeRibbonWrapper';
 import { CustomPlace, Geolocation, Random, RandomPlaceInRegion, RegionCity } from '../components/modes';
@@ -172,6 +174,35 @@ export const ModesOverview = () => {
 
     const otherModesArray: GameModes[] = useMemo(() => {
         return [
+            {
+                coverImgAlt: 'Herní mód - Úžasná místa v Česku',
+                coverImgSrc: uzasnaMista,
+                title: 'Úžasná místa v Česku',
+                content: (
+                    <>
+                        <p>
+                            Hledáte tipy na výlety? Web{' '}
+                            <a href="https://www.uzasnamista.cz/">https://www.uzasnamista.cz/</a> má pro vás více než{' '}
+                            <b>1000 tipů</b> na neokoukaná místa v Česku.
+                        </p>
+                        <p>
+                            Stáhněte si zdarma turistickou aplikaci <b>Úžasná místa</b>.
+                        </p>
+                        <div
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginBottom: '15px',
+                            }}
+                        >
+                            <img src={appleAndroid} height={100} />
+                        </div>
+                        <p>A určitě si zahrajte poznávačku dle fotek Úžasných míst!</p>
+                        <Heraldry />
+                    </>
+                ),
+            },
             {
                 coverImgAlt: 'Herní mód - Heraldika',
                 coverImgSrc: heraldryCover,
