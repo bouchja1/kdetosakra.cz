@@ -38,6 +38,7 @@ export const AmazingPlacesRoundResultModal = ({
 
     return (
         <Modal open={visible} onOk={closeModal} onCancel={closeModal} footer={null} centered destroyOnClose>
+            {roundScore === 100 && <ConfettiAnimation />}
             <div className="result-modal-container">
                 {currentRound > 0 ? (
                     <div className="result-modal-container-item">

@@ -261,6 +261,7 @@ export const GuessingMapContainer = ({
                             roundGuessed={roundGuessed}
                             refVectorLayerSMapValue={refVectorLayerSMapValue}
                             saveCurrentClickedMapPointCoordinates={handleSaveCurrentClickedMapPointCoordinates}
+                            isBattle={isBattle}
                         />
                         <>
                             {guessingMapButtonVisible ? (
