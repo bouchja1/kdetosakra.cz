@@ -49,7 +49,11 @@ const GuessingMap = ({
                     currentRoundGuessedPoint={currentRoundGuessedPoint}
                 />
             ) : (
-                <ResultSMapWrapper currentRoundGuessedPoint={currentRoundGuessedPoint} isBattle={isBattle} />
+                <>
+                    {currentRoundGuessedPoint ? (
+                        <ResultSMapWrapper currentRoundGuessedPoint={currentRoundGuessedPoint} isBattle={isBattle} />
+                    ) : null}
+                </>
             )}
         </>
     );

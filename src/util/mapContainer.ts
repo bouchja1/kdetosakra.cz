@@ -7,22 +7,27 @@ import {
 import { MARKER_PLACE_ICON_KDETOSAKRA } from '../constants/icons';
 import gameModes from '../enums/modes';
 
-interface MarkLatLon {
+export interface MarkLatLon {
     lat: number;
     lon: number;
 }
 
-const getDistance = (panoramaCoordinates: MarkLatLon) => {
+interface CurrentMapPointMarkLatLon {
+    mapLat: number;
+    mapLon: number;
+}
+
+const getDistance = (estimatedPlaceCoordinates: MarkLatLon, currentMapPointCoordinates: CurrentMapPointMarkLatLon) => {
     if (
-        panoramaCoordinates.lat === currentMapPointCoordinates.mapLat &&
-        panoramaCoordinates.lon === currentMapPointCoordinates.mapLon
+        estimatedPlaceCoordinates.lat === currentMapPointCoordinates.mapLat &&
+        estimatedPlaceCoordinates.lon === currentMapPointCoordinates.mapLon
     ) {
         return 0;
     }
 
-    const radlat1 = (Math.PI * panoramaCoordinates.lat) / 180;
+    const radlat1 = (Math.PI * estimatedPlaceCoordinates.lat) / 180;
     const radlat2 = (Math.PI * currentMapPointCoordinates.mapLat) / 180;
-    const theta = panoramaCoordinates.lon - currentMapPointCoordinates.mapLon;
+    const theta = estimatedPlaceCoordinates.lon - currentMapPointCoordinates.mapLon;
     const radtheta = (Math.PI * theta) / 180;
     let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
     if (dist > 1) {
@@ -72,8 +77,10 @@ export const calculateDistanceForPanorama = (
     isBattle: boolean,
     gameMode: string,
     saveRoundResult: (score: number, distance: number) => void,
+    currentMapPointCoordinates: CurrentMapPointMarkLatLon,
     panoramaSceneCoordinates: MarkLatLon,
     panoramaPlaceCoordinates: MarkLatLon,
+    radius: number,
     currentGame: any,
     currentBattleInfo: any,
 ) => {
@@ -97,8 +104,8 @@ export const calculateDistanceForPanorama = (
         }
     }
 
-    const distance = getDistance(panoramaSceneCoordinates);
-    const score = calculateScore(distance, gameMode, saveRoundResult);
+    const distance = getDistance(panoramaSceneCoordinates, currentMapPointCoordinates);
+    const score = calculateScore(distance, gameMode, saveRoundResult, radius);
     return {
         panoramaCoordinates: panoramaSceneCoordinates,
         distance,
@@ -109,9 +116,10 @@ export const calculateDistanceForPanorama = (
 export const calculateDistanceForPlace = (
     gameMode: string,
     saveRoundResult: (score: number, distance: number) => void,
+    currentMapPointCoordinates: CurrentMapPointMarkLatLon,
     placeCoordinates: MarkLatLon,
 ) => {
-    const distance = getDistance(placeCoordinates);
+    const distance = getDistance(placeCoordinates, currentMapPointCoordinates);
     const score = calculateScore(distance, gameMode, saveRoundResult);
     return {
         distance,
@@ -142,4 +150,8 @@ export const drawDistanceToTheMap = (
         'Panorama point',
         markerPanoramaOptions,
     );
+    return {
+        path,
+        markerPanorama,
+    };
 };

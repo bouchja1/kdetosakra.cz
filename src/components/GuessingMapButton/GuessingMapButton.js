@@ -12,7 +12,7 @@ const GuessingMapButton = ({
     refreshMap,
     isBattle = false,
     guessSingleplayerRound,
-    guessBattleRound,
+    guessBattleRound = null,
     allGuessedPoints,
     round,
     totalScore,
@@ -57,7 +57,7 @@ const GuessingMapButton = ({
                         <Button
                             disabled={disabled}
                             onClick={async () => {
-                                if (isBattle) {
+                                if (isBattle && guessBattleRound) {
                                     await guessBattleRound();
                                 } else {
                                     await guessSingleplayerRound();

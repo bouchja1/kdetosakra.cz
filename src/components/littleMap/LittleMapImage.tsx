@@ -1,28 +1,20 @@
 import { writeStorage } from '@rehooks/local-storage';
-import React, { CSSProperties, ReactElement, useEffect, useState } from 'react';
+import React, { CSSProperties, ReactElement, useEffect, useRef, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 
 import maximizeMapShadow from '../../assets/images/map/maximizeMapShadow.png';
 import minimizeMapShadow from '../../assets/images/map/minimizeMapShadowFull.png';
 import minimizeMapShadowDisabled from '../../assets/images/map/minimizeMapShadowFullDisabled.png';
 import useSMapResize from '../../hooks/useSMapResize';
-import GuessingMap from '../GuessingMap';
 
 interface LittleMapImageProps {
     mapDimension: 'min' | 'max' | 'normal';
-    GuessingMapButton: ReactElement;
+    GuessingMap: ReactElement;
     visible: boolean;
     onSetMapDimension: (dimension: 'min' | 'max' | 'normal') => void;
-    onSaveCurrentClickedMapPointCoordinates: (coordinates: any) => void;
 }
 
-export const LittleMapImage = ({
-    mapDimension,
-    GuessingMapButton,
-    visible,
-    onSaveCurrentClickedMapPointCoordinates,
-    onSetMapDimension,
-}: LittleMapImageProps) => {
+export const LittleMapImage = ({ mapDimension, GuessingMap, visible, onSetMapDimension }: LittleMapImageProps) => {
     const [mapStyle, setMapStyle] = useState<CSSProperties | null>();
     const { width, height } = useSMapResize();
 
@@ -56,7 +48,6 @@ export const LittleMapImage = ({
                             window.dispatchEvent(new Event('resize'));
                         }}
                     />
-                    ;
                     <img
                         alt="Normální velikost mapy"
                         className="smap-collapsible-max"
@@ -73,7 +64,6 @@ export const LittleMapImage = ({
                             window.dispatchEvent(new Event('resize'));
                         }}
                     />
-                    ;
                 </>
             );
         }
@@ -112,14 +102,7 @@ export const LittleMapImage = ({
                     }}
                 >
                     {getLittleMapResizers('maxAndNormal')}
-                    <GuessingMap
-                        currentRoundGuessedPoint={currentRoundGuessedPoint}
-                        refLayerValue={refLayerValue}
-                        roundGuessed={roundGuessed}
-                        refVectorLayerSMapValue={refVectorLayerSMapValue}
-                        saveCurrentClickedMapPointCoordinates={onSaveCurrentClickedMapPointCoordinates}
-                    />
-                    {GuessingMapButton}
+                    {GuessingMap}
                 </div>
             )}
             {mapDimension === 'min' && (

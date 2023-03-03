@@ -5,8 +5,3 @@ export interface HeraldryResultT {
     city: CzechCity;
     cityWhichWasGuessed: CzechCity;
 }
-
-export interface AmazingPlaceResultT {
-    guessed: boolean;
-    amazingPlace: AmazingPlace;
-}

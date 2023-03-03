@@ -10,12 +10,9 @@ import { AmazingPlacesRoundResultModal } from '../../components/AmazingPlacesRou
 import gameModes from '../../enums/modes';
 import useGameMenuResize from '../../hooks/useGameMenuResize';
 import { setCurrentGame, setTotalRoundCounter, setTotalRoundScore } from '../../redux/actions/game';
-import { setLastResult } from '../../redux/actions/result';
-import { AmazingPlaceResultT } from '../../types/heraldry';
-import { AmazingPlace } from '../../types/places';
+import { AmazingPlace, GuessedAmazingPlacePoint } from '../../types/places';
 import { getRandomAmazingPlace } from '../../util';
 import { AmazingPlacesMapContainer } from '../AmazingPlacesMapContainer';
-import { GuessingMapContainer } from '../GuessingMapContainer';
 
 const { Content } = Layout;
 
@@ -32,12 +29,16 @@ export const AmazingPlacesGame = () => {
     const [smapDimensionLocalStorage] = useLocalStorage<'max' | 'min' | 'normal'>('smapDimension');
     // @ts-ignore
     const [activeTabKey, setActiveTabKey] = useState('1');
+    // @ts-ignore
     const currentGame = useSelector(state => state.game.currentGame);
+    const [roundScore, setRoundScore] = useState(0);
     const [roundGuessedDistance, setRoundGuessedDistance] = useState<number | null>(null);
     const [resultModalVisible, setResultModalVisible] = useState(false);
     const [guessedAmazingPlace, setGuessedAmazingPlace] = useState<AmazingPlace | null>(null);
-    const [allGuessedPlaces, setAllGuessedPlaces] = useState<AmazingPlaceResultT[]>([]);
+    const [allGuessedPlaces, setAllGuessedPlaces] = useState<GuessedAmazingPlacePoint[]>([]);
+    const [currentRoundGuessedPoint, setCurrentRoundGuessedPoint] = useState<GuessedAmazingPlacePoint | null>(null);
     const [mapDimension, setMapDimension] = useState<'max' | 'min' | 'normal'>(smapDimensionLocalStorage || 'normal');
+    const [nextRoundButtonVisible, setNextRoundButtonVisible] = useState(false);
     useGameMenuResize();
 
     const { mode, round, amazingPlace, totalScore } = currentGame;
@@ -58,19 +59,11 @@ export const AmazingPlacesGame = () => {
         }
     }, [round]);
 
-    const handleGuessHeraldry = (placeWhichWasGuessed: AmazingPlace) => {
-        // TODO calculate distance instead of points
-        const roundResultScore = placeWhichWasGuessed.id === amazingPlace.id ? 1 : 0;
-        setGuessedAmazingPlace(placeWhichWasGuessed);
-        // @ts-ignore
-        dispatch(setTotalRoundScore(totalScore + roundResultScore));
-        setAllGuessedPlaces([
-            ...allGuessedPlaces,
-            {
-                guessed: !!roundResultScore,
-                amazingPlace: placeWhichWasGuessed,
-            },
-        ]);
+    const evaluateGuessedRound = (guessedPlacesInRound: GuessedAmazingPlacePoint) => {
+        const { amazingPlace } = guessedPlacesInRound;
+        setGuessedAmazingPlace(amazingPlace);
+        setAllGuessedPlaces([...allGuessedPlaces, guessedPlacesInRound]);
+        setCurrentRoundGuessedPoint(guessedPlacesInRound);
         setResultModalVisible(true);
     };
 
@@ -88,19 +81,14 @@ export const AmazingPlacesGame = () => {
         dispatch(setTotalRoundCounter(round + 1));
     };
 
-    const handleShowResult = () => {
-        setResultModalVisible(false);
-        dispatch(
-            // @ts-ignore
-            setLastResult({
-                totalScore,
-                mode: gameModes.amazingPlaces,
-                guessedAmazingPlaces: allGuessedPlaces,
-            }),
-        );
+    const changeNextRoundButtonVisibility = (visible: boolean) => {
+        setNextRoundButtonVisible(visible);
     };
 
     const saveRoundResult = (score: number, distance: number) => {
+        console.log('SCORE: ', score);
+        console.log('DISTANCE: ', distance);
+        setRoundScore(Math.round(score));
         // @ts-ignore
         dispatch(setTotalRoundScore(Math.round(totalScore + score)));
         setRoundGuessedDistance(distance);
@@ -117,11 +105,11 @@ export const AmazingPlacesGame = () => {
                         onGuessNextRound={handleGuessNextRound}
                         mapDimension={mapDimension}
                         onSetMapDimension={dimension => setMapDimension(dimension)}
+                        amazingPlace={amazingPlace}
                         evaluateGuessedRound={evaluateGuessedRound}
                         currentRoundGuessedPoint={currentRoundGuessedPoint}
                         saveRoundResult={saveRoundResult}
-                        allGuessedPoints={allGuessedPoints}
-                        currentCity={currentCity}
+                        allGuessedPlaces={allGuessedPlaces}
                         nextRoundButtonVisible={nextRoundButtonVisible}
                         changeNextRoundButtonVisibility={changeNextRoundButtonVisibility}
                     />
@@ -129,9 +117,10 @@ export const AmazingPlacesGame = () => {
                 {guessedAmazingPlace && (
                     <AmazingPlacesRoundResultModal
                         visible={resultModalVisible}
-                        roundGuessedDistance={roundGuessedDistance}
+                        closeModal={() => setResultModalVisible(false)}
                         guessedAmazingPlace={guessedAmazingPlace}
-                        guessSuccessful={true}
+                        roundGuessedDistance={roundGuessedDistance}
+                        roundScore={roundScore}
                     />
                 )}
             </Content>

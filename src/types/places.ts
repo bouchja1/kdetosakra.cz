@@ -21,3 +21,11 @@ export interface AmazingPlace {
     longitude: number;
     images: string[];
 }
+
+export interface GuessedAmazingPlacePoint {
+    pointPanorama: any;
+    pointMap: any;
+    amazingPlace: AmazingPlace;
+    distance: number;
+    score: number;
+}

@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import GuessingMap from '../components/GuessingMap';
 import GuessingMapButton from '../components/GuessingMapButton';
 import GuessLimitModal from '../components/GuessLimitModal';
 import { LittleMapImage } from '../components/littleMap/LittleMapImage';
@@ -55,7 +56,7 @@ export const GuessingMapContainer = ({
     const { battleId, myDocumentId, myNickname, round: battleRound, rounds, players } = currentBattleInfo;
 
     /*
-    When the round is changed
+    When the battle round is changed
      */
     useEffect(() => {
         if (round && rounds.length) {
@@ -182,7 +183,12 @@ export const GuessingMapContainer = ({
     };
 
     const drawGuessedDistance = (currentPanoramaPositionPoint, selectedPointOnMap, panoramaCoordinates) => {
-        drawDistanceToTheMap(mapyContext.SMap, currentPanoramaPositionPoint, selectedPointOnMap, panoramaCoordinates);
+        const { path, markerPanorama } = drawDistanceToTheMap(
+            mapyContext.SMap,
+            currentPanoramaPositionPoint,
+            selectedPointOnMap,
+            panoramaCoordinates,
+        );
         refVectorLayerSMapValue.current.addGeometry(path);
         refLayerValue.current.addMarker(markerPanorama);
     };
@@ -194,14 +200,16 @@ export const GuessingMapContainer = ({
 
         // eslint-disable-next-line no-underscore-dangle
         const panoramaSceneCoordinates = panoramaScene._place._data.mark;
-        const panoramaPlaceCoordinates = panoramaScene._place._data.mark;
+        const panoramaPlaceCoords = bestPanoramaPlace._data.mark;
 
         const { panoramaCoordinates, distance, score } = calculateDistanceForPanorama(
             isBattle,
             mode,
             saveRoundResult,
+            currentMapPointCoordinates,
             { lat: panoramaSceneCoordinates.lat, lon: panoramaSceneCoordinates.lon },
-            { lat: panoramaPlaceCoordinates.lat, lon: panoramaPlaceCoordinates.lon },
+            { lat: panoramaPlaceCoords.lat, lon: panoramaPlaceCoords.lon },
+            radius,
             currentGame,
             currentBattleInfo,
         );
@@ -244,24 +252,35 @@ export const GuessingMapContainer = ({
                 onSaveCurrentClickedMapPointCoordinates={handleSaveCurrentClickedMapPointCoordinates}
                 onSetMapDimension={onSetMapDimension}
                 mapDimension={mapDimension}
-                visible={true}
-                GuessingMapButton={
-                    guessingMapButtonVisible ? (
-                        <GuessingMapButton
-                            refreshMap={refreshMap}
-                            isBattle={isBattle}
-                            guessBattleRound={guessBattleRound}
-                            guessSingleplayerRound={guessSingleplayerRound}
-                            allGuessedPoints={allGuessedPoints}
-                            round={round}
-                            totalScore={totalScore}
+                visible={visible}
+                GuessingMap={
+                    <>
+                        <GuessingMap
+                            currentRoundGuessedPoint={currentRoundGuessedPoint}
+                            refLayerValue={refLayerValue}
                             roundGuessed={roundGuessed}
-                            disabled={guessButtonDisabled || panoramaLoading || !isGameStarted}
-                            currentRound={isBattle ? currentRoundBattle : currentGame.round}
-                            currentGame={currentGame}
-                            nextRoundButtonVisible={nextRoundButtonVisible}
+                            refVectorLayerSMapValue={refVectorLayerSMapValue}
+                            saveCurrentClickedMapPointCoordinates={handleSaveCurrentClickedMapPointCoordinates}
                         />
-                    ) : null
+                        <>
+                            {guessingMapButtonVisible ? (
+                                <GuessingMapButton
+                                    refreshMap={refreshMap}
+                                    isBattle={isBattle}
+                                    guessBattleRound={guessBattleRound}
+                                    guessSingleplayerRound={guessSingleplayerRound}
+                                    allGuessedPoints={allGuessedPoints}
+                                    round={round}
+                                    totalScore={totalScore}
+                                    roundGuessed={roundGuessed}
+                                    disabled={guessButtonDisabled || panoramaLoading || !isGameStarted}
+                                    currentRound={isBattle ? currentRoundBattle : currentGame.round}
+                                    currentGame={currentGame}
+                                    nextRoundButtonVisible={nextRoundButtonVisible}
+                                />
+                            ) : null}
+                        </>
+                    </>
                 }
             />
             <GuessLimitModal
