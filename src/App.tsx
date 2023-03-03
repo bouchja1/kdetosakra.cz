@@ -57,21 +57,23 @@ export const App = () => {
                             <RouterSwitch />
                         </MapyCzProvider>
                     )}
-                    <Footer style={{ textAlign: 'center', fontSize: '14px' }}>
-                        <p>
-                            Postaveno s <HeartTwoTone twoToneColor="#eb2f96" /> na{' '}
-                            <a href="https://api.mapy.cz/">Mapy.cz API</a>{' '}
-                            {!pathname.includes(routeNames.info) && !pathname.includes(routeNames.podpora) && (
-                                <>
-                                    {' | '}
-                                    {/* eslint-disable-next-line react/jsx-no-target-blank */}
-                                    <Link to={`/${routeNames.podpora}`}>
-                                        Podpořte provoz a další rozvoj <CoffeeOutlined />
-                                    </Link>
-                                </>
-                            )}
-                        </p>
-                    </Footer>
+                    {!isInGame && (
+                        <Footer style={{ textAlign: 'center', fontSize: '14px' }}>
+                            <p>
+                                Postaveno s <HeartTwoTone twoToneColor="#eb2f96" /> na{' '}
+                                <a href="https://api.mapy.cz/">Mapy.cz API</a>{' '}
+                                {!pathname.includes(routeNames.info) && !pathname.includes(routeNames.podpora) && (
+                                    <>
+                                        {' | '}
+                                        {/* eslint-disable-next-line react/jsx-no-target-blank */}
+                                        <Link to={`/${routeNames.podpora}`}>
+                                            Podpořte provoz a další rozvoj <CoffeeOutlined />
+                                        </Link>
+                                    </>
+                                )}
+                            </p>
+                        </Footer>
+                    )}
                 </Layout>
             </PersistGate>
         </Provider>

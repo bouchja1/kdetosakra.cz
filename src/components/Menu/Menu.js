@@ -55,6 +55,8 @@ const Menu = ({ isInGame = false }) => {
         return false;
     };
 
+    const menuItemWithIconContainerStyles = isBattle || isInGame ? 'menu-item-with-icon-container' : '';
+
     return (
         <div id="menu-container" className={classNames('section menu-container', isInGame && 'menu-without-padding')}>
             <Link to="/">
@@ -71,39 +73,49 @@ const Menu = ({ isInGame = false }) => {
                 </div>
             </Link>
             <div className={isBattle || isInGame ? 'main-menu--battle' : 'main-menu'}>
-                <Link to={`/${routeNames.info}`}>
-                    <InfoCircleOutlined className="menu-item-icon" />
-                    <div className="menu-item">O projektu</div>
-                </Link>
+                <div className={menuItemWithIconContainerStyles}>
+                    <Link to={`/${routeNames.info}`}>
+                        <InfoCircleOutlined className={classNames('menu-item-icon')} />
+                        <div className="menu-item">O projektu</div>
+                    </Link>
+                </div>
                 <div className="menu-item menu-separator">|</div>
-                <Link to={`/${routeNames.napoveda}`}>
-                    <QuestionCircleOutlined className="menu-item-icon" />
-                    <div className="menu-item">Nápověda</div>
-                </Link>
+                <div className={menuItemWithIconContainerStyles}>
+                    <Link to={`/${routeNames.napoveda}`}>
+                        <QuestionCircleOutlined className="menu-item-icon" />
+                        <div className="menu-item">Nápověda</div>
+                    </Link>
+                </div>
                 {!isBattle && (
                     <>
                         <div className="menu-item menu-separator">|</div>
-                        <CoffeeOutlined className="menu-item-icon" />
-                        <Link to={`/${routeNames.podpora}`}>
-                            <div className="menu-item">Podpořte provoz a další rozvoj</div>
-                        </Link>
+                        <div className={menuItemWithIconContainerStyles}>
+                            <Link to={`/${routeNames.podpora}`}>
+                                <CoffeeOutlined className="menu-item-icon" />
+                                <div className="menu-item">Podpořte provoz a další rozvoj</div>
+                            </Link>
+                        </div>
                     </>
                 )}
                 <div className="menu-item menu-separator">|</div>
-                {/* eslint-disable-next-line react/jsx-no-target-blank */}
-                <a title="Discord" href="https://discord.gg/b9h3xdP6gG" target="_blank" rel="noreferrer">
-                    <img alt="Discord" src={discordIcon} height={30} />
-                </a>
+                <div className="menu-item-with-icon-container">
+                    {/* eslint-disable-next-line react/jsx-no-target-blank */}
+                    <a title="Discord" href="https://discord.gg/b9h3xdP6gG" target="_blank" rel="noreferrer">
+                        <img alt="Discord" src={discordIcon} height={30} />
+                    </a>
+                </div>
                 <div className="menu-item menu-separator">|</div>
                 {/* eslint-disable-next-line react/jsx-no-target-blank */}
-                <a
-                    title="Facebook stránka"
-                    href="https://www.facebook.com/kdetosakra.cz"
-                    target="_blank"
-                    rel="noreferrer"
-                >
-                    <FacebookFilled style={{ color: 'rgb(66, 103, 178)', fontSize: '25px' }} />
-                </a>
+                <div className={menuItemWithIconContainerStyles}>
+                    <a
+                        title="Facebook stránka"
+                        href="https://www.facebook.com/kdetosakra.cz"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        <FacebookFilled style={{ color: 'rgb(66, 103, 178)', fontSize: '25px' }} />
+                    </a>
+                </div>
             </div>
             {!isGameFinished() && isBattle && myPlayer?.userId && currentBattleInfo.round > 0 && <BattleCountDown />}
             {isGameInfoShown(pathname, isBattle) && (

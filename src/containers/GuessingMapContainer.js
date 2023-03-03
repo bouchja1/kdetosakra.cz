@@ -1,5 +1,6 @@
 import { writeStorage } from '@rehooks/local-storage';
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { isMobile } from 'react-device-detect';
 import { useDispatch, useSelector } from 'react-redux';
 
 import maximizeMapShadow from '../assets/images/map/maximizeMapShadow.png';
@@ -365,7 +366,16 @@ export const GuessingMapContainer = ({
     return (
         <>
             {visible && mapDimension !== 'min' && (
-                <div id="smap-container" className="smap-container" style={mapStyle}>
+                <div
+                    id="smap-container"
+                    className="smap-container"
+                    style={{
+                        ...mapStyle,
+                        ...(isMobile && {
+                            height: height - 110,
+                        }),
+                    }}
+                >
                     {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions */}
                     <img
                         alt="Maximální velikost mapy"
