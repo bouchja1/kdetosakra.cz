@@ -24,15 +24,20 @@ export const GuessResultMode = ({
             <p>Jakou polohu v mapě chceš hádat jako výsledek?</p>
             <Radio.Group onChange={onChange} value={value}>
                 <Space direction="vertical">
-                    <Radio value={guessResultMode.end}>aktuální polohu v panorama</Radio>
-                    <Radio value={guessResultMode.start}>polohu výchozího místa</Radio>
+                    <Radio value={guessResultMode.end}>aktuální polohu v panoráma</Radio>
+                    <Radio value={guessResultMode.start}>polohu místa, kde začínám</Radio>
                 </Space>
             </Radio.Group>
             <div style={{ marginTop: '10px', color: '#c80707' }}>
                 <p>
-                    {value === guessResultMode.start
-                        ? 'Jak jste zvyklí např. ze hry GeoGuessr. Zjisti kde to sakra jsi a pak se v mapě snaž označit místo odkud se vyráželo.'
-                        : 'Dojedeš někam, kde už to bezpečně poznáváš. A pak se snažíš tuto polohu označit v mapě s přesností na metr.'}
+                    {value === guessResultMode.start ? (
+                        'Aneb GeoGuessr. Zjistiš, kde to sakra jsi, a pak se v mapě snažíš dohledat místo odkud se vyráželo.'
+                    ) : (
+                        <>
+                            Dojedeš v panoráma někam, kde už to bezpečně poznáváš (<i>"A hele! Tohle je nádraží!"</i>).
+                            A pak označíš místo s přesností na metr.
+                        </>
+                    )}
                 </p>
             </div>
             {withAdvancedOptions && onNoMoveChange && (

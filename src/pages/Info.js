@@ -1,8 +1,10 @@
 import { GithubOutlined } from '@ant-design/icons';
-import { Layout } from 'antd';
+import { Image, Layout } from 'antd';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import discordIcon from '../assets/images/discord.png';
+import krumlovInfo from '../assets/images/info/krumlovInfo.png';
 import { Donate } from '../components/Donate';
 import { decryptEmail } from '../util';
 
@@ -12,7 +14,7 @@ export const Info = () => {
     return (
         <Content>
             <div className="about-container">
-                <h2>O projektu</h2>
+                <h2>O hře</h2>
                 <p>
                     <i>Kde to sakra?</i> je zeměpisná online hra a česká{' '}
                     <a href="https://github.com/bouchja1/kdetosakra.cz" target="_blank" rel="noopener noreferrer">
@@ -25,49 +27,60 @@ export const Info = () => {
                     </a>
                     .
                 </p>
-                <Donate marginBottom={25} />
                 <p>
                     Hra využívá panoramata a mapové podklady aplikace{' '}
                     {/* eslint-disable-next-line react/jsx-no-target-blank */}
                     <a href="https://api.mapy.cz/" target="_blank" rel="noreferrer">
                         Mapy.cz od Seznamu
                     </a>
-                    . Hratelnost je takřka neomezená a jedinou hranicí je hranice České republiky 🇨🇿
+                    . Hratelnost je neomezená - jedinou hranicí je hranice České republiky 🇨🇿.
                 </p>
-                <h3>Jak hrát?</h3>
-                <p>Hra nabízí pět různých herních módů s panorámaty:</p>
-                <ol>
-                    <li>Krajská města ČR</li>
-                    <li>Náhodné místo (celá ČR)</li>
-                    <li>Náhodné místo (v kraji ČR)</li>
-                    <li>Vlastní místo</li>
-                    <li>Podle mojí geolokace</li>
-                </ol>
+                <div className="tutorial-section">
+                    <h3>Průběh a cíl hry</h3>
+                    <p>
+                        Soutěžíš v pěti herních kolech. V každém kole tě KdeToSakra přenese na jiné místo naší vlasti a
+                        ty se můžeš virtuálně procházet po jeho okolí. Tvým úkolem je zorientovat se a v přiložené mapce
+                        označit co nejpřesněji místo, kde se právě nacházíš.
+                    </p>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <Image alt="Princip hry KdeToSakra" src={krumlovInfo} />
+                    </div>
+                </div>
                 <p>
-                    První čtyři je možné hrát i v módu <i>multiplayer</i> (ve stejný čas hraje více hráčů proti sobě).
-                </p>
-                <p>
-                    Cílem hry je vypátrat v pěti kolech polohu pěti různých míst v České republice. Pátrání začínáš v
-                    náhodně generovaném panoramatickém snímku a v přiložené mapě se snažíš s co nejvyšší přesností určit
-                    polohu místa.
-                </p>
-                <p>
-                    Před začátkem hry si můžeš zvolit, jakou polohu v mapě chceš hádat. Na základě tvých tipů se pak
-                    sčítá finální výsledek:
+                    Před začátkem každé nové hry je možné zvolit si, jakou polohu v mapě chceš v jednotlivých kolech
+                    tipovat jako svůj výsledek. Celkové skóre se počítá jako součet výsledků ze všech pěti kol.
                 </p>
                 <ul>
                     <li>
-                        <b>hádat aktuální polohu v panorama</b> - tj. dojedeš někam, kde už to bezpečně poznáváš. A pak
-                        se trefíš s přesností na metr. Výsledek se počítá podle této poslední polohy v panorama.
+                        <b>hádat aktuální polohu v panoráma</b> - tj. dojedeš v panoráma někam, kde už to bezpečně
+                        poznáváš (<i>"A hele! Tohle je nádraží!"</i>). A pak označíš místo s přesností na metr.
                     </li>
                     <li>
-                        <b>hádat polohu výchozího místa</b> - aneb jak jste zvyklí např. ze hry GeoGuessr. Zjisti kde to
-                        sakra jsi a pak se v mapě dopátrej místa odkud se vyráželo. Výsledek se počítá podle pozice na
-                        začátku hry.
+                        <b>hádat polohu místa, kde začínám</b> - aneb GeoGuessr. Zjistiš, kde to sakra jsi, a pak se v
+                        mapě snažíš dohledat místo odkud se vyráželo.
                     </li>
                 </ul>
+                <h3>Typy her</h3>
+                <p>Hra má pět herních módů pro hádání náhodně vygenerované polohy v panorámatu:</p>
+                <ol>
+                    <li>hádání vlastnoručně zadaného místa</li>
+                    <li>hádání místa v celé ČR</li>
+                    <li>hádání místa ve vybraném kraji</li>
+                    <li>hádání místa ve vybraném krajském městě ČR</li>
+                    <li>hádání místa v bezprostředním okolí (podle geolokace zařízení)</li>
+                </ol>
                 <p>
-                    Obsáhlejší informace jsou k nalezení v{' '}
+                    První čtyři herní módy je možné hrát i v módu <i>multiplayer</i> (ve stejný čas proti sobě soupeří
+                    více hráčů).
+                </p>
+                <p>
+                    Žádný spoluhráč po ruce? Domluv si bitvu na{' '}
+                    <a title="Discord" href="https://discord.gg/b9h3xdP6gG" target="_blank" rel="noreferrer">
+                        na Discordu! <img alt="Discord" src={discordIcon} height={30} />
+                    </a>
+                </p>
+                <p>
+                    Detailnější informace jsou k nalezení v{' '}
                     <Link
                         to={{
                             pathname: '/napoveda',
@@ -78,10 +91,7 @@ export const Info = () => {
                     .
                 </p>
                 <h3>Vznik</h3>
-                <p>
-                    Hru jsem naprogramoval koncem roku 2019, když jsem se chtěl blíž seznámit s JavaScript knihovnou
-                    React.
-                </p>
+                <Donate marginBottom={25} />
                 <p>
                     Máte dotaz nebo přání? Tak mi <a href={decryptEmail('amFuLmJvdWNobmVyQGdtYWlsLmNvbQ==')}>napište</a>{' '}
                     ✉️.

@@ -76,14 +76,14 @@ const Menu = ({ isInGame = false }) => {
                 <div className={menuItemWithIconContainerStyles}>
                     <Link to={`/${routeNames.info}`}>
                         <InfoCircleOutlined className={classNames('menu-item-icon')} />
-                        <div className="menu-item">O projektu</div>
+                        <div className="menu-item">O hře</div>
                     </Link>
                 </div>
                 <div className="menu-item menu-separator">|</div>
                 <div className={menuItemWithIconContainerStyles}>
                     <Link to={`/${routeNames.napoveda}`}>
                         <QuestionCircleOutlined className="menu-item-icon" />
-                        <div className="menu-item">Nápověda</div>
+                        <div className="menu-item">Jak to hrát?</div>
                     </Link>
                 </div>
                 {!isBattle && (
