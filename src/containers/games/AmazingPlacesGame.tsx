@@ -1,14 +1,15 @@
 import { useLocalStorage } from '@rehooks/local-storage';
 import { Layout } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { CSSProperties, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useDispatch, useSelector } from 'react-redux';
+import { Carousel } from 'react-responsive-carousel';
 import { Redirect } from 'react-router-dom';
-import styled from 'styled-components';
 
 import { AmazingPlacesRoundResultModal } from '../../components/AmazingPlacesRoundResultModal';
 import gameModes from '../../enums/modes';
 import useGameMenuResize from '../../hooks/useGameMenuResize';
+import useSMapResize from '../../hooks/useSMapResize';
 import { setCurrentGame, setTotalRoundCounter, setTotalRoundScore } from '../../redux/actions/game';
 import { AmazingPlace, GuessedAmazingPlacePoint } from '../../types/places';
 import { getRandomAmazingPlace } from '../../util';
@@ -16,13 +17,14 @@ import { AmazingPlacesMapContainer } from '../AmazingPlacesMapContainer';
 
 const { Content } = Layout;
 
-const AmazingPlaceContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 20px;
-    gap: 30px;
-`;
+const arrowStyles: CSSProperties = {
+    position: 'absolute',
+    top: 'calc(50% - 15px)',
+    width: 40,
+    height: 40,
+    cursor: 'pointer',
+    backgroundColor: '#c80707',
+};
 
 export const AmazingPlacesGame = () => {
     const dispatch = useDispatch();
@@ -32,6 +34,7 @@ export const AmazingPlacesGame = () => {
     // @ts-ignore
     const currentGame = useSelector(state => state.game.currentGame);
     const [roundScore, setRoundScore] = useState(0);
+    const { width, height } = useSMapResize();
     const [roundGuessedDistance, setRoundGuessedDistance] = useState<number | null>(null);
     const [resultModalVisible, setResultModalVisible] = useState(false);
     const [guessedAmazingPlace, setGuessedAmazingPlace] = useState<AmazingPlace | null>(null);
@@ -86,8 +89,6 @@ export const AmazingPlacesGame = () => {
     };
 
     const saveRoundResult = (score: number, distance: number) => {
-        console.log('SCORE: ', score);
-        console.log('DISTANCE: ', distance);
         setRoundScore(Math.round(score));
         // @ts-ignore
         dispatch(setTotalRoundScore(Math.round(totalScore + score)));
@@ -97,23 +98,37 @@ export const AmazingPlacesGame = () => {
     if (mode === gameModes.amazingPlaces && amazingPlace) {
         return (
             <Content>
-                <div>
-                    <AmazingPlaceContainer>
-                        <p>LALA BLABLA</p>
-                    </AmazingPlaceContainer>
-                    <AmazingPlacesMapContainer
-                        onGuessNextRound={handleGuessNextRound}
-                        mapDimension={mapDimension}
-                        onSetMapDimension={dimension => setMapDimension(dimension)}
-                        amazingPlace={amazingPlace}
-                        evaluateGuessedRound={evaluateGuessedRound}
-                        currentRoundGuessedPoint={currentRoundGuessedPoint}
-                        saveRoundResult={saveRoundResult}
-                        allGuessedPlaces={allGuessedPlaces}
-                        nextRoundButtonVisible={nextRoundButtonVisible}
-                        changeNextRoundButtonVisibility={changeNextRoundButtonVisibility}
-                    />
+                <div
+                    className="panorama-container"
+                    style={{ height: height - (isMobile ? 110 : 75), ...(!isMobile && { width }) }}
+                >
+                    <Carousel
+                        showThumbs={false}
+                        statusFormatter={(current, total) => `Fotka: ${current} / Celkem: ${total}`}
+                        useKeyboardArrows
+                        swipeable
+                    >
+                        {amazingPlace.images.map((imageSrc: string, i: number) => {
+                            return (
+                                <div>
+                                    <img src={imageSrc} className="responsive-amazing-place" key={`image-${i + 1}`} />
+                                </div>
+                            );
+                        })}
+                    </Carousel>
                 </div>
+                <AmazingPlacesMapContainer
+                    onGuessNextRound={handleGuessNextRound}
+                    mapDimension={mapDimension}
+                    onSetMapDimension={dimension => setMapDimension(dimension)}
+                    amazingPlace={amazingPlace}
+                    evaluateGuessedRound={evaluateGuessedRound}
+                    currentRoundGuessedPoint={currentRoundGuessedPoint}
+                    saveRoundResult={saveRoundResult}
+                    allGuessedPlaces={allGuessedPlaces}
+                    nextRoundButtonVisible={nextRoundButtonVisible}
+                    changeNextRoundButtonVisibility={changeNextRoundButtonVisibility}
+                />
                 {guessedAmazingPlace && (
                     <AmazingPlacesRoundResultModal
                         visible={resultModalVisible}

@@ -1,3 +1,5 @@
+import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
+
 // This must be the first line in src/index.js
 import './polyfills';
 import './App.less';

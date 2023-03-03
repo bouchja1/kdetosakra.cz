@@ -40,6 +40,7 @@
     "react-hook-geolocation": "^1.0.8",
     "react-redux": "^7.2.5",
     "react-responsive": "^8.2.0",
+    "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^5.3.4",
     "react-scripts": "5.0.1",
     "redux": "^4.1.1",

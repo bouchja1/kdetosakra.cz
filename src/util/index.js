@@ -125,7 +125,7 @@ export const getRandomAmazingPlace = () => {
         latitude: 49.939604,
         longitude: 14.188146,
         images: [
-            'https://cs.wikipedia.org/wiki/Karl%C5%A1tejn#/media/Soubor:Zamek_Karl%C5%A1tejn.jpg',
+            'https://upload.wikimedia.org/wikipedia/commons/5/5f/Zamek_Karl%C5%A1tejn.jpg',
             'https://www.velkoobchodmcu.cz/www/obrazky/large/__avif/9788086374147.avif?18.1.201314:50:06',
         ],
     };

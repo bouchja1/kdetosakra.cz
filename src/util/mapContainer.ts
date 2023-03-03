@@ -1,6 +1,7 @@
 import {
     MAX_DISTANCE_TO_GAIN_100_PERCENT_KM,
     MAX_SCORE_PERCENT,
+    MIN_DISTANCE_FOR_POINTS_AMAZING_PLACES,
     MIN_DISTANCE_FOR_POINTS_RANDOM,
     guessResultMode,
 } from '../constants/game';
@@ -50,7 +51,7 @@ const calculateScore = (
     if (gameMode === gameModes.random || gameMode === gameModes.randomRegion) {
         minDistanceForPoints = MIN_DISTANCE_FOR_POINTS_RANDOM;
     } else if (gameMode === gameModes.amazingPlaces) {
-        minDistanceForPoints = radius + 2;
+        minDistanceForPoints = MIN_DISTANCE_FOR_POINTS_AMAZING_PLACES;
     } else {
         minDistanceForPoints = radius + 2;
     }
