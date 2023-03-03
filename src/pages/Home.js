@@ -13,7 +13,7 @@ export const Home = () => {
                 <p>Toulej se v panorámatech a hádej, kde se právě nacházíš.</p>
 
                 <p className="subtitle">
-                    Žádná věda... trochu vlastivěda. Prostě česká obdoba kultovního <b>GeoGuessr</b>
+                    Žádná věda... česká obdoba kultovního <b>GeoGuessr</b>
                 </p>
             </div>
             <Content>
