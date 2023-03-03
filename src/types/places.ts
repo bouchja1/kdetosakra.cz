@@ -12,3 +12,12 @@ export interface CzechCity {
     coatOfArmsFlagDescription?: string;
     coatOfArmsDescription?: string;
 }
+
+export interface AmazingPlace {
+    id: string;
+    name: string;
+    category: string;
+    latitude: number;
+    longitude: number;
+    images: string[];
+}

@@ -92,7 +92,6 @@ export const HeraldryGame = () => {
         return (
             <Content>
                 <div>
-                    {/* -40 padding of layout */}
                     <div>
                         <CoaContainer>
                             <img

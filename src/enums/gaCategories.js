@@ -7,4 +7,5 @@ export const CATEGORIES = {
     BATTLE: 'Battle',
     HERALDRY: 'Heraldry',
     UPLOAD_NEW_PLACE_CLICKED: 'UploadNewPlaceClicked',
+    AMAZING_PLACES: 'AmazingPlaces',
 };

@@ -1,38 +1,40 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import GuessingMapButton from '../components/GuessingMapButton';
-import GuessLimitModal from '../components/GuessLimitModal';
 import { LittleMapImage } from '../components/littleMap/LittleMapImage';
+import { guessResultMode } from '../constants/game';
+import { MARKER_PLACE_ICON_KDETOSAKRA } from '../constants/icons';
 import MapyCzContext from '../context/MapyCzContext';
 import useGetRandomUserToken from '../hooks/useGetRandomUserToken';
 import { incrementMyTotalScore } from '../redux/actions/battle';
 import { addGuessedRoundToPlayer, updateBattleRound } from '../services/firebase';
-import { findUserFromBattleByRandomTokenId, getUnixTimestamp } from '../util';
-import { calculateDistanceForPanorama, drawDistanceToTheMap } from '../util/mapContainer';
+import { getUnixTimestamp } from '../util';
+import { calculateDistanceForPlace } from '../util/mapContainer';
 
-export const GuessingMapContainer = ({
-    isBattle = false,
-    visible = true,
+interface AmazingPlacesMapContainerProps {
+    mapDimension: 'min' | 'max' | 'normal';
+    onSetMapDimension: (dimension: 'min' | 'max' | 'normal') => void;
+    onGuessNextRound: () => void;
+    saveRoundResult: (score: number, distance: number) => void;
+}
+
+export const AmazingPlacesMapContainer = ({
+    mapDimension,
+    onSetMapDimension,
+    onGuessNextRound,
+
     evaluateGuessedRound,
     currentRoundGuessedPoint,
-    panoramaLoading,
-    findNewPanorama,
     saveRoundResult,
-    panoramaScene,
-    bestPanoramaPlace,
     allGuessedPoints,
-    isGameStarted,
     currentCity,
     nextRoundButtonVisible,
     changeNextRoundButtonVisibility,
-    mapDimension,
-    onSetMapDimension,
-}) => {
+}: AmazingPlacesMapContainerProps) => {
     const dispatch = useDispatch();
     const mapyContext = useContext(MapyCzContext);
     const randomUserToken = useGetRandomUserToken();
-    const [showGuessLimitModal, setShowGuessLimitModal] = useState(false);
     const [guessButtonDisabled, setGuessButtonDisabled] = useState(true);
     const [currentRoundBattle, setCurrentRoundBattle] = useState();
     const currentGame = useSelector(state => state.game.currentGame);
@@ -86,36 +88,14 @@ export const GuessingMapContainer = ({
             setRound(roundVar);
         };
 
-        if (isBattle && isGameStarted) {
-            const { mode: battleMode, radius: battleRadius, myTotalScore } = currentBattleInfo;
-            setCommonVars(battleMode, battleRadius, myTotalScore, battleRound);
-        } else {
-            const {
-                mode: currentGameMode,
-                radius: currentGameRadius,
-                totalScore: currentGameTotalScore,
-                round: currentGameRound,
-            } = currentGame;
-            setCommonVars(currentGameMode, currentGameRadius, currentGameTotalScore, currentGameRound);
-        }
-    }, [isBattle, isGameStarted, currentGame, currentBattleInfo, battleRound]);
-
-    const guessingMapButtonVisible = useMemo(() => {
-        if (isBattle) {
-            if (!currentRoundBattle) {
-                return false;
-            }
-
-            const { isRoundActive } = currentRoundBattle;
-            if (!isRoundActive) {
-                return false;
-            }
-
-            const myUser = findUserFromBattleByRandomTokenId(players, randomUserToken);
-            return !myUser[`round${battleRound}`];
-        }
-        return true;
-    }, [currentRoundBattle, battleRound, isBattle, players, randomUserToken]);
+        const {
+            mode: currentGameMode,
+            radius: currentGameRadius,
+            totalScore: currentGameTotalScore,
+            round: currentGameRound,
+        } = currentGame;
+        setCommonVars(currentGameMode, currentGameRadius, currentGameTotalScore, currentGameRound);
+    }, [currentGame, currentBattleInfo, battleRound]);
 
     const guessSingleplayerRound = () => {
         const guessedRoundPoint = calculateCoordsAndDrawGuess();
@@ -176,14 +156,78 @@ export const GuessingMapContainer = ({
             });
     };
 
-    const handleSaveCurrentClickedMapPointCoordinates = coordinates => {
+    const calculateDistance = () => {
+        // eslint-disable-next-line no-underscore-dangle
+        let panoramaCoordinates = panoramaScene._place._data.mark;
+        const { lat, lon } = bestPanoramaPlace._data.mark;
+
+        const { guessResultMode: guessResultModeSinglePlayer } = currentGame;
+        if (guessResultModeSinglePlayer === guessResultMode.start) {
+            panoramaCoordinates = {
+                lat,
+                lon,
+            };
+        }
+
+        let distance;
+        if (
+            panoramaCoordinates.lat === currentMapPointCoordinates.mapLat &&
+            panoramaCoordinates.lon === currentMapPointCoordinates.mapLon
+        ) {
+            distance = 0;
+        } else {
+            const radlat1 = (Math.PI * panoramaCoordinates.lat) / 180;
+            const radlat2 = (Math.PI * currentMapPointCoordinates.mapLat) / 180;
+            const theta = panoramaCoordinates.lon - currentMapPointCoordinates.mapLon;
+            const radtheta = (Math.PI * theta) / 180;
+            let dist =
+                Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+            if (dist > 1) {
+                dist = 1;
+            }
+            dist = Math.acos(dist);
+            dist = (dist * 180) / Math.PI;
+            dist = dist * 60 * 1.1515;
+            dist *= 1.609344; // convert from miles to kilometers
+            distance = dist;
+        }
+        const score = calculateScore(distance);
+        return {
+            panoramaCoordinates,
+            distance,
+            score,
+        };
+    };
+
+    const handleSaveCurrentClickedMapPointCoordinates = (coordinates: any) => {
         setCurrentMapPointCoordinates(coordinates);
         setGuessButtonDisabled(false);
     };
 
     const drawGuessedDistance = (currentPanoramaPositionPoint, selectedPointOnMap, panoramaCoordinates) => {
-        drawDistanceToTheMap(mapyContext.SMap, currentPanoramaPositionPoint, selectedPointOnMap, panoramaCoordinates);
+        const markerPanoramaOptions = {
+            url: MARKER_PLACE_ICON_KDETOSAKRA,
+            anchor: { left: 10, bottom: 15 },
+        };
+
+        const guessedVectorPathCoordinates = [currentPanoramaPositionPoint, selectedPointOnMap];
+        const vectorPathOptions = {
+            color: '#f00',
+            width: 3,
+        };
+        const path = new mapyContext.SMap.Geometry(
+            mapyContext.SMap.GEOMETRY_POLYLINE,
+            null,
+            guessedVectorPathCoordinates,
+            vectorPathOptions,
+        );
         refVectorLayerSMapValue.current.addGeometry(path);
+        // panorama place marker
+        const markerPanorama = new mapyContext.SMap.Marker(
+            mapyContext.SMap.Coords.fromWGS84(panoramaCoordinates.lon, panoramaCoordinates.lat),
+            'Panorama point',
+            markerPanoramaOptions,
+        );
         refLayerValue.current.addMarker(markerPanorama);
     };
 
@@ -192,19 +236,7 @@ export const GuessingMapContainer = ({
         changeNextRoundButtonVisibility(true);
         setRoundGuessed(true);
 
-        // eslint-disable-next-line no-underscore-dangle
-        const panoramaSceneCoordinates = panoramaScene._place._data.mark;
-        const panoramaPlaceCoordinates = panoramaScene._place._data.mark;
-
-        const { panoramaCoordinates, distance, score } = calculateDistanceForPanorama(
-            isBattle,
-            mode,
-            saveRoundResult,
-            { lat: panoramaSceneCoordinates.lat, lon: panoramaSceneCoordinates.lon },
-            { lat: panoramaPlaceCoordinates.lat, lon: panoramaPlaceCoordinates.lon },
-            currentGame,
-            currentBattleInfo,
-        );
+        const { panoramaCoordinates, distance, score } = calculateDistanceForPlace(mode, saveRoundResult, currentGame);
 
         const guessedPanoramaPositionPoint = mapyContext.SMap.Coords.fromWGS84(
             panoramaCoordinates.lon,
@@ -229,7 +261,7 @@ export const GuessingMapContainer = ({
      * Refresh map for a new guessing!
      */
     const refreshMap = () => {
-        findNewPanorama();
+        onGuessNextRound();
         refLayerValue.current.removeAll();
         refVectorLayerSMapValue.current.removeAll();
         changeNextRoundButtonVisibility(false);
@@ -239,35 +271,26 @@ export const GuessingMapContainer = ({
     };
 
     return (
-        <>
-            <LittleMapImage
-                onSaveCurrentClickedMapPointCoordinates={handleSaveCurrentClickedMapPointCoordinates}
-                onSetMapDimension={onSetMapDimension}
-                mapDimension={mapDimension}
-                visible={true}
-                GuessingMapButton={
-                    guessingMapButtonVisible ? (
-                        <GuessingMapButton
-                            refreshMap={refreshMap}
-                            isBattle={isBattle}
-                            guessBattleRound={guessBattleRound}
-                            guessSingleplayerRound={guessSingleplayerRound}
-                            allGuessedPoints={allGuessedPoints}
-                            round={round}
-                            totalScore={totalScore}
-                            roundGuessed={roundGuessed}
-                            disabled={guessButtonDisabled || panoramaLoading || !isGameStarted}
-                            currentRound={isBattle ? currentRoundBattle : currentGame.round}
-                            currentGame={currentGame}
-                            nextRoundButtonVisible={nextRoundButtonVisible}
-                        />
-                    ) : null
-                }
-            />
-            <GuessLimitModal
-                visible={showGuessLimitModal}
-                handleGuessModalVisibility={() => setShowGuessLimitModal(false)}
-            />
-        </>
+        <LittleMapImage
+            onSaveCurrentClickedMapPointCoordinates={handleSaveCurrentClickedMapPointCoordinates}
+            onSetMapDimension={onSetMapDimension}
+            mapDimension={mapDimension}
+            visible={true}
+            GuessingMapButton={
+                <GuessingMapButton
+                    refreshMap={refreshMap}
+                    guessBattleRound={guessBattleRound}
+                    guessSingleplayerRound={guessSingleplayerRound}
+                    allGuessedPoints={allGuessedPoints}
+                    round={round}
+                    totalScore={totalScore}
+                    roundGuessed={roundGuessed}
+                    disabled={guessButtonDisabled}
+                    currentRound={currentGame.round}
+                    currentGame={currentGame}
+                    nextRoundButtonVisible={nextRoundButtonVisible}
+                />
+            }
+        />
     );
 };

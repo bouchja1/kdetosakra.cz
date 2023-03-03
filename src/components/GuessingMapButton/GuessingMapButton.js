@@ -10,7 +10,7 @@ import { setLastResult } from '../../redux/actions/result';
 
 const GuessingMapButton = ({
     refreshMap,
-    isBattle,
+    isBattle = false,
     guessSingleplayerRound,
     guessBattleRound,
     allGuessedPoints,

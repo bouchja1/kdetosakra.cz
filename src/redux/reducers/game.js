@@ -28,6 +28,7 @@ const initialState = {
         totalScore: 0,
         radius: 1,
         city: null,
+        amazingPlace: null,
         regionNutCode: null,
         guessResultMode: null,
         noMove: false,

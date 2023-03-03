@@ -116,6 +116,21 @@ export const getRandomCzechPlaceWithCoatOfArms = (alreadyGeneratedCities = []) =
     return randomCity;
 };
 
+export const getRandomAmazingPlace = () => {
+    // TODO ADD CHECking from local storage for already guessed IDs
+    return {
+        id: '123456',
+        name: 'Karlštejn',
+        category: 'Hrady a zříceniny',
+        latitude: 49.939604,
+        longitude: 14.188146,
+        images: [
+            'https://cs.wikipedia.org/wiki/Karl%C5%A1tejn#/media/Soubor:Zamek_Karl%C5%A1tejn.jpg',
+            'https://www.velkoobchodmcu.cz/www/obrazky/large/__avif/9788086374147.avif?18.1.201314:50:06',
+        ],
+    };
+};
+
 export const getRandomPlaceInRegion = regionNutCode => {
     const selectedRegionArray = nutsCitiesObjectEntries[regionNutCode];
     let randomCity = selectedRegionArray[Math.floor(Math.random() * selectedRegionArray.length)];

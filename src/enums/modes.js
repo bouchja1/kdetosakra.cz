@@ -5,6 +5,7 @@ const gameModes = {
     city: 'city',
     custom: 'custom',
     heraldry: 'heraldry',
+    amazingPlaces: 'amazingPlaces',
 };
 
 export default gameModes;

@@ -13,6 +13,7 @@ import uzasnaMista from '../assets/images/uzasna-mista.png';
 import youtubeCover from '../assets/images/youtube.jpg';
 import { GameModeRibbonWrapper } from '../components/GameModeRibbonWrapper';
 import { CustomPlace, Geolocation, Random, RandomPlaceInRegion, RegionCity } from '../components/modes';
+import { AmazingPlaces } from '../components/modes/AmazingPlaces';
 import { Heraldry } from '../components/modes/Heraldry';
 import { routeNames } from '../constants/routes';
 import { CATEGORIES } from '../enums/gaCategories';
@@ -185,21 +186,22 @@ export const ModesOverview = () => {
                             <a href="https://www.uzasnamista.cz/">https://www.uzasnamista.cz/</a> má pro vás více než{' '}
                             <b>1000 tipů</b> na neokoukaná místa v Česku.
                         </p>
-                        <p>
-                            Stáhněte si zdarma turistickou aplikaci <b>Úžasná místa</b>.
-                        </p>
+                        <p>Zahrajte si poznávačku z výběru fotek Úžasných míst!</p>
+                        <AmazingPlaces />
                         <div
                             style={{
                                 display: 'flex',
+                                flexDirection: 'column',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                marginBottom: '15px',
+                                marginTop: '15px',
                             }}
                         >
+                            <p>
+                                A určitě si stáhněte zdarma turistickou aplikaci <b>Úžasná místa</b>.
+                            </p>
                             <img src={appleAndroid} height={100} />
                         </div>
-                        <p>A určitě si zahrajte poznávačku dle fotek Úžasných míst!</p>
-                        <Heraldry />
                     </>
                 ),
             },

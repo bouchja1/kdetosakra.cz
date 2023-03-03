@@ -13,6 +13,7 @@ export const routeNames = {
     geolokace: 'geolokace',
     podminky: 'podminky',
     cookies: 'cookies',
+    uzasnaMista: 'uzasna-mista',
 };
 
 export const isInGameRoute = pathname => {

@@ -1,12 +1,13 @@
 import React, { useContext, useRef } from 'react';
-import MapyCzContext from '../../context/MapyCzContext';
+
 import { DEFAUL_MARKER_ICON } from '../../constants/icons';
-import { RoundSMapWrapper } from '../SMap/RoundSMapWrapper';
+import MapyCzContext from '../../context/MapyCzContext';
 import { ResultSMapWrapper } from '../SMap/ResultSMapWrapper';
+import { RoundSMapWrapper } from '../SMap/RoundSMapWrapper';
 
 const GuessingMap = ({
     currentRoundGuessedPoint,
-    isBattle,
+    isBattle = false,
     refLayerValue,
     roundGuessed,
     refVectorLayerSMapValue,

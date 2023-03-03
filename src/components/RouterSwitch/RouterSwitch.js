@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 
 import { routeNames } from '../../constants/routes';
 import { Battle, CustomPlace, Geolocation, Random, RandomRegionalPlace, RegionCity } from '../../containers/games';
+import { AmazingPlacesGame } from '../../containers/games/AmazingPlacesGame';
 import { HeraldryGame } from '../../containers/games/HeraldryGame';
 import { Help, Home, Info, NotFound, Result } from '../../pages';
 import { CookiesPage } from '../../pages/Cookies';
@@ -27,6 +28,9 @@ const RouterSwitch = () => {
             </Route>
             <Route path={`/${routeNames.heraldika}`}>
                 <HeraldryGame />
+            </Route>
+            <Route path={`/${routeNames.uzasnaMista}`}>
+                <AmazingPlacesGame />
             </Route>
             <Route path={`/${routeNames.nahodneKraj}`}>
                 <RandomRegionalPlace />
