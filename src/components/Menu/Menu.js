@@ -97,25 +97,29 @@ const Menu = ({ isInGame = false }) => {
                         </div>
                     </>
                 )}
-                <div className="menu-item menu-separator">|</div>
-                <div className="menu-item-with-icon-container">
-                    {/* eslint-disable-next-line react/jsx-no-target-blank */}
-                    <a title="Discord" href="https://discord.gg/b9h3xdP6gG" target="_blank" rel="noreferrer">
-                        <img alt="Discord" src={discordIcon} height={30} />
-                    </a>
-                </div>
-                <div className="menu-item menu-separator">|</div>
-                {/* eslint-disable-next-line react/jsx-no-target-blank */}
-                <div className={menuItemWithIconContainerStyles}>
-                    <a
-                        title="Facebook stránka"
-                        href="https://www.facebook.com/kdetosakra.cz"
-                        target="_blank"
-                        rel="noreferrer"
-                    >
-                        <FacebookFilled style={{ color: 'rgb(66, 103, 178)', fontSize: '25px' }} />
-                    </a>
-                </div>
+                {!isInGame && (
+                    <>
+                        <div className="menu-item menu-separator">|</div>
+                        <div className="menu-item-with-icon-container">
+                            {/* eslint-disable-next-line react/jsx-no-target-blank */}
+                            <a title="Discord" href="https://discord.gg/b9h3xdP6gG" target="_blank" rel="noreferrer">
+                                <img alt="Discord" src={discordIcon} height={30} />
+                            </a>
+                        </div>
+                        <div className="menu-item menu-separator">|</div>
+                        {/* eslint-disable-next-line react/jsx-no-target-blank */}
+                        <div className={menuItemWithIconContainerStyles}>
+                            <a
+                                title="Facebook stránka"
+                                href="https://www.facebook.com/kdetosakra.cz"
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                <FacebookFilled style={{ color: 'rgb(66, 103, 178)', fontSize: '25px' }} />
+                            </a>
+                        </div>
+                    </>
+                )}
             </div>
             {!isGameFinished() && isBattle && myPlayer?.userId && currentBattleInfo.round > 0 && <BattleCountDown />}
             {isGameInfoShown(pathname, isBattle) && (
