@@ -1,5 +1,6 @@
 import { Spin } from 'antd';
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { isMobile } from 'react-device-detect';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
@@ -143,7 +144,10 @@ const Panorama = ({
             size="large"
         >
             {/* -40 padding of layout */}
-            <div className="panorama-container" style={{ height: height - 75, width }}>
+            <div
+                className="panorama-container"
+                style={{ height: height - (isMobile ? 110 : 75), ...(!isMobile && { width }) }}
+            >
                 {!panoramaFounded ? (
                     <p>V okruhu 5 km od vašeho místa nebylo nalezeno žádné panorama.</p>
                 ) : (

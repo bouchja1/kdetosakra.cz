@@ -1,6 +1,7 @@
-import { useLocalStorage, writeStorage } from '@rehooks/local-storage';
+import { useLocalStorage } from '@rehooks/local-storage';
 import { Tabs } from 'antd';
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import { isMobile } from 'react-device-detect';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMediaQuery } from 'react-responsive';
 
@@ -62,16 +63,19 @@ export const GameScreen = ({ mode, radius, city, isGameStarted = true, isBattle,
     }, [activeTabKey]);
 
     useEffect(() => {
-        let roundNumber;
-        if (isBattle) {
-            roundNumber = currentRoundNumber;
-        } else {
-            roundNumber = round;
-        }
-        if (!roundNumber || roundNumber === 1) {
-            setMapDimension('normal');
-        } else {
-            setMapDimension('min');
+        // Do not do this for mobile - it breaks map rendering in next rounds
+        if (!isMobile) {
+            let roundNumber;
+            if (isBattle) {
+                roundNumber = currentRoundNumber;
+            } else {
+                roundNumber = round;
+            }
+            if (!roundNumber || roundNumber === 1) {
+                setMapDimension('normal');
+            } else {
+                setMapDimension('min');
+            }
         }
     }, [isBattle, currentRoundNumber, round]);
 
