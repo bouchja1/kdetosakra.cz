@@ -11,7 +11,7 @@ export const Home = () => {
             <div className="home-overview-hero">
                 <h1
                     style={{
-                        paddingTop: '25px',
+                        paddingTop: '10px',
                     }}
                 >
                     Poznávej Česko!
