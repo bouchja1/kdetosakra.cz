@@ -92,9 +92,8 @@ export const CustomPlace = ({ multiplayerSupported }) => {
     }
 
     return (
-        <form>
+        <div className="customPlaceForm">
             <input
-                name="place"
                 type="text"
                 className="ant-input text-input"
                 placeholder="Místo, které chceš zkoumat"
@@ -147,6 +146,6 @@ export const CustomPlace = ({ multiplayerSupported }) => {
                 radius={Number(radius)}
                 selectedCity={cityData}
             />
-        </form>
+        </div>
     );
 };

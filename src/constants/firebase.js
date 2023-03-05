@@ -1,4 +1,5 @@
-import firebase from 'firebase/app';
+// v9 compat packages are API compatible with v8 code
+import firebase from 'firebase/compat/app';
 
 export const firebaseUiConfig = {
     // Popup signin flow rather than redirect flow.

@@ -29,7 +29,7 @@ const ModesContainer = styled.div`
     flex: 0 0 100%; /* Let it fill the entire space horizontally */
 `;
 
-const SectionModesContainer = styled.div`
+export const SectionModesContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;

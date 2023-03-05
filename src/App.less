@@ -297,9 +297,8 @@ label {
     color: #E5E4E4FF;
 }
 
-.smap-suggest {
-    position: relative;
-    bottom: -25px;
+.customPlaceForm ul.smap-suggest {
+    bottom: -70px;
 }
 
 .result-container {
@@ -724,8 +723,21 @@ label {
     font-weight: bolder;
 }
 
+@media (min-width: 1024px) {
+    .placeUploadForm {
+        max-width: 600px;
+        margin-bottom: 5px;
+        min-width: 600px;
+    }
+}
+
 /* Mobile Styles */
 @media only screen and (max-width: 400px) {
+    .placeUploadForm {
+        width: 80vw;
+        min-width: initial;
+    }
+
     .game-mode-info-container {
         display: none;
     }
@@ -796,6 +808,11 @@ label {
 
 /* Tablet Styles */
 @media only screen and (min-width: 401px) and (max-width: 960px) {
+    .placeUploadForm {
+        width: 80vw;
+        min-width: initial;
+    }
+
     .game-mode-item {
         width: 50%;
     }

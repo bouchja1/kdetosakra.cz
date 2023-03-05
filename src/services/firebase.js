@@ -1,18 +1,22 @@
-import 'firebase/analytics';
-import 'firebase/auth';
-import 'firebase/firestore';
+import 'firebase/compat/analytics';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
 
-import firebase from 'firebase/app';
+// v9 compat packages are API compatible with v8 code
+import firebase from 'firebase/compat/app';
+import { getStorage } from 'firebase/storage';
 
 import { firebaseConfig } from '../constants/firebase';
 import { MAX_ALLOWED_BATTLE_PLAYERS } from '../constants/game';
 import { DuplicatedBattlePlayerError, MaxBattleCapacityExhaustedError, NotFoundBattlePlayerError } from '../errors';
 import { generateRandomRadius, getRandomNickname } from '../util';
 
-firebase.initializeApp(firebaseConfig);
+const app = firebase.initializeApp(firebaseConfig);
 firebase.analytics();
-const db = firebase.firestore();
+export const db = firebase.firestore();
+export const storage = getStorage(app);
 
+export const COLLECTION_PLACES = 'places';
 const COLLECTION_BATTLE = 'battle';
 const COLLECTION_BATTLE_PLAYERS = 'players';
 const COLLECTION_BATTLE_ROUNDS = 'battleRounds';

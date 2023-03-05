@@ -6,6 +6,7 @@ import { Battle, CustomPlace, Geolocation, Random, RandomRegionalPlace, RegionCi
 import { HeraldryGame } from '../../containers/games/HeraldryGame';
 import { Help, Home, Info, NotFound, Result } from '../../pages';
 import { DonationPage } from '../../pages/DonationPage';
+import { PlacesUpload } from '../../pages/PlacesUpload';
 
 const RouterSwitch = () => {
     return (
@@ -42,6 +43,9 @@ const RouterSwitch = () => {
             </Route>
             <Route path={`/${routeNames.podpora}`}>
                 <DonationPage />
+            </Route>
+            <Route path={`/${routeNames.nahratMisto}`}>
+                <PlacesUpload />
             </Route>
             <Route path={`/${routeNames.battle}/:battleId`}>
                 <Battle />
