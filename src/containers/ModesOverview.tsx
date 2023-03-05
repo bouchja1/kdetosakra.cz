@@ -9,7 +9,6 @@ import heraldryCover from '../assets/images/city/heraldry.png';
 import pragueCover from '../assets/images/city/prague.jpg';
 import randomCover from '../assets/images/city/random.jpg';
 import suggestedCover from '../assets/images/city/suggested.jpg';
-import uzasnaMista from '../assets/images/uzasna-mista.png';
 import youtubeCover from '../assets/images/youtube.jpg';
 import { GameModeRibbonWrapper } from '../components/GameModeRibbonWrapper';
 import { CustomPlace, Geolocation, Random, RandomPlaceInRegion, RegionCity } from '../components/modes';
@@ -176,17 +175,13 @@ export const ModesOverview = () => {
     const otherModesArray: GameModes[] = useMemo(() => {
         return [
             {
-                coverImgAlt: 'Herní mód - Úžasná místa v Česku',
-                coverImgSrc: uzasnaMista,
-                title: 'Úžasná místa v Česku',
+                coverImgAlt: 'Herní mód - Zajímavá místa v Česku',
+                coverImgSrc: suggestedCover,
+                title: 'Zajímavá místa v Česku',
                 content: (
                     <>
-                        <p>
-                            Hledáte tipy na výlety? Web{' '}
-                            <a href="https://www.uzasnamista.cz/">https://www.uzasnamista.cz/</a> má pro vás více než{' '}
-                            <b>1000 tipů</b> na neokoukaná místa v Česku.
-                        </p>
-                        <p>Zahrajte si poznávačku z výběru fotek Úžasných míst!</p>
+                        <p>Hledáte tipy na výlety?</p>
+                        <p>Zahrajte si poznávačku z výběru fotek</p>
                         <AmazingPlaces />
                         <div
                             style={{
@@ -196,12 +191,7 @@ export const ModesOverview = () => {
                                 justifyContent: 'center',
                                 marginTop: '15px',
                             }}
-                        >
-                            <p>
-                                A určitě si stáhněte zdarma turistickou aplikaci <b>Úžasná místa</b>.
-                            </p>
-                            <img src={appleAndroid} height={100} />
-                        </div>
+                        ></div>
                     </>
                 ),
             },
