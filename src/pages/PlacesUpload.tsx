@@ -151,7 +151,7 @@ export const PlacesUpload = () => {
                                         type="primary"
                                         htmlType="submit"
                                         style={{
-                                            width: '500px',
+                                            width: '100%',
                                         }}
                                     >
                                         Nahrát
