@@ -92,7 +92,7 @@ export const PlacesUpload = () => {
                 <SectionModesContainer>
                     {showUploadPlaceForm ? (
                         <>
-                            <h2>Pomoc připravit nový herní mód</h2>
+                            <h2>Prosba o pomoc s přípravou nového herního módu</h2>
                             <Form
                                 className="placeUploadForm"
                                 form={form}
