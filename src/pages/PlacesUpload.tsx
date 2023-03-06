@@ -113,12 +113,12 @@ export const PlacesUpload = () => {
                                     <input
                                         type="text"
                                         className="ant-input text-input"
-                                        placeholder="Název místa na fotce"
+                                        placeholder="Zadejte název místa na fotce"
                                         ref={suggestInput}
                                     />
                                 </Form.Item>
                                 <Form.Item
-                                    label="Fotka"
+                                    label="Vaše fotka"
                                     valuePropName="fileList"
                                     name="image"
                                     required
