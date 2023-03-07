@@ -1,5 +1,7 @@
-import { Card, Radio, RadioChangeEvent, Select } from 'antd';
+import { Button, Card, Radio, RadioChangeEvent, Select } from 'antd';
 import React, { useMemo, useState } from 'react';
+import ReactGA from 'react-ga4';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
 import geolocationCover from '../assets/images/city/geolocation.jpg';
@@ -11,9 +13,12 @@ import youtubeCover from '../assets/images/youtube.jpg';
 import { GameModeRibbonWrapper } from '../components/GameModeRibbonWrapper';
 import { CustomPlace, Geolocation, Random, RandomPlaceInRegion, RegionCity } from '../components/modes';
 import { Heraldry } from '../components/modes/Heraldry';
+import { routeNames } from '../constants/routes';
+import { CATEGORIES } from '../enums/gaCategories';
 import { nutsCodes } from '../enums/nutsCodes';
 import useGetRandomUserToken from '../hooks/useGetRandomUserToken';
 import useSMapResize from '../hooks/useSMapResize';
+import { GameModes } from '../types/game';
 import { borderRadiusBase, componentBackground } from '../util/theme';
 
 const { Meta } = Card;
@@ -29,7 +34,7 @@ const ModesContainer = styled.div`
     flex: 0 0 100%; /* Let it fill the entire space horizontally */
 `;
 
-const SectionModesContainer = styled.div`
+export const SectionModesContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -37,7 +42,7 @@ const SectionModesContainer = styled.div`
     background: ${componentBackground};
     box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.1);
     border-radius: ${borderRadiusBase};
-    padding: 15px 0 15px 0;
+    padding: 15px 30px 15px 30px;
 `;
 
 const SectionModeCards = styled.div`
@@ -51,6 +56,7 @@ const SectionModeCards = styled.div`
 export const ModesOverview = () => {
     useGetRandomUserToken();
     const { width } = useSMapResize();
+    let history = useHistory();
     const [randomMode, setRandomMode] = useState('cr');
     const [regionNutCode, setRegionNutCode] = useState(null);
 
@@ -62,7 +68,7 @@ export const ModesOverview = () => {
 
     const regionEnumKeys = Object.keys(nutsCodes);
 
-    const panoramaModesArray = useMemo(() => {
+    const panoramaModesArray: GameModes[] = useMemo(() => {
         return [
             {
                 coverImgAlt: 'Herní mód - Vlastní místo',
@@ -165,7 +171,15 @@ export const ModesOverview = () => {
         ];
     }, [randomMode, regionNutCode, isMultiplayerSupported]);
 
-    const otherModesArray = useMemo(() => {
+    const handleAddNewAmazingPlace = () => {
+        ReactGA.event({
+            category: CATEGORIES.UPLOAD_NEW_PLACE_CLICKED,
+            action: 'Play suggested city game',
+        });
+        history.push(`/${routeNames.nahratMisto}`);
+    };
+
+    const otherModesArray: GameModes[] = useMemo(() => {
         return [
             {
                 coverImgAlt: 'Herní mód - Heraldika',
@@ -228,12 +242,9 @@ export const ModesOverview = () => {
                     <h1>Herní módy s panorámaty</h1>
                     <SectionModeCards>
                         {panoramaModesArray.map(mode => {
-                            const { coverImgAlt, coverImgSrc, title, content } = mode;
+                            const { coverImgAlt, coverImgSrc, title, content, isNew } = mode;
                             return (
-                                <GameModeRibbonWrapper
-                                    condition={title === 'Erby měst a obcí v Česku'}
-                                    message="Novinka!"
-                                >
+                                <GameModeRibbonWrapper condition={!!isNew} message="Novinka!">
                                     <Card
                                         cover={<img alt={coverImgAlt} src={coverImgSrc} style={{ opacity: 0.9 }} />}
                                         key={title}
@@ -249,12 +260,9 @@ export const ModesOverview = () => {
                     <h1>Ostatní</h1>
                     <SectionModeCards>
                         {otherModesArray.map(mode => {
-                            const { coverImgAlt, coverImgSrc, title, content } = mode;
+                            const { coverImgAlt, coverImgSrc, title, content, isNew } = mode;
                             return (
-                                <GameModeRibbonWrapper
-                                    condition={title === 'Erby měst a obcí v Česku'}
-                                    message="Novinka!"
-                                >
+                                <GameModeRibbonWrapper condition={!!isNew} message="Novinka!">
                                     <Card
                                         cover={<img alt={coverImgAlt} src={coverImgSrc} style={{ opacity: 0.9 }} />}
                                         key={title}

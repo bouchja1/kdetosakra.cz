@@ -1,4 +1,10 @@
-import { CoffeeOutlined, FacebookFilled, InfoCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import {
+    CoffeeOutlined,
+    FacebookFilled,
+    FileImageOutlined,
+    InfoCircleOutlined,
+    QuestionCircleOutlined,
+} from '@ant-design/icons';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';

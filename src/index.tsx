@@ -3,6 +3,8 @@ import './polyfills';
 import './App.less';
 import './assets/fonts/Roboto-Regular.ttf';
 
+import { ConfigProvider } from 'antd';
+import csCZ from 'antd/lib/locale/cs_CZ';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -15,6 +17,8 @@ const root = createRoot(container!); // createRoot(container!) if you use TypeSc
 root.render(
     <Router>
         <ScrollToTop />
-        <App />
+        <ConfigProvider locale={csCZ}>
+            <App />
+        </ConfigProvider>
     </Router>,
 );

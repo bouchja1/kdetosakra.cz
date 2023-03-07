@@ -4,12 +4,14 @@ export const routeNames = {
     vlastni: 'vlastni',
     napoveda: 'napoveda',
     podpora: 'podpora',
+    nahratMisto: 'nahrat-misto',
     vysledek: 'vysledek',
     nahodne: 'nahodne',
     nahodneKraj: 'nahodne-kraj',
     mesto: 'mesto',
     heraldika: 'heraldika',
     geolokace: 'geolokace',
+    podminky: 'podminky',
 };
 
 export const isInGameRoute = pathname => {
@@ -17,6 +19,8 @@ export const isInGameRoute = pathname => {
         pathname !== '/' &&
         pathname !== `/${routeNames.info}` &&
         pathname !== `/${routeNames.napoveda}` &&
-        pathname !== `/${routeNames.podpora}`
+        pathname !== `/${routeNames.podpora}` &&
+        pathname !== `/${routeNames.nahratMisto}` &&
+        pathname !== `/${routeNames.podminky}`
     );
 };
