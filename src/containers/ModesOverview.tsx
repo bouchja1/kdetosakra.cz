@@ -42,7 +42,7 @@ export const SectionModesContainer = styled.div`
     background: ${componentBackground};
     box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.1);
     border-radius: ${borderRadiusBase};
-    padding: 15px 0 15px 0;
+    padding: 15px 30px 15px 30px;
 `;
 
 const SectionModeCards = styled.div`
@@ -181,22 +181,6 @@ export const ModesOverview = () => {
 
     const otherModesArray: GameModes[] = useMemo(() => {
         return [
-            {
-                coverImgAlt: 'Herní mód - Zajímavá místa v ČR',
-                coverImgSrc: heraldryCover,
-                title: 'Zajímavá místa v ČR',
-                isNew: false, // switch to true when we have more places :)
-                content: (
-                    <>
-                        <p>TODO</p>
-                        <div style={{ display: 'flex', justifyContent: 'center' }}>
-                            <Button size="large" type="primary" onClick={handleAddNewAmazingPlace}>
-                                Přidat místo
-                            </Button>
-                        </div>
-                    </>
-                ),
-            },
             {
                 coverImgAlt: 'Herní mód - Heraldika',
                 coverImgSrc: heraldryCover,

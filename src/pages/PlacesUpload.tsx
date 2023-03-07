@@ -1,9 +1,12 @@
-import { Button, Form, Input, InputNumber, Layout, Progress } from 'antd';
+import { CoffeeOutlined } from '@ant-design/icons';
+import { Button, Checkbox, Form, Input, InputNumber, Layout, Progress } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import firebase from 'firebase/compat/app';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 
+import { routeNames } from '../constants/routes';
 import { SectionModesContainer } from '../containers/ModesOverview';
 import MapyCzContext from '../context/MapyCzContext';
 import { COLLECTION_PLACES, db, storage } from '../services/firebase';
@@ -17,6 +20,19 @@ interface PlaceFormValues {
     suggestedName: string;
     image: React.BaseSyntheticEvent;
 }
+
+const tailFormItemLayout = {
+    wrapperCol: {
+        xs: {
+            span: 24,
+            offset: 0,
+        },
+        sm: {
+            span: 16,
+            offset: 8,
+        },
+    },
+};
 
 export const PlacesUpload = () => {
     const [form] = Form.useForm();
@@ -50,6 +66,13 @@ export const PlacesUpload = () => {
         const file = image.target?.files[0];
 
         if (!file) return;
+
+        const fileMb = file.size / 1024 ** 2;
+
+        if (fileMb > 20) {
+            alert('Maximální povolená velikost fotky je 20 MB.');
+            return;
+        }
 
         const storageRef = ref(storage, `places/${file.name}`);
         const uploadTask = uploadBytesResumable(storageRef, file);
@@ -92,7 +115,24 @@ export const PlacesUpload = () => {
                 <SectionModesContainer>
                     {showUploadPlaceForm ? (
                         <>
-                            <h2>Prosba o pomoc s přípravou nového herního módu</h2>
+                            <h2>Poděl se prosím o své fotky zajímavých míst v ČR</h2>
+                            <p>
+                                Milí výletníci. Rád bych vytvořil nový herní mód založený na poznávání zajímavých míst v
+                                ČR na základě jejich fotek. Budu vděčný, když mi s vytvářením databáze míst pomůžete.
+                            </p>
+                            <p>
+                                Pokud máte fotky, které jste ochotni sdílet a máte chuť pomoci s tvorbou nového herního
+                                módu, neváhejte a nahrávejte prostřednictvím formuláře níže. Vítané jsou fotky všech
+                                různých zajímavých míst, od nejznámějších turistických atrakcí (např.{' '}
+                                <a href="https://www.google.com/search?q=hrad+karl%C5%A1tejn" target="_blank">
+                                    Karlštejn
+                                </a>
+                                ) po místa méně známá (např.{' '}
+                                <a href="https://www.google.com/search?q=helen%C4%8Diny+vodop%C3%A1dy" target="_blank">
+                                    Helenčiny vodopády
+                                </a>
+                                ). Děkuji za pomoc a podporu.
+                            </p>
                             <Form
                                 className="placeUploadForm"
                                 form={form}
@@ -108,7 +148,9 @@ export const PlacesUpload = () => {
                                     label="Název místa"
                                     name="suggestedName"
                                     required
-                                    rules={[{ required: true, message: 'lol' }]}
+                                    rules={[
+                                        { required: true, message: 'Vyplňte prosím název místa, které je na fotce.' },
+                                    ]}
                                 >
                                     <input
                                         type="text"
@@ -122,9 +164,14 @@ export const PlacesUpload = () => {
                                     valuePropName="fileList"
                                     name="image"
                                     required
-                                    rules={[{ required: true }]}
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Vyberte prosím soubor s fotkou, kterou chcete nahrát.',
+                                        },
+                                    ]}
                                 >
-                                    <input type="file" />
+                                    <input type="file" accept="image/*" />
                                 </Form.Item>
                                 <Form.Item label="Zeměpisná šířka (lat)" name="latitude">
                                     <InputNumber
@@ -145,6 +192,26 @@ export const PlacesUpload = () => {
                                 </Form.Item>
                                 <Form.Item label="Autor místa" name="author">
                                     <Input placeholder="Tvé jméno nebo přezdívka" />
+                                </Form.Item>
+                                <Form.Item
+                                    name="agreement"
+                                    valuePropName="checked"
+                                    rules={[
+                                        {
+                                            validator: (_, value) =>
+                                                value
+                                                    ? Promise.resolve()
+                                                    : Promise.reject(new Error('Odsouhlaste prosím podmínky.')),
+                                        },
+                                    ]}
+                                    {...tailFormItemLayout}
+                                >
+                                    <Checkbox>
+                                        Souhlasím s{' '}
+                                        <Link target="_blank" to={`/${routeNames.podminky}`}>
+                                            podmínkami používání
+                                        </Link>
+                                    </Checkbox>
                                 </Form.Item>
                                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                                     <Button

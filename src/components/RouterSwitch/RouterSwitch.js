@@ -7,6 +7,7 @@ import { HeraldryGame } from '../../containers/games/HeraldryGame';
 import { Help, Home, Info, NotFound, Result } from '../../pages';
 import { DonationPage } from '../../pages/DonationPage';
 import { PlacesUpload } from '../../pages/PlacesUpload';
+import { TermsPage } from '../../pages/Terms';
 
 const RouterSwitch = () => {
     return (
@@ -43,6 +44,9 @@ const RouterSwitch = () => {
             </Route>
             <Route path={`/${routeNames.podpora}`}>
                 <DonationPage />
+            </Route>
+            <Route path={`/${routeNames.podminky}`}>
+                <TermsPage />
             </Route>
             <Route path={`/${routeNames.nahratMisto}`}>
                 <PlacesUpload />

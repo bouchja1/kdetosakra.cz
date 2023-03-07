@@ -75,6 +75,11 @@ export const App = () => {
                                     </Link>
                                 </>
                             )}
+                            <>
+                                {' | '}
+                                {/* eslint-disable-next-line react/jsx-no-target-blank */}
+                                <Link to={`/${routeNames.podminky}`}>Podmínky</Link>
+                            </>
                         </p>
                     </Footer>
                 )}

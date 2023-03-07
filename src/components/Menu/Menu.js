@@ -92,13 +92,6 @@ const Menu = ({ isInGame = false }) => {
                         <div className="menu-item">Jak to hrát?</div>
                     </Link>
                 </div>
-                <div className="menu-item menu-separator">|</div>
-                <div className={menuItemWithIconContainerStyles}>
-                    <Link to={`/${routeNames.nahratMisto}`}>
-                        <FileImageOutlined className="menu-item-icon" />
-                        <div className="menu-item">Nahrát místo</div>
-                    </Link>
-                </div>
                 {!isBattle && (
                     <>
                         <div className="menu-item menu-separator">|</div>

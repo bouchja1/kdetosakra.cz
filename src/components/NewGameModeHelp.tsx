@@ -32,7 +32,9 @@ export const NewGameModeHelp = () => {
     return (
         <NewGameModeHelpContainer>
             <p>
-                TODO claim. <Link to={`/${routeNames.nahratMisto}`}>Nahrát místo</Link>
+                <Link to={`/${routeNames.nahratMisto}`}>
+                    Prosba o pomoc s přípravou nového herního módu "Zajímavá místa v ČR".
+                </Link>
             </p>
         </NewGameModeHelpContainer>
     );

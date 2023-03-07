@@ -11,6 +11,7 @@ export const routeNames = {
     mesto: 'mesto',
     heraldika: 'heraldika',
     geolokace: 'geolokace',
+    podminky: 'podminky',
 };
 
 export const isInGameRoute = pathname => {
@@ -19,6 +20,7 @@ export const isInGameRoute = pathname => {
         pathname !== `/${routeNames.info}` &&
         pathname !== `/${routeNames.napoveda}` &&
         pathname !== `/${routeNames.podpora}` &&
-        pathname !== `/${routeNames.nahratMisto}`
+        pathname !== `/${routeNames.nahratMisto}` &&
+        pathname !== `/${routeNames.podminky}`
     );
 };
