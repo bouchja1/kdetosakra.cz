@@ -171,14 +171,6 @@ export const ModesOverview = () => {
         ];
     }, [randomMode, regionNutCode, isMultiplayerSupported]);
 
-    const handleAddNewAmazingPlace = () => {
-        ReactGA.event({
-            category: CATEGORIES.UPLOAD_NEW_PLACE_CLICKED,
-            action: 'Play suggested city game',
-        });
-        history.push(`/${routeNames.nahratMisto}`);
-    };
-
     const otherModesArray: GameModes[] = useMemo(() => {
         return [
             {
