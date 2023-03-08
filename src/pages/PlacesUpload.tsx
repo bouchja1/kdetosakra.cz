@@ -115,10 +115,10 @@ export const PlacesUpload = () => {
                 <SectionModesContainer>
                     {showUploadPlaceForm ? (
                         <>
-                            <h2>Poděl se prosím o své fotky zajímavých míst v ČR</h2>
+                            <h2>Poděl se o své fotky zajímavých míst v ČR</h2>
                             <p>
                                 Milí výletníci. Rád bych vytvořil nový herní mód založený na poznávání zajímavých míst v
-                                ČR na základě jejich fotek. Budu vděčný, když mi s vytvářením databáze míst pomůžete.
+                                ČR na základě jejich fotek.
                             </p>
                             <p>
                                 Pokud máte fotky, které jste ochotni sdílet a máte chuť pomoci s tvorbou nového herního
