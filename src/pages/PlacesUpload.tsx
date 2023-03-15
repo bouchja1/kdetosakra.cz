@@ -144,14 +144,7 @@ export const PlacesUpload = () => {
                                 onFinishFailed={() => console.log('failed')}
                                 size="large"
                             >
-                                <Form.Item
-                                    label="Název místa"
-                                    name="suggestedName"
-                                    required
-                                    rules={[
-                                        { required: true, message: 'Vyplňte prosím název místa, které je na fotce.' },
-                                    ]}
-                                >
+                                <Form.Item label="Název místa" name="suggestedName" required>
                                     <input
                                         type="text"
                                         className="ant-input text-input"

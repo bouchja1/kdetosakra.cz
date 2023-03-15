@@ -52,8 +52,7 @@ export const App = () => {
     return (
         <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
-                {/* lets comment this for now - not working */}
-                {/*  !isMobile && !isInGame && <NewGameModeHelp /> */}
+                {!isMobile && !isInGame && <NewGameModeHelp />}
                 <Menu isInGame={isInGame} />
                 <Layout className={classNames(!isInGame && 'layout')}>
                     {loaded && !error && (
