@@ -19,6 +19,7 @@ interface PlaceFormValues {
     longitude: number;
     suggestedName: string;
     image: React.BaseSyntheticEvent;
+    author: string;
 }
 
 const tailFormItemLayout = {
@@ -62,7 +63,7 @@ export const PlacesUpload = () => {
     }, [mapyContext]);
 
     const handleSubmit = (values: PlaceFormValues) => {
-        const { image, suggestedName, description, latitude, longitude } = values;
+        const { image, suggestedName, description, latitude, longitude, author } = values;
         const file = image.target?.files[0];
 
         if (!file) return;
@@ -97,6 +98,7 @@ export const PlacesUpload = () => {
                             latitude: latitude ?? null,
                             longitude: longitude ?? null,
                             image: downloadURL,
+                            author: author ?? null,
                         });
                     })
                     .then(res => {
