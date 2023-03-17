@@ -135,6 +135,12 @@ export const PlacesUpload = () => {
                                 </a>
                                 ). Děkuji za pomoc a podporu.
                             </p>
+                            <p>
+                                <b>
+                                    PS: Pokud budete zadávat i souřadnice, zadávejte prosím souřadnice vyfoceného místa
+                                    (ne polohu fotografa)
+                                </b>
+                            </p>
                             <Form
                                 className="placeUploadForm"
                                 form={form}
