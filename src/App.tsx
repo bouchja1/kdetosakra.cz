@@ -65,21 +65,15 @@ export const App = () => {
                     <Footer style={{ textAlign: 'center', fontSize: '14px' }}>
                         <p>
                             Postaveno s <HeartTwoTone twoToneColor="#eb2f96" /> na{' '}
-                            <a href="https://api.mapy.cz/">Mapy.cz API</a>{' '}
-                            {!pathname.includes(routeNames.info) && !pathname.includes(routeNames.podpora) && (
-                                <>
-                                    {' | '}
-                                    {/* eslint-disable-next-line react/jsx-no-target-blank */}
-                                    <Link to={`/${routeNames.podpora}`}>
-                                        Podpořte provoz a další rozvoj <CoffeeOutlined />
-                                    </Link>
-                                </>
-                            )}
-                            <>
-                                {' | '}
-                                {/* eslint-disable-next-line react/jsx-no-target-blank */}
-                                <Link to={`/${routeNames.podminky}`}>Podmínky</Link>
-                            </>
+                            <a href="https://api.mapy.cz/">Mapy.cz API</a>
+                            {' | '}
+                            {/* eslint-disable-next-line react/jsx-no-target-blank */}
+                            <Link to={`/${routeNames.podminky}`}>Podmínky</Link>
+                            {' | '}
+                            {/* eslint-disable-next-line react/jsx-no-target-blank */}
+                            <a href="https://zenamu.com" target="_blank">
+                                Koukněte i na můj další projekt Zenamu - rezervační systém pro jóga studia
+                            </a>
                         </p>
                     </Footer>
                 )}
