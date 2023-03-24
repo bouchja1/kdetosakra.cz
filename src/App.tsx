@@ -71,9 +71,11 @@ export const App = () => {
                             <Link to={`/${routeNames.podminky}`}>Podmínky</Link>
                             {' | '}
                             {/* eslint-disable-next-line react/jsx-no-target-blank */}
-                            <a href="https://zenamu.com" target="_blank">
-                                Koukněte i na můj další projekt Zenamu - rezervační systém pro jóga studia
-                            </a>
+                            Koukněte i na můj další projekt{' '}
+                            <a href="https://zenamu.com" target="_blank" rel="noreferrer">
+                                Zenamu
+                            </a>{' '}
+                            - rezervační systém pro jóga studia
                         </p>
                     </Footer>
                 )}
