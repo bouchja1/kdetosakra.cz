@@ -65,9 +65,6 @@ export const App = () => {
                             {' | '}
                             {/* eslint-disable-next-line react/jsx-no-target-blank */}
                             <Link to={`/${routeNames.cookies}`}>Cookies</Link>
-                            <a href="/#" id="open_preferences_center">
-                                | Upravit souhlas s cookies
-                            </a>
                             {' | '}
                             {/* eslint-disable-next-line react/jsx-no-target-blank */}
                             Koukněte i na můj další projekt{' '}
