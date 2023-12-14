@@ -1,6 +1,5 @@
 import { Col, InputNumber, Row, Slider, Tooltip } from 'antd';
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import ReactGA from 'react-ga4';
 import { useDispatch } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
@@ -32,10 +31,6 @@ export const CustomPlace = ({ multiplayerSupported }) => {
     };
 
     const handleClickStartGame = (resultMode, noMove = false) => {
-        ReactGA.event({
-            category: CATEGORIES.SUGGESTED,
-            action: 'Play suggested city game',
-        });
         dispatch(
             setCurrentGame({
                 mode: gameModes.custom,

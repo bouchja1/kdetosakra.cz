@@ -1,6 +1,5 @@
 import { Button } from 'antd';
 import React, { useState } from 'react';
-import ReactGA from 'react-ga4';
 import { useDispatch } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
@@ -16,10 +15,6 @@ export const Heraldry = () => {
 
     const handlePlayHeraldry = () => {
         const randomCity = getRandomCzechPlaceWithCoatOfArms();
-        ReactGA.event({
-            category: CATEGORIES.HERALDRY,
-            action: 'Play heraldry',
-        });
         dispatch(
             // @ts-ignore
             setCurrentGame({

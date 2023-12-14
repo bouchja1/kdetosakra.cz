@@ -1,6 +1,5 @@
-import { Button, Card, Radio, RadioChangeEvent, Select } from 'antd';
+import { Card, Radio, RadioChangeEvent, Select } from 'antd';
 import React, { useMemo, useState } from 'react';
-import ReactGA from 'react-ga4';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 

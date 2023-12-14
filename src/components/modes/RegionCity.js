@@ -1,6 +1,5 @@
 import { Col, InputNumber, Row, Select, Slider, Tooltip } from 'antd';
 import React, { useState } from 'react';
-import ReactGA from 'react-ga4';
 import { useDispatch } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
@@ -62,10 +61,6 @@ export const RegionCity = ({ multiplayerSupported }) => {
     };
 
     const handleClickStartGame = (resultMode, noMove = false) => {
-        ReactGA.event({
-            category: CATEGORIES.CITY,
-            action: 'Play city game',
-        });
         const selectedCity = cities.filter(city => {
             return city.name === citySelected.name;
         });

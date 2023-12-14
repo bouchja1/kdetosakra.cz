@@ -1,6 +1,5 @@
 import { Button, Col, InputNumber, Row, Slider, Tooltip } from 'antd';
 import React, { useState } from 'react';
-import ReactGA from 'react-ga4';
 import useGeolocation from 'react-hook-geolocation';
 import { useDispatch } from 'react-redux';
 import { Redirect } from 'react-router-dom';
@@ -27,10 +26,6 @@ export const Geolocation = () => {
     };
 
     const handleClickStartGame = (resultMode, noMove = false) => {
-        ReactGA.event({
-            category: CATEGORIES.GEOLOCATION,
-            action: 'Play geolocation city game',
-        });
         dispatch(
             setCurrentGame({
                 mode: gameModes.geolocation,

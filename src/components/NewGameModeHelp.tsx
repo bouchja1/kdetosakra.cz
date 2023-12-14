@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactGA from 'react-ga4';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -34,15 +33,7 @@ export const NewGameModeHelp = () => {
     return (
         <NewGameModeHelpContainer>
             <p>
-                <Link
-                    to={`/${routeNames.nahratMisto}`}
-                    onClick={() => {
-                        ReactGA.event({
-                            category: CATEGORIES.UPLOAD_NEW_PLACE_CLICKED,
-                            action: 'New place upload click',
-                        });
-                    }}
-                >
+                <Link to={`/${routeNames.nahratMisto}`}>
                     Prosba o pomoc s přípravou nového herního módu "Zajímavá místa v ČR".
                 </Link>
             </p>

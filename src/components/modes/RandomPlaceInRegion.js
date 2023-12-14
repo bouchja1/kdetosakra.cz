@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import ReactGA from 'react-ga4';
 import { useDispatch } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
@@ -86,10 +85,6 @@ export const RandomPlaceInRegion = ({ multiplayerSupported, regionNutCode }) => 
     };
 
     const handleClickStartGame = (resultMode, noMove = false) => {
-        ReactGA.event({
-            category: CATEGORIES.RANDOM_PLACE_IN_REGION,
-            action: 'Play random place in region',
-        });
         dispatch(
             setCurrentGame({
                 mode: gameModes.randomRegion,

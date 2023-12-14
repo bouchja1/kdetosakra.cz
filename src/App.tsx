@@ -22,13 +22,6 @@ import store, { persistor } from './redux/store';
 
 const { Footer } = Layout;
 
-/*
-const initializeReactGA = () => {
-    ReactGA.initialize('UA-151784741-1');
-    ReactGA.send({ hitType: 'pageview', page: window.location.pathname });
-};
- */
-
 export const App = () => {
     // init google analytics
     if (process.env.NODE_ENV === 'production') {

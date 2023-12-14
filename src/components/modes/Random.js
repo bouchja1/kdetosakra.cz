@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import ReactGA from 'react-ga4';
 import { useDispatch } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
@@ -26,10 +25,6 @@ export const Random = ({ multiplayerSupported }) => {
     };
 
     const handleClickStartGame = (resultMode, noMove = false) => {
-        ReactGA.event({
-            category: CATEGORIES.RANDOM_CITY,
-            action: 'Play random city game',
-        });
         dispatch(
             setCurrentGame({
                 mode: gameModes.random,
