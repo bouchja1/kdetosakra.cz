@@ -71,6 +71,9 @@ export const App = () => {
                             <Link to={`/${routeNames.podminky}`}>Podmínky</Link>
                             {' | '}
                             {/* eslint-disable-next-line react/jsx-no-target-blank */}
+                            <Link to={`/${routeNames.cookies}`}>Cookies</Link>
+                            {' | '}
+                            {/* eslint-disable-next-line react/jsx-no-target-blank */}
                             Koukněte i na můj další projekt{' '}
                             <a href="https://zenamu.com" target="_blank" rel="noreferrer">
                                 Zenamu

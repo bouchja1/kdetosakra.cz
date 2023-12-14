@@ -5,6 +5,7 @@ import { routeNames } from '../../constants/routes';
 import { Battle, CustomPlace, Geolocation, Random, RandomRegionalPlace, RegionCity } from '../../containers/games';
 import { HeraldryGame } from '../../containers/games/HeraldryGame';
 import { Help, Home, Info, NotFound, Result } from '../../pages';
+import { CookiesPage } from '../../pages/Cookies';
 import { DonationPage } from '../../pages/DonationPage';
 import { PlacesUpload } from '../../pages/PlacesUpload';
 import { TermsPage } from '../../pages/Terms';
@@ -47,6 +48,9 @@ const RouterSwitch = () => {
             </Route>
             <Route path={`/${routeNames.podminky}`}>
                 <TermsPage />
+            </Route>
+            <Route path={`/${routeNames.cookies}`}>
+                <CookiesPage />
             </Route>
             <Route path={`/${routeNames.nahratMisto}`}>
                 <PlacesUpload />
