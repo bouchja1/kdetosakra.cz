@@ -1,6 +1,6 @@
 import './services/firebase';
 
-import { CoffeeOutlined, HeartTwoTone } from '@ant-design/icons';
+import { HeartTwoTone } from '@ant-design/icons';
 import * as Sentry from '@sentry/react';
 import { BrowserTracing } from '@sentry/tracing';
 import { Layout } from 'antd';
