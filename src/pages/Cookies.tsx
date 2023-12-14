@@ -70,6 +70,11 @@ export const CookiesPage = () => {
                     Tyto zásady mohou být pravidelně aktualizovány, aby odrážely změny v našich praktikách nebo změny v
                     právních požadavcích.
                 </p>
+                <p>
+                    <a href="#" id="open_preferences_center">
+                        Upravit svůj souhlas s cookies.
+                    </a>
+                </p>
                 <p>Tyto podmínky jsou platné od 14. 12. 2023</p>
             </div>
         </Content>
