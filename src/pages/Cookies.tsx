@@ -20,14 +20,12 @@ export const CookiesPage = () => {
                     Tyto zásady používání cookies popisují, jak web www.kdetosakra.cz ("web", "my", "nás") používá
                     cookies a podobné technologie k zajištění nejlepšího uživatelského zážitku a ke shromažďování dat.
                 </p>
-
                 <h3>Co jsou cookies?</h3>
                 <p>
                     Cookies jsou malé datové soubory ukládané ve vašem zařízení (počítač, mobilní telefon, tablet) při
                     prohlížení webu. Pomáhají webu zapamatovat si informace o vaší návštěvě, jako jsou preferovaný jazyk
                     a další nastavení. To může usnadnit vaši další návštěvu a zpříjemnit uživatelský zážitek.
                 </p>
-
                 <h3>Jak používáme cookies?</h3>
                 <p>Na našem webu používáme cookies k různým účelům:</p>
                 <h4>Nezbytné cookies</h4>
@@ -42,7 +40,6 @@ export const CookiesPage = () => {
                 </p>
                 <h4>Reklamní cookies</h4>
                 <p>Používáme je k zobrazení relevantních reklam na našem a jiných webech.</p>
-
                 <h3>Vaše volby</h3>
                 <p>
                     Při první návštěvě webu vás požádáme o souhlas s používáním cookies. Můžete svůj souhlas kdykoli
