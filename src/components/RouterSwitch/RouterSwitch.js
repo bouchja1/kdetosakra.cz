@@ -7,6 +7,7 @@ import { HeraldryGame } from '../../containers/games/HeraldryGame';
 import { Help, Home, Info, NotFound, Result } from '../../pages';
 import { CookiesPage } from '../../pages/Cookies';
 import { DonationPage } from '../../pages/DonationPage';
+import { EndIsNear } from '../../pages/EndIsNear';
 import { PlacesUpload } from '../../pages/PlacesUpload';
 import { TermsPage } from '../../pages/Terms';
 
@@ -54,6 +55,9 @@ const RouterSwitch = () => {
             </Route>
             <Route path={`/${routeNames.nahratMisto}`}>
                 <PlacesUpload />
+            </Route>
+            <Route path={`/${routeNames.endIsNear}`}>
+                <EndIsNear />
             </Route>
             <Route path={`/${routeNames.battle}/:battleId`}>
                 <Battle />

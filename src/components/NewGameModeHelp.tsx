@@ -9,9 +9,9 @@ const NewGameModeHelpContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: red;
+    background-color: #ea648b;
     color: white;
-    padding: 5px 0 5px 0;
+    padding: 7px 0 7px 0;
     font-weight: bold;
 
     p {
@@ -33,8 +33,9 @@ export const NewGameModeHelp = () => {
     return (
         <NewGameModeHelpContainer>
             <p>
-                <Link to={`/${routeNames.nahratMisto}`}>
-                    Prosba o pomoc s přípravou nového herního módu "Zajímavá místa v ČR".
+                <Link to={`/${routeNames.endIsNear}`}>
+                    kdetosakra.cz poběží ještě do konce roku 2025. A nová hra "Zajímavá místa v ČR" už asi nebude,
+                    nezlobte se, prosím 🙏.
                 </Link>
             </p>
         </NewGameModeHelpContainer>

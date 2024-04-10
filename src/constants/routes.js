@@ -13,6 +13,7 @@ export const routeNames = {
     geolokace: 'geolokace',
     podminky: 'podminky',
     cookies: 'cookies',
+    endIsNear: 'koncici-podpora',
 };
 
 export const isInGameRoute = pathname => {
@@ -22,6 +23,7 @@ export const isInGameRoute = pathname => {
         pathname !== `/${routeNames.napoveda}` &&
         pathname !== `/${routeNames.podpora}` &&
         pathname !== `/${routeNames.nahratMisto}` &&
+        pathname !== `/${routeNames.endIsNear}` &&
         pathname !== `/${routeNames.podminky}` &&
         pathname !== `/${routeNames.cookies}`
     );
