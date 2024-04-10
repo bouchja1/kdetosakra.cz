@@ -50,7 +50,7 @@ export const EndIsNear = () => {
                     <p>Herní mód "Zajímavá místa v ČR" nebude.</p>
                     <h2>Co bude s KdeToSakra dál?</h2>
                     <p>
-                        Psali mi <a href="https://developer.mapy.cz/">Mapy od Seznam.cz</a>, díky kterým celé KdeToSakra
+                        Psaly mi <a href="https://developer.mapy.cz/">Mapy od Seznam.cz</a>, díky kterým celé KdeToSakra
                         funguje.
                     </p>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -59,8 +59,8 @@ export const EndIsNear = () => {
                     <p>↘️</p>
                     <p>Jo, tohle je přesně důvod toho, proč nejsou v KdeToSakra aktuální panorámata 😉. </p>
                     <p>
-                        Nová verze REST API od Seznamu je placená. KdeToSakra byl a je nevýdělečný hobby projekt, takže
-                        si na sebe nevydělá.
+                        Nová verze REST API od Seznamu je navíc placená. KdeToSakra byl a je nevýdělečný hobby projekt,
+                        takže si na sebe nevydělá.
                     </p>
                     <p>
                         Do konce roku 2025 bych měl projekt přemigrovat na novou verzi API, aby všechno fungovalo jako
