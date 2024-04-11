@@ -19,7 +19,9 @@
 }
 
 .about-container h2,
-.about-container h3 {
+.about-container h3,
+.end-is-near-container h2,
+.end-is-near-container h3 {
     font-weight: bold;
 }
 
@@ -283,6 +285,12 @@ label {
 }
 
 .about-container {
+    padding: 0 20px 0 20px;
+    width: 900px;
+    justify-content: center;
+}
+
+.end-is-near-container {
     padding: 0 20px 0 20px;
     width: 900px;
     justify-content: center;
@@ -808,6 +816,10 @@ label {
 
 /* Tablet Styles */
 @media only screen and (min-width: 401px) and (max-width: 960px) {
+    .end-is-near-container {
+        padding: 0;
+    }
+
     .placeUploadForm {
         width: 80vw;
         min-width: initial;

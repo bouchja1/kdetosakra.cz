@@ -34,7 +34,7 @@ export const NewGameModeHelp = () => {
         <NewGameModeHelpContainer>
             <p>
                 <Link to={`/${routeNames.endIsNear}`}>
-                    kdetosakra.cz poběží ještě do konce roku 2025. A nová hra "Zajímavá místa v ČR" už asi nebude,
+                    kdetosakra.cz poběží ještě do konce roku 2025. A nová hra "Zajímavá místa v ČR" už bohužel nebude,
                     nezlobte se, prosím 🙏.
                 </Link>
             </p>

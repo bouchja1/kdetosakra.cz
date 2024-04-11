@@ -20,7 +20,7 @@ const EndIsNearModesContainer = styled.div`
 export const EndIsNear = () => {
     return (
         <Content>
-            <div className="about-container">
+            <div className="end-is-near-container">
                 <EndIsNearModesContainer>
                     <h1>Nový herní mód "Zajímavá místa v ČR"</h1>
                     <p>
@@ -50,21 +50,26 @@ export const EndIsNear = () => {
                     <p>Herní mód "Zajímavá místa v ČR" nebude.</p>
                     <h2>Co bude s KdeToSakra dál?</h2>
                     <p>
-                        Psaly mi <a href="https://developer.mapy.cz/">Mapy od Seznam.cz</a>, díky kterým celé KdeToSakra
-                        funguje.
+                        Psali mi z <a href="https://developer.mapy.cz/">Mapy od Seznam.cz</a>, díky kterým vlastně celé
+                        KdeToSakra funguje.
                     </p>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <Image alt="Multiplayer - získání odkazu" src={`${process.env.REACT_APP_WEB_URL}/mapy.png`} />
                     </div>
                     <p>↘️</p>
-                    <p>Jo, tohle je přesně důvod toho, proč nejsou v KdeToSakra aktuální panorámata 😉. </p>
                     <p>
-                        Nová verze REST API od Seznamu je navíc placená. KdeToSakra byl a je nevýdělečný hobby projekt,
-                        takže si na sebe nevydělá.
+                        Jo, tohle je přesně důvod toho, proč nejsou v KdeToSakra aktuální panorámata, jak se spousta z
+                        vás v průběhu posledních let psalo 😉.
                     </p>
                     <p>
-                        Do konce roku 2025 bych měl projekt přemigrovat na novou verzi API, aby všechno fungovalo jako
-                        doposud, ale platí to, co jsem napsal výše: nemám na to bohužel čas. Takže{' '}
+                        Nová verze REST API od Seznamu je <a href="https://developer.mapy.cz/cena/">placená</a> dle
+                        počtu stažených panorama dlaždic. A KdeToSakra byl a je nevýdělečný hobby{' '}
+                        <a href="https://github.com/bouchja1/kdetosakra.cz">open source projekt</a>, takže si na sebe
+                        nevydělá.
+                    </p>
+                    <p>
+                        Do konce roku 2025 bych musel projekt přemigrovat na novou verzi API, aby všechno fungovalo jako
+                        doposud, ale bohužel platí to, co jsem napsal výše: nemám na to čas. Takže to znamená, že{' '}
                         <b>KdeToSakra přestane koncem roku 2025 fungovat</b>.
                     </p>
                     <p>Díky všem, které to bavilo, baví a hrajte dokud můžete! 😉</p>
