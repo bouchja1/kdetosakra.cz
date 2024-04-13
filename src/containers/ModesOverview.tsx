@@ -202,7 +202,7 @@ export const ModesOverview = () => {
                             <li>
                                 {/* eslint-disable-next-line react/jsx-no-target-blank */}
                                 <a
-                                    href="https://www.youtube.com/playlist?list=PLtFesIeBF_meZrA0cGcPhMp_nUl79_AWI"
+                                    href="https://www.youtube.com/@kdepakjsme7888/videos"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
@@ -212,7 +212,7 @@ export const ModesOverview = () => {
                             <li>
                                 {/* eslint-disable-next-line react/jsx-no-target-blank */}
                                 <a
-                                    href="https://www.youtube.com/playlist?list=PLgtWt-mElPivScJgTABHu--vjAB9uOzxe"
+                                    href="https://www.youtube.com/@LakelyDorton/videos"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
