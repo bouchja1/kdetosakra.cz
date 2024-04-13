@@ -59,7 +59,7 @@ export const EndIsNear = () => {
                     <p>↘️</p>
                     <p>
                         Jo, tohle je přesně důvod toho, proč nejsou v KdeToSakra aktuální panorámata, jak se spousta z
-                        vás v průběhu posledních let psalo 😉.
+                        vás v průběhu posledních let ptalo 😉.
                     </p>
                     <p>
                         Nová verze REST API od Seznamu je <a href="https://developer.mapy.cz/cena/">placená</a> dle
