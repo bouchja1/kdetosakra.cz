@@ -37,7 +37,7 @@ export const EndIsNear = () => {
                     </p>
                     <p>
                         Oproti mému původnímu očekávání („pár desítek by bylo supr“) se k dnešku sešlo skoro 500 fotek
-                        od různých autorů. A já všem moc děkuji za příspěvky! 😉 🙏
+                        od různých autorů. A já všem děkuji za příspěvky! 😉 🙏
                     </p>
                     <p>
                         Fakt je ten, že jsem si ukrojil větší sousto, než jsem schopen zpracovat. Jinými slovy: Na
@@ -48,14 +48,13 @@ export const EndIsNear = () => {
                         nahráli své fotky.
                     </p>
                     <p>Herní mód "Zajímavá místa v ČR" nebude.</p>
-                    <h2>Co bude s KdeToSakra dál?</h2>
+                    <h2>Co bude s KdeToSakra dál? Aneb na konci roku 2025 zavíráme krám</h2>
+                    <h3>Bohužel</h3>
                     <p>
                         Psali mi z <a href="https://developer.mapy.cz/">Mapy od Seznam.cz</a>, díky kterým vlastně celé
                         KdeToSakra funguje.
                     </p>
-                    <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        <Image alt="Multiplayer - získání odkazu" src={`${process.env.REACT_APP_WEB_URL}/mapy.png`} />
-                    </div>
+                    <Image alt="Upozornění na končící podporu" src={`${process.env.REACT_APP_WEB_URL}/mapy.png`} />
                     <p>↘️</p>
                     <p>
                         Jo, tohle je přesně důvod toho, proč nejsou v KdeToSakra aktuální panorámata, jak se spousta z
@@ -68,9 +67,27 @@ export const EndIsNear = () => {
                         nevydělá.
                     </p>
                     <p>
-                        Do konce roku 2025 bych musel projekt přemigrovat na novou verzi API, aby všechno fungovalo jako
-                        doposud, ale bohužel platí to, co jsem napsal výše: nemám na to čas. Takže to znamená, že{' '}
-                        <b>KdeToSakra přestane koncem roku 2025 fungovat</b>.
+                        Poprosil jsem o cenový odhad provozu po případném přemigrování na nové API a dostal jsem
+                        následujícíc odpověď:
+                    </p>
+                    <Image
+                        alt="Cenový odhad za používání nového REST API Mapy.cz"
+                        src={`${process.env.REACT_APP_WEB_URL}/new-api-price.jpg`}
+                        width="300px"
+                        height="auto"
+                    />
+                    <br />
+                    <p>Dotovat hobby projekt desítkami tisíc měsíčně nedává smysl ani mně, a určitě ani vám.</p>
+                    <p>
+                        Do konce roku 2025 bych tedy musel projekt přemigrovat na novou verzi API, aby všechno fungovalo
+                        jako doposud, ale i tak by pak byly náklady na provoz cca 100 000 Kč měsíčně.
+                    </p>
+                    <p>
+                        To bohužel znamená, že <b>KdeToSakra přestane koncem roku 2025 fungovat</b>.
+                    </p>
+                    <p>
+                        Nejen z byznysového pohledu Seznam.cz naprosto chápu a moc děkuji, že jsme tak dlouho mohli
+                        využít úplně <b>zdarma</b> a v takové míře jejich zdroje.
                     </p>
                     <p>Díky všem, které to bavilo, baví a hrajte dokud můžete! 😉</p>
                     <p>Honza Bouchner</p>
