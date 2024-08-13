@@ -69,9 +69,8 @@ export const App = () => {
                             {/* eslint-disable-next-line react/jsx-no-target-blank */}
                             Koukněte i na můj další projekt{' '}
                             <a href="https://zenamu.com" target="_blank" rel="noreferrer">
-                                Zenamu
-                            </a>{' '}
-                            - rezervační systém pro jóga studia
+                                Zenamu - rezervační systém pro skupinové cvičení
+                            </a>
                         </p>
                     </Footer>
                 )}

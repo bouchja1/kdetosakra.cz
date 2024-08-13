@@ -72,7 +72,7 @@ const Menu = ({ isInGame = false }) => {
                         src={smilingLogo}
                         alt="logo"
                         className="kdetosakra-logo"
-                        width="50px"
+                        width="30px"
                         height="auto"
                     />
                     <h2 className="kdetosakra-logo-text">Kde to sakra?</h2>
