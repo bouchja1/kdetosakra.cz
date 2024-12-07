@@ -10,7 +10,6 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 
-import discordIcon from '../../assets/images/discord.png';
 import smilingLogo from '../../assets/images/kdetosakraSmile.svg';
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
 import { routeNames } from '../../constants/routes';
@@ -105,13 +104,6 @@ const Menu = ({ isInGame = false }) => {
                 )}
                 {!isInGame && (
                     <>
-                        <div className="menu-item menu-separator">|</div>
-                        <div className="menu-item-with-icon-container">
-                            {/* eslint-disable-next-line react/jsx-no-target-blank */}
-                            <a title="Discord" href="https://discord.gg/b9h3xdP6gG" target="_blank" rel="noreferrer">
-                                <img alt="Discord" src={discordIcon} height={30} />
-                            </a>
-                        </div>
                         <div className="menu-item menu-separator">|</div>
                         {/* eslint-disable-next-line react/jsx-no-target-blank */}
                         <div className={menuItemWithIconContainerStyles}>

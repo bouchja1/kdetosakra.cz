@@ -3,7 +3,6 @@ import { Image, Layout } from 'antd';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import discordIcon from '../assets/images/discord.png';
 import krumlovInfo from '../assets/images/info/krumlovInfo.png';
 import { Donate } from '../components/Donate';
 import { decryptEmail } from '../util';
@@ -72,12 +71,6 @@ export const Info = () => {
                 <p>
                     První čtyři herní módy je možné hrát i v módu <i>multiplayer</i> (ve stejný čas proti sobě soupeří
                     více hráčů).
-                </p>
-                <p>
-                    Žádný spoluhráč po ruce? Domluv si bitvu na{' '}
-                    <a title="Discord" href="https://discord.gg/b9h3xdP6gG" target="_blank" rel="noreferrer">
-                        na Discordu! <img alt="Discord" src={discordIcon} height={30} />
-                    </a>
                 </p>
                 <p>
                     Detailnější informace jsou k nalezení v{' '}
