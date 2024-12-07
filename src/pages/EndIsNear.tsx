@@ -2,6 +2,7 @@ import { Image, Layout } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 
+import { decryptEmail } from '../util';
 import { borderRadiusBase, componentBackground } from '../util/theme';
 
 const { Content } = Layout;
@@ -27,38 +28,37 @@ export const EndIsNear = () => {
                         <b>11. dubna 2024</b>
                     </p>
                     <p>
-                        Onehdá (už to bude rok a půl) jsem si vymyslel, že by bylo fajn vytvořit v KdeToSakra nový herní
-                        mód založený na poznávání zajímavých míst v ČR na základě fotek.
+                        Před rokem a půl mě napadlo, že by bylo skvělé vytvořit v rámci KdeToSakra nový herní mód
+                        zaměřený na poznávání zajímavých míst v České republice prostřednictvím fotek.
                     </p>
                     <p>
-                        Vás – fanoušky a nadšence – jsem prosil o to, že pokud máte fotky ze svých výletů, které jste
-                        ochotni sdílet a máte chuť s tvorbou nového herního módu pomoci, ať neváhejte a pálíte mi je sem
-                        😊.
+                        Požádal jsem vás, fanoušky a nadšence, jestli byste se chtěli podělit o fotky ze svých výletů a
+                        tím přispět k tvorbě tohoto nápadu. Vaše ochota a nadšení mě naprosto ohromily – místo „pár
+                        desítek fotek“, v které jsem doufal, se mi jich sešlo téměř 500! ❤️ Velké díky každému, kdo
+                        přispěl – vážím si toho víc, než dokážu vyjádřit. 🙏
                     </p>
                     <p>
-                        Oproti mému původnímu očekávání („pár desítek by bylo supr“) se k dnešku sešlo skoro 500 fotek
-                        od různých autorů. A já všem děkuji za příspěvky! 😉 🙏
+                        Bohužel jsem ale musel uznat, že jsem si ukrojil větší sousto, než dokážu zvládnout. Na
+                        vytvoření herního módu nemám kapacitu ani čas.
                     </p>
                     <p>
-                        Fakt je ten, že jsem si ukrojil větší sousto, než jsem schopen zpracovat. Jinými slovy: Na
-                        tvorbu nového herního módu nemám bohužel čas.
+                        Proto se vám všem, kdo jste se na tento mód těšili, omlouvám a zároveň znovu děkuji těm, kdo mi
+                        poslali své fotky.
                     </p>
-                    <p>
-                        Omlouvám se všem, co se na nový herní mód těšili, a ještě jednou velký dík těm, co mi sem
-                        nahráli své fotky.
-                    </p>
-                    <p>Herní mód "Zajímavá místa v ČR" nebude.</p>
-                    <h2>Co bude s KdeToSakra dál? Aneb na konci roku 2025 zavíráme krám</h2>
+                    <p>Herní mód "Zajímavá místa v ČR" bohužel nevznikne.</p>
+                    <h2>Co bude dál? KdeToSakra ukončí provoz na konci roku 2025</h2>
                     <h3>Bohužel</h3>
                     <p>
-                        Psali mi z <a href="https://developer.mapy.cz/">Mapy od Seznam.cz</a>, díky kterým vlastně celé
-                        KdeToSakra funguje.
+                        Nedávno mě oslovili z <a href="https://developer.mapy.cz/">Mapy.cz od Seznam.cz</a>, díky kterým
+                        vlastně celý projekt KdeToSakra funguje. Upozornili mě, že jejich stávající REST API, na kterém
+                        KdeToSakra běží, končí, a že nová verze bude placená podle množství stažených dlaždic s
+                        panoramaty.
                     </p>
                     <Image alt="Upozornění na končící podporu" src={`${process.env.REACT_APP_WEB_URL}/mapy.png`} />
                     <p>↘️</p>
                     <p>
-                        Jo, tohle je přesně důvod toho, proč nejsou v KdeToSakra aktuální panorámata, jak se spousta z
-                        vás v průběhu posledních let ptalo 😉.
+                        Proto už například poslední roky nejsou v KdeToSakra aktuální panorámata, což jste si mnozí
+                        všimli a ptali se na to. 😉
                     </p>
                     <p>
                         Nová verze REST API od Seznamu je <a href="https://developer.mapy.cz/cena/">placená</a> dle
@@ -67,8 +67,8 @@ export const EndIsNear = () => {
                         nevydělá.
                     </p>
                     <p>
-                        Poprosil jsem o cenový odhad provozu po případném přemigrování na nové API a dostal jsem
-                        následujícíc odpověď:
+                        Požádal jsem o cenový odhad provozu na novém API, a odpověď mě přivedla k tvrdé realitě:{' '}
+                        <b>Náklady by činily zhruba 100 000 Kč měsíčně</b>.
                     </p>
                     <Image
                         alt="Cenový odhad za používání nového REST API Mapy.cz"
@@ -77,20 +77,28 @@ export const EndIsNear = () => {
                         height="auto"
                     />
                     <br />
-                    <p>Dotovat hobby projekt desítkami tisíc měsíčně nedává smysl ani mně, a určitě ani vám.</p>
                     <p>
-                        Do konce roku 2025 bych tedy musel projekt přemigrovat na novou verzi API, aby všechno fungovalo
-                        jako doposud, ale i tak by pak byly náklady na provoz cca 100 000 Kč měsíčně.
+                        Jelikož je KdeToSakra nevýdělečný hobby projekt, dotovat ho takovou částkou jednoduše není
+                        možné. Z mého pohledu by to nedávalo smysl a věřím, že ani z vašeho.
+                    </p>
+                    <h3>Co to znamená?</h3>
+                    <p>
+                        Do konce roku 2025 bych musel projekt přemigrovat na nové API, aby mohl fungovat jako dosud.
+                        Bohužel se to ale ukazuje jako neproveditelné.
+                    </p>
+                    <p>Proto KdeToSakra přestane na konci roku 2025 fungovat.</p>
+                    <p>
+                        Chci touto cestou poděkovat týmu Seznam.cz, že jsme mohli tak dlouhou dobu využívat jejich API
+                        zdarma a v takové míře. Z byznysového pohledu jejich rozhodnutí naprosto chápu.
                     </p>
                     <p>
-                        To bohužel znamená, že <b>KdeToSakra přestane koncem roku 2025 fungovat</b>.
+                        A hlavně – děkuji vám všem, které tento projekt bavil, kteří jste ho hráli, podporovali a
+                        šířili. Hrajte, dokud můžete, a užijte si to! 😉
                     </p>
                     <p>
-                        Nejen z byznysového pohledu Seznam.cz naprosto chápu a moc děkuji, že jsme tak dlouho mohli
-                        využít úplně <b>zdarma</b> a v takové míře jejich zdroje.
+                        Díky za všechny společné zážitky,{' '}
+                        <a href={decryptEmail('amFuLmJvdWNobmVyQGdtYWlsLmNvbQ==')}>Honza Bouchner</a>
                     </p>
-                    <p>Díky všem, které to bavilo, baví a hrajte dokud můžete! 😉</p>
-                    <p>Honza Bouchner</p>
                 </EndIsNearModesContainer>
             </div>
         </Content>
