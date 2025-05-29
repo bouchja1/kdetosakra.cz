@@ -3,6 +3,7 @@ import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 
+import { DonateContent } from '../../components/DonateContent';
 import ResultSMap from '../../components/ResultSMap';
 import { TOTAL_ROUNDS_MAX } from '../../constants/game';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
@@ -128,6 +129,7 @@ export const BattleResult = () => {
                         </Link>
                     </Button>
                 </div>
+                <DonateContent marginBottom={25} withDonate />
                 {activePlayerStructure && (
                     <ResultSMap
                         guessedPoints={activePlayerStructure.guessedPoints}

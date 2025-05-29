@@ -33,10 +33,7 @@ export const NewGameModeHelp = () => {
     return (
         <NewGameModeHelpContainer>
             <p>
-                <Link to={`/${routeNames.endIsNear}`}>
-                    kdetosakra.cz poběží ještě do konce roku 2025. A nová hra "Zajímavá místa v ČR" už bohužel nebude,
-                    nezlobte se, prosím 🙏.
-                </Link>
+                <Link to={`/${routeNames.endIsNear}`}>Provoz kdetosakra.cz bude v prosinci 2025 ukončen</Link>
             </p>
         </NewGameModeHelpContainer>
     );

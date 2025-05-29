@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
+import { DonateContent } from '../components/DonateContent';
 import gameModes from '../enums/modes';
 import useGameMenuResize from '../hooks/useGameMenuResize';
 import { BattleResult, SingleResult } from './results';
@@ -21,5 +22,5 @@ export const Result = () => {
         return <HeraldryResult />;
     }
 
-    return isBattle ? <BattleResult /> : <SingleResult />;
+    return <>{isBattle ? <BattleResult /> : <SingleResult />}</>;
 };
