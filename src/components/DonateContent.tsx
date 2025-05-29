@@ -48,7 +48,7 @@ export const DonateContent = ({ marginBottom = 0, withDonate = false }: DonatePr
             <DonateContainer marginBottom={marginBottom}>
                 <DonateItems>
                     <p>
-                        Poslat příspěvek na kafe přes <b>Lightning Network</b> ⚡️
+                        Poslat příspěvek na kafe přes <b>Lightning Bolt 12 Network</b> ⚡️
                     </p>
                     <img src={phoenixLightning} height={200} />
                 </DonateItems>
