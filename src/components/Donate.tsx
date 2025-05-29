@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import btcLightning from '../assets/images/donate/btcLightning.png';
 import buyMeCoffee from '../assets/images/donate/buyMeCoffee.png';
+import phoenixLightning from '../assets/images/donate/phoenixLightning.png';
 
 interface DonateProps {
     marginBottom?: number;
@@ -11,7 +11,7 @@ interface DonateProps {
 const DonateContainer = styled.div<{ marginBottom: number }>`
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     gap: 50px;
     flex-wrap: wrap;
     margin-bottom: ${({ marginBottom }) => `${marginBottom}px`};
@@ -41,9 +41,7 @@ export const Donate = ({ marginBottom = 0 }: DonateProps) => {
                     <p>
                         Poslat příspěvek na kafe přes <b>Lightning Network</b> ⚡️
                     </p>
-                    <a href="https://getalby.com/p/kdetosakra" target="_blank">
-                        <img src={btcLightning} height={100} />
-                    </a>
+                    <img src={phoenixLightning} height={200} />
                 </DonateItems>
                 <DonateItems>
                     <p>
