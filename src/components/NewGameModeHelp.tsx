@@ -33,7 +33,13 @@ export const NewGameModeHelp = () => {
     return (
         <NewGameModeHelpContainer>
             <p>
-                <Link to={`/${routeNames.endIsNear}`}>Provoz kdetosakra.cz bude v prosinci 2025 ukončen</Link>
+                <Link to={`/${routeNames.endIsNear}`}>Provoz kdetosakra.cz bude v prosinci 2025 ukončen.</Link>
+            </p>
+            <p>
+                <a href="https://developer.mapy.com/cs/js-api/ukonceni-podpory-js-sdk" target="_blank">
+                    Od května 2025 už se ve hře objevují dočasné výpadky (pano se nenačte). Bohužel, nedá se s tím nic
+                    dělat.
+                </a>
             </p>
         </NewGameModeHelpContainer>
     );
