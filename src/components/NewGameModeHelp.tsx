@@ -7,6 +7,7 @@ import { CATEGORIES } from '../enums/gaCategories';
 
 const NewGameModeHelpContainer = styled.div`
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     background-color: #ea648b;
@@ -37,9 +38,9 @@ export const NewGameModeHelp = () => {
             </p>
             <p>
                 <a href="https://developer.mapy.com/cs/js-api/ukonceni-podpory-js-sdk" target="_blank">
-                    Od května 2025 už se ve hře objevují dočasné výpadky (pano se nenačte). Bohužel, nedá se s tím nic
-                    dělat.
-                </a>
+                    Od května 2025 už se ve hře objevují dočasné výpadky (pano se nenačte).
+                </a>{' '}
+                Bohužel, nedá se s tím nic dělat.
             </p>
         </NewGameModeHelpContainer>
     );
