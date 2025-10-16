@@ -1,8 +1,8 @@
 import {
     CoffeeOutlined,
     FacebookFilled,
-    FileImageOutlined,
     InfoCircleOutlined,
+    InstagramFilled,
     QuestionCircleOutlined,
 } from '@ant-design/icons';
 import classNames from 'classnames';
@@ -114,6 +114,18 @@ const Menu = ({ isInGame = false }) => {
                                 rel="noreferrer"
                             >
                                 <FacebookFilled style={{ color: 'rgb(66, 103, 178)', fontSize: '25px' }} />
+                            </a>
+                        </div>
+                        <div className="menu-item menu-separator">|</div>
+                        {/* eslint-disable-next-line react/jsx-no-target-blank */}
+                        <div className={menuItemWithIconContainerStyles}>
+                            <a
+                                title="Instagram stránka"
+                                href="https://www.instagram.com/kdetosakra/"
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                <InstagramFilled style={{ color: 'rgb(126,125,125)', fontSize: '25px' }} />
                             </a>
                         </div>
                     </>
