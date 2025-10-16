@@ -19,7 +19,7 @@ export const Home = () => {
 
                 <Alert
                     message="Loučíme se, ale víme, kde to sakra bylo! ❤️"
-                    description='6 let, 1 země, nespočet „Vysočin". Po šesti letech a tisících uhodnutých (i totálně přestřelených) míst se KdeToSakra.cz pomalu loučí — ale stylově, jako poslední tour po Česku.'
+                    description='6 let, 1 země, nespočet „Vysočin". Po šesti letech a tisících uhodnutých (i totálně přestřelených) míst se KdeToSakra.cz pomalu loučí — ale stylově, jako poslední tour po Česku'
                     type="error"
                     closable={false}
                     className="farewell-alert"
