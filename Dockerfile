@@ -1,4 +1,4 @@
-FROM bitnami/node:16.18.0 AS build-stage
+FROM bitnamilegacy/node:16.18.0 AS build-stage
 WORKDIR /app
 
 COPY package*.json yarn.lock ./
@@ -38,7 +38,7 @@ RUN yarn build
 
 ################ Second stage
 
-FROM bitnami/node:16.18.0
+FROM bitnamilegacy/node:16.18.0
 
 WORKDIR /app
 
