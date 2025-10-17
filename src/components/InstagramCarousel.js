@@ -28,7 +28,6 @@ export const InstagramCarousel = () => {
         console.error('Failed to load Instagram image for post:', postId);
         setImageErrors(prev => ({ ...prev, [postId]: true }));
         // Try to redirect to Instagram if image fails
-        console.log('View post on Instagram:', postUrl);
     };
 
     const toggleCaption = postId => {
@@ -61,7 +60,7 @@ export const InstagramCarousel = () => {
                 }}
                 breakpoints={{
                     768: {
-                        slidesPerView: 2,
+                        slidesPerView: 3,
                         spaceBetween: 30,
                     },
                 }}
