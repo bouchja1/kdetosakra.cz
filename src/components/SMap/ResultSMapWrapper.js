@@ -1,4 +1,5 @@
 import React from 'react';
+
 import SMap from './SMap';
 
 export const ResultSMapWrapper = ({ currentRoundGuessedPoint, isGuessing, isBattle }) => {

@@ -1,8 +1,8 @@
-@import "~antd/dist/antd.less"; // Import Ant Design styles by less entry
+@import '~antd/dist/antd.less'; // Import Ant Design styles by less entry
 
 * {
     box-sizing: border-box;
-    font-family: 'Roboto', 'Arial', sans-serif;
+    font-family: 'Work Sans', 'Arial', sans-serif;
     margin: 0;
     padding: 0;
     -webkit-font-smoothing: antialiased;
@@ -50,7 +50,7 @@ ul.video-list {
 }
 
 .ant-layout {
-    background-color: #f0f0f0;
+    background-color: #f5f5f5;
 }
 
 .ant-layout-content {
@@ -74,6 +74,8 @@ ul.video-list {
 .farewell-alert {
     max-width: 700px;
     text-align: left;
+    padding: 1rem 1.3rem !important;
+    margin: 0.75rem 0;
 
     .ant-alert-message {
         font-size: 16px;
@@ -127,6 +129,13 @@ ul.video-list {
         p.subtitle {
             font-size: small;
         }
+
+        p.tooltip-text {
+            cursor: help;
+            border-bottom: 1px dotted #888;
+            display: inline-block;
+            text-decoration: none;
+        }
     }
 }
 
@@ -160,8 +169,14 @@ ul.video-list {
     color: #828282;
     display: flex;
     justify-content: center;
-    height: 75px;
+    height: 55px;
     padding: 0 80px 0 80px;
+}
+
+.swiper-navigation-icon {
+    width: 15px !important;
+    height: 15px !important;
+    font-weight: bold !important;
 }
 
 .randomPlace__modes {
@@ -176,6 +191,7 @@ ul.video-list {
 }
 
 .menu-without-padding {
+    height: 75px;
     padding: 0 25px 0 25px;
 }
 
@@ -257,7 +273,7 @@ ul.video-list {
 }
 
 .ant-card {
-    background-color: #f0f0f0;
+    background-color: #f5f5f5;
     width: 300px !important;
     margin: 0 1px 0 1px !important;
 }
@@ -318,7 +334,7 @@ label {
 }
 
 .heraldry-meta-card .ant-card-meta-description {
-    color: #E5E4E4FF;
+    color: #e5e4e4ff;
 }
 
 .customPlaceForm ul.smap-suggest {
@@ -811,7 +827,7 @@ label {
     .menu-item-icon {
         display: inline-block;
         color: rgb(97, 95, 95);
-        margin-right: 10px
+        margin-right: 10px;
     }
 
     .menu-item {
@@ -882,7 +898,7 @@ label {
     .menu-item-icon {
         display: inline-block;
         color: rgb(97, 95, 95);
-        margin-right: 10px
+        margin-right: 10px;
     }
 
     .menu-item {
@@ -937,5 +953,213 @@ label {
 @media only screen and (min-width: 1281px) {
     .ant-card {
         width: 600px;
+    }
+}
+
+/* Instagram Carousel Styles */
+.instagram-carousel-container {
+    margin: 10px auto;
+    max-width: 900px;
+    padding: 20px;
+    width: 100%;
+
+    .instagram-carousel-title {
+        text-align: center;
+        font-size: 24px;
+        font-weight: 600;
+        color: #262626;
+        margin-bottom: 25px;
+    }
+}
+
+.instagram-swiper {
+    padding: 10px 50px 40px 50px;
+
+    .swiper-button-next,
+    .swiper-button-prev {
+        color: #c80707;
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+        &:after {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        &:hover {
+            background: rgba(255, 255, 255, 1);
+        }
+    }
+
+    .swiper-button-next {
+        right: 0;
+    }
+
+    .swiper-button-prev {
+        left: 0;
+    }
+
+    .swiper-pagination-bullet {
+        background: #c80707;
+    }
+
+    .swiper-pagination-bullet-active {
+        background: #c80707;
+    }
+}
+
+.instagram-post {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #dbdbdb;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    height: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .instagram-post-image-container {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        overflow: hidden;
+        cursor: pointer;
+        position: relative;
+        background-color: #f5f5f5;
+
+        &:hover .instagram-post-image {
+            opacity: 0.9;
+        }
+    }
+
+    .instagram-post-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: opacity 0.2s ease;
+    }
+
+    .instagram-post-image-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+
+    .instagram-placeholder-content {
+        text-align: center;
+        color: #8e8e8e;
+
+        p {
+            margin-top: 15px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+    }
+
+    .instagram-post-caption {
+        padding: 15px;
+        background: #fff;
+
+        p {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #262626;
+            margin-bottom: 10px;
+            word-wrap: break-word;
+        }
+
+        .instagram-more-button {
+            padding: 0;
+            height: auto;
+            font-size: 13px;
+            color: #8e8e8e;
+            margin-bottom: 10px;
+
+            &:hover {
+                color: #262626;
+            }
+        }
+
+        .instagram-view-button {
+            width: 100%;
+            background: #c80707;
+            border-color: #c80707;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+
+            &:hover {
+                background: #a00606;
+                border-color: #a00606;
+            }
+        }
+    }
+}
+
+/* Mobile styles for Instagram carousel */
+@media only screen and (max-width: 767px) {
+    .instagram-carousel-container {
+        padding: 15px 5px;
+        margin: 20px auto;
+        max-width: 100%;
+
+        .instagram-carousel-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+    }
+
+    .instagram-swiper {
+        padding: 10px 35px 40px 35px;
+
+        .swiper-button-next,
+        .swiper-button-prev {
+            width: 30px;
+            height: 30px;
+
+            &:after {
+                font-size: 16px;
+            }
+        }
+
+        .swiper-button-next {
+            right: 0;
+        }
+
+        .swiper-button-prev {
+            left: 0;
+        }
+    }
+
+    .instagram-post {
+        max-width: 100%;
+
+        .instagram-post-caption {
+            padding: 12px;
+
+            p {
+                font-size: 13px;
+            }
+        }
+    }
+}
+
+/* Tablet and desktop styles for Instagram carousel */
+@media only screen and (min-width: 768px) {
+    .instagram-post {
+        max-width: 420px;
     }
 }

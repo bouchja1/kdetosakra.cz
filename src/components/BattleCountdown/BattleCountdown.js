@@ -1,25 +1,21 @@
-import React, { useEffect, useMemo, useState } from 'react';
 import { Alert } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
 import { differenceInSeconds } from 'date-fns';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
+
+import { TOTAL_ROUNDS_MAX } from '../../constants/game';
 import useGetRandomUserToken from '../../hooks/useGetRandomUserToken';
-import { findUserFromBattleByRandomTokenId, getDateFromUnixTimestamp } from '../../util';
 import useTimeInterval from '../../hooks/useTimeInterval';
 import { setIsRoundActive } from '../../redux/actions/battle';
-import { TOTAL_ROUNDS_MAX } from '../../constants/game';
+import { findUserFromBattleByRandomTokenId, getDateFromUnixTimestamp } from '../../util';
 
 const getAlertMessageFastestPlayer = (round, countdownTime) => (
     <>
         {countdownTime > 0 && (
             <>
                 Byl jsi nejrychlejší! Do konce kola zbývá
-                <b>
-                    {' '}
-                    {countdownTime}
-                </b>
-                {' '}
-                sekund.
+                <b> {countdownTime}</b> sekund.
             </>
         )}
     </>
@@ -29,15 +25,8 @@ const getAlertMessageOtherPlayers = (round, name, countdownTime) => (
     <>
         {countdownTime > 0 && (
             <>
-                <b>{name}</b>
-                {' '}
-                byl nejrychlejší. Na tvůj tip ti zbývá
-                <b>
-                    {' '}
-                    {countdownTime}
-                </b>
-                {' '}
-                sekund.
+                <b>{name}</b> byl nejrychlejší. Na tvůj tip ti zbývá
+                <b> {countdownTime}</b> sekund.
             </>
         )}
     </>
@@ -52,9 +41,7 @@ const BattleCountDown = () => {
     const [countdownIsRunning, setCountdownIsRunning] = useState(false);
     const { pathname } = useLocation();
 
-    const {
-        isGameStarted, countdown, round, rounds, createdById,
-    } = currentBattleInfo;
+    const { isGameStarted, countdown, round, rounds, createdById } = currentBattleInfo;
 
     const handleBattleRoundTick = () => {
         setCountdownTime(prevTime => prevTime - 1);
@@ -67,8 +54,8 @@ const BattleCountDown = () => {
         if (currentBattlePlayers !== null) {
             const playersWithFinishedRoundGuess = currentBattlePlayers.filter(player => player[`round${round}`]);
             if (
-                countdownIsRunning
-                && (countdownTime < 1 || playersWithFinishedRoundGuess.length === currentBattlePlayers.length)
+                countdownIsRunning &&
+                (countdownTime < 1 || playersWithFinishedRoundGuess.length === currentBattlePlayers.length)
             ) {
                 dispatch(
                     setIsRoundActive({
@@ -103,9 +90,7 @@ const BattleCountDown = () => {
         if (currentBattlePlayers !== null) {
             const currentRound = rounds[round - 1];
 
-            const {
-                isGuessed, guessedTime, firstGuess, isRoundActive,
-            } = currentRound;
+            const { isGuessed, guessedTime, firstGuess, isRoundActive } = currentRound;
             const battleUserCreator = findUserFromBattleByRandomTokenId(currentBattlePlayers, createdById);
             if (firstGuess?.guessedById && isGuessed && !isRoundActive) {
                 if (round >= TOTAL_ROUNDS_MAX) {
@@ -114,18 +99,11 @@ const BattleCountDown = () => {
 
                 return (
                     <Alert
-                        message={(
+                        message={
                             <b>
-                                Konec kola.
-                                {' '}
-                                {battleUserCreator.name}
-                                {' '}
-                                odstartuje
-                                {' '}
-                                {round + 1}
-                                . kolo
+                                Konec kola. {battleUserCreator.name} odstartuje {round + 1}. kolo
                             </b>
-                        )}
+                        }
                         type="info"
                     />
                 );
@@ -156,18 +134,11 @@ const BattleCountDown = () => {
     if (!isGameStarted) {
         return (
             <Alert
-                message={(
+                message={
                     <p>
-                        Po nejrychlejším tipu daného kola začne odpočet
-                        {' '}
-                        <b>
-                            {countdown}
-                            {' '}
-                            sekund
-                        </b>
-                        .
+                        Po nejrychlejším tipu daného kola začne odpočet <b>{countdown} sekund</b>.
                     </p>
-                )}
+                }
             />
         );
     }

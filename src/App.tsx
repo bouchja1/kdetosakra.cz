@@ -6,7 +6,6 @@ import { BrowserTracing } from '@sentry/tracing';
 import { Layout } from 'antd';
 import classNames from 'classnames';
 import React from 'react';
-import { isMobile } from 'react-device-detect';
 import { Provider } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -45,7 +44,6 @@ export const App = () => {
     return (
         <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
-                {!isMobile && !isInGame && <NewGameModeHelp />}
                 <Menu isInGame={isInGame} />
                 <Layout className={classNames(!isInGame && 'layout')}>
                     {loaded && !error && (

@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
 import { useLocalStorage, writeStorage } from '@rehooks/local-storage';
 import cryptoRandomString from 'crypto-random-string';
+import { useEffect } from 'react';
 
 const useGetRandomUserToken = () => {
     const [randomUserResultToken] = useLocalStorage('randomUserResultToken'); // send the key to be tracked

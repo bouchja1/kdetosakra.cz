@@ -14,7 +14,7 @@
     "@sentry/react": "^7.29.0",
     "@sentry/tracing": "^7.29.0",
     "antd": "^4.24.7",
-    "axios": "^0.21.1",
+    "axios": "^0.21.4",
     "babel-plugin-import": "^1.13.0",
     "classnames": "^2.3.1",
     "core-js": "^3.18.3",
@@ -47,6 +47,7 @@
     "redux-persist": "^6.0.0",
     "stream-browserify": "^3.0.0",
     "styled-components": "^5.2.3",
+    "swiper": "^12.0.2",
     "typesafe-actions": "^5.1.0",
     "wikijs": "^6.4.1",
     "yup": "^0.28.3"
@@ -64,7 +65,9 @@
     "circulars": "madge --circular ./src/**",
     "run-script": "node --experimental-modules --es-module-specifier-resolution=node --",
     "get-coa": "yarn run-script scripts/getCoaForCities.js",
-    "get-coa-description": "yarn run-script scripts/getCoaDescriptionsForCities.js"
+    "get-coa-description": "yarn run-script scripts/getCoaDescriptionsForCities.js",
+    "fetch-instagram": "node scripts/fetchInstagramPosts.js && node scripts/downloadInstagramImages.js",
+    "download-instagram-images": "node scripts/downloadInstagramImages.js"
   },
   "eslintConfig": {
     "extends": "react-app"

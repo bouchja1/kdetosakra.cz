@@ -1,7 +1,6 @@
 // This must be the first line in src/index.js
 import './polyfills';
 import './App.less';
-import './assets/fonts/Roboto-Regular.ttf';
 
 import { ConfigProvider } from 'antd';
 import csCZ from 'antd/lib/locale/cs_CZ';

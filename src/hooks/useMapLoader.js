@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-const useMapLoader = function(loaded) {
+const useMapLoader = function (loaded) {
     const [mapLoader, setMapLoader] = useState({
         loadedMapApi: false,
         SMap: null,

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function useSMapResize() {
     // Initialize state with undefined width/height so server and client renders match

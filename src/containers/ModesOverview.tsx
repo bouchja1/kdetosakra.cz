@@ -29,7 +29,6 @@ const ModesContainer = styled.div`
     justify-content: center;
     flex-wrap: wrap;
     gap: 25px;
-    margin-bottom: 50px;
     flex: 0 0 100%; /* Let it fill the entire space horizontally */
 `;
 
