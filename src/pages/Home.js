@@ -16,9 +16,9 @@ export const Home = () => {
             <div className="home-overview-hero">
                 <h1>Poznávej Česko!</h1>
 
-                <p className={!isMobile ? 'tooltip-text' : undefined}>
+                <h2 className={!isMobile ? 'tooltip-text' : undefined}>
                     Žádná věda... česká obdoba kultovního <b>GeoGuessr</b>
-                </p>
+                </h2>
 
                 <Alert
                     message="Loučíme se, ale víme, kde to sakra bylo! ❤️"
