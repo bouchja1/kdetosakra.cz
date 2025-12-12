@@ -16,18 +16,9 @@ export const Home = () => {
             <div className="home-overview-hero">
                 <h1>Poznávej Česko!</h1>
 
-                <Tooltip
-                    title={
-                        <>
-                            Žádná věda... česká obdoba kultovního <b>GeoGuessr</b>
-                        </>
-                    }
-                    placement="right"
-                >
-                    <p className={!isMobile ? 'tooltip-text' : undefined}>
-                        Toulej se v panorámatech a hádej, kde se právě nacházíš.
-                    </p>
-                </Tooltip>
+                <p className={!isMobile ? 'tooltip-text' : undefined}>
+                    Žádná věda... česká obdoba kultovního <b>GeoGuessr</b>
+                </p>
 
                 <Alert
                     message="Loučíme se, ale víme, kde to sakra bylo! ❤️"
